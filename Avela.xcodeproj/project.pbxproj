@@ -1,0 +1,440 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8464565395CA480AB53D8C0B = { isa = PBXBuildFile; fileRef = 38F5FFD260E1D1E91F6338AC; };
+		42376078E52BF632F4B50338 = { isa = PBXBuildFile; fileRef = D7360AE37E28CA2077F913AC; };
+		EDD96DA354FD345B4D52EF7E = { isa = PBXBuildFile; fileRef = 47F97734D39C2482BA80694D; };
+		C47ECDBE3BBA2242A28E28CF = { isa = PBXBuildFile; fileRef = D21757CCACBCB090FD71CDDC; };
+		8AF272842EAFB9E80EB7B26F = { isa = PBXBuildFile; fileRef = 79669938CA756588A73ABF61; };
+		FD2B5A5C6CCE66F2BD3911AC = { isa = PBXBuildFile; fileRef = F9BA393299CCEFE9670D789C; };
+		7BE32390068C7DE7160DFEE8 = { isa = PBXBuildFile; fileRef = 477AEC8C127FCCBEECE67382; };
+		CE8BB3D2CD96728917F204AC = { isa = PBXBuildFile; fileRef = 1001433A70BC9DB7C28DE376; settings = { ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		48AFDBE4881D87F2B74FEB5E = { isa = PBXBuildFile; fileRef = A33FC34214F540599C1FA259; };
+		9114D589DC3B6C2640571DBB = { isa = PBXBuildFile; fileRef = 4D9F2EBF1D9A784CFA6FB366; };
+		ECDD275E262F78CB8FA56E5F = { isa = PBXBuildFile; fileRef = E201FFA6BFFD260571841EAF; };
+		DBC1EBA051CE1FF2D1102726 = { isa = PBXBuildFile; fileRef = 84DABF851511566B54C6D014; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F83F934FB4001512D7DF54DD = { isa = PBXContainerItemProxy; containerPortal = 244210E48437B6556980A702; proxyType = 1; remoteGlobalIDString = C300F2C9E907C523A89F9916; remoteInfo = AvelaWidget; };
+		5414B820ED24ACFE395648C8 = { isa = PBXContainerItemProxy; containerPortal = 244210E48437B6556980A702; proxyType = 1; remoteGlobalIDString = E64C44E110C68927474000A8; remoteInfo = Avela; };
+		C605D5ED92C2A2D2C191ADBB = { isa = PBXContainerItemProxy; containerPortal = 244210E48437B6556980A702; proxyType = 1; remoteGlobalIDString = E64C44E110C68927474000A8; remoteInfo = Avela; };
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		073C34A79D8CA96E4892A560 = { isa = PBXCopyFilesBuildPhase; buildActionMask = 2147483647; dstPath = ""; dstSubfolderSpec = 13; files = (CE8BB3D2CD96728917F204AC, ); name = "Embed App Extensions"; runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		38F5FFD260E1D1E91F6338AC = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppShellView.swift"; sourceTree = "<group>"; };
+		D7360AE37E28CA2077F913AC = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppTab.swift"; sourceTree = "<group>"; };
+		47F97734D39C2482BA80694D = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvelaApp.swift"; sourceTree = "<group>"; };
+		D21757CCACBCB090FD71CDDC = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScaffoldRecord.swift"; sourceTree = "<group>"; };
+		79669938CA756588A73ABF61 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppPersistence.swift"; sourceTree = "<group>"; };
+		F9BA393299CCEFE9670D789C = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScaffoldPlaceholderView.swift"; sourceTree = "<group>"; };
+		477AEC8C127FCCBEECE67382 = { isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Assets.xcassets"; sourceTree = "<group>"; };
+		A33FC34214F540599C1FA259 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvelaWidget.swift"; sourceTree = "<group>"; };
+		1108B858726A785B22D21795 = { isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info.plist"; sourceTree = "<group>"; };
+		4D9F2EBF1D9A784CFA6FB366 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppPersistenceTests.swift"; sourceTree = "<group>"; };
+		E201FFA6BFFD260571841EAF = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppShellTests.swift"; sourceTree = "<group>"; };
+		84DABF851511566B54C6D014 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvelaUITests.swift"; sourceTree = "<group>"; };
+		69BAECD7E7218B76436C5BF4 = { isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Avela.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1001433A70BC9DB7C28DE376 = { isa = PBXFileReference; explicitFileType = wrapper.app-extension; includeInIndex = 0; path = "AvelaWidget.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1ECE9916A78412BE380C424 = { isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AvelaTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8100736BC8764210ABB3E1AA = { isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AvelaUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		74B3E0798222A3FCFFDA0C54 = { isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		E6A982465E61E15DB94DEEA4 = { isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		A5EF2DECBCC06A1D9566FE2A = { isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		0568EB43AC8723D91CDD3EAE = { isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		28C249B99B44A2CF3DCF7C6F = { isa = PBXGroup; children = (
+				38F5FFD260E1D1E91F6338AC,
+				D7360AE37E28CA2077F913AC,
+				47F97734D39C2482BA80694D,
+			); path = "App"; sourceTree = "<group>"; };
+		8A5BDC99B8A4E11461B200F9 = { isa = PBXGroup; children = (
+				D21757CCACBCB090FD71CDDC,
+			); path = "Models"; sourceTree = "<group>"; };
+		42653060503F3A3A7D2F9294 = { isa = PBXGroup; children = (
+				79669938CA756588A73ABF61,
+			); path = "Persistence"; sourceTree = "<group>"; };
+		14A6447CCE92A4DF47C887F4 = { isa = PBXGroup; children = (
+			); path = "Utilities"; sourceTree = "<group>"; };
+		F685E6A427A2C2B22A7CAB95 = { isa = PBXGroup; children = (
+				8A5BDC99B8A4E11461B200F9,
+				42653060503F3A3A7D2F9294,
+				14A6447CCE92A4DF47C887F4,
+			); path = "Core"; sourceTree = "<group>"; };
+		E19E2570B519A7B291970A67 = { isa = PBXGroup; children = (
+			); path = "Data"; sourceTree = "<group>"; };
+		93AC7C281EC4CF354B6E452E = { isa = PBXGroup; children = (
+			); path = "Domain"; sourceTree = "<group>"; };
+		AF1016C780C1C213EC6D03EC = { isa = PBXGroup; children = (
+			); path = "UI"; sourceTree = "<group>"; };
+		65E3CCDC4434E260AC46F1E4 = { isa = PBXGroup; children = (
+				E19E2570B519A7B291970A67,
+				93AC7C281EC4CF354B6E452E,
+				AF1016C780C1C213EC6D03EC,
+			); path = "Attention"; sourceTree = "<group>"; };
+		CBAB3E5CD122978DC0EFBC5C = { isa = PBXGroup; children = (
+			); path = "Companion"; sourceTree = "<group>"; };
+		8E9E984445841ECD303FE72C = { isa = PBXGroup; children = (
+			); path = "Data"; sourceTree = "<group>"; };
+		D543A5282D52CF2A7DC42B82 = { isa = PBXGroup; children = (
+			); path = "Domain"; sourceTree = "<group>"; };
+		4E4C8E10E17DD9381AB8B8D1 = { isa = PBXGroup; children = (
+			); path = "UI"; sourceTree = "<group>"; };
+		61D76D5F6D58B4B7098827F6 = { isa = PBXGroup; children = (
+				8E9E984445841ECD303FE72C,
+				D543A5282D52CF2A7DC42B82,
+				4E4C8E10E17DD9381AB8B8D1,
+			); path = "Habit"; sourceTree = "<group>"; };
+		88B394C6BAF18DD7FA8E1C7F = { isa = PBXGroup; children = (
+			); path = "History"; sourceTree = "<group>"; };
+		8DF9481F1BC394326C1EAA2A = { isa = PBXGroup; children = (
+			); path = "Insights"; sourceTree = "<group>"; };
+		E4078E23A86AF752108D73B1 = { isa = PBXGroup; children = (
+			); path = "LiveActivity"; sourceTree = "<group>"; };
+		1DDB15D9EAE26A99FCF1980D = { isa = PBXGroup; children = (
+			); path = "Notifications"; sourceTree = "<group>"; };
+		3A74F73DD684704372CC0BED = { isa = PBXGroup; children = (
+			); path = "Settings"; sourceTree = "<group>"; };
+		5E9E8BF516365186E7280935 = { isa = PBXGroup; children = (
+				F9BA393299CCEFE9670D789C,
+			); path = "Shared"; sourceTree = "<group>"; };
+		07A3D04DA5EEAC89B8588720 = { isa = PBXGroup; children = (
+			); path = "Subscription"; sourceTree = "<group>"; };
+		3B393744AADFD3097631B45E = { isa = PBXGroup; children = (
+			); path = "Widgets"; sourceTree = "<group>"; };
+		85E4325DE1B61F9F3918CEA2 = { isa = PBXGroup; children = (
+				65E3CCDC4434E260AC46F1E4,
+				CBAB3E5CD122978DC0EFBC5C,
+				61D76D5F6D58B4B7098827F6,
+				88B394C6BAF18DD7FA8E1C7F,
+				8DF9481F1BC394326C1EAA2A,
+				E4078E23A86AF752108D73B1,
+				1DDB15D9EAE26A99FCF1980D,
+				3A74F73DD684704372CC0BED,
+				5E9E8BF516365186E7280935,
+				07A3D04DA5EEAC89B8588720,
+				3B393744AADFD3097631B45E,
+			); path = "Features"; sourceTree = "<group>"; };
+		CF10170D8C7A9D186D6CB4BD = { isa = PBXGroup; children = (
+				477AEC8C127FCCBEECE67382,
+			); path = "Resources"; sourceTree = "<group>"; };
+		EE8D942788C8A7CE8CE08A0C = { isa = PBXGroup; children = (
+				28C249B99B44A2CF3DCF7C6F,
+				F685E6A427A2C2B22A7CAB95,
+				85E4325DE1B61F9F3918CEA2,
+				CF10170D8C7A9D186D6CB4BD,
+			); path = "Avela"; sourceTree = "<group>"; };
+		015AAAD1E53C3F41CDA9639D = { isa = PBXGroup; children = (
+				A33FC34214F540599C1FA259,
+				1108B858726A785B22D21795,
+			); path = "AvelaWidget"; sourceTree = "<group>"; };
+		9D0EA45D1CD17EEB3AA690D2 = { isa = PBXGroup; children = (
+				4D9F2EBF1D9A784CFA6FB366,
+				E201FFA6BFFD260571841EAF,
+			); path = "AvelaTests"; sourceTree = "<group>"; };
+		82730F5961304C837085B896 = { isa = PBXGroup; children = (
+				84DABF851511566B54C6D014,
+			); path = "AvelaUITests"; sourceTree = "<group>"; };
+		AE7805B56D1DCAFAA071416F = { isa = PBXGroup; children = (
+				69BAECD7E7218B76436C5BF4,
+				1001433A70BC9DB7C28DE376,
+				E1ECE9916A78412BE380C424,
+				8100736BC8764210ABB3E1AA,
+			); name = Products; sourceTree = "<group>"; };
+		CC5D242D023A9271190EA7C6 = { isa = PBXGroup; children = (
+				EE8D942788C8A7CE8CE08A0C,
+				015AAAD1E53C3F41CDA9639D,
+				9D0EA45D1CD17EEB3AA690D2,
+				82730F5961304C837085B896,
+				AE7805B56D1DCAFAA071416F,
+			); sourceTree = "<group>"; };
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E64C44E110C68927474000A8 = { isa = PBXNativeTarget; buildConfigurationList = DCC64440AB2023B33A968276; buildPhases = (
+				4EBC01CC71406868A48CAFC4,
+				74B3E0798222A3FCFFDA0C54,
+				7BE7515AB13F32293C5DF20E,
+				073C34A79D8CA96E4892A560,
+			); buildRules = (); dependencies = (
+				7B8599F8F644ADC748B215F0,
+			); name = Avela; productName = Avela; productReference = 69BAECD7E7218B76436C5BF4; productType = "com.apple.product-type.application"; };
+		C300F2C9E907C523A89F9916 = { isa = PBXNativeTarget; buildConfigurationList = 083CA4A3E1671DC0191844E3; buildPhases = (
+				B44EAA3080E09062981DE1FC,
+				E6A982465E61E15DB94DEEA4,
+				5E6AC5EB12298D95681E5680,
+			); buildRules = (); dependencies = (
+			); name = AvelaWidget; productName = AvelaWidget; productReference = 1001433A70BC9DB7C28DE376; productType = "com.apple.product-type.app-extension"; };
+		F76B40F72DE3D7FC963A2C44 = { isa = PBXNativeTarget; buildConfigurationList = 33FB17BF72C17F3DD59E5A99; buildPhases = (
+				03CB799B82CAE42CDF6F07E9,
+				A5EF2DECBCC06A1D9566FE2A,
+				D552DD1234B04253436599FD,
+			); buildRules = (); dependencies = (
+				30B39ED829775BA0623A761B,
+			); name = AvelaTests; productName = AvelaTests; productReference = E1ECE9916A78412BE380C424; productType = "com.apple.product-type.bundle.unit-test"; };
+		DDBCF808FD02C01BFC645675 = { isa = PBXNativeTarget; buildConfigurationList = 45F178D7403F69C8FD23150D; buildPhases = (
+				DB6A7E6E512FB31E839B15F8,
+				0568EB43AC8723D91CDD3EAE,
+				9C868ECAE89206C7F1EF42B3,
+			); buildRules = (); dependencies = (
+				4D0372D00A96139AED7720E2,
+			); name = AvelaUITests; productName = AvelaUITests; productReference = 8100736BC8764210ABB3E1AA; productType = "com.apple.product-type.bundle.ui-testing"; };
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		244210E48437B6556980A702 = { isa = PBXProject; attributes = { BuildIndependentTargetsInParallel = YES; LastSwiftUpdateCheck = 1600; LastUpgradeCheck = 1600; TargetAttributes = { E64C44E110C68927474000A8 = { CreatedOnToolsVersion = 16.0; };
+C300F2C9E907C523A89F9916 = { CreatedOnToolsVersion = 16.0; };
+F76B40F72DE3D7FC963A2C44 = { CreatedOnToolsVersion = 16.0; TestTargetID = E64C44E110C68927474000A8; };
+DDBCF808FD02C01BFC645675 = { CreatedOnToolsVersion = 16.0; TestTargetID = E64C44E110C68927474000A8; };
+ }; }; buildConfigurationList = AF797F0382D714D04A261BC4; compatibilityVersion = "Xcode 14.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en, Base, ); mainGroup = CC5D242D023A9271190EA7C6; productRefGroup = AE7805B56D1DCAFAA071416F; projectDirPath = ""; projectRoot = ""; targets = (
+				E64C44E110C68927474000A8,
+				C300F2C9E907C523A89F9916,
+				F76B40F72DE3D7FC963A2C44,
+				DDBCF808FD02C01BFC645675,
+			); };
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7BE7515AB13F32293C5DF20E = { isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (
+				7BE32390068C7DE7160DFEE8,
+			); runOnlyForDeploymentPostprocessing = 0; };
+		5E6AC5EB12298D95681E5680 = { isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (
+			); runOnlyForDeploymentPostprocessing = 0; };
+		D552DD1234B04253436599FD = { isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (
+			); runOnlyForDeploymentPostprocessing = 0; };
+		9C868ECAE89206C7F1EF42B3 = { isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (
+			); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4EBC01CC71406868A48CAFC4 = { isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (
+				8464565395CA480AB53D8C0B,
+				42376078E52BF632F4B50338,
+				EDD96DA354FD345B4D52EF7E,
+				C47ECDBE3BBA2242A28E28CF,
+				8AF272842EAFB9E80EB7B26F,
+				FD2B5A5C6CCE66F2BD3911AC,
+			); runOnlyForDeploymentPostprocessing = 0; };
+		B44EAA3080E09062981DE1FC = { isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (
+				48AFDBE4881D87F2B74FEB5E,
+			); runOnlyForDeploymentPostprocessing = 0; };
+		03CB799B82CAE42CDF6F07E9 = { isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (
+				9114D589DC3B6C2640571DBB,
+				ECDD275E262F78CB8FA56E5F,
+			); runOnlyForDeploymentPostprocessing = 0; };
+		DB6A7E6E512FB31E839B15F8 = { isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (
+				DBC1EBA051CE1FF2D1102726,
+			); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7B8599F8F644ADC748B215F0 = { isa = PBXTargetDependency; target = C300F2C9E907C523A89F9916; targetProxy = F83F934FB4001512D7DF54DD; };
+		30B39ED829775BA0623A761B = { isa = PBXTargetDependency; target = E64C44E110C68927474000A8; targetProxy = 5414B820ED24ACFE395648C8; };
+		4D0372D00A96139AED7720E2 = { isa = PBXTargetDependency; target = E64C44E110C68927474000A8; targetProxy = C605D5ED92C2A2D2C191ADBB; };
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0B8CF9A978C27BD86D8B22D2 = { isa = XCBuildConfiguration; buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("DEBUG=1", "$(inherited)");
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			}; name = Debug; };
+		9EA3F85534490133C1FD3250 = { isa = XCBuildConfiguration; buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			}; name = Release; };
+		033D227DB27AC75BF017182F = { isa = XCBuildConfiguration; buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Avela;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.Avela";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			}; name = Debug; };
+		036DBB1E31165BBF14333E3C = { isa = XCBuildConfiguration; buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Avela;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.Avela";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			}; name = Release; };
+		8247FFF4154AB26C407C6ACF = { isa = XCBuildConfiguration; buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AvelaWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Avela Scaffold";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.Avela.widget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			}; name = Debug; };
+		BCB03277DA99DD6EB4B973E7 = { isa = XCBuildConfiguration; buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AvelaWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Avela Scaffold";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.Avela.widget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			}; name = Release; };
+		298AE4C7C7D14FA7DD11704C = { isa = XCBuildConfiguration; buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.AvelaTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Avela.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Avela";
+			}; name = Debug; };
+		FB02341D3E83E05D9921BCE6 = { isa = XCBuildConfiguration; buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.AvelaTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Avela.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Avela";
+			}; name = Release; };
+		06B70DDAAA2FE9AB62DBAF59 = { isa = XCBuildConfiguration; buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.AvelaUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Avela;
+			}; name = Debug; };
+		2D49F1812F582FA642C240CA = { isa = XCBuildConfiguration; buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.AvelaUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Avela;
+			}; name = Release; };
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AF797F0382D714D04A261BC4 = { isa = XCConfigurationList; buildConfigurations = (
+				0B8CF9A978C27BD86D8B22D2,
+				9EA3F85534490133C1FD3250,
+			); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		DCC64440AB2023B33A968276 = { isa = XCConfigurationList; buildConfigurations = (
+				033D227DB27AC75BF017182F,
+				036DBB1E31165BBF14333E3C,
+			); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		083CA4A3E1671DC0191844E3 = { isa = XCConfigurationList; buildConfigurations = (
+				8247FFF4154AB26C407C6ACF,
+				BCB03277DA99DD6EB4B973E7,
+			); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		33FB17BF72C17F3DD59E5A99 = { isa = XCConfigurationList; buildConfigurations = (
+				298AE4C7C7D14FA7DD11704C,
+				FB02341D3E83E05D9921BCE6,
+			); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		45F178D7403F69C8FD23150D = { isa = XCConfigurationList; buildConfigurations = (
+				06B70DDAAA2FE9AB62DBAF59,
+				2D49F1812F582FA642C240CA,
+			); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+/* End XCConfigurationList section */
+	};
+	rootObject = 244210E48437B6556980A702;
+}
