@@ -234,6 +234,13 @@ V1 may include Live Activity only for a real active session:
 - phone-free until a specified time
 - focus / protected-attention session
 
+### Current V1 implementation
+The optional Live Activity is included for explicitly started phone-free sessions.
+A second, explicit "Show Session Activity" action opts into system presentation.
+It displays the selected companion and timer on supported Dynamic Island and
+Lock Screen surfaces. It never monitors phone use or records a result from time
+elapsed. Protected recurring windows do not automatically create activities.
+
 ### Acceptance criteria
 - Live Activity is time-bound.
 - It is not used as a permanent virtual-pet surface.

@@ -1,0 +1,72 @@
+{
+  "identifier": "FCAC26FF-C0EA-4F0F-8425-A8889AC54CF7",
+  "nonRenewingSubscriptions": [],
+  "products": [],
+  "settings": {
+    "_failTransactionsEnabled": false,
+    "_locale": "en_US",
+    "_storefront": "USA",
+    "_storeKitErrors": []
+  },
+  "subscriptionGroups": [
+    {
+      "id": "8642DCD5-8A1E-42D9-A3FC-992E4D042088",
+      "localizations": [
+        {
+          "description": "Unlimited habits and attention goals",
+          "displayName": "Avela Premium",
+          "locale": "en_US"
+        }
+      ],
+      "name": "Avela Premium",
+      "subscriptions": [
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "2.99",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "FF766B77-3F65-49B1-A164-9E5A3848F566",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "Unlimited habits and attention goals. Local testing product; not a published price.",
+              "displayName": "Avela Premium Monthly",
+              "locale": "en_US"
+            }
+          ],
+          "productID": "com.avela.premium.monthly",
+          "recurringSubscriptionPeriod": "P1M",
+          "referenceName": "Avela Premium Monthly",
+          "subscriptionGroupID": "8642DCD5-8A1E-42D9-A3FC-992E4D042088",
+          "type": "RecurringSubscription"
+        },
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "19.99",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "1EDC63DA-8102-4803-A276-FAB221F7D3B4",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "Unlimited habits and attention goals. Local testing product; not a published price.",
+              "displayName": "Avela Premium Annual",
+              "locale": "en_US"
+            }
+          ],
+          "productID": "com.avela.premium.annual",
+          "recurringSubscriptionPeriod": "P1Y",
+          "referenceName": "Avela Premium Annual",
+          "subscriptionGroupID": "8642DCD5-8A1E-42D9-A3FC-992E4D042088",
+          "type": "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version": {
+    "major": 3,
+    "minor": 0
+  }
+}

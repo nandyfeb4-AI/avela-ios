@@ -1,0 +1,117 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:"AvRounded";src:url("file:///System/Library/Fonts/SFNSRounded.ttf");font-weight:1 1000}
+@font-face{font-family:"AvSerif";src:url("file:///System/Library/Fonts/NewYork.ttf");font-weight:1 1000}
+@font-face{font-family:"AvSerif";font-style:italic;src:url("file:///System/Library/Fonts/NewYorkItalic.ttf");font-weight:1 1000}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,system-ui,"Helvetica Neue",sans-serif;-webkit-font-smoothing:antialiased;background:#E4E2DC;color:#1d1d1f}
+.round{font-family:"AvRounded",-apple-system,system-ui,sans-serif}
+.serif{font-family:"AvSerif",Georgia,serif}
+.tnum{font-variant-numeric:tabular-nums}
+.phone{width:393px;height:852px;border-radius:56px;overflow:hidden;position:relative;background:var(--bg);color:var(--ink);
+  box-shadow:0 0 0 10px #111,0 0 0 11px #3a3a3a,0 30px 60px rgba(0,0,0,.25);flex:none}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:124px;height:36px;border-radius:20px;background:#000;z-index:30}
+.status{position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:6px 34px 0 46px;font-weight:600;font-size:17px;z-index:20;color:var(--ink)}
+.status .glyphs{display:flex;gap:6px;align-items:center}
+.home{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:139px;height:5px;border-radius:3px;background:var(--ink);opacity:.85;z-index:30}
+.scroll{position:absolute;top:54px;left:0;right:0;bottom:0;overflow:hidden;padding:0 16px}
+.glassbtn{width:44px;height:44px;border-radius:22px;background:var(--glass);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);
+  border:.5px solid var(--glassBorder);box-shadow:0 2px 10px rgba(0,0,0,.08);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+.glasspill{height:44px;border-radius:22px;padding:0 16px;background:var(--glass);backdrop-filter:blur(18px) saturate(1.6);border:.5px solid var(--glassBorder);
+  box-shadow:0 2px 10px rgba(0,0,0,.08);display:flex;align-items:center;gap:6px;font-size:17px;font-weight:500;color:var(--ink)}
+.tabbar{position:absolute;left:16px;right:16px;bottom:22px;height:62px;border-radius:31px;background:var(--glass);backdrop-filter:blur(22px) saturate(1.7);
+  -webkit-backdrop-filter:blur(22px) saturate(1.7);border:.5px solid var(--glassBorder);box-shadow:0 8px 28px rgba(0,0,0,.12);display:flex;padding:4px;z-index:25}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10px;font-weight:600;color:var(--ink);border-radius:27px}
+.tab.sel{background:var(--surface2);color:var(--accent)}
+.fade{position:absolute;left:0;right:0;bottom:0;height:120px;background:linear-gradient(to bottom,transparent,var(--bg) 70%);z-index:24;pointer-events:none}
+.marker{position:absolute;width:22px;height:22px;border-radius:11px;background:#E8572A;color:#fff;font:700 12px/22px system-ui,system-ui;text-align:center;z-index:50;
+  box-shadow:0 0 0 2px #fff}
+.future{outline:1.5px dashed #7E6BD9;outline-offset:3px;position:relative}
+.future::after{content:"FUTURE";position:absolute;top:-17px;right:10px;font:700 9px/1 system-ui;letter-spacing:.06em;background:#7E6BD9;color:#fff;padding:3px 5px;border-radius:4px}
+
+/* Boards */
+.board{padding:48px 56px 56px;background:#E9E7E1;min-height:100vh}
+.board.darkboard{background:#1B1C1E;color:#EDEDED}
+.board h1{font:700 30px/1.15 system-ui;letter-spacing:-.01em}
+.board .sub{font:400 16px/1.45 system-ui;color:#5c5c5c;margin-top:6px;max-width:1100px}
+.darkboard .sub{color:#A5A5A5}
+.row{display:flex;gap:64px;margin-top:40px;align-items:flex-start}
+.col{width:413px;display:flex;flex-direction:column;align-items:center}
+.col h2{font:600 15px/1.2 system-ui;margin:0 0 22px;align-self:flex-start;letter-spacing:.02em;text-transform:uppercase;color:#6a6a6a}
+.darkboard .col h2{color:#9a9a9a}
+.notes{margin-top:34px;align-self:stretch;list-style:none;counter-reset:n}
+.notes li{counter-increment:n;font:400 13.5px/1.45 system-ui;color:#333;padding-left:30px;position:relative;margin-bottom:9px}
+.darkboard .notes li{color:#cfcfcf}
+.notes li::before{content:counter(n);position:absolute;left:0;top:0;width:20px;height:20px;border-radius:10px;background:#E8572A;color:#fff;font:700 11px/20px system-ui;text-align:center}
+.notes li.plain::before{background:#7E6BD9;content:"F"}
+.legend{margin-top:14px;font:400 12.5px/1.4 system-ui;color:#6a6a6a}
+.darkboard .legend{color:#9a9a9a}
+.t-tide-light{--bg:#F5F3EE;--surface:#FFFFFF;--surface2:#EEEBE4;--ink:#1D2321;--ink2:#56605C;--ink3:#636C67;--sep:rgba(29,35,33,.10);--accent:#2C6B63;--accentInk:#FFFFFF;--accentSoft:#DCEAE5;--amber:#9A6414;--amberSoft:#F5E8D2;--clay:#9C5136;--gold:#B48A1E;--glass:rgba(250,249,246,.72);--glassBorder:rgba(255,255,255,.9);--shadow:0 1px 2px rgba(29,35,33,.05), 0 6px 18px rgba(29,35,33,.05);--halo:#CFE5DE;--mint:#2C6B63}
+.t-tide-dark{--bg:#0F1312;--surface:#191F1D;--surface2:#222A27;--ink:#ECEFEC;--ink2:#A8B2AD;--ink3:#78837E;--sep:rgba(236,239,236,.10);--accent:#6EBFB1;--accentInk:#0B1F1C;--accentSoft:#1E3834;--amber:#E2A955;--amberSoft:#3A2E1B;--clay:#DC8A6C;--gold:#E0C060;--glass:rgba(38,44,42,.62);--glassBorder:rgba(255,255,255,.10);--shadow:none;--halo:#1E3834;--mint:#6EBFB1}
+.t-almanac-light{--bg:#FAF7F0;--surface:#FFFDF8;--surface2:#F1ECE0;--ink:#1F1C17;--ink2:#5E574B;--ink3:#766F62;--sep:rgba(31,28,23,.14);--accent:#4C6330;--accentInk:#FFFFFF;--accentSoft:#E3E9D6;--amber:#9A5F14;--amberSoft:#F3E4CA;--clay:#9A4B2E;--gold:#A88120;--glass:rgba(250,247,240,.74);--glassBorder:rgba(255,255,255,.9);--shadow:none;--halo:#E3E9D6;--mint:#4C6330}
+.t-almanac-dark{--bg:#15130F;--surface:#1D1B16;--surface2:#29261F;--ink:#EEE7D7;--ink2:#B5AC9A;--ink3:#857D6E;--sep:rgba(238,231,215,.13);--accent:#A9C07E;--accentInk:#1A2110;--accentSoft:#2C3420;--amber:#E0A85A;--amberSoft:#3A2C18;--clay:#D9896A;--gold:#D9BC6A;--glass:rgba(41,38,31,.66);--glassBorder:rgba(255,255,255,.08);--shadow:none;--halo:#2C3420;--mint:#A9C07E}
+.t-dusk-dark{--bg:#0C0E1C;--surface:#161A2E;--surface2:#1F2440;--ink:#EEF0FF;--ink2:#AEB3D6;--ink3:#7D82A8;--sep:rgba(238,240,255,.10);--accent:#A4AEFF;--accentInk:#10132A;--accentSoft:#262C55;--amber:#F2B866;--amberSoft:#3B2F22;--clay:#EE9A7E;--gold:#F3D27A;--glass:rgba(40,45,78,.58);--glassBorder:rgba(255,255,255,.12);--shadow:none;--halo:#3B4590;--mint:#7FD8BE}
+.t-dusk-light{--bg:#F2F1FA;--surface:#FFFFFF;--surface2:#E8E7F5;--ink:#191B33;--ink2:#545878;--ink3:#6B6E8E;--sep:rgba(25,27,51,.10);--accent:#4F58C9;--accentInk:#FFFFFF;--accentSoft:#E1E3FA;--amber:#965F12;--amberSoft:#F6E8D0;--clay:#A14F35;--gold:#9C7A16;--glass:rgba(250,250,255,.70);--glassBorder:rgba(255,255,255,.9);--shadow:0 1px 2px rgba(25,27,51,.06), 0 8px 22px rgba(25,27,51,.06);--halo:#C9CDF7;--mint:#2B8C72}
+body{background:transparent;width:433px;height:892px;padding:20px}</style></head><body><div class="phone t-tide-light "><div class="island"></div><div class="status"><span class="tnum">9:41</span><span class="glyphs"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0.0" y="9" width="3.2" height="3" rx="1" fill="currentColor"/><rect x="4.6" y="6" width="3.2" height="6" rx="1" fill="currentColor"/><rect x="9.2" y="3" width="3.2" height="9" rx="1" fill="currentColor"/><rect x="13.799999999999999" y="0" width="3.2" height="12" rx="1" fill="currentColor"/></svg><svg width="17" height="17" viewBox="0 0 24 24" style="color:currentColor;flex:none;display:block" aria-label="wifi" ><path d="M2.5 9.2a13.5 13.5 0 0 1 19 0M5.6 12.4a9 9 0 0 1 12.8 0M8.7 15.6a4.6 4.6 0 0 1 6.6 0" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/><circle cx="12" cy="19" r="1.7" fill="currentColor"/></svg><svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="20" height="9" rx="2" fill="currentColor"/><path d="M25 4.5v4" stroke="currentColor" stroke-width="1.5" opacity=".4" stroke-linecap="round"/></svg></span></div>
+    <div class="scroll">
+      <div style="display:flex;justify-content:flex-end;padding-top:4px"><div class="glassbtn"><svg width="22" height="22" viewBox="0 0 24 24" style="color:currentColor;flex:none;display:block" aria-label="plus" ><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></div></div>
+      <div style="font-size:13px;font-weight:600;color:var(--ink3);letter-spacing:.04em;text-transform:uppercase;margin:-6px 4px 0">Saturday, October 3</div>
+      <div style="font-size:34px;font-weight:700;letter-spacing:-.02em;margin:0 4px 14px">Today</div>
+      <div style="background:var(--surface);border-radius:22px;box-shadow:var(--shadow);"><div style="display:flex;align-items:center;gap:14px;padding:14px 16px"><svg width="58" height="58" viewBox="0 0 100 100" style="flex:none;display:block" aria-label="companion (calm)"><circle cx="50" cy="54" r="46" fill="var(--halo)"/><path d="M28 40 L30 18 L44 31 Z M72 40 L70 18 L56 31 Z" fill="var(--accent)" stroke="var(--accent)" stroke-width="5" stroke-linejoin="round"/><ellipse cx="50" cy="58" rx="27" ry="25" fill="var(--accent)"/><path d="M37 52q4 3 8 0M55 52q4 3 8 0" fill="none" stroke="var(--surface)" stroke-width="3.2" stroke-linecap="round"/><ellipse cx="50" cy="63" rx="3" ry="2" fill="var(--surface)" opacity=".85"/></svg>
+          <div style="flex:1"><div style="font-size:17px;font-weight:600">A steady morning.</div>
+          <div style="font-size:14px;color:var(--ink2);margin-top:2px">2 of 5 done · Social media well within today’s budget</div></div></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin:20px 6px 8px"><span style="font-size:15px;font-weight:600;color:var(--ink2)">To do</span><span style="font-size:15px;color:var(--ink3)" class="tnum">3</span></div>
+      <div style="background:var(--surface);border-radius:22px;box-shadow:var(--shadow);">
+    <div style="display:flex;align-items:center;gap:13px;padding:11px 14px 11px 12px;min-height:68px">
+      <div style="width:40px;height:40px;border-radius:12px;background:var(--accentSoft);display:flex;align-items:center;justify-content:center;flex:none">
+        <svg width="21" height="21" viewBox="0 0 24 24" style="color:var(--accent);flex:none;display:block" aria-label="drop.fill" ><path d="M12 2.8C9 7.4 5.8 10.6 5.8 14.6a6.2 6.2 0 0 0 12.4 0c0-4-3.2-7.2-6.2-11.8z" fill="currentColor"/></svg></div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:17px;font-weight:600;color:var(--ink);letter-spacing:-.01em">Drink water</div>
+        <div style="font-size:14px;color:var(--ink2);margin-top:2px" class="tnum">Every day · 4-day streak</div>
+      </div>
+      <div style="width:44px;height:44px;border-radius:22px;border:2.5px solid var(--ink3);opacity:.75;flex:none"></div>
+    </div><div style="height:.5px;background:var(--sep);margin-left:66px"></div>
+    <div style="display:flex;align-items:center;gap:13px;padding:11px 14px 11px 12px;min-height:68px">
+      <div style="width:40px;height:40px;border-radius:12px;background:var(--accentSoft);display:flex;align-items:center;justify-content:center;flex:none">
+        <svg width="21" height="21" viewBox="0 0 24 24" style="color:var(--accent);flex:none;display:block" aria-label="book.fill" ><path d="M2.5 5.6c3.2-1.4 6.4-1.2 8.7.7v13.4c-2.3-1.6-5.5-1.8-8.7-.6z M21.5 5.6c-3.2-1.4-6.4-1.2-8.7.7v13.4c2.3-1.6 5.5-1.8 8.7-.6z" fill="currentColor"/></svg></div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:17px;font-weight:600;color:var(--ink);letter-spacing:-.01em">Read</div>
+        <div style="font-size:14px;color:var(--ink2);margin-top:2px" class="tnum"><span style="display:inline-flex;gap:3px;margin-right:7px;vertical-align:1px"><span style="width:18px;height:6px;border-radius:3px;background:var(--accent)"></span><span style="width:18px;height:6px;border-radius:3px;background:var(--accent)"></span><span style="width:18px;height:6px;border-radius:3px;background:var(--surface2)"></span></span>2 of 3 this week</div>
+      </div>
+      <div style="width:44px;height:44px;border-radius:22px;border:2.5px solid var(--ink3);opacity:.75;flex:none"></div>
+    </div><div style="height:.5px;background:var(--sep);margin-left:66px"></div>
+    <div style="display:flex;align-items:center;gap:13px;padding:11px 14px 11px 12px;min-height:68px">
+      <div style="width:40px;height:40px;border-radius:12px;background:var(--accentSoft);display:flex;align-items:center;justify-content:center;flex:none">
+        <svg width="21" height="21" viewBox="0 0 24 24" style="color:var(--accent);flex:none;display:block" aria-label="pencil.line" ><path d="M4 16.8L15.4 5.4l3.2 3.2L7.2 20H4z" fill="currentColor"/><path d="M12 21h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:17px;font-weight:600;color:var(--ink);letter-spacing:-.01em">Journal</div>
+        <div style="font-size:14px;color:var(--amber);margin-top:2px" class="tnum"><span style="display:inline-block;vertical-align:-3px;margin-right:4px"><svg width="14" height="14" viewBox="0 0 24 24" style="color:var(--amber);flex:none;display:block" aria-label="arrow.clockwise" ><path d="M19 12.5a7 7 0 1 1-2.1-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M18.8 3.6v4.6h-4.6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Rebuilding · 2 of 3 good days</div>
+      </div>
+      <div style="width:44px;height:44px;border-radius:22px;border:2.5px solid var(--ink3);opacity:.75;flex:none"></div>
+    </div></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin:20px 6px 8px"><span style="font-size:15px;font-weight:600;color:var(--ink2)">Done</span><span style="font-size:15px;color:var(--ink3)" class="tnum">2</span></div>
+      <div style="background:var(--surface);border-radius:22px;box-shadow:var(--shadow);">
+    <div style="display:flex;align-items:center;gap:13px;padding:11px 14px 11px 12px;min-height:68px">
+      <div style="width:40px;height:40px;border-radius:12px;background:var(--accentSoft);display:flex;align-items:center;justify-content:center;flex:none">
+        <svg width="21" height="21" viewBox="0 0 24 24" style="color:var(--accent);flex:none;display:block" aria-label="figure.walk" ><circle cx="13.6" cy="3.9" r="2.1" fill="currentColor"/><path d="M12.6 7.6l-2 5.6 3.2 3.2 1 4.8M10.6 13.2l-2.4 7M12.4 8.2l-3.6 2.6-.6 3M12.8 8.4l1.6 3.4 3 1.2" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:17px;font-weight:600;color:var(--ink2);letter-spacing:-.01em">Morning walk</div>
+        <div style="font-size:14px;color:var(--ink2);margin-top:2px" class="tnum">Every day · 6-day streak</div>
+      </div>
+      <div style="width:44px;height:44px;border-radius:22px;background:var(--accent);display:flex;align-items:center;justify-content:center;flex:none"><svg width="22.0" height="22.0" viewBox="0 0 24 24" style="color:var(--accentInk);flex:none;display:block" aria-label="checkmark" ><path d="M5 12.6l4.6 4.6L19.4 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div><div style="height:.5px;background:var(--sep);margin-left:66px"></div>
+    <div style="display:flex;align-items:center;gap:13px;padding:11px 14px 11px 12px;min-height:68px">
+      <div style="width:40px;height:40px;border-radius:12px;background:var(--accentSoft);display:flex;align-items:center;justify-content:center;flex:none">
+        <svg width="21" height="21" viewBox="0 0 24 24" style="color:var(--accent);flex:none;display:block" aria-label="iphone.slash" ><rect x="7" y="2.8" width="10" height="18.4" rx="2.6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 4l16 16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:17px;font-weight:600;color:var(--ink2);letter-spacing:-.01em">No phone in bed</div>
+        <div style="font-size:14px;color:var(--ink2);margin-top:2px" class="tnum">Cut down · avoided last night</div>
+      </div>
+      <div style="width:44px;height:44px;border-radius:22px;background:var(--accent);display:flex;align-items:center;justify-content:center;flex:none"><svg width="22.0" height="22.0" viewBox="0 0 24 24" style="color:var(--accentInk);flex:none;display:block" aria-label="checkmark" ><path d="M5 12.6l4.6 4.6L19.4 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin:20px 6px 8px"><span style="font-size:15px;font-weight:600;color:var(--ink2)">Attention</span><span style="font-size:15px;color:var(--ink3)" class="tnum"></span></div>
+      <div class="future"><div style="background:var(--surface);border-radius:22px;box-shadow:var(--shadow);"><div style="display:flex;align-items:center;gap:13px;padding:14px">
+          <div style="width:40px;height:40px;border-radius:12px;background:var(--surface2);display:flex;align-items:center;justify-content:center"><svg width="21" height="21" viewBox="0 0 24 24" style="color:var(--ink2);flex:none;display:block" aria-label="hourglass" ><path d="M6 3h12M6 21h12M7.5 3c0 5 9 5 9 9s-9 4-9 9M16.5 3c0 5-9 5-9 9s9 4 9 9" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M9.5 19h5l-2.5-2.6z" fill="currentColor"/></svg></div>
+          <div style="flex:1"><div style="display:flex;justify-content:space-between"><span style="font-size:17px;font-weight:600">Social media</span>
+          <span class="round tnum" style="font-size:16px;font-weight:600">18<span style="color:var(--ink3);font-weight:500"> / 30 min</span></span></div>
+          <div style="height:6px;border-radius:3px;background:var(--surface2);margin-top:9px"><div style="width:60%;height:6px;border-radius:3px;background:var(--accent)"></div></div></div></div></div></div>
+    </div><div class="fade"></div><div class="tabbar" style=""><div class="tab sel"><svg width="24" height="24" viewBox="0 0 24 24" style="color:currentColor;flex:none;display:block" aria-label="sun.max.fill" ><circle cx="12" cy="12" r="4.8" fill="currentColor"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.5 1.5M17.2 17.2l1.5 1.5M5.3 18.7l1.5-1.5M17.2 6.8l1.5-1.5" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg><span>Today</span></div><div class="tab"><svg width="24" height="24" viewBox="0 0 24 24" style="color:currentColor;flex:none;display:block" aria-label="chart.bar.xaxis" ><path d="M3.5 20.5h17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="5" y="11" width="3.4" height="7" rx="1" fill="currentColor"/><rect x="10.3" y="5" width="3.4" height="13" rx="1" fill="currentColor"/><rect x="15.6" y="8.5" width="3.4" height="9.5" rx="1" fill="currentColor"/></svg><span>Insights</span></div><div class="tab"><svg width="24" height="24" viewBox="0 0 24 24" style="color:currentColor;flex:none;display:block" aria-label="calendar" ><rect x="3.5" y="5" width="17" height="15.5" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>History</span></div><div class="tab"><svg width="24" height="24" viewBox="0 0 24 24" style="color:currentColor;flex:none;display:block" aria-label="gearshape" ><circle cx="12" cy="12" r="6.6" fill="none" stroke="currentColor" stroke-width="3.2" stroke-dasharray="2.6 2.6"/><circle cx="12" cy="12" r="5.6" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg><span>Settings</span></div></div><div class="home"></div></div></body></html>

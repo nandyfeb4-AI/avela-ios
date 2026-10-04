@@ -114,3 +114,23 @@ Review risk:
 Mitigation:
 Reviewer test steps:
 ```
+
+## Phone-free Live Activity implementation — 2026-10-04
+
+The user explicitly requests system presentation from an active phone-free
+session. ActivityKit authorization is respected; denial/request failure never
+blocks or ends local tracking. No remote push, backend, notification-permission
+prompt, frequent-update entitlement or permanent pet surface is used.
+
+The extension shows captured start/end dates and an optional companion, not goal
+names or history. Tapping returns to Today. Check-in remains inside the app.
+Timer expiry never asserts kept/healthy or modifies a session outcome.
+Reconciliation ends expired/interrupted activities when the app can execute and
+never recreates a dismissed activity. Background suspension prevents guaranteeing
+exact scheduled termination; `staleDate` marks expired content neutrally while
+iOS controls presentation lifetime (maximum eight active hours). Longer local
+sessions remain supported, with a clear unsupported Live Activity message.
+
+See [Apple ActivityKit](https://developer.apple.com/documentation/activitykit)
+and [Live Activity lifetime](https://developer.apple.com/documentation/activitykit/displaying-live-data-with-live-activities).
+Signed-device privacy, authorization and dismissal checks remain release gates.

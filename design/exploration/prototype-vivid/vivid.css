@@ -1,0 +1,61 @@
+/* Vivid Tidewater — colour/emphasis overrides layered on ../prototype/styles.css.
+   Layout, copy, data and interactions are untouched: no layout properties change
+   except where noted (none alter size or position).
+   Token blocks are parsed by contrast.py — keep the "tokens:" markers. */
+
+/* tokens:light */
+body.vivid .phone {
+  --accent:#0E7468;        /* brand teal, more saturated than #2C6B63; same hue family */
+  --onAccent:#FFFFFF;
+  --accentSoft:#D3EFE8;    /* tile + selected-tab tint, more chroma than #DCEAE5 */
+  --ink3:#5C6560;          /* tertiary text: was #636C67 */
+  --doneWash:#E6F4F0;      /* settling-row tint (feedback) */
+  --toastBg:#0B3D37; --toastInk:#F2FBF9; --toastIcon:#7FE3D3; --toastUndoBg:#F2FBF9; --toastUndoInk:#0B3D37;
+  --ring:#0E7468;          /* empty completion control outline */
+  --track:#5C6560;         /* outline of unfilled progress pips */
+}
+/* tokens:dark */
+body.vivid .phone.theme-dark {
+  --accent:#3CC9B4;
+  --onAccent:#03231F;
+  --accentSoft:#123F39;
+  --ink3:#8E9994;          /* fixes the known gap: #78837E measured 4.3:1 on surface */
+  --doneWash:#13302C;
+  --toastBg:#D3F4EE; --toastInk:#03231F; --toastIcon:#0E7468; --toastUndoBg:#03231F; --toastUndoInk:#D3F4EE;
+  --ring:#3CC9B4;
+  --track:#8E9994;
+}
+/* end tokens */
+
+/* ---------- Action discovery ---------- */
+/* Empty completion control: brand-coloured outline at full opacity (was grey ink3 @ 80%). */
+body.vivid .phone .check .ring { border-color:var(--ring); opacity:1; }
+/* Add button as a prominent tinted control (native analogue: .buttonStyle(.glassProminent) tinted with AccentColor). */
+body.vivid .phone #add-btn { background:var(--accent); color:var(--onAccent); border-color:transparent; }
+
+/* ---------- Progress emphasis ---------- */
+body.vivid .phone #pillar-value { color:var(--accent); }
+body.vivid .phone .pip { border-color:var(--track); }
+body.vivid .phone .wk span { background:transparent; box-shadow:inset 0 0 0 1.5px var(--track); }
+body.vivid .phone .wk span.on { background:var(--accent); box-shadow:none; }
+
+/* ---------- Feedback ---------- */
+/* A row that was just completed and is waiting to regroup gets a quiet teal wash. */
+body.vivid .phone .row { transition:background-color .25s ease-out; }
+body.vivid .phone .row.settling { background:var(--doneWash); }
+body.vivid .phone #todo-list .row:first-child { border-radius:22px 22px 0 0; }
+body.vivid .phone.reduce-motion .row { transition:none; }
+/* Toast in brand colours with a high-contrast Undo. */
+body.vivid .phone .toast-icon { color:var(--toastIcon); }
+body.vivid .phone .toast-undo { background:var(--toastUndoBg); color:var(--toastUndoInk); }
+
+/* ---------- Brand recognition ---------- */
+body.vivid .phone .tab.sel { background:var(--accentSoft); color:var(--accent); }
+
+/* ---------- Non-text contrast fixes (WCAG 1.4.11, 3:1 for state graphics) ---------- */
+body.vivid .phone .cell.m { opacity:1; border-color:var(--ink3); }
+body.vivid .phone .cell.s { box-shadow:inset 0 0 0 1.5px var(--ink3); }
+body.vivid .phone .cell.n { border:1.5px dotted var(--ink3); }
+
+/* Variant label under the device frame. */
+body.vivid .sample-tag::after { content:" · VIVID TIDEWATER variant"; font-weight:800; }

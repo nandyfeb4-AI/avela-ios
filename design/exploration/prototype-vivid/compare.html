@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Balance vs Vivid Tidewater · side by side (design artifact)</title>
+<style>
+  body { margin:0; font:14px/1.4 -apple-system, system-ui, sans-serif; background:#E4E2DC; color:#1d1d1f; }
+  header { padding:18px 28px 6px; display:flex; gap:22px; align-items:center; flex-wrap:wrap; }
+  header h1 { font-size:18px; margin:0 12px 0 0; }
+  header label { display:flex; gap:6px; align-items:center; }
+  header select { font:inherit; padding:3px 6px; }
+  .note { padding:0 28px; color:#5f5f5f; font-size:12.5px; max-width:1100px; }
+  .pair { display:flex; gap:28px; justify-content:center; padding:18px 12px 30px; flex-wrap:wrap; }
+  figure { margin:0; display:flex; flex-direction:column; align-items:center; gap:8px; }
+  figcaption { font-weight:700; font-size:13px; letter-spacing:.04em; text-transform:uppercase; color:#555; }
+  iframe { width:520px; height:960px; border:0; border-radius:12px; background:transparent; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Balance vs Vivid Tidewater</h1>
+  <label>State <select id="state"><option>populated</option><option>many</option><option>empty</option></select></label>
+  <label>Appearance <select id="theme"><option>light</option><option>dark</option></select></label>
+  <label>Text <select id="text"><option>default</option><option>xl</option><option>ax3</option></select></label>
+  <label>Motion <select id="motion"><option>system</option><option>reduce</option><option>full</option></select></label>
+</header>
+<p class="note">Both sides run the same app.js, data and markup; only colour and emphasis differ (vivid.css). Each side is interactive on its own.
+  Reviewer panels are cropped out here; open either prototype directly for the event log. Changing a setting reloads both and resets sample data.</p>
+<div class="pair">
+  <figure><figcaption>Balance (current)</figcaption><iframe id="a" title="Balance prototype"></iframe></figure>
+  <figure><figcaption>Vivid Tidewater</figcaption><iframe id="b" title="Vivid Tidewater prototype"></iframe></figure>
+</div>
+<script>
+  const ids = ["state", "theme", "text", "motion"];
+  const q = new URLSearchParams(location.search);
+  ids.forEach((k) => { if (q.get(k)) document.getElementById(k).value = q.get(k); });
+  function load() {
+    const p = new URLSearchParams();
+    ids.forEach((k) => p.set(k, document.getElementById(k).value));
+    history.replaceState(null, "", "?" + p);
+    document.getElementById("a").src = "../prototype/index.html?" + p;
+    document.getElementById("b").src = "index.html?" + p;
+  }
+  ids.forEach((k) => document.getElementById(k).addEventListener("change", load));
+  load();
+</script>
+</body>
+</html>
