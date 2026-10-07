@@ -78,6 +78,7 @@ final class SwiftDataHabitRepository: HabitRepository {
     @discardableResult
     func createHabit(_ draft: HabitDraft, at date: Date = Date()) throws -> Habit {
         try validate(draft.schedule)
+        guard (draft.whyItMatters?.count ?? 0) <= 240 else { throw HabitRepositoryError.invalidWhyMemory }
         let record = HabitRecord(domain: Habit(
             id: UUID(),
             name: draft.name,
@@ -88,7 +89,12 @@ final class SwiftDataHabitRepository: HabitRepository {
             createdAt: date,
             updatedAt: date,
             archivedAt: nil,
-            sortOrder: try nextSortOrder()
+            sortOrder: try nextSortOrder(),
+            whyItMatters: draft.whyItMatters.flatMap { value in
+                let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+                return trimmed.isEmpty ? nil : trimmed
+            },
+            isWhyMemoryHidden: draft.isWhyMemoryHidden
         ))
         modelContext.insert(record)
         modelContext.insert(HabitConfigurationSnapshotRecord(domain: HabitConfigurationSnapshot(
@@ -108,6 +114,7 @@ final class SwiftDataHabitRepository: HabitRepository {
     @discardableResult
     func updateHabit(id: UUID, with draft: HabitDraft, at date: Date = Date()) throws -> Habit {
         try validate(draft.schedule)
+        guard (draft.whyItMatters?.count ?? 0) <= 240 else { throw HabitRepositoryError.invalidWhyMemory }
         guard let record = try habitRecord(id: id) else {
             throw HabitRepositoryError.habitNotFound(id)
         }
@@ -123,7 +130,8 @@ final class SwiftDataHabitRepository: HabitRepository {
         let revision = configurationChanged ? try nextConfigurationRevision(for: id) : nil
         let previous = record.toDomain()
         let previousDraft = HabitDraft(name: previous.name, iconName: previous.iconName,
-            category: previous.category, polarity: previous.polarity, schedule: previous.schedule)
+            category: previous.category, polarity: previous.polarity, schedule: previous.schedule,
+            whyItMatters: previous.whyItMatters, isWhyMemoryHidden: previous.isWhyMemoryHidden)
         var insertedSnapshot: HabitConfigurationSnapshotRecord?
         record.apply(draft: draft, updatedAt: date)
         if let revision {
@@ -229,7 +237,13 @@ final class SwiftDataHabitRepository: HabitRepository {
         ))
         record.isQuantityDerived = try SwiftDataHabitActivityRepository(context: modelContext, habits: self, calendar: calendar).configuration(for: habitID, on: date)?.target != nil
         modelContext.insert(record)
-        try modelContext.save()
+        do { try modelContext.save() }
+        catch {
+            // A failed check-in must not remain pending for a later autosave.
+            // Discard only this insertion, preserving unrelated edits.
+            modelContext.delete(record)
+            throw error
+        }
         NotificationCenter.default.post(name: .avelaPersistenceDidChange, object: nil)
         return record.toDomain()
     }

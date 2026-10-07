@@ -54,3 +54,10 @@ Atmospheric themes: [native light/dark gallery and verification](verification/at
 - [Recovery progress card verification](verification/recovery-card/README.md): native light/dark and accessibility-size support/Undo flows.
 
 - [Visual Insights verification](verification/visual-insights/README.md): native completed-week analytics, manual coverage, archived history and large-text navigation.
+
+
+[Implemented features and UX inventory](FEATURES_AND_UX_REVIEW.md) is a shareable product-review document, including verification gaps and proposed differentiation hypotheses.
+
+## Connected differentiation
+
+[Native screenshots and verification](verification/differentiation/README.md) document optional reasons, explainable Momentum, confirmed recovery choices, factual Make Room connections and companion states.

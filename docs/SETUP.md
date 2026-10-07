@@ -1671,3 +1671,27 @@ The first coordinated design pass is implemented: neutral reading surfaces, comp
 ### Visual Insights DEBUG fixture
 
 `AVELA_UI_TEST_SEED_FIXTURE=visualInsights` uses public repositories to seed daily and archived flexible-weekly habits plus partial manual attention coverage. The rounded habit score is 68%, below-budget result 33%, coverage 3/7 goal-days. Like other fixtures, it requires an empty isolated `AVELA_UI_TEST_STORE_PATH` store and is compiled out of Release. It never affects an ordinary store or changes the production clock.
+
+
+## Reflection dictation verification — 2026-10-06
+
+Open Settings → Weekly Reflection → Write/Edit Reflection → Dictate. Permissions are requested only after Start Dictation. A compatible physical iPhone and installed on-device recognition support for the current locale are required to verify actual speech. The simulator may report recognition unavailable. Review can be edited; Add Text appends, and Save persists separately. Test microphone/speech denial, 55-second stop, interruption, app background, dismiss during permission waits, cancel, append and relaunch on hardware. There is no cloud fallback or saved audio file.
+
+
+## Make Room focus flow — 2026-10-06
+
+Today → habit details → Make Room → Create Session Goal defaults to Focus; choose Phone-free if desired. Save creates a reusable goal only; Start records the session and habit intention. Opt into mascot/timer presentation before Start, then go Home/long-press on a supported Island device. Open Session & Check In to report an outcome; Log What I Did opens the independent habit logger. Existing free/Premium attention-goal creation limits apply. Old phone-free goals remain phone-free. An unsigned simulator build does not verify distribution entitlements or real-device Live Activity behavior.
+
+## Differentiation verification
+
+October 6: 501 unit tests and four affected UI flows pass across runs; Debug/Release build. Optional reason columns migrate an old populated store without losing original business values. The owner simulator was updated without uninstall/reset. Exact commands, screenshots, the alert accessibility fix and remaining device gates: [differentiation](verification/differentiation/README.md).
+
+
+## Quick Log widget — 2026-10-07
+
+Quick Log is a separate optional Home Screen widget. Add it once via Home Screen → touch and hold → Edit → Add Widget → Avela → Avela Quick Log; Settings → Home Screen Widgets includes a guide. Simple check-in circles work in the background; names open detail, and quantity + opens the logger. Refresh habits updates a stale day without foregrounding the app. The App Group must be correctly provisioned for physical devices. No new permission, schema or runtime secret is required. Native simulator evidence, full unit/targeted UI results and exact commands: [Quick Log verification](verification/quick-log-widget/README.md). Signed device background/unlock, VoiceOver and actual widget scheduling remain verification gates.
+
+
+## Rich Tide widgets — October 7, 2026
+
+The Home Screen gallery now offers **Quick Log** and **Routine**, each in small/medium. Approved Rich Tide uses deep theme gradients and contrasting labelled Log buttons. Remove retired Attention/Progress placements and add the replacement. Routine requires a saved routine selected in Edit Widget. Log saves a simple check-in without opening Avela; names and quantity + open the relevant app screen. Native light/dark/largest-text screenshots, 523 passing unit tests, guide UI regression, background logging checks and Release verification are recorded in [widget verification](verification/two-widgets/README.md).

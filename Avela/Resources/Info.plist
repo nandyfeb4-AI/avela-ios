@@ -19,5 +19,9 @@
 	</array>
 	<key>AvelaCloudBackupContainer</key>
 	<string>$(AVELA_CLOUD_BACKUP_CONTAINER)</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Avela uses the microphone only when you start dictating a reflection. Audio is processed on this device and is not saved.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Avela turns your spoken reflection into editable text using on-device recognition. You review the text before adding and saving it.</string>
 </dict>
 </plist>

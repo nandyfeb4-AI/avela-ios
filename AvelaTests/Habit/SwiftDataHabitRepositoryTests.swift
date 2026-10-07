@@ -26,6 +26,69 @@ final class SwiftDataHabitRepositoryTests: XCTestCase {
     private let day1 = Date(timeIntervalSince1970: 1_718_632_800) // Mon 2024-06-17
     private let day2 = Date(timeIntervalSince1970: 1_718_805_600) // Wed 2024-06-19
 
+    func testRecordWithoutOptionalMemoryDecodesToLegacyDefaults() {
+        let record = HabitRecord(id: UUID(), name: "Existing habit", iconName: "book.fill",
+            categoryRaw: "learning", polarityRaw: "positive", scheduleKindRaw: "daily",
+            scheduleWeekdaysRaw: [], scheduleTimesPerWeek: nil, createdAt: day1,
+            updatedAt: day1, archivedAt: nil, sortOrder: 0)
+        XCTAssertNil(record.whyItMatters)
+        XCTAssertNil(record.whyMemoryHidden)
+        XCTAssertNil(record.toDomain().whyItMatters)
+        XCTAssertFalse(record.toDomain().isWhyMemoryHidden)
+    }
+
+    func testPrivateMotivationPersistsWithoutChangingHistoricalFactsAndCanBeRemoved() throws {
+        let repository = try makeRepository()
+        var draft = HabitDraft(name: "Read", iconName: "book.fill", category: .learning,
+            polarity: .positive, schedule: .daily, whyItMatters: "  Be curious for my children.  ")
+        let habit = try repository.createHabit(draft, at: day1)
+        XCTAssertEqual(habit.whyItMatters, "Be curious for my children.")
+        let completion = try repository.recordCompletion(habitID: habit.id, at: day1, source: .app, note: nil)
+        draft.whyItMatters = "Learn something new."
+        draft.isWhyMemoryHidden = true
+        _ = try repository.updateHabit(id: habit.id, with: draft, at: day2)
+        let fresh = SwiftDataHabitRepository(modelContext: try XCTUnwrap(container).mainContext, calendar: calendar)
+        XCTAssertEqual(try fresh.fetchHabit(id: habit.id)?.whyItMatters, "Learn something new.")
+        XCTAssertEqual(try fresh.fetchHabit(id: habit.id)?.isWhyMemoryHidden, true)
+        XCTAssertEqual(try fresh.configurationHistory(for: habit.id).count, 1)
+        XCTAssertEqual(try fresh.completions(for: habit.id, in: DateInterval(start: day1, end: day2)).first, completion)
+        draft.whyItMatters = "   "
+        _ = try fresh.updateHabit(id: habit.id, with: draft, at: day2)
+        XCTAssertNil(try fresh.fetchHabit(id: habit.id)?.whyItMatters)
+    }
+
+    func testInvalidMemoryEditLeavesPersistedHabitUntouched() throws {
+        let repository = try makeRepository()
+        var draft = HabitDraft(name: "Read", iconName: "book.fill", category: .learning,
+            polarity: .positive, schedule: .daily, whyItMatters: "Stay curious.")
+        let habit = try repository.createHabit(draft, at: day1)
+        draft.name = "Changed"
+        draft.whyItMatters = String(repeating: "x", count: 241)
+        XCTAssertThrowsError(try repository.updateHabit(id: habit.id, with: draft, at: day2)) {
+            XCTAssertEqual($0 as? HabitRepositoryError, .invalidWhyMemory)
+        }
+        XCTAssertEqual(try repository.fetchHabit(id: habit.id), habit)
+        XCTAssertEqual(try repository.configurationHistory(for: habit.id).count, 1)
+    }
+
+    func testMemoryAndVisibilitySurviveDiskRelaunch() throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let url = directory.appendingPathComponent("memory.store")
+        let id: UUID
+        do {
+            let store = try AppPersistence.makeContainer(storeURL: url)
+            let repo = SwiftDataHabitRepository(modelContext: store.mainContext)
+            id = try repo.createHabit(.init(name: "Read", iconName: "book.fill", category: .learning,
+                polarity: .positive, schedule: .daily, whyItMatters: "Be curious.", isWhyMemoryHidden: true), at: day1).id
+        }
+        let reopened = try AppPersistence.makeContainer(storeURL: url)
+        let habit = try XCTUnwrap(SwiftDataHabitRepository(modelContext: reopened.mainContext).fetchHabit(id: id))
+        XCTAssertEqual(habit.whyItMatters, "Be curious.")
+        XCTAssertTrue(habit.isWhyMemoryHidden)
+    }
+
     func testCreateHabitPersistsFieldsAndInitialConfigurationSnapshot() throws {
         let repository = try makeRepository()
         let draft = HabitDraft(name: "Read", iconName: "book", category: .learning, polarity: .positive, schedule: .daily)

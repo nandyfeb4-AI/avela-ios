@@ -56,12 +56,15 @@ struct MadeRoomReviewView: View {
                             Image(systemName: "timer").foregroundStyle(palette.accent)
                         }
                     } header: { Text("Recorded Session Results") } footer: {
-                        Text("Ended sessions only. Timer minutes are not verified phone-free or saved time; outcomes are self-reported.")
+                        Text("Ended sessions only. Timer minutes are not verified concentration, phone-free or saved time; outcomes are self-reported.")
                     }
                     Section {
                         ForEach(review.habits) { habit in
                             VStack(alignment: .leading, spacing: 10) {
                                 Text(habit.habitName).font(.headline)
+                                Text("You made room for \(habit.habitName) \(habit.sessionCount) \(habit.sessionCount == 1 ? "time" : "times") this week.")
+                                    .font(.subheadline)
+
                                 if habit.isArchived { Text("Archived").font(.caption).foregroundStyle(.secondary) }
                                 Text("\(habit.sessionCount) linked sessions · \(habit.keptSessions) reported kept")
                                     .font(.subheadline).foregroundStyle(palette.accent)

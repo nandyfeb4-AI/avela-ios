@@ -13,6 +13,8 @@ No external package installation required for:
 - SwiftUI
 - SwiftData
 - Foundation
+- Speech (optional on-device reflection dictation)
+- AVFoundation (explicit reflection microphone capture)
 - UserNotifications
 - StoreKit 2
 - WidgetKit
@@ -93,3 +95,8 @@ CloudKit (private Apple iCloud database) and CryptoKit (SHA-256 integrity check)
 are native frameworks used by owner-approved recovery. No third-party dependency,
 backend, analytics, generative AI or network framework is introduced. A real signed
 CloudKit container is required; placeholder builds remain local-only.
+
+
+## Reflection dictation frameworks — 2026-10-06
+
+Apple Speech and AVFoundation are runtime SDK frameworks for optional on-device reflection transcription and microphone capture. No third-party library or package is introduced. On-device capability is mandatory, with no cloud recognition fallback. Both remain behind the reflection platform adapter and can be removed without changing persisted reflections.

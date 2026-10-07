@@ -11,16 +11,14 @@ struct CompanionView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
-    private var state: CompanionState { CompanionStateEngine.state(for: input) }
+    private var state: CompanionPresentationState { CompanionPresentation.state(for: input) }
 
-    private var stateLabel: String {
+    private var stateInk: Color {
         switch state {
-        case .calm: return "Calm"
-        case .focused: return "Focused"
-        case .nearLimit: return "Close to a logged limit"
-        case .overloaded: return "Time for a pause"
-        case .recovering: return "Rebuilding momentum"
-        case .celebrating: return "Celebrating progress"
+        case .steady: return Color.appInkSecondary
+        case .buildingMomentum: return palette.accent
+        case .recovering: return Color.appRecovery
+        case .needsSpace: return Color.appOverBudget
         }
     }
 
@@ -30,17 +28,22 @@ struct CompanionView: View {
                 ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12))
                 : AnyLayout(HStackLayout(alignment: .center, spacing: 16))
             layout {
-                CompanionArtwork(animal: profile.selectedAnimal.rawValue, state: state.rawValue, size: compact ? 48 : 80)
+                CompanionArtwork(animal: profile.selectedAnimal.rawValue, state: state.artworkState.rawValue, size: compact ? 48 : 80)
+                    .padding(6)
+                    .background(stateInk.opacity(0.08), in: Circle())
                     .id(state)
                     .transition(reduceMotion ? .identity : .opacity)
-                    .scaleEffect(!reduceMotion && state == .celebrating ? 1.04 : 1)
                     .animation(reduceMotion ? nil : .easeInOut(duration: 0.3), value: state)
                 VStack(alignment: .leading, spacing: 4) {
                     if !compact {
                         Text("Your \(profile.selectedAnimal.title.lowercased()) companion")
                             .font(.caption).foregroundStyle(Color.appInkSecondary)
                     }
-                    Text(CompanionStateEngine.message(for: input))
+                    Label(state.title, systemImage: state.symbol)
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(stateInk)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text(CompanionPresentation.message(for: input))
                         .font(.subheadline).foregroundStyle(Color.appInk)
                         .fixedSize(horizontal: false, vertical: true)
                 }
@@ -50,9 +53,9 @@ struct CompanionView: View {
             .background(palette.surface)
             .clipShape(RoundedRectangle(cornerRadius: 20))
             .accessibilityElement(children: .combine)
-            .accessibilityLabel("Your \(profile.selectedAnimal.title.lowercased()) companion. \(CompanionStateEngine.message(for: input))")
+            .accessibilityLabel("Your \(profile.selectedAnimal.title.lowercased()) companion. \(CompanionPresentation.message(for: input))")
             .accessibilityIdentifier("companion.summary")
-            .accessibilityValue(stateLabel)
+            .accessibilityValue(state.title)
         }
     }
 }

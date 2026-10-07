@@ -200,7 +200,7 @@ final class SwiftDataAttentionRepository: AttentionRepository {
 
     @discardableResult
     func startSession(goalID: UUID, at date: Date) throws -> AttentionSession {
-        guard try fetchGoal(id: goalID)?.type == .phoneFreeSession,
+        guard try fetchGoal(id: goalID)?.type.isTimedSession == true,
               let snapshot = try activeConfiguration(for: goalID, on: date),
               (snapshot.targetValue * 60).isFinite else { throw AttentionRepositoryError.invalidGoal }
         guard try sessions(for: goalID).allSatisfy({ !$0.isActive }) else { throw AttentionRepositoryError.sessionAlreadyActive }

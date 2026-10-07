@@ -9,4 +9,7 @@ struct HabitDraft: Equatable, Sendable {
     var category: HabitCategory
     var polarity: HabitPolarity
     var schedule: HabitSchedule
+    /// Private, optional motivation; never exported to logical cloud recovery.
+    var whyItMatters: String? = nil
+    var isWhyMemoryHidden: Bool = false
 }

@@ -6,6 +6,21 @@ import SwiftData
 final class SessionLiveActivityServiceTests: XCTestCase {
     private let start = Date(timeIntervalSince1970: 1_780_000_000)
 
+    func testFocusPresentationUsesFocusLabelAndOldStateStillDecodes() throws {
+        let store = try AppPersistence.makeContainer(inMemory: true)
+        let repository = SwiftDataAttentionRepository(modelContext: store.mainContext)
+        let profiles = SwiftDataCompanionProfileRepository(modelContext: store.mainContext)
+        let goal = try repository.createGoal(.init(name: "Focus", appOrCategoryLabel: nil, type: .focusSession, targetValue: 20, unit: .minutes), at: start)
+        let session = try repository.startSession(goalID: goal.id, at: start)
+        let adapter = FocusAdapter()
+        let service = SessionLiveActivityService(repository: repository, profiles: profiles, adapter: adapter)
+        try service.show(sessionID: session.id, at: start)
+        XCTAssertEqual(adapter.activities.first?.isFocusSession, true)
+        XCTAssertNil(try repository.sessions(for: goal.id).first?.outcome)
+        let old = try JSONDecoder().decode(PhoneFreeActivityAttributes.ContentState.self, from: Data("{\"animal\":\"owl\"}".utf8))
+        XCTAssertNil(old.isFocusSession)
+    }
+
     func testExplicitRequestUsesPersistedSessionAndDuplicateDoesNotRequestAgain() throws {
         let fixture = try Fixture()
         let (_, session) = try fixture.startSession(at: start)
@@ -303,4 +318,13 @@ final class SessionLiveActivityServiceTests: XCTestCase {
             events.append("end:\(sessionID)")
         }
     }
+}
+
+@MainActor
+private final class FocusAdapter: SessionLiveActivityAdapter {
+    var areEnabled = true
+    var activities: [SessionLiveActivityDescriptor] = []
+    func request(_ descriptor: SessionLiveActivityDescriptor) throws { activities.append(descriptor) }
+    func update(_ descriptor: SessionLiveActivityDescriptor) async {}
+    func end(sessionID: UUID) async { activities.removeAll { $0.sessionID == sessionID } }
 }

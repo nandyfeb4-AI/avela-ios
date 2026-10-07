@@ -134,6 +134,7 @@ struct ReflectionView: View {
 private struct ReflectionEditorView: View {
     @Bindable var viewModel: ReflectionViewModel
     @Environment(\.dismiss) private var dismiss
+    @State private var dictationPrompt: ReflectionDictationPrompt?
 
     var body: some View {
         NavigationStack {
@@ -148,6 +149,7 @@ private struct ReflectionEditorView: View {
                         .frame(minHeight: 120)
                         .accessibilityLabel("What helped this week?")
                         .accessibilityIdentifier("reflection.helpedEditor")
+                    dictateButton(for: .helped)
                     count(viewModel.draft.whatHelped)
                 }
                 Section("What Got in the Way?") {
@@ -155,10 +157,21 @@ private struct ReflectionEditorView: View {
                         .frame(minHeight: 120)
                         .accessibilityLabel("What got in the way this week?")
                         .accessibilityIdentifier("reflection.obstacleEditor")
+                    dictateButton(for: .obstacle)
                     count(viewModel.draft.whatGotInTheWay)
                 }
                 if let error = viewModel.errorMessage {
                     Section { Text(error).foregroundStyle(.secondary).accessibilityIdentifier("reflection.error") }
+                }
+            }
+            .sheet(item: $dictationPrompt) { prompt in
+                ReflectionDictationView(prompt: prompt.title) { text in
+                    switch prompt {
+                    case .helped:
+                        viewModel.draft.whatHelped = ReflectionDictationModel.appended(text, to: viewModel.draft.whatHelped)
+                    case .obstacle:
+                        viewModel.draft.whatGotInTheWay = ReflectionDictationModel.appended(text, to: viewModel.draft.whatGotInTheWay)
+                    }
                 }
             }
             .scrollDismissesKeyboard(.interactively)
@@ -179,6 +192,16 @@ private struct ReflectionEditorView: View {
         }
     }
 
+    private func dictateButton(for prompt: ReflectionDictationPrompt) -> some View {
+        Button { dictationPrompt = prompt } label: {
+            Label("Dictate", systemImage: "mic")
+                .frame(minHeight: 44)
+        }
+        .buttonStyle(.borderless)
+        .accessibilityLabel("Dictate \(prompt.title.lowercased())")
+        .accessibilityIdentifier("reflection.dictate.\(prompt.rawValue)")
+    }
+
     private func count(_ text: String) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             Text("\(text.count) of \(ReflectionDraft.characterLimit) characters")
@@ -187,5 +210,83 @@ private struct ReflectionEditorView: View {
             }
         }
         .font(.footnote).foregroundStyle(.secondary)
+    }
+}
+
+private enum ReflectionDictationPrompt: String, Identifiable {
+    case helped, obstacle
+    var id: String { rawValue }
+    var title: String { self == .helped ? "What Helped?" : "What Got in the Way?" }
+}
+
+private struct ReflectionDictationView: View {
+    let prompt: String
+    let onInsert: (String) -> Void
+    @State private var model = ReflectionDictationModel()
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.scenePhase) private var scenePhase
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    Label(prompt, systemImage: "mic").font(.headline)
+                    Text("Speak a short reflection, then review the text. Audio stays on this device and isn't saved. Nothing is added until you confirm.")
+                        .foregroundStyle(.secondary)
+                    Text("On-device recognition must be available for your device and language. Each recording lasts up to 55 seconds.")
+                        .font(.footnote).foregroundStyle(.secondary)
+                }
+                Section {
+                    if model.phase == .listening {
+                        Label("Listening…", systemImage: "mic.fill")
+                            .accessibilityIdentifier("reflection.dictation.listening")
+                        Button("Stop Recording", systemImage: "stop.circle.fill") { model.stop() }
+                            .accessibilityIdentifier("reflection.dictation.stop")
+                    } else {
+                        Button(model.transcript.isEmpty ? "Start Dictation" : "Record Again", systemImage: "mic") {
+                            Task { await model.start() }
+                        }
+                        .disabled(model.phase == .authorizing)
+                        .accessibilityIdentifier("reflection.dictation.start")
+                        if model.phase == .authorizing { Text("Waiting for permission…") }
+                    }
+                    if let message = model.message {
+                        Text(message).foregroundStyle(.secondary)
+                            .accessibilityIdentifier("reflection.dictation.message")
+                    }
+                }
+                Section("Review Your Words") {
+                    TextEditor(text: $model.transcript)
+                        .frame(minHeight: 160)
+                        .disabled(model.phase == .listening || model.phase == .authorizing)
+                        .accessibilityLabel("Dictated reflection text")
+                        .accessibilityIdentifier("reflection.dictation.transcript")
+                    Text("You can edit this text. Adding it appends to your answer; save the reflection separately.")
+                        .font(.footnote).foregroundStyle(.secondary)
+                }
+            }
+            .appThemeCanvas()
+            .navigationTitle("Dictate Reflection")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { model.discard(); dismiss() }
+                        .accessibilityIdentifier("reflection.dictation.cancel")
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Add Text") {
+                        model.stop()
+                        onInsert(model.transcript)
+                        dismiss()
+                    }
+                    .disabled(!model.canInsert)
+                    .accessibilityIdentifier("reflection.dictation.insert")
+                }
+            }
+        }
+        .onDisappear { model.discard() }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .background || (phase != .active && model.phase == .listening) { model.stop() }
+        }
     }
 }

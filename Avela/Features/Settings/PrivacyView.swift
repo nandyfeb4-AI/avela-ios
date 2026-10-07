@@ -23,17 +23,22 @@ struct PrivacyView: View {
         List {
             Section("Local Tracking, Optional Protection") {
                 Text("Tracking is saved on your device. Avela doesn't require its own account. If you enable optional iCloud backup, eligible tracking and preferences are copied to your private Apple iCloud storage.")
-                Text("Avela doesn't track how you use the app or show advertisements. It doesn't automatically monitor Screen Time, block other apps or record your microphone.")
+                Text("Avela doesn't track how you use the app or show advertisements. It doesn't automatically monitor Screen Time or block other apps. Microphone access is used only when you explicitly start reflection dictation.")
             }
 
             Section("Device backups") {
                 Text("Avela doesn't provide app-managed cloud sync. iOS may include local app data in a device backup according to your Apple backup settings. Manage those backups separately in iOS settings.")
-                Text("Optional Avela iCloud backup keeps dated recovery copies while the app is active. It isn't live sync or a guarantee against every loss. Health-connected habits, health/fitness habits, imported Health history, reflection notes and completion notes are excluded. Local logging remains available offline.")
+                Text("Optional Avela iCloud backup keeps dated recovery copies while the app is active. It isn't live sync or a guarantee against every loss. Health-connected habits, health/fitness habits, imported Health history, reflection notes, completion notes and private habit reasons are excluded. Local logging remains available offline.")
                 Text("Turn backup off in Progress Protection to stop future upload requests; an upload already sent may finish. Existing cloud copies remain until you explicitly delete them there. Restore is available only before tracking begins on an installation; existing progress is never overwritten. Apple iCloud account availability and storage affect backup delivery.")
             }
 
             Section("Optional Siri and Shortcuts") {
                 Text("Apple handles Siri voice processing. Avela doesn't record audio. Habit and budget names may appear in Apple's suggestions and your saved shortcuts. Logging opens Avela and may require device authentication; attention minutes remain self-reported.")
+            }
+
+            Section("Optional reflection dictation") {
+                Text("When you tap Start Dictation, Avela requests microphone and speech recognition permission. Recognition must be available on-device; there is no server fallback. Audio is used temporarily and isn't saved. You review or edit the transcript before adding it to a reflection, then explicitly save the note.")
+                Text("Capture stops when you stop, leave the recording screen, put Avela in the background, or reach 55 seconds. Typing stays available when access is denied or recognition is unavailable. Saved reflection text stays local and is excluded from Avela's iCloud recovery copies; Apple device backups may include it.")
             }
 
             Section("Optional Apple Health") {
@@ -49,7 +54,7 @@ struct PrivacyView: View {
             }
 
             Section("Optional session activities") {
-                Text("When you choose Show Session Activity, iOS can display a phone-free session timer and your companion on the Lock Screen and Dynamic Island, where supported. The activity contains no goal name or tracking history. Anyone who can see those screens may see it. Hide the activity without ending your session, or disable Live Activities in iOS Settings. A timer never verifies phone use.")
+                Text("When you choose Show Session Activity, iOS can display a focus or phone-free session timer and your companion on the Lock Screen and Dynamic Island, where supported. The activity contains no goal name or tracking history. Anyone who can see those screens may see it. Hide the activity without ending your session, or disable Live Activities in iOS Settings. A timer never verifies phone use or concentration.")
             }
 
             Section("Apple purchases") {

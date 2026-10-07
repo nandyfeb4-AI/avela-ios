@@ -245,3 +245,29 @@ The first coordinated design pass is implemented: neutral reading surfaces, comp
 ### Visual Insights verification
 
 `InsightsViewModelTests` adds coverage for archived habit identity/read-only detail navigation and session-only goals without a phantom budget. `MVPFlowTests` adds populated chart/detail/filtered-History/relaunch coverage and largest-text navigation. Existing Insights UI tests retain empty, insufficient, week-clamp, tie, balanced, valid-trend and incompatible-cohort guarantees. The fixture deliberately includes a usage day exactly at budget; it is excluded from the below-budget rate under existing rules. Native evidence: [visual-insights](verification/visual-insights/README.md).
+
+
+## Reflection dictation — 2026-10-06
+
+Owner-approved optional dictation is available in each Weekly Reflection editor prompt. Start explicitly requests optional microphone/speech access only where on-device recognition is supported; audio is ephemeral, with no network fallback or saved audio. Review/Edit → Add Text appends to the draft, and Save persists independently of metrics. Seven capture-controller tests cover unsupported/denied access, permission-wait cancellation, late callbacks, errors and append/limit behavior. Eleven existing reflection tests and two targeted UI flows passed (review/cancel/append/explicit save, existing save/cancel/relaunch). UI transcript editing is a review test, not simulated proof of microphone recognition. Hardware speech, locale availability, permissions, interruptions and background capture cleanup remain required device checks.
+
+
+## Make Room → Do It — 2026-10-06
+
+Habit Detail → Make Room now lets the user create a Focus or Phone-Free goal in place, explicitly start a session and optionally request the mascot/countdown Live Activity. Focus permits phone use; Phone-Free records an intention without blocking or monitoring apps. Existing phone-free history is preserved. Session outcomes and actual habit logging remain independent: Log What I Did opens the existing habit logger without importing elapsed minutes or automatically completing the habit. Active-session review survives relaunch; failed intention-link writes do not replace the newly started session's review destination with an older session.
+
+All 473 unit tests and four affected UI flows pass. Debug and Release build; production binaries contain none of the checked DEBUG store/fixture hooks. This is a full unit run and a targeted UI run, not a full UI-suite or physical-device certification. Native screenshots, exact commands and remaining device checks: [Make Room verification](verification/make-room/README.md).
+
+## Differentiation regression coverage
+
+Momentum tests cover pending unknowns, excused pauses/skips, recovery threshold/undo, weekly units, separate smaller effort, lifetime retention and missing habits. Recovery tests cover current-revision evidence, weekly/due-day eligibility, current successes, skipped/paused time, stale day/action, explicit indefinite pause and no automatic writes. Memory tests cover validation, preserved history, disk reopen/hide, private backup omission and factual weekly starts. Companion tests cover four distinct poses, precedence/provenance, missing data and saved-vs-transient progress. Targeted UI and old-store migration evidence: [verification](verification/differentiation/README.md).
+
+
+## Quick Log widget — 2026-10-07
+
+Full unit suite: 519 tests, zero failures, including 18 new Quick Log tests for capability guards, idempotency, source, next-day preservation, ordering, accessibility capacity, summary honesty and projection compatibility. Three affected UI regression tests pass. Real SpringBoard background logging (including terminated app), name navigation, quantity route and stale-day refresh were separately verified with temporary drivers, then removed. This is targeted UI coverage, not a full UI suite. Release app/widget binary inspection confirms checked DEBUG hooks absent. Commands and native evidence: [Quick Log verification](verification/quick-log-widget/README.md).
+
+
+## Rich Tide widgets — October 7, 2026
+
+The Home Screen gallery now offers **Quick Log** and **Routine**, each in small/medium. Approved Rich Tide uses deep theme gradients and contrasting labelled Log buttons. Remove retired Attention/Progress placements and add the replacement. Routine requires a saved routine selected in Edit Widget. Log saves a simple check-in without opening Avela; names and quantity + open the relevant app screen. Native light/dark/largest-text screenshots, 523 passing unit tests, guide UI regression, background logging checks and Release verification are recorded in [widget verification](verification/two-widgets/README.md).

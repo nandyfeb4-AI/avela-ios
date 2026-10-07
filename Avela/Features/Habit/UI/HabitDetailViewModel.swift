@@ -41,6 +41,7 @@ struct HabitDetailDisplay: Equatable {
 final class HabitDetailViewModel {
     private(set) var display: HabitDetailDisplay?
     private(set) var draft: HabitDraft?
+    private(set) var whyMemory: String?
     private(set) var adjustmentProposal: HabitAdjustmentProposal?
     var isShowingEditForm = false
     var isShowingArchiveConfirmation = false
@@ -71,7 +72,8 @@ final class HabitDetailViewModel {
             }
             draft = HabitDraft(
                 name: habit.name, iconName: habit.iconName, category: habit.category,
-                polarity: habit.polarity, schedule: habit.schedule
+                polarity: habit.polarity, schedule: habit.schedule,
+                whyItMatters: habit.whyItMatters, isWhyMemoryHidden: habit.isWhyMemoryHidden
             )
 
             let historyStart = min(habit.createdAt, date)
@@ -94,6 +96,7 @@ final class HabitDetailViewModel {
                 for: habit, snapshots: snapshots, completions: completions, skips: skips,
                 archivePeriods: archivePeriods, asOf: date, calendar: calendar
             )
+            whyMemory = recovery.isRecovering && !habit.isWhyMemoryHidden ? habit.whyItMatters : nil
             // -13, not -14: the window includes today, so 14 total days are
             // [today - 13, today] inclusive, i.e. [today - 13, tomorrow) half-open.
             let windowStart = calendar.date(
@@ -141,6 +144,17 @@ final class HabitDetailViewModel {
         } catch {
             handle(error)
         }
+    }
+
+    func hideWhyMemory(asOf date: Date = Date()) {
+        do {
+            guard let habit = try repository.fetchHabit(id: habitID) else { return }
+            let draft = HabitDraft(name: habit.name, iconName: habit.iconName, category: habit.category,
+                polarity: habit.polarity, schedule: habit.schedule, whyItMatters: habit.whyItMatters,
+                isWhyMemoryHidden: true)
+            _ = try repository.updateHabit(id: habitID, with: draft, at: date)
+            load(asOf: date)
+        } catch { handle(error) }
     }
 
     func makeAdjustmentViewModel() -> HabitAdjustmentViewModel {

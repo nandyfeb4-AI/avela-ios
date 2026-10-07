@@ -2,6 +2,8 @@ import Foundation
 
 enum WidgetDeepLink: Equatable {
     case today
+    case habit(habitID: UUID)
+    case logProgress(habitID: UUID)
     case complete(habitID: UUID, localDateKey: String)
 
     var url: URL {
@@ -9,6 +11,9 @@ enum WidgetDeepLink: Equatable {
         components.scheme = "avela"
         switch self {
         case .today: components.host = "today"
+        case .habit(let habitID), .logProgress(let habitID):
+            components.host = self == .habit(habitID: habitID) ? "habit" : "log-progress"
+            components.queryItems = [URLQueryItem(name: "habit", value: habitID.uuidString)]
         case .complete(let habitID, let key):
             components.host = "complete"
             components.queryItems = [
@@ -27,6 +32,11 @@ enum WidgetDeepLink: Equatable {
               components.port == nil, components.fragment == nil,
               components.path.isEmpty else { return nil }
         if components.host == "today", components.queryItems == nil { return .today }
+        if components.host == "habit" || components.host == "log-progress" {
+            guard let query = components.queryItems, query.count == 1, query[0].name == "habit",
+                  let text = query[0].value, let id = UUID(uuidString: text) else { return nil }
+            return components.host == "habit" ? .habit(habitID: id) : .logProgress(habitID: id)
+        }
         guard components.host == "complete",
               let query = components.queryItems, query.count == 2,
               Set(query.map(\.name)) == ["habit", "day"],

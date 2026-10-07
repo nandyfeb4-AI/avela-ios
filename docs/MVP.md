@@ -484,3 +484,33 @@ The card opens existing progress, smaller-action and lighter-schedule tools. Sma
 Insights now visualizes its existing completed-week results with an equal-weight consistency ring, exact per-habit success/resolved commitment bars, neutral highlights and a comparable-cohort trend explanation. Per-habit links open existing detail/support tools and retain View History navigation. Archived habits remain included when eligible, with current identity and an explicit archive label. Daily and flexible weekly commitment units are disclosed rather than pooled into a misleading total.
 
 Manual attention remains separate: reported below-budget results and logging coverage use different bars. Missing reports remain unknown; reaching the budget is excluded from the below-budget count under the existing threshold rule. Session-only goals do not generate a phantom budget card. No AI, causal claim, invented trend series, new metric definition, permission, schema or dependency. Charts are read-only; full-success logging still uses existing explicit actions.
+
+
+## Today companion placement — 2026-10-06
+
+The owner-requested compact companion status card now sits immediately below the daily summary and before habit actions, rather than after routines at the bottom of Today. This supersedes the earlier bottom-placement guidance. The companion remains optional, reflects real state, and retains its existing Reduce Motion and scalable-text behavior. No progress, persistence, permissions or feature scope changes.
+
+
+## Owner-approved reflection dictation — 2026-10-06
+
+The owner pulled forward in-app dictation for weekly reflections only. This supersedes earlier blanket in-app speech deferral; voice command parsing and audio-note storage remain deferred. Each editor prompt offers Dictate → Start Dictation → Stop → review/edit → Add Text, then the existing explicit Save. Existing text is appended to, never silently replaced or truncated; the existing 500-character-per-answer limit still applies. Recording does not log habits, quantities or session outcomes. Apple Speech and AVFoundation require on-device recognition and optional permissions, with typing fallback and no network fallback, LLM, raw-audio persistence or new schema.
+
+
+## Make Room → Do It — 2026-10-06
+
+Owner-approved deepening adds a Focus Session goal alongside the existing Phone-free Session. Focus allows phone use; phone-free is a stated intention, not app monitoring/blocking. Stored goal types are immutable: no old phone-free history is relabeled. Habit Detail → Make Room can explicitly create a reusable timed-session goal with the same creation limits as Today, choose one, request an optional mascot Live Activity when starting, review the session, and open the habit's existing logger via Log What I Did. No timer/outcome supplies habit quantity or auto-completion. Advanced Personal Patterns and a new Today Flexible Day entry point remain proposals; the existing factual review and manageable-week tools are unchanged.
+
+## Approved differentiation enrichment — October 6, 2026
+
+Owner-approved additions deepen existing journeys without new tabs: optional text-only habit reasons, an explainable Momentum view, optional recovery choices after repeated resolved misses, factual linked-session summaries, and four app-facing companion states. Reasons are optional and hideable. No photo memory, automatic recovery/schedule changes, future-dated auto-resume, opaque score, generative AI coach, social layer or currency system is introduced.
+
+## Avela Quick Log Home Screen widget (approved addition)
+
+A separate, optional small/medium Quick Log widget complements Habit Progress and Attention Budget. Simple check-ins use a dedicated interactive circle without bringing the app onscreen; the habit name opens details. Quantity targets open their existing logger. Small shows up to two rows, medium four; accessibility text sizes reduce this to one/two. Pending rows follow the user's habit order. Recently checked rows remain in place briefly. Nothing requires installing a widget or adding a new tracking routine. Skipped days are reviewed in the app, never silently replaced. No mascot, rankings, guilt copy or additional dashboard appears on this surface.
+
+Quick Log's stale-day state offers a user-initiated 'Refresh habits' App Intent that reads the app-owned canonical repositories and exports today's facts without foregrounding Avela. It does not create a completion, auto-reset progress, or evaluate history inside the extension. If refreshing cannot succeed, the stale prompt and explicit Open Avela recovery link remain; the date on old facts is never advanced to fake freshness. WidgetKit controls refresh timing.
+
+
+## Two focused widgets — 2026-10-07
+
+Owner-approved simplification supersedes the earlier three-widget Home Screen gallery: Quick Log and Routine, each small/medium. Retire Habit Progress and Attention Budget registrations; their app features remain. Active-session Live Activities stay separate. Quick Log uses an explicit Log button; Routine is an explicitly selected saved sequence with individual check-ins, never bulk completion. Quantity logging opens the canonical logger.

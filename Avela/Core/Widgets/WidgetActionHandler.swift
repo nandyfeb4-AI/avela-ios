@@ -3,6 +3,8 @@ import Foundation
 enum WidgetActionResult: Equatable {
     case ignored
     case openedToday
+    case openedHabit(UUID)
+    case openedProgress(UUID)
     case completed(UUID)
     case alreadyCompleted(UUID)
 }
@@ -19,6 +21,9 @@ struct WidgetActionHandler {
         guard let link = WidgetDeepLink.parse(url) else { return .ignored }
         switch link {
         case .today: return .openedToday
+        case .habit(let id), .logProgress(let id):
+            guard try repository.fetchHabit(id: id) != nil else { return .ignored }
+            return link == .habit(habitID: id) ? .openedHabit(id) : .openedProgress(id)
         case .complete(let habitID, let dayKey):
             guard dayKey == LocalDay.key(for: date, calendar: calendar),
                   let habit = try repository.fetchHabit(id: habitID),

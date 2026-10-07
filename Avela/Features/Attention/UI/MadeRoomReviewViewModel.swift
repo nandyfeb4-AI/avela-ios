@@ -38,7 +38,7 @@ final class MadeRoomReviewViewModel {
             let allHabits = try habits.fetchHabits(includeArchived: true)
             var allLinks: [IntentionSessionLink] = []
             for habit in allHabits { allLinks += try links.links(for: habit.id) }
-            let goals = try attention.fetchGoals().filter { $0.type == .phoneFreeSession }
+            let goals = try attention.fetchGoals().filter { $0.type.isTimedSession }
             var sessions: [AttentionSession] = []
             for goal in goals { sessions += try attention.sessions(for: goal.id) }
             // Repositories filter timestamps; civil-day membership is authoritative

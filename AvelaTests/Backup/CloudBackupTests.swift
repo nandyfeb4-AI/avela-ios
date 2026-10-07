@@ -26,6 +26,45 @@ import SwiftData
         addTeardownBlock { value.removePersistentDomain(forName: name) }
         return value
     }
+    func testPrivateMotivationIsAbsentFromLogicalCloudRecoveryAndRemainsLocal() throws {
+        let source = try AppPersistence.makeContainer(inMemory: true)
+        let habits = SwiftDataHabitRepository(modelContext: source.mainContext)
+        let privateReason = "Private future-self reason never uploaded"
+        let habit = try habits.createHabit(.init(name: "Read", iconName: "book.fill", category: .learning,
+            polarity: .positive, schedule: .daily, whyItMatters: privateReason, isWhyMemoryHidden: true), at: date(1))
+        let archive = try BackupStore(context: source.mainContext).capture(at: date(2))
+        let encoded = try JSONEncoder().encode(archive)
+        let json = String(decoding: encoded, as: UTF8.self)
+        XCTAssertFalse(json.contains(privateReason))
+        XCTAssertFalse(json.contains("whyItMatters"))
+        XCTAssertFalse(json.contains("whyMemoryHidden"))
+        XCTAssertEqual(try habits.fetchHabit(id: habit.id)?.whyItMatters, privateReason)
+        let target = try AppPersistence.makeContainer(inMemory: true)
+        try BackupStore(context: target.mainContext).restore(archive)
+        let restored = try XCTUnwrap(SwiftDataHabitRepository(modelContext: target.mainContext).fetchHabit(id: habit.id))
+        XCTAssertNil(restored.whyItMatters)
+        XCTAssertFalse(restored.isWhyMemoryHidden)
+    }
+
+    func testFocusSessionAndIntentionSurviveLogicalRecoveryWithoutRelabeling() throws {
+        let source = try AppPersistence.makeContainer(inMemory: true)
+        let habit = try seed(source)
+        let attention = SwiftDataAttentionRepository(modelContext: source.mainContext)
+        let goal = try attention.createGoal(.init(name: "Reading focus", appOrCategoryLabel: nil, type: .focusSession, targetValue: 20, unit: .minutes), at: date(5))
+        let session = try attention.startSession(goalID: goal.id, at: date(5))
+        let finished = try attention.finishSession(id: session.id, outcome: .kept, at: session.expectedEnd)
+        let links = SwiftDataIntentionSessionLinkRepository(modelContext: source.mainContext)
+        let link = IntentionSessionLink(id: UUID(), habitID: habit.id, sessionID: session.id, createdAt: date(5))
+        try links.save(link)
+        let archive = try BackupStore(context: source.mainContext).capture(at: date(6))
+        let target = try AppPersistence.makeContainer(inMemory: true)
+        try BackupStore(context: target.mainContext).restore(archive)
+        let restored = SwiftDataAttentionRepository(modelContext: target.mainContext)
+        XCTAssertEqual(try restored.fetchGoal(id: goal.id)?.type, .focusSession)
+        XCTAssertEqual(try restored.sessions(for: goal.id), [finished])
+        XCTAssertEqual(try SwiftDataIntentionSessionLinkRepository(modelContext: target.mainContext).links(for: habit.id), [link])
+    }
+
     func testRestorePreservesIDsDatesScheduleHistoryAndProgressOnDisk() throws {
         let source = try AppPersistence.makeContainer(inMemory: true)
         let habit = try seed(source)

@@ -38,6 +38,14 @@ struct HabitDetailView: View {
                         .padding(.vertical, 12)
                     }
 
+                    if let memory = viewModel.whyMemory {
+                        Section {
+                            Text(memory).accessibilityIdentifier("habitDetail.whyMemory")
+                            Button("Hide this reminder") { viewModel.hideWhyMemory() }
+                                .accessibilityIdentifier("habitDetail.hideWhyMemory")
+                        } header: { Text("Why this matters") } footer: { Text("Your reason, in your own words. Restore it in Edit Habit.") }
+                    }
+
                     Section("Schedule") {
                         detailRow("Schedule", value: display.scheduleLabel)
                         if let weeklyProgress = display.weeklyProgress {
@@ -87,6 +95,12 @@ struct HabitDetailView: View {
 
                     Section("Explore Progress") {
                         NavigationLink {
+                            HabitMomentumView(viewModel: HabitMomentumViewModel(habitID: viewModel.habitID,
+                                habits: viewModel.habitsRepository, activity: activityRepository))
+                        } label: {
+                            toolLabel("Momentum", symbol: "chart.bar.xaxis", subtitle: "Recent consistency, recovery & lasting effort")
+                        }.accessibilityIdentifier("habitDetail.momentum")
+                        NavigationLink {
                             HabitLifetimeView(viewModel: viewModel.makeLifetimeViewModel(activity: activityRepository))
                         } label: {
                             toolLabel("Lifetime Progress", symbol: "chart.bar")
@@ -105,8 +119,8 @@ struct HabitDetailView: View {
                                 NavigationLink {
                                     IntentionSessionView(viewModel: IntentionSessionViewModel(habitID: viewModel.habitID, habits: viewModel.habitsRepository, attention: attentionIntentionRepository, links: intentionLinks))
                                 } label: {
-                                    toolLabel("Make Room", symbol: "moon", subtitle: "A phone-free session for this habit")
-                                        .accessibilityLabel("Make Room with a Phone-Free Session")
+                                    toolLabel("Make Room", symbol: "moon", subtitle: "Focus time or a phone-free break")
+                                        .accessibilityLabel("Make Room with a Focus or Phone-Free Session")
                                 }.accessibilityIdentifier("habitDetail.intention")
                             }
                             if let reminderService, let schedule = viewModel.draft?.schedule {

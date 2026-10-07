@@ -10,7 +10,7 @@ struct PhoneFreeLiveActivityWidget: Widget {
             HStack(spacing: 12) {
                 sessionArtwork(context, size: 48)
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Phone-free session").font(.headline)
+                    Text(context.state.isFocusSession == true ? "Focus session" : "Phone-free session").font(.headline)
                     if context.isStale {
                         Text("Time elapsed · confirm in Avela").font(.subheadline)
                     } else {
@@ -36,7 +36,7 @@ struct PhoneFreeLiveActivityWidget: Widget {
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Phone-free session").font(.headline)
+                        Text(context.state.isFocusSession == true ? "Focus session" : "Phone-free session").font(.headline)
                         Text(context.isStale ? "Time elapsed · confirm in Avela" : "Tap to check in with Avela")
                             .font(.caption)
                     }

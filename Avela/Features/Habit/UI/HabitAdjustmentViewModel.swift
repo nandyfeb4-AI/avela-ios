@@ -57,7 +57,8 @@ final class HabitAdjustmentViewModel {
             else { markStale(); return false }
             _ = try repository.updateHabit(id: habitID, with: HabitDraft(
                 name: habit.name, iconName: habit.iconName, category: habit.category,
-                polarity: habit.polarity, schedule: .timesPerWeek(frequency)
+                polarity: habit.polarity, schedule: .timesPerWeek(frequency),
+                whyItMatters: habit.whyItMatters, isWhyMemoryHidden: habit.isWhyMemoryHidden
             ), at: date)
             self.proposal = nil // a repeated confirmation cannot append another edit
             return true

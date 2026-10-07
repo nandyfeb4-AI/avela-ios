@@ -8,6 +8,7 @@ import SwiftUI
 /// `HabitFormView`.
 struct AttentionGoalFormView: View {
     let initialDraft: AttentionGoalDraft?
+    let sessionOnly: Bool
     let onSave: (AttentionGoalDraft) -> Void
 
     @Environment(\.dismiss) private var dismiss
@@ -18,15 +19,16 @@ struct AttentionGoalFormView: View {
     @State private var windowStart: Date
     @State private var windowEnd: Date
 
-    init(initialDraft: AttentionGoalDraft? = nil, onSave: @escaping (AttentionGoalDraft) -> Void) {
+    init(initialDraft: AttentionGoalDraft? = nil, defaultType: AttentionGoalType = .maxDurationPerDay, defaultName: String = "", sessionOnly: Bool = false, onSave: @escaping (AttentionGoalDraft) -> Void) {
         self.initialDraft = initialDraft
+        self.sessionOnly = sessionOnly
         self.onSave = onSave
-        _goalType = State(initialValue: initialDraft?.type ?? .maxDurationPerDay)
+        _goalType = State(initialValue: initialDraft?.type ?? defaultType)
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
         _windowStart = State(initialValue: calendar.date(byAdding: .minute, value: initialDraft?.windowStartMinute ?? 0, to: today) ?? today)
         _windowEnd = State(initialValue: calendar.date(byAdding: .minute, value: initialDraft?.windowEndMinute ?? 540, to: today) ?? today)
-        _name = State(initialValue: initialDraft?.name ?? "")
+        _name = State(initialValue: initialDraft?.name ?? defaultName)
         _appOrCategoryLabel = State(initialValue: initialDraft?.appOrCategoryLabel ?? "")
         _targetMinutesText = State(initialValue: initialDraft.map { Self.format($0.targetValue) } ?? "30")
     }
@@ -49,9 +51,12 @@ struct AttentionGoalFormView: View {
                 if !isEditing {
                     Section("Goal Type") {
                         Picker("Type", selection: $goalType) {
-                            Text("Daily budget").tag(AttentionGoalType.maxDurationPerDay)
-                            Text("Protected window").tag(AttentionGoalType.noUseBeforeTime)
-                            Text("Phone-free window").tag(AttentionGoalType.phoneFreeUntilTime)
+                            if !sessionOnly {
+                                Text("Daily budget").tag(AttentionGoalType.maxDurationPerDay)
+                                Text("Protected window").tag(AttentionGoalType.noUseBeforeTime)
+                                Text("Phone-free window").tag(AttentionGoalType.phoneFreeUntilTime)
+                            }
+                            Text("Focus session").tag(AttentionGoalType.focusSession)
                             Text("Phone-free session").tag(AttentionGoalType.phoneFreeSession)
                         }
                         .accessibilityIdentifier("attentionGoalForm.typePicker")
@@ -70,13 +75,16 @@ struct AttentionGoalFormView: View {
                         TextField("Minutes", text: $targetMinutesText)
                             .keyboardType(.numberPad)
                             .accessibilityIdentifier("attentionGoalForm.targetField")
-                        Text(goalType == .phoneFreeSession ? "min/session" : "min/day")
+                        Text(goalType.isTimedSession ? "min/session" : "min/day")
                             .foregroundStyle(.secondary)
                     }
                 } header: {
-                    Text(goalType == .phoneFreeSession ? "Session Duration" : "Daily Budget")
+                    Text(goalType.isTimedSession ? "Session Duration" : "Daily Budget")
                 } footer: {
                     Text("Choose a duration greater than 0 and no more than 1,440 minutes (24 hours).")
+                    if goalType.isTimedSession {
+                        Text(goalType == .focusSession ? "Focus on an activity; using your phone is allowed. Avela does not block or monitor apps." : "Intend to step away from your phone. Avela does not block or monitor apps; you report the result yourself.")
+                    }
                 }
                 }
             }

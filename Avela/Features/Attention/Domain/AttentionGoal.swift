@@ -31,6 +31,9 @@ enum AttentionGoalType: String, Codable, Hashable, Sendable {
     case noUseBeforeTime
     case phoneFreeUntilTime
     case phoneFreeSession
+    case focusSession
+
+    var isTimedSession: Bool { self == .phoneFreeSession || self == .focusSession }
 
     var label: String {
         switch self {
@@ -38,6 +41,7 @@ enum AttentionGoalType: String, Codable, Hashable, Sendable {
         case .noUseBeforeTime: return "Protected window"
         case .phoneFreeUntilTime: return "Phone-free window"
         case .phoneFreeSession: return "Phone-free session"
+        case .focusSession: return "Focus session"
         }
     }
 }

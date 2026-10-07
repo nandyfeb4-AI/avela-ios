@@ -19,7 +19,7 @@ the progress and history shown in the app. Avela does not transmit these trackin
 records to a developer-operated server.
 
 Avela does not include advertising or analytics SDKs, collect advertising
-identifiers, automatically meter Screen Time, block other apps, or record audio.
+identifiers, automatically meter Screen Time, block other apps, or save audio recordings.
 Attention results depend on your manual records; a timer alone cannot establish
 that you stayed phone-free.
 
@@ -38,7 +38,7 @@ they are not an instruction to erase historical copies in system backups.
 ## Siri and Apple Shortcuts
 
 Optional Siri and Shortcuts actions let you report a habit success or attention
-minutes. Apple handles Siri and its voice processing; Avela does not record audio.
+minutes. Apple handles Siri and its voice processing; Avela does not capture audio for Siri actions.
 Your selected habit and budget names may be shown in Apple's system suggestions
 and saved shortcuts. These reports are saved locally like your in-app entries;
 they do not verify your behavior or automatically measure phone usage. Actions
@@ -164,7 +164,7 @@ Local-only data and Apple's own collection are distinguished in
 
 If used, Avela stores manual quantities, elapsed timer state, smaller-action records, routine names/selected habits and weekly reflection answers locally. These can be included in Apple-managed device backups under your settings. They are not sent to an Avela backend or analytics service. Removing a routine or reflection does not remove habit history.
 
-If you enable Apple Watch quick logging, Avela sends today's due habit names, icons and completion state to your paired Watch using Apple's WatchConnectivity. Reflection answers and Health samples are not transferred. Disabling sharing clears the Watch's shared snapshot when it reconnects; previously received information can remain until reconnect or expiry. Siri/Shortcuts can add amounts in a habit's configured unit, following explicit user commands and Apple's device authentication controls. Avela does not record audio.
+If you enable Apple Watch quick logging, Avela sends today's due habit names, icons and completion state to your paired Watch using Apple's WatchConnectivity. Reflection answers and Health samples are not transferred. Disabling sharing clears the Watch's shared snapshot when it reconnects; previously received information can remain until reconnect or expiry. Siri/Shortcuts can add amounts in a habit's configured unit, following explicit user commands and Apple's device authentication controls. Avela does not capture audio for these Siri/Shortcuts actions.
 
 Habit intentions linked to phone-free sessions are stored locally as identifiers and a creation timestamp. Session results are your manual reports, and never independently confirm a habit or phone-free behaviour. Manageable Week uses existing archive history rather than collecting a new behavioural profile.
 
@@ -205,3 +205,17 @@ contact before submission. The current placeholder build cannot access CloudKit.
 ## Local quick amounts and derived progress
 
 Personal quick-log amounts are saved on your device as app preferences, separately for each habit and unit. They are not included in Avela’s logical iCloud recovery copy; a new installation uses default amounts. Recorded history is separate. Lifetime progress and intention-review summaries are calculated from existing records without AI or analysis of private notes. Timer minutes are elapsed recorded duration, not monitored phone usage.
+
+
+## Optional on-device reflection dictation — 2026-10-06
+
+Avela uses Apple Speech and AVFoundation when you explicitly start reflection dictation. Microphone and speech recognition permission are optional. Recognition must be supported on-device; no server fallback is used. Audio is transient and not saved. Only reviewed text added to a draft and explicitly saved becomes a reflection. Saved notes remain excluded from Avela's logical iCloud recovery copies, while Apple device backups may include them. Earlier statements that Avela never accesses the microphone are superseded for this feature. Typing remains available without permissions.
+
+
+## Focus session presentation
+
+Optional session Live Activities now support focus and phone-free sessions. The presentation includes only session timing and the selected companion, not private habit names or journal text. Neither timer monitors apps, verifies concentration, or records habit success.
+
+## Optional private habit reasons
+
+You can save an optional text reason for a habit, hide its reminders, edit it or remove it. The reason stays in local app storage and is excluded from Avela’s logical iCloud recovery copies and widget, watch and Live Activity data. Apple whole-device backups are separate. No reason text is sent to an AI service or used to infer your mental state. Recommendations use recorded progress and configured actions only.

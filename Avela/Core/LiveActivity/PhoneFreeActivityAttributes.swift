@@ -6,6 +6,7 @@ import Foundation
 struct PhoneFreeActivityAttributes: ActivityAttributes {
     struct ContentState: Codable, Hashable {
         var animal: String?
+        var isFocusSession: Bool? = nil
     }
     let sessionID: UUID
     let startedAt: Date

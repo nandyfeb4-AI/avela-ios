@@ -31,6 +31,7 @@ struct TodayRecoveryDisplay: Equatable {
     let unit: String
     let canMakeEasier: Bool
     let smallerAction: String?
+    var suggestion: HabitRecoverySuggestion? = nil
     var progressLabel: String { "\(completed) of \(target) good \(unit)" }
 }
 
@@ -199,11 +200,16 @@ final class TodayViewModel {
             archivePeriods: archivePeriods, asOf: date, calendar: calendar
         )
         let action = smallerAction?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let suggestion = HabitRecoverySuggestionCalculator.suggestion(
+            for: habit, snapshots: snapshots, completions: completions, skips: skips,
+            archivePeriods: archivePeriods, smallerAction: smallerAction, asOf: date, calendar: calendar)
+        let alreadyLogged = try activityRepository?.entries(for: habit.id, on: date).contains { $0.kind == .smallerAction } ?? false
         return TodayRecoveryDisplay(
             completed: recovery.consecutiveSuccessesSinceMiss,
             target: HabitProgressCalculator.recoveryCompletionThreshold,
             unit: unit, canMakeEasier: proposal != nil,
-            smallerAction: habit.polarity == .positive && action?.isEmpty == false ? action : nil
+            smallerAction: habit.polarity == .positive && action?.isEmpty == false ? action : nil,
+            suggestion: alreadyLogged ? nil : suggestion
         )
     }
 

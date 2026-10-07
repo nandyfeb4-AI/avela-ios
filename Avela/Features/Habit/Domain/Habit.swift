@@ -13,6 +13,9 @@ struct Habit: Identifiable, Equatable, Hashable, Sendable {
     var updatedAt: Date
     var archivedAt: Date?
     var sortOrder: Int
+    /// Private, optional motivation; never exported to logical cloud recovery.
+    var whyItMatters: String? = nil
+    var isWhyMemoryHidden: Bool = false
 
     var isArchived: Bool { archivedAt != nil }
 }

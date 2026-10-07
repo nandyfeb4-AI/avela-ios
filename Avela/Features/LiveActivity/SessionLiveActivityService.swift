@@ -6,6 +6,7 @@ struct SessionLiveActivityDescriptor: Equatable, Sendable {
     let startedAt: Date
     let expectedEnd: Date
     let animal: String?
+    var isFocusSession = false
 }
 
 @MainActor
@@ -105,7 +106,7 @@ final class SessionLiveActivityService {
     }
 
     private func activeSessions() throws -> [AttentionSession] {
-        try repository.fetchGoals().filter { $0.type == .phoneFreeSession }.flatMap {
+        try repository.fetchGoals().filter { $0.type.isTimedSession }.flatMap {
             try repository.sessions(for: $0.id).filter(\.isActive)
         }
     }
@@ -113,6 +114,7 @@ final class SessionLiveActivityService {
     private func descriptor(for session: AttentionSession) throws -> SessionLiveActivityDescriptor {
         let profile = try profiles.profile()
         return SessionLiveActivityDescriptor(sessionID: session.id, startedAt: session.startedAt,
-            expectedEnd: session.expectedEnd, animal: profile.companionEnabled ? profile.selectedAnimal.rawValue : nil)
+            expectedEnd: session.expectedEnd, animal: profile.companionEnabled ? profile.selectedAnimal.rawValue : nil,
+            isFocusSession: try repository.fetchGoal(id: session.attentionGoalID)?.type == .focusSession)
     }
 }

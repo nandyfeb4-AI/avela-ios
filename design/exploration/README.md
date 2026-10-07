@@ -102,3 +102,8 @@ The change list, measured contrast ([`prototype-vivid/CONTRAST.md`](prototype-vi
 Balance 5 failures, Vivid 0), and before/after completion renders in light
 and dark are all in that folder. It makes no claim that colour affects
 adherence. The `prototype/` folder and earlier rounds are unchanged.
+
+
+## Widget visual refinement — October 7, 2026
+
+[Three Home Screen widget treatments](widget-refinement/README.md), with an interactive comparison board. Design review before native styling; two focused widget types with labelled individual logging.

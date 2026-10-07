@@ -35,6 +35,7 @@ struct BackupPayload: Codable {
     }
     var habitReminderRecords: [HabitReminderRecordRow] = []
 
+    /// Private motivation and its visibility preference deliberately stay local.
     struct HabitRecordRow: Codable {
         var id: UUID
         var name: String

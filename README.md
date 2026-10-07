@@ -49,6 +49,7 @@ review remain required before TestFlight or App Store release.
   entitlement handling. Free supports three active habits and one attention goal;
   Premium removes creation limits. Existing tracking and history remain available
   after expiry.
+- **Quick Log widget:** optional small/medium Home Screen check-ins without opening Avela; quantity controls open their logger. Add it once from the Home Screen widget gallery (Settings → Home Screen Widgets has guidance).
 - **Widgets:** small, medium, and Lock Screen habit/attention summaries using
   read-only App Group snapshots; Home Screen companion artwork. Medium habit
   completion links open the app for a validated, idempotent write.
@@ -230,3 +231,26 @@ Nine existing themes now coordinate neutral cards, sky atmosphere, colorful cont
 Latest recovery UI evidence: [Build Momentum card and accessible Undo](docs/verification/recovery-card/README.md).
 
 Visual weekly review evidence: [Insights rings, habit bars and manual coverage](docs/verification/visual-insights/README.md).
+
+
+## Reflection dictation — 2026-10-06
+
+Owner-approved optional dictation is available in each Weekly Reflection editor prompt. Start explicitly requests optional microphone/speech access only where on-device recognition is supported; audio is ephemeral, with no network fallback or saved audio. Review/Edit → Add Text appends to the draft, and Save persists independently of metrics. Seven capture-controller tests cover unsupported/denied access, permission-wait cancellation, late callbacks, errors and append/limit behavior. Eleven existing reflection tests and two targeted UI flows passed (review/cancel/append/explicit save, existing save/cancel/relaunch). UI transcript editing is a review test, not simulated proof of microphone recognition. Hardware speech, locale availability, permissions, interruptions and background capture cleanup remain required device checks.
+
+
+## Make Room → Do It — 2026-10-06
+
+Habit Detail → Make Room now lets the user create a Focus or Phone-Free goal in place, explicitly start a session and optionally request the mascot/countdown Live Activity. Focus permits phone use; Phone-Free records an intention without blocking or monitoring apps. Existing phone-free history is preserved. Session outcomes and actual habit logging remain independent: Log What I Did opens the existing habit logger without importing elapsed minutes or automatically completing the habit. Active-session review survives relaunch; failed intention-link writes do not replace the newly started session's review destination with an older session.
+
+All 473 unit tests and four affected UI flows pass. Debug and Release build; production binaries contain none of the checked DEBUG store/fixture hooks. This is a full unit run and a targeted UI run, not a full UI-suite or physical-device certification. Native screenshots, exact commands and remaining device checks: [Make Room verification](docs/verification/make-room/README.md).
+
+Shareable feature/UX inventory and differentiation review prompt: [Features and UX review](docs/FEATURES_AND_UX_REVIEW.md).
+
+## Connected differentiation
+
+Optional private habit reasons, explainable Momentum, evidence-based recovery choices, factual weekly Make Room connections and four app-facing companion states are implemented. See [screenshots and verification](docs/verification/differentiation/README.md). 501 unit tests and four affected UI flows pass across runs; Debug and Release build. Device/distribution verification remains separate.
+
+
+## Rich Tide widgets — October 7, 2026
+
+The Home Screen gallery now offers **Quick Log** and **Routine**, each in small/medium. Approved Rich Tide uses deep theme gradients and contrasting labelled Log buttons. Remove retired Attention/Progress placements and add the replacement. Routine requires a saved routine selected in Edit Widget. Log saves a simple check-in without opening Avela; names and quantity + open the relevant app screen. Native light/dark/largest-text screenshots, 523 passing unit tests, guide UI regression, background logging checks and Release verification are recorded in [widget verification](docs/verification/two-widgets/README.md).

@@ -18,6 +18,8 @@ final class HabitRecord {
     var updatedAt: Date
     var archivedAt: Date?
     var sortOrder: Int
+    var whyItMatters: String? = nil
+    var whyMemoryHidden: Bool? = nil
     /// Lossless local recovery decoding; validation happens before insertion.
     init(backup row: BackupPayload.HabitRecordRow) {
         self.id = row.id
@@ -32,6 +34,9 @@ final class HabitRecord {
         self.updatedAt = row.updatedAt
         self.archivedAt = row.archivedAt
         self.sortOrder = row.sortOrder
+        // Private motivation is intentionally absent from logical recovery.
+        self.whyItMatters = nil
+        self.whyMemoryHidden = nil
     }
 
 
@@ -47,7 +52,9 @@ final class HabitRecord {
         createdAt: Date,
         updatedAt: Date,
         archivedAt: Date?,
-        sortOrder: Int
+        sortOrder: Int,
+        whyItMatters: String? = nil,
+        whyMemoryHidden: Bool? = nil
     ) {
         self.id = id
         self.name = name
@@ -61,6 +68,8 @@ final class HabitRecord {
         self.updatedAt = updatedAt
         self.archivedAt = archivedAt
         self.sortOrder = sortOrder
+        self.whyItMatters = whyItMatters
+        self.whyMemoryHidden = whyMemoryHidden
     }
 }
 
@@ -79,11 +88,16 @@ extension HabitRecord {
             createdAt: habit.createdAt,
             updatedAt: habit.updatedAt,
             archivedAt: habit.archivedAt,
-            sortOrder: habit.sortOrder
+            sortOrder: habit.sortOrder,
+            whyItMatters: habit.whyItMatters,
+            whyMemoryHidden: habit.isWhyMemoryHidden
         )
     }
 
     func apply(draft: HabitDraft, updatedAt: Date) {
+        whyItMatters = draft.whyItMatters?.trimmingCharacters(in: .whitespacesAndNewlines)
+        if whyItMatters?.isEmpty == true { whyItMatters = nil }
+        whyMemoryHidden = draft.isWhyMemoryHidden
         name = draft.name
         iconName = draft.iconName
         categoryRaw = draft.category.rawValue
@@ -118,7 +132,9 @@ extension HabitRecord {
             createdAt: createdAt,
             updatedAt: updatedAt,
             archivedAt: archivedAt,
-            sortOrder: sortOrder
+            sortOrder: sortOrder,
+            whyItMatters: whyItMatters,
+            isWhyMemoryHidden: whyMemoryHidden ?? false
         )
     }
 

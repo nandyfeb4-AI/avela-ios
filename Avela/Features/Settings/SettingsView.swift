@@ -23,6 +23,10 @@ struct SettingsView: View {
                     settingsLabel("Habit Order", systemImage: "arrow.up.arrow.down")
                 }
                 .accessibilityIdentifier("settings.habitOrderButton")
+                NavigationLink { WidgetGuideView() } label: {
+                    settingsLabel("Home Screen Widgets", systemImage: "square.grid.2x2")
+                }
+                .accessibilityIdentifier("settings.widgetsLink")
                 NavigationLink {
                     ShortcutsGuideView()
                 } label: {

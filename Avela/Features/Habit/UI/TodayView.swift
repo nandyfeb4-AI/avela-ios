@@ -56,6 +56,8 @@ struct TodayView: View {
     @State private var isShowingHabitOrder = false
     @State private var toast: TodayToast?
     @State private var activityHabitID: UUID?
+    @State private var recoveryChoiceID: UUID?
+    @State private var pendingRecoveryLoggerID: UUID?
     @State private var recoveryAdjustmentID: UUID?
     @State private var prioritizesSmallerAction = false
     @Environment(\.habitActivityRepository) private var activityRepository
@@ -81,7 +83,7 @@ struct TodayView: View {
         viewModel.rows.filter { $0.isCompletedToday && !pendingDoneIDs.contains($0.id) }
     }
 
-    var body: some View {
+    private var presentedContent: some View {
         todayContent
         .sheet(isPresented: $showingRoutines, onDismiss: { viewModel.load() }) {
             if let routineRepository { NavigationStack {
@@ -101,6 +103,25 @@ struct TodayView: View {
                 Task { try? await reminderService?.synchronize() }
             }
         }
+        .sheet(item: Binding(get: { recoveryChoiceID.map(ActivityHabitSelection.init) }, set: { recoveryChoiceID = $0?.id }), onDismiss: {
+            viewModel.load()
+            if let pending = pendingRecoveryLoggerID {
+                pendingRecoveryLoggerID = nil
+                prioritizesSmallerAction = true
+                activityHabitID = pending
+            }
+        }) { selection in
+            if let activityRepository {
+                NavigationStack {
+                    HabitRecoveryChoiceView(habitID: selection.id, habits: repository, activities: activityRepository,
+                        onLogSmallerAction: { pendingRecoveryLoggerID = selection.id }, onChanged: { viewModel.load() })
+                }
+            }
+        }
+    }
+
+    var body: some View {
+        presentedContent
         .safeAreaInset(edge: .bottom, spacing: 0) { toastView }
         .sensoryFeedback(.success, trigger: toast?.id) { _, new in
             companionProfile.hapticsEnabled && new != nil
@@ -212,8 +233,20 @@ struct TodayView: View {
                 emptyState
             } else {
                 ScrollView {
+                    populatedContent
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 16)
+                }
+                .appThemeCanvas()
+            }
+        }
+        .appThemeCanvas()
+    }
+
+    private var populatedContent: some View {
                     VStack(alignment: .leading, spacing: 28) {
                         pillarStrip
+                        CompanionView(profile: companionProfile, input: companionInput, compact: true)
                         habitsSection
                         recoveryCard
                         if !attentionViewModel.rows.isEmpty {
@@ -223,15 +256,7 @@ struct TodayView: View {
                             Button("Routines & Restart Plans", systemImage: "list.bullet.rectangle") { prepareForNavigation(); showingRoutines = true }
                                 .frame(minHeight: 44).accessibilityIdentifier("today.routines")
                         }
-                        CompanionView(profile: companionProfile, input: companionInput, compact: true)
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 16)
-                }
-                .appThemeCanvas()
-            }
-        }
-        .appThemeCanvas()
     }
 
     private var companionInput: CompanionInput {
@@ -427,10 +452,14 @@ struct TodayView: View {
                                         .frame(height: 7)
                                 }
                             }.accessibilityHidden(true)
-                            let actionsLayout = isAccessibilitySize
-                                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 4))
-                                : AnyLayout(HStackLayout(spacing: 16))
-                            actionsLayout { recoveryActions(row, recovery: recovery) }
+                            if isAccessibilitySize {
+                                VStack(alignment: .leading, spacing: 4) { recoveryActions(row, recovery: recovery) }
+                            } else {
+                                LazyVGrid(columns: [GridItem(.flexible(), alignment: .leading), GridItem(.flexible(), alignment: .leading)],
+                                          alignment: .leading, spacing: 4) {
+                                    recoveryActions(row, recovery: recovery)
+                                }
+                            }
                         }
                         if row.id != recovering.last?.id { Divider() }
                     }
@@ -447,6 +476,12 @@ struct TodayView: View {
         NavigationLink(value: row.id) { Text("View progress").font(.subheadline.weight(.medium)).frame(minHeight: 44) }
             .accessibilityLabel("View recovery progress for \(row.name)")
             .simultaneousGesture(TapGesture().onEnded { prepareForNavigation() })
+        if recovery.suggestion != nil && activityRepository != nil {
+            Button("A smaller step") { prepareForNavigation(); recoveryChoiceID = row.id }
+                .font(.subheadline.weight(.medium)).frame(minHeight: 44)
+                .accessibilityLabel("Review recovery choices for \(row.name)")
+                .accessibilityIdentifier("today.recovery.choice.\(row.name)")
+        }
         if recovery.canMakeEasier {
             Button("Make it easier") { prepareForNavigation(); recoveryAdjustmentID = row.id }
                 .font(.subheadline.weight(.medium)).frame(minHeight: 44)

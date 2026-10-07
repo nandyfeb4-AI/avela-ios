@@ -37,12 +37,14 @@ final class SwiftDataRoutineRepository: RoutineRepository {
                 record.updatedAt = old.updatedAt
                 throw error
             }
+            NotificationCenter.default.post(name: .avelaPersistenceDidChange, object: nil)
             return record.domain
         }
         let value = HabitRoutine(id: UUID(), name: name, habitIDs: habitIDs, createdAt: date, updatedAt: date, restartDays: restartDays)
         let record = RoutineRecord(value)
         context.insert(record)
         do { try context.save() } catch { context.delete(record); throw error }
+        NotificationCenter.default.post(name: .avelaPersistenceDidChange, object: nil)
         return value
     }
 
@@ -50,6 +52,7 @@ final class SwiftDataRoutineRepository: RoutineRepository {
         guard let record = try record(id: id) else { throw RoutineError.routineNotFound }
         context.delete(record)
         do { try context.save() } catch { context.rollback(); throw error }
+        NotificationCenter.default.post(name: .avelaPersistenceDidChange, object: nil)
     }
 
     private func record(id: UUID) throws -> RoutineRecord? {

@@ -40,6 +40,11 @@ struct AppShellView: View {
     @State private var companionProfile = CompanionProfile()
     @State private var onboardingViewModel: OnboardingViewModel?
     @State private var subscriptionManager = SubscriptionManager()
+    private struct WidgetSelection: Identifiable {
+        let id: UUID
+        let logsProgress: Bool
+    }
+    @State private var widgetSelection: WidgetSelection?
     @State private var pendingWidgetURL: URL?
     @State private var widgetActionError: String?
     @State private var didInitialize = false
@@ -96,15 +101,32 @@ struct AppShellView: View {
         .environment(\.habitActivityRepository, activityRepository)
         .environment(\.routineRepository, routineRepository)
         .environment(\.attentionIntentionRepository, attentionRepository)
+        .environment(\.attentionGoalCreationAllowed, { subscriptionManager.canCreateAttentionGoal(activeCount: $0) })
         .environment(\.intentionLinkRepository, intentionLinks)
         .environment(\.habitReminderService, reminderService)
         .environment(\.healthHabitService, healthService)
         .environment(\.sessionLiveActivityService, liveActivityService)
+        .sheet(item: $widgetSelection, onDismiss: refreshVisibleData) { selection in
+            if let repository {
+                if selection.logsProgress, let activityRepository {
+                    HabitActivityView(habitID: selection.id, repository: activityRepository, habits: repository)
+                } else {
+                    WidgetHabitDestination(habitID: selection.id, repository: repository, onViewHistory: { id in
+                        widgetSelection = nil
+                        historyViewModel?.selectedHabitID = id
+                        selectedTab = .history
+                        historyViewModel?.load()
+                    })
+                }
+            }
+        }
         .onOpenURL { url in
             if didInitialize { handleWidgetURL(url) } else { pendingWidgetURL = url }
         }
         .onReceive(NotificationCenter.default.publisher(for: .avelaPersistenceDidChange)) { _ in
-            exportWidgetSnapshot()
+            // Background widget intents publish their final, pinned projection
+            // after the save. Do not race that export with an unpinned reload.
+            if scenePhase == .active { exportWidgetSnapshot() }
             synchronizeLiveActivity()
             watchCoordinator?.refresh()
             todayViewModel?.load()
@@ -339,7 +361,7 @@ struct AppShellView: View {
         #if DEBUG
         guard ProcessInfo.processInfo.environment["AVELA_UI_TEST_STORE_PATH"] == nil else { return }
         #endif
-        do { try WidgetSnapshotExporter().export(habits: repository, attention: attentionRepository, profiles: profiles, calendar: .autoupdatingCurrent) }
+        do { try WidgetSnapshotExporter().export(habits: repository, attention: attentionRepository, profiles: profiles, activity: activityRepository, routines: routineRepository, theme: appTheme, calendar: .autoupdatingCurrent) }
         catch {
             Logger(subsystem: "com.example.Avela", category: "Widgets").error("Widget export failed: \(String(describing: error), privacy: .private)")
         }
@@ -349,6 +371,11 @@ struct AppShellView: View {
         guard let repository else { return }
         do {
             let result = try WidgetActionHandler(repository: repository, calendar: .autoupdatingCurrent).handle(url)
+            switch result {
+            case .openedHabit(let id): widgetSelection = WidgetSelection(id: id, logsProgress: false)
+            case .openedProgress(let id): widgetSelection = WidgetSelection(id: id, logsProgress: true)
+            default: break
+            }
             if result != .ignored {
                 selectedTab = .today
                 refreshVisibleData()

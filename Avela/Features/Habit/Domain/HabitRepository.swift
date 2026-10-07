@@ -7,6 +7,7 @@ enum HabitRepositoryError: Error, Equatable {
     case invalidSchedule
     case manualQuantityRequiresPositivePolarity
     case invalidHabitOrder
+    case invalidWhyMemory
 }
 
 /// Domain-facing persistence boundary for habits, their configuration history,

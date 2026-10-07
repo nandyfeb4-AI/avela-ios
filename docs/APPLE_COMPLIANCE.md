@@ -259,3 +259,28 @@ This slice reuses recorded progress and existing support tools. No new data coll
 ### Visual Insights presentation — 2026-10-06
 
 Charts visualize existing recorded data locally. Manual attention is explicitly reported, with missing days unknown; habit consistency and usage coverage are separate. No causal/medical claims, AI, collection, permission or commercial gate is added. This is native simulator implementation evidence; physical accessibility verification remains pending.
+
+
+## Optional reflection dictation — 2026-10-06
+
+Owner-approved microphone capture is limited to explicit Start Dictation in the reflection editor. NSMicrophoneUsageDescription and NSSpeechRecognitionUsageDescription explain editable reflection transcription. Permission denial never prevents typed reflections or habit tracking. No prompt occurs simply by opening the editor or dictation preview. Check SFSpeechRecognizer.supportsOnDeviceRecognition and isAvailable before authorization/capture and set requiresOnDeviceRecognition=true on every request. Unsupported device/language fails closed; do not fall back to Apple's server recognition. Audio buffers are transient, with no file/analytics/LLM upload. Stop removes the audio tap, cancels recognition and deactivates the audio session on Stop, Cancel, dismissal, background, interruption, errors and a 55-second limit. Cancellation during permission waits invalidates the capture token. Late results cannot change review text. Saved text is private reflection data under existing backup exclusions. Earlier no-microphone statements describe the earlier build or other integrations and are superseded for this optional feature.
+
+Primary references: [on-device capability](https://developer.apple.com/documentation/speech/sfspeechrecognizer/supportsondevicerecognition), [required on-device request](https://developer.apple.com/documentation/speech/sfspeechrecognitionrequest/requiresondevicerecognition), [microphone permission](https://developer.apple.com/documentation/avfaudio/avaudioapplication/requestrecordpermission(completionhandler:)). No change to current tracking/collection privacy manifest declarations: audio/text are not sent off-device by this feature. Actual locale support, denied/granted permission, interruptions and hardware microphone delivery remain physical-device gates; simulator UI review tests do not prove transcription.
+
+
+## Focus session presentation — 2026-10-06
+
+The owner-approved Focus Session permits other app use and uses the existing locally recorded, manually reported session lifecycle. It requests no Screen Time/Family Controls capability and makes no concentration verification claim. Live Activity presentation is explicitly selected and identifies focus versus phone-free without exposing the habit name. Duration/system availability limits remain unchanged. Timers never grant habit completion or mark other apps blocked. New session-goal creation uses the same subscription creation policy, without deleting or restricting existing history on expiry. No new permissions, remote service, tracking or audio capability is introduced by this flow.
+
+## Differentiation privacy and truthful presentation
+
+Private habit reasons are local optional text, excluded from Avela logical cloud recovery and shared watch/widget/Live Activity data. This enrichment requests no new permission and adds no third-party service. Momentum and recovery suggestions are deterministic projections of persisted tracking, not health advice or AI inference. Timer starts are identified as starts, never verified focus or habit success. No automatic resumption date is promised. Photo memory remains unimplemented.
+
+## Interactive Quick Log widget
+
+Uses native WidgetKit Button(intent:), App Intents and existing App Group JSON only; no added entitlement, microphone, tracking, analytics or dependency. The app owns all database writes. LiveActivityIntent selects app-process execution without opening UI or creating a Live Activity; see [Apple's WidgetKit interactivity documentation](https://developer.apple.com/documentation/widgetkit/adding-interactivity-to-widgets-and-live-activities). Actions require local device authentication; locked-device behavior remains under iOS control. Habit names/progress are marked privacy-sensitive and the optional setup guide explains Home Screen visibility. Artwork/private habit memories are not added to Quick Log. Provisioned device/App Group checks remain necessary before distribution.
+
+
+## Two focused widgets — 2026-10-07
+
+Routine names/IDs/order join the existing app-exported shared widget projection for explicit Home Screen selection. AppEntity queries read only JSON, never SwiftData in the extension. No reason/photo/Health sample/reflection export, new permission, entitlement, SDK or remote processing. Native configurable widgets and app-process logging retain local-device authentication and canonical capability guards. Individual logging is explicit; no routine bulk success or false attention measurement. Existing Live Activity behavior remains time-bound and unchanged.

@@ -3,6 +3,66 @@ import XCTest
 /// Public user flows only. Each method uses an isolated persistent store;
 /// no fixture can reach a real user's data or manufacture a session result.
 final class MVPFlowTests: XCTestCase {
+
+
+    func testWidgetGuideIsOptionalAndExplainsSeparateControls() {
+        let app = launch()
+        waitAndTap(app.tabBars.buttons["Settings"])
+        waitAndTap(app.buttons["settings.widgetsLink"])
+        XCTAssertTrue(app.navigationBars["Home Screen Widgets"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Tap Log to save a simple check-in here."].exists)
+        XCTAssertTrue(app.staticTexts["Tap a habit name to open its details."].exists)
+        XCTAssertTrue(app.staticTexts["Tap + to log an amount or duration in Avela."].exists)
+        let routineHelp = app.staticTexts["Create a routine in Avela first. Add the Routine widget, then touch and hold it → Edit Widget → choose your routine."]
+        for _ in 0..<4 { if routineHelp.isHittable { break }; app.swipeUp() }
+        XCTAssertTrue(routineHelp.exists)
+    }
+
+    func testRecoveryChoicesRequireConfirmationAndSmallerLoggerDoesNotAutoSave() {
+        let app = launch(fixture: "recoveryProgress")
+        waitAndTap(app.buttons["today.recovery.choice.Read"])
+        XCTAssertTrue(app.staticTexts["Read one paragraph"].waitForExistence(timeout: 10))
+        let screenshot = XCTAttachment(screenshot: app.screenshot()); screenshot.name = "Optional recovery choices"; screenshot.lifetime = .keepAlways; add(screenshot)
+        waitAndTap(app.buttons["recoveryChoice.pause"])
+        waitAndTap(app.alerts.buttons["Keep Habit"])
+        XCTAssertTrue(app.buttons["recoveryChoice.smallerAction"].exists)
+        waitAndTap(app.buttons["recoveryChoice.smallerAction"])
+        XCTAssertTrue(app.buttons["activity.logSmaller"].waitForExistence(timeout: 10), app.debugDescription)
+        waitAndTap(app.buttons["Done"])
+        XCTAssertEqual(app.staticTexts["today.recovery.progress.Read"].label, "2 of 3 good days")
+        waitAndTap(app.buttons["today.recovery.choice.Read"])
+        waitAndTap(app.buttons["recoveryChoice.pause"])
+        let confirmation = XCTAttachment(screenshot: app.screenshot()); confirmation.name = "Recovery pause confirmation"; confirmation.lifetime = .keepAlways; add(confirmation)
+        waitAndTap(app.alerts.buttons["Pause Habit"])
+
+        XCTAssertFalse(app.buttons["today.recovery.choice.Read"].waitForExistence(timeout: 2))
+        waitAndTap(app.tabBars.buttons["Settings"])
+        waitAndTap(app.buttons["settings.archivedHabitsLink"])
+        XCTAssertTrue(app.staticTexts["Read"].waitForExistence(timeout: 10))
+    }
+
+    func testMomentumShowsRecordedFactsAndOptionalReasonSurvivesRelaunch() {
+        let app = launch(fixture: "recoveryProgress")
+        waitAndTap(app.buttons["View recovery progress for Read"])
+        waitAndTap(app.buttons["habitDetail.editButton"])
+        let memory = app.textFields["habitForm.whyMemory"]
+        waitAndTap(memory)
+        memory.typeText("To make space for ideas")
+        waitAndTap(app.buttons["habitForm.saveButton"])
+        let reason = app.staticTexts["habitDetail.whyMemory"]
+        XCTAssertTrue(reason.waitForExistence(timeout: 10))
+        XCTAssertEqual(reason.label, "To make space for ideas")
+        waitAndTap(app.buttons["habitDetail.momentum"])
+        XCTAssertTrue(app.staticTexts["momentum.recentCounts"].waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts["momentum.recentCounts"].label, "2 of 4 resolved commitments kept")
+        XCTAssertEqual(app.staticTexts["momentum.recovery"].label, "2 of 3 good days")
+        XCTAssertEqual(app.staticTexts["momentum.lifetime"].label, "2 successful check-in days")
+        let screenshot = XCTAttachment(screenshot: app.screenshot()); screenshot.name = "Explainable Momentum"; screenshot.lifetime = .keepAlways; add(screenshot)
+        app.terminate(); app.launchEnvironment.removeValue(forKey: "AVELA_UI_TEST_SEED_FIXTURE"); app.launch()
+        waitAndTap(app.buttons["View recovery progress for Read"])
+        XCTAssertEqual(reason.label, "To make space for ideas")
+    }
+
     func testVisualInsightsShowsExactCommitmentsCoverageAndReadOnlyNavigation() {
         let app = launch(fixture: "visualInsights")
         waitAndTap(app.tabBars.buttons["Insights"])
@@ -293,6 +353,54 @@ final class MVPFlowTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["A Gentle Restart"].waitForExistence(timeout: 10))
     }
 
+    func testMakeRoomCreatesFocusSessionAndRequiresSeparateHabitLogging() {
+        let app = launch(liveActivity: true)
+        waitAndTap(app.buttons["today.addHabitButton"])
+        let name = app.textFields["habitForm.nameField"]
+        waitAndTap(name); name.typeText("Read")
+        waitAndTap(app.buttons["habitForm.saveButton"])
+        waitAndTap(app.buttons["Open Read details"])
+        waitAndTap(app.buttons["habitDetail.intention"])
+        waitAndTap(app.buttons["intentionSession.createGoal"])
+        waitAndTap(app.buttons["attentionGoalForm.saveButton"])
+        XCTAssertTrue(app.staticTexts["Using your phone is allowed. Elapsed time never verifies concentration or completes this habit."].waitForExistence(timeout: 10))
+        let toggle = app.switches["intentionSession.islandToggle"]
+        XCTAssertTrue(toggle.waitForExistence(timeout: 10))
+        for _ in 0..<5 where !toggle.isHittable { app.swipeUp() }
+        XCTAssertTrue(toggle.isHittable)
+        toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap()
+        let ready = XCTAttachment(screenshot: app.screenshot()); ready.name = "Make Room focus setup"; ready.lifetime = .keepAlways; add(ready)
+        waitAndTap(app.buttons["intentionSession.start"])
+        let message = app.staticTexts["intentionSession.activityMessage"]
+        for _ in 0..<5 where !message.isHittable { app.swipeUp() }
+        XCTAssertTrue(message.waitForExistence(timeout: 10))
+        if message.label.contains("requested") {
+            XCUIDevice.shared.press(.home)
+            let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+            XCTAssertTrue(springboard.wait(for: .runningForeground, timeout: 10))
+            springboard.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.02)).press(forDuration: 1.5)
+            let island = XCTAttachment(screenshot: springboard.screenshot()); island.name = "Make Room focus Dynamic Island"; island.lifetime = .keepAlways; add(island)
+            app.activate()
+        }
+        app.terminate(); app.launch()
+        XCTAssertTrue(app.buttons["Mark Read complete"].waitForExistence(timeout: 10), "Starting a focus session must not log a habit")
+        waitAndTap(app.buttons["Open Read details"])
+        waitAndTap(app.buttons["habitDetail.intention"])
+        waitAndTap(app.buttons["intentionSession.openStarted"])
+        XCTAssertFalse(app.buttons["attentionWindow.kept"].isEnabled)
+        XCTAssertEqual(app.buttons["attentionWindow.kept"].label, "I Stayed Focused")
+        waitAndTap(app.buttons["attentionWindow.interrupted"])
+        app.terminate(); app.launch()
+        XCTAssertTrue(app.buttons["Mark Read complete"].waitForExistence(timeout: 10), "Reporting a session must not log the habit")
+        waitAndTap(app.buttons["Open Read details"])
+        waitAndTap(app.buttons["habitDetail.intention"])
+        waitAndTap(app.buttons["intentionSession.logHabit"])
+        waitAndTap(app.buttons["activity.logSuccess"])
+        app.terminate(); app.launch()
+        waitAndTap(app.buttons["today.doneToggle"])
+        XCTAssertTrue(app.buttons["Undo completion for Read"].waitForExistence(timeout: 10))
+    }
+
     func testPhoneFreeIntentionStaysSeparateFromHabitCompletion() {
         let app = launch(fixture: "populated")
         createGoal(named: "Room to read", type: "Phone-free session", in: app)
@@ -346,6 +454,33 @@ final class MVPFlowTests: XCTestCase {
         let done = app.buttons["today.doneToggle"]
         XCTAssertTrue(done.waitForExistence(timeout: 10))
         XCTAssertTrue(done.label.contains("1 habit"))
+    }
+
+    /// Exercises review/append/cancel without pretending simulator text is microphone input.
+    func testReflectionDictationReviewRequiresInsertionAndExplicitSave() {
+        let app = launch()
+        waitAndTap(app.tabBars.buttons["Settings"])
+        let link = app.buttons["settings.reflection"]
+        for _ in 0..<8 where !link.isHittable { app.swipeUp() }
+        waitAndTap(link)
+        waitAndTap(app.buttons["reflection.write"])
+        let answer = app.textViews["reflection.helpedEditor"]
+        waitAndTap(answer); answer.typeText("Reading helped.")
+        waitAndTap(app.buttons["reflection.dictate.helped"])
+        XCTAssertFalse(app.buttons["reflection.dictation.insert"].isEnabled)
+        XCTAssertTrue(app.buttons["reflection.dictation.start"].exists)
+        let text = app.textViews["reflection.dictation.transcript"]
+        waitAndTap(text); text.typeText("Walking helped too.")
+        waitAndTap(app.buttons["reflection.dictation.cancel"])
+        XCTAssertEqual(answer.value as? String, "Reading helped.")
+        waitAndTap(app.buttons["reflection.dictate.helped"])
+        waitAndTap(text); text.typeText("Walking helped too.")
+        let preview = XCTAttachment(screenshot: app.screenshot())
+        preview.name = "Dictation review before explicit insertion"; preview.lifetime = .keepAlways; add(preview)
+        waitAndTap(app.buttons["reflection.dictation.insert"])
+        XCTAssertEqual(answer.value as? String, "Reading helped.\n\nWalking helped too.")
+        waitAndTap(app.buttons["reflection.save"])
+        XCTAssertEqual(app.staticTexts["reflection.savedHelped"].label, "Reading helped.\n\nWalking helped too.")
     }
 
     func testWeeklyReflectionSaveCancelAndRelaunch() {
@@ -562,6 +697,10 @@ final class MVPFlowTests: XCTestCase {
         let firstHabit = app.buttons["Mark Read complete"]
         XCTAssertTrue(firstHabit.waitForExistence(timeout: 10))
         XCTAssertTrue(firstHabit.isHittable, "The first habit action should be visible without scrolling past companion/routines")
+        let companion = app.staticTexts["companion.summary"]
+        XCTAssertTrue(companion.waitForExistence(timeout: 10))
+        XCTAssertTrue(companion.isHittable, "The companion should be visible beside the daily overview without scrolling")
+        XCTAssertLessThan(companion.frame.maxY, firstHabit.frame.minY, "Companion context belongs before the actionable habit list")
         let originalToday = XCTAttachment(screenshot: app.screenshot())
         originalToday.name = "Atmospheric Tidewater Today"; originalToday.lifetime = .keepAlways; add(originalToday)
         waitAndTap(app.tabBars.buttons["Settings"])
@@ -1253,5 +1392,7 @@ final class MVPFlowTests: XCTestCase {
         undo.tap()
         XCTAssertEqual(app.buttons["habitDetail.skipButton"].label, "Skip Today")
     }
+
+
 
 }

@@ -155,3 +155,27 @@ Use neutral reading surfaces, the selected theme's accent for three restrained p
 Use a neutral card hierarchy over the selected atmospheric canvas: completed-week header, consistency ring, factual highlights, per-habit bars, then separate manual attention and intention review. The selected accent carries progress; stable habit icon identities and explicit archived text preserve context. Use explicit InkSecondary for card/link metadata so secondary labels do not inherit a faint accent tint. Bar tracks have visible outlines.
 
 At accessibility text sizes, stack ring and explanation, retain full count labels and reveal content by scrolling instead of squeezing an entire dashboard into one viewport. Chart geometry is decorative to assistive tools; actual percentages, counts, provenance and navigation labels carry meaning. No chart animation or new haptics. Never plot fabricated intermediate trend points.
+
+
+## Today companion placement — 2026-10-06
+
+The owner-requested compact companion status card now sits immediately below the daily summary and before habit actions, rather than after routines at the bottom of Today. This supersedes the earlier bottom-placement guidance. The companion remains optional, reflects real state, and retains its existing Reduce Motion and scalable-text behavior. No progress, persistence, permissions or feature scope changes.
+
+## Differentiation presentation
+
+Momentum uses native, adaptive fact cards on the selected theme canvas; semantic color emphasizes counts without being the sole signal. Optional memory and recovery choices use existing native form/list and alert patterns. The compact companion uses four labelled presentation states and distinct existing poses, with a restrained crossfade disabled under Reduce Motion. No idle loops, reward economy or extra navigation tabs.
+
+## Quick Log widget
+
+Neutral native widget background, system typography, selected theme accent for controls (exported RGB tokens, no duplicated theme mapping). This exception applies to Quick Log; earlier progress/budget widgets and Live Activities retain their existing treatment. No decorative mascot or analytics. A separate 44pt control logs; name/body opens details. Completed rows use a static checkmark plus 'Logged today', quantities a plus and in-app route, skips an explicit text state. Medium uses a row-major 2×2 grid in habit order. At the first accessibility text size, small shows one row and medium two in one column; at larger accessibility sizes both show one row. Text is not forcibly scaled down. There are no bespoke animations.
+
+
+## Two focused widgets — Rich Tide, 2026-10-07
+
+Quick Log and Routine are the two Home Screen choices. The approved Rich Tide treatment uses a deep selected-theme gradient, off-white text and pale solid 44pt-high Log buttons with deep contrasting ink. Surfaces derive from the exported light accent; there is no second registry of theme colors. A restrained lower tonal arc adds depth without decorative art behind reading text. Increase Contrast or Reduce Transparency uses a solid deep surface instead. Static styling adds no animation or permission.
+
+Quick Log shows two small/four medium rows; Routine shows one small/two medium steps in a vertical sequence. Accessibility sizes reduce capacity and allow names to wrap. Completed/skipped/weekly-met states retain explicit text. Quantity + is a distinct softly tinted in-app action; Log saves a simple check-in without opening the app. Setup, empty and stale states use the same surface. No decorative mascot or mandatory app-opening action.
+
+The palette regression verifies primary/secondary text and Log ink at 4.5:1, and action boundaries at 3:1, for both gradient endpoints in every theme and appearance. Native evidence and remaining device checks are in [two-widget verification](verification/two-widgets/README.md). System tinted rendering is controlled by iOS and remains a physical-device check.
+
+Widget pending feedback is confined to the status caption, following [Apple's guidance to use invalidatable content judiciously](https://developer.apple.com/documentation/widgetkit/adding-interactivity-to-widgets-and-live-activities). Do not invalidate the complete Log button or show completed state before its save. Cold background startup may still take time; stable action styling does not promise instant execution.

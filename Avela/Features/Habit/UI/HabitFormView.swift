@@ -14,6 +14,8 @@ struct HabitFormView: View {
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @State private var whyItMatters: String
+    @State private var isWhyMemoryHidden: Bool
     @State private var name: String
     @State private var iconName: String
     @State private var category: HabitCategory
@@ -25,6 +27,8 @@ struct HabitFormView: View {
     init(initialDraft: HabitDraft? = nil, onSave: @escaping (HabitDraft) -> Void) {
         self.initialDraft = initialDraft
         self.onSave = onSave
+        _whyItMatters = State(initialValue: initialDraft?.whyItMatters ?? "")
+        _isWhyMemoryHidden = State(initialValue: initialDraft?.isWhyMemoryHidden ?? false)
         _name = State(initialValue: initialDraft?.name ?? "")
         _category = State(initialValue: initialDraft?.category ?? .other)
         _polarity = State(initialValue: initialDraft?.polarity ?? .positive)
@@ -123,6 +127,20 @@ struct HabitFormView: View {
                     TextField("Habit name", text: $name)
                         .accessibilityIdentifier("habitForm.nameField")
                 }
+
+                Section {
+                    TextField("A sentence for your future self", text: $whyItMatters, axis: .vertical)
+                        .lineLimit(2...5)
+                        .accessibilityIdentifier("habitForm.whyMemory")
+                    Text("\(whyItMatters.count) / 240 characters")
+                        .font(.caption).foregroundStyle(.secondary)
+                    if !whyItMatters.isEmpty {
+                        Toggle("Show when I need a reminder", isOn: Binding(
+                            get: { !isWhyMemoryHidden }, set: { isWhyMemoryHidden = !$0 }))
+                            .accessibilityIdentifier("habitForm.showWhyMemory")
+                    }
+                } header: { Text("Why this matters · optional") }
+                  footer: { Text("A private reason, shown during recovery or before Make Room. Stored on this device; excluded from Avela’s iCloud recovery copies. You can hide or remove it anytime.") }
 
                 Section("Icon") {
                     // `.adaptive(minimum:)` recomputes how many columns fit
@@ -255,6 +273,7 @@ struct HabitFormView: View {
     }
 
     private var isValid: Bool {
+        guard whyItMatters.count <= 240 else { return false }
         guard !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return false }
         if scheduleKind == .weekdays && selectedWeekdays.isEmpty { return false }
         return true
@@ -272,7 +291,9 @@ struct HabitFormView: View {
             iconName: iconName,
             category: category,
             polarity: polarity,
-            schedule: schedule
+            schedule: schedule,
+            whyItMatters: whyItMatters,
+            isWhyMemoryHidden: isWhyMemoryHidden
         )
         onSave(draft)
     }

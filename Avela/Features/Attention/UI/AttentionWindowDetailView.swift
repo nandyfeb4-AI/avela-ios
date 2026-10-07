@@ -14,7 +14,7 @@ struct AttentionWindowDetailView: View {
         List {
             Section("Goal") {
                 HStack(spacing: 12) {
-                    AppIconBadge(symbol: viewModel.goalType == .phoneFreeSession ? "moon" : "clock")
+                    AppIconBadge(symbol: viewModel.goalType.isTimedSession ? "moon" : "clock")
                         .accessibilityHidden(true)
                     Text(viewModel.name).font(.title2.weight(.semibold))
                 }.padding(.vertical, 8)
@@ -23,22 +23,22 @@ struct AttentionWindowDetailView: View {
                     Text(summary.statusLabel).foregroundStyle(.secondary)
                         .accessibilityIdentifier("attentionWindow.status")
                 }
-                Text("Avela does not monitor or block phone use. Results are your own check-ins.")
+                Text(viewModel.goalType == .focusSession ? "Focus on your activity. Using your phone is allowed; Avela does not block or monitor apps." : "Avela does not monitor or block phone use. Results are your own check-ins.")
                     .font(.caption).foregroundStyle(.secondary)
             }
-            Section(viewModel.goalType == .phoneFreeSession ? "Session" : "Check In") {
-                if viewModel.goalType == .phoneFreeSession && viewModel.activeSession == nil {
-                    Button("Start Phone-Free Session") { viewModel.startSession() }
+            Section(viewModel.goalType.isTimedSession ? "Session" : "Check In") {
+                if viewModel.goalType.isTimedSession && viewModel.activeSession == nil {
+                    Button(viewModel.goalType == .focusSession ? "Start Focus Session" : "Start Phone-Free Session") { viewModel.startSession() }
                         .accessibilityIdentifier("attentionWindow.startSession")
                 } else {
                     if let session = viewModel.activeSession {
                         Text("Started \(session.startedAt.formatted(date: .abbreviated, time: .shortened))")
                         Text("Target ends \(session.expectedEnd.formatted(date: .abbreviated, time: .shortened))")
                         if viewModel.presentationDate >= session.expectedEnd {
-                            Text("Time elapsed. Confirm whether you stayed phone-free.")
+                            Text(viewModel.goalType == .focusSession ? "Time elapsed. Confirm whether you stayed focused." : "Time elapsed. Confirm whether you stayed phone-free.")
                         }
                     }
-                    Button("I Kept It") { viewModel.report(.kept) }
+                    Button(viewModel.goalType == .focusSession ? "I Stayed Focused" : "I Kept It") { viewModel.report(.kept) }
                         .disabled(!viewModel.canReportKept(at: viewModel.presentationDate))
                         .accessibilityIdentifier("attentionWindow.kept")
                     Button("I Was Interrupted") { viewModel.report(.interrupted) }

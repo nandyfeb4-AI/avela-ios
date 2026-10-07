@@ -5,6 +5,57 @@ import UIKit
 
 @MainActor
 final class CompanionTests: XCTestCase {
+    func testFourPresentationStatesUseDistinctExistingPosesForEveryAnimal() throws {
+        XCTAssertEqual(CompanionPresentationState.allCases.count, 4)
+        for animal in CompanionAnimal.allCases {
+            var poses = Set<Data>()
+            for state in CompanionPresentationState.allCases {
+                let image = try XCTUnwrap(CompanionArtwork.image(animal: animal.rawValue, state: state.artworkState.rawValue))
+                poses.insert(try XCTUnwrap(image.pngData()))
+            }
+            XCTAssertEqual(poses.count, 4)
+        }
+    }
+
+    func testPresentationProgressIsRecordedRatherThanTransientOrInferred() {
+        var input = CompanionInput(meaningfulCompletion: true, hasActiveSession: true, dueHabits: 20)
+        XCTAssertEqual(CompanionPresentation.state(for: input), .steady)
+        XCTAssertTrue(CompanionPresentation.message(for: input).contains("session is running"))
+        input.completedHabits = 1
+        input.meaningfulCompletion = false
+        XCTAssertEqual(CompanionPresentation.state(for: input), .buildingMomentum)
+        XCTAssertTrue(CompanionPresentation.message(for: input).contains("1 habit logged today"))
+        input.completedHabits = 2
+        XCTAssertTrue(CompanionPresentation.message(for: input).contains("2 habits logged today"))
+    }
+
+    func testPresentationKeepsBudgetFactsAndRecoveryAheadOfProgress() {
+        var input = CompanionInput(loggedAttentionStates: [.exceeded], isRecovering: true, completedHabits: 2)
+        XCTAssertEqual(CompanionPresentation.state(for: input), .needsSpace)
+        XCTAssertEqual(CompanionPresentation.state(for: input).title, "Logged budget exceeded")
+        XCTAssertTrue(CompanionPresentation.message(for: input).contains("manually logged"))
+        XCTAssertFalse(CompanionPresentation.message(for: input).contains("overloaded"))
+        input.loggedAttentionStates = [.nearLimit]
+        XCTAssertEqual(CompanionPresentation.state(for: input), .recovering)
+        XCTAssertTrue(CompanionPresentation.message(for: input).contains("close to a budget"))
+        input.isRecovering = false
+        XCTAssertEqual(CompanionPresentation.state(for: input), .buildingMomentum)
+        XCTAssertTrue(CompanionPresentation.message(for: input).contains("close to a budget"))
+        input.completedHabits = 0
+        XCTAssertEqual(CompanionPresentation.state(for: input), .steady)
+        XCTAssertTrue(CompanionPresentation.message(for: input).contains("manually logged"))
+    }
+
+    func testMissingRecordsNeverInferOverloadOrHealthyAttention() {
+        let input = CompanionInput(attentionGoalCount: 4, dueHabits: 100)
+        XCTAssertEqual(CompanionPresentation.state(for: input), .steady)
+        let message = CompanionPresentation.message(for: input).lowercased()
+        XCTAssertTrue(message.contains("isn't fully logged"))
+        for unsupportedClaim in ["healthy", "on track", "overloaded", "failed"] {
+            XCTAssertFalse(message.contains(unsupportedClaim))
+        }
+    }
+
     func testEveryAnimalAndStateLoadsDistinctBundledArtwork() throws {
         for animal in CompanionAnimal.allCases {
             var poses = Set<Data>()

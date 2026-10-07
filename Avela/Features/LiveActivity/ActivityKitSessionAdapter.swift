@@ -9,7 +9,7 @@ final class ActivityKitSessionAdapter: SessionLiveActivityAdapter {
         currentActivities.map {
             SessionLiveActivityDescriptor(sessionID: $0.attributes.sessionID,
                 startedAt: $0.attributes.startedAt, expectedEnd: $0.attributes.expectedEnd,
-                animal: $0.content.state.animal)
+                animal: $0.content.state.animal, isFocusSession: $0.content.state.isFocusSession == true)
         }
     }
 
@@ -21,7 +21,7 @@ final class ActivityKitSessionAdapter: SessionLiveActivityAdapter {
 
     func update(_ descriptor: SessionLiveActivityDescriptor) async {
         for activity in currentActivities where activity.attributes.sessionID == descriptor.sessionID {
-            if activity.content.state.animal != descriptor.animal {
+            if activity.content.state.animal != descriptor.animal || (activity.content.state.isFocusSession == true) != descriptor.isFocusSession {
                 await activity.update(content(descriptor))
             }
         }
@@ -40,7 +40,7 @@ final class ActivityKitSessionAdapter: SessionLiveActivityAdapter {
     }
 
     private func content(_ descriptor: SessionLiveActivityDescriptor) -> ActivityContent<PhoneFreeActivityAttributes.ContentState> {
-        ActivityContent(state: PhoneFreeActivityAttributes.ContentState(animal: descriptor.animal),
+        ActivityContent(state: PhoneFreeActivityAttributes.ContentState(animal: descriptor.animal, isFocusSession: descriptor.isFocusSession),
             staleDate: descriptor.expectedEnd)
     }
 }

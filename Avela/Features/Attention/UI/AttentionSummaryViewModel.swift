@@ -68,7 +68,7 @@ final class AttentionSummaryViewModel {
         do {
             let goals = try repository.fetchGoals()
             rows = try goals.map { try row(for: $0, asOf: date) }
-            hasActiveSession = try goals.filter { $0.type == .phoneFreeSession }.contains {
+            hasActiveSession = try goals.filter { $0.type.isTimedSession }.contains {
                 try repository.sessions(for: $0.id).contains(where: \.isActive)
             }
         } catch {

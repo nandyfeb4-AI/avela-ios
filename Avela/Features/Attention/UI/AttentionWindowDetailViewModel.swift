@@ -33,9 +33,9 @@ struct AttentionWindowSummary {
     @MainActor
     static func make(goal: AttentionGoal, configuration: AttentionGoalConfigurationSnapshot,
                      repository: AttentionRepository, date: Date, calendar: Calendar) throws -> AttentionWindowSummary {
-        if goal.type == .phoneFreeSession {
+        if goal.type.isTimedSession {
             let active = try repository.sessions(for: goal.id).last(where: \.isActive)
-            let label = "\((active?.targetMinutes ?? configuration.targetValue).formatted()) min phone-free session"
+            let label = "\((active?.targetMinutes ?? configuration.targetValue).formatted()) min \(goal.type.label.lowercased())"
             guard let active else { return AttentionWindowSummary(targetLabel: label, statusLabel: "Start a session when you're ready", state: nil) }
             return AttentionWindowSummary(targetLabel: label,
                 statusLabel: date >= active.expectedEnd ? "Time elapsed · confirm your result" : "Session active · self-reported", state: nil)
@@ -98,7 +98,7 @@ final class AttentionWindowDetailViewModel {
                 windowStartMinute: configuration.windowStartMinute, windowEndMinute: configuration.windowEndMinute)
             summary = try AttentionWindowSummary.make(goal: goal, configuration: configuration,
                 repository: repository, date: date, calendar: calendar)
-            if goal.type == .phoneFreeSession {
+            if goal.type.isTimedSession {
                 sessionHistory = try repository.sessions(for: goalID)
                 activeSession = sessionHistory.last(where: \.isActive)
             } else {
@@ -139,7 +139,7 @@ final class AttentionWindowDetailViewModel {
 
     func report(_ outcome: AttentionCheckInOutcome, asOf date: Date = Date()) {
         do {
-            if goalType == .phoneFreeSession {
+            if goalType.isTimedSession {
                 guard let activeSession else { throw AttentionRepositoryError.invalidCheckIn }
                 _ = try repository.finishSession(id: activeSession.id, outcome: outcome, at: date)
             } else {

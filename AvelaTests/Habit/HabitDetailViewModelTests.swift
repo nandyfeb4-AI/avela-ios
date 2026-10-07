@@ -25,6 +25,25 @@ final class HabitDetailViewModelTests: XCTestCase {
         return SwiftDataHabitRepository(modelContext: container.mainContext, calendar: calendar)
     }
 
+    func testMemoryOnlySurfacesDuringRecoveryAndHidingKeepsItsText() throws {
+        let repository = try makeRepository()
+        let habit = try repository.createHabit(.init(name: "Read", iconName: "book.fill", category: .learning,
+            polarity: .positive, schedule: .daily, whyItMatters: "Stay curious."), at: day0)
+        let model = HabitDetailViewModel(habitID: habit.id, repository: repository, calendar: calendar)
+        model.load(asOf: day0)
+        XCTAssertNil(model.whyMemory, "No unsolicited reason card during an ordinary pending day")
+        XCTAssertEqual(model.draft?.whyItMatters, "Stay curious.")
+        model.load(asOf: day(2))
+        XCTAssertEqual(model.whyMemory, "Stay curious.")
+        model.hideWhyMemory(asOf: day(2))
+        XCTAssertNil(model.whyMemory)
+        XCTAssertEqual(try repository.fetchHabit(id: habit.id)?.whyItMatters, "Stay curious.")
+        let reopened = HabitDetailViewModel(habitID: habit.id, repository: repository, calendar: calendar)
+        reopened.load(asOf: day(2))
+        XCTAssertNil(reopened.whyMemory)
+        XCTAssertEqual(try repository.configurationHistory(for: habit.id).count, 1)
+    }
+
     func testDetailDisplaysNameIconCategoryPolarityAndSchedule() throws {
         let repository = try makeRepository()
         let habit = try repository.createHabit(

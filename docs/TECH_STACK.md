@@ -90,3 +90,8 @@ Native CloudKit private-database snapshots protect eligible tracking after opt-i
 CryptoKit computes payload integrity checks. Local SwiftData uses .none for
 CloudKit and remains the primary store. This is logical backup, not SwiftData
 cloud synchronization; no uniqueness constraints are removed.
+
+
+## Optional on-device reflection dictation — 2026-10-06
+
+Avela uses Apple Speech and AVFoundation when you explicitly start reflection dictation. Microphone and speech recognition permission are optional. Recognition must be supported on-device; no server fallback is used. Audio is transient and not saved. Only reviewed text added to a draft and explicitly saved becomes a reflection. Saved notes remain excluded from Avela's logical iCloud recovery copies, while Apple device backups may include them. Earlier statements that Avela never accesses the microphone are superseded for this feature. Typing remains available without permissions.

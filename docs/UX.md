@@ -246,3 +246,33 @@ The end of a recovery run uses the existing logging confirmation, without confet
 The completed-week review moves from one dense textual card to distinct layers: overall consistency, factual highlights, habit-by-habit counts, manually reported attention and private intention review. Strongest/attention rankings keep their existing tie and balanced-week semantics, with neutral “Most consistent”/“Room to grow” headings. Trends explain that their comparable cohort may be smaller than the overall habit group. A bar is never presented without its real count; archived identity is explicit. Missing reports cannot imply verified zero attention usage.
 
 Per-habit rows navigate to existing details/support and History, without recording success on navigation. Large text uses a stacked summary and scrollable rows. Native accessibility labels state exact values and the destination. Charts remain static, with no additional motion or haptic noise.
+
+
+## Today companion placement — 2026-10-06
+
+The owner-requested compact companion status card now sits immediately below the daily summary and before habit actions, rather than after routines at the bottom of Today. This supersedes the earlier bottom-placement guidance. The companion remains optional, reflects real state, and retains its existing Reduce Motion and scalable-text behavior. No progress, persistence, permissions or feature scope changes.
+
+
+## Dictated reflections — 2026-10-06
+
+Settings → Weekly Reflection (or Insights → reflection) → Write/Edit Reflection exposes a labeled Dictate microphone button for each prompt. The preview explains on-device audio handling before Start. A visible Listening state and Stop Recording control precede editable review and Add Text. Add Text appends to the answer; Save remains separate. Cancel never alters the answer. Record Again explicitly replaces only the current unsaved transcript preview. Unsupported recognition/permission denial keeps typing available. Recording stops automatically at 55 seconds, on background/interruption or dismissal; there is no idle microphone or background recording. Existing length feedback handles long transcripts without silent truncation.
+
+
+## Make Room → Do It — 2026-10-06
+
+Habit Detail → Make Room now explains Focus (phone permitted) versus Phone-free (intention to step away; no blocking/monitoring). Empty-state creation is in this screen, defaults to a Focus goal named for the habit and remains editable. Existing goals use a compact picker. A labeled optional Dynamic Island/Lock Screen toggle precedes explicit Start. Session outcome reporting and Log What I Did are separate actions, with no inferred completion or imported timer quantity. Existing phone-free wording/history remains specific. The chronological weekly intention review includes both session types without causal claims.
+
+## Differentiation experience
+
+Habit Detail → Momentum brings Recent Rhythm, Coming Back and Lasting Effort together as explainable facts. No single score ranks the user. Optional reasons use their own words and appear during recovery or before Make Room, with a persistent Hide action and Edit Habit restoration. Recovery support is a deliberate “A smaller step” entry in Today; the user reviews evidence and chooses an existing smaller action or confirms a pause. A pause preserves history and explains manual reactivation. Linked-session language always distinguishes recorded starts, self-reported outcomes and independent habit check-ins. Companion states acknowledge saved facts, never diagnose the person or create care obligations.
+
+## Optional Home Screen quick logging
+
+Settings → Home Screen Widgets explains one-time, user-controlled installation. Quick Log separates the logging circle from the name/detail link and quantity/logger link. Saved rows stay put briefly to prevent a second habit appearing under the same finger. 'Left today' counts all due exported habits, not just visible rows. Empty and stale states open Avela; failure copy provides retry/review without diagnostics. Undo and excused-skip replacement remain deliberate in-app actions.
+
+Quick Log's stale-day state offers a user-initiated 'Refresh habits' App Intent that reads the app-owned canonical repositories and exports today's facts without foregrounding Avela. It does not create a completion, auto-reset progress, or evaluate history inside the extension. If refreshing cannot succeed, the stale prompt and explicit Open Avela recovery link remain; the date on old facts is never advanced to fake freshness. WidgetKit controls refresh timing.
+
+
+## Two focused widgets — 2026-10-07
+
+One-time setup offers Quick Log or Routine. Quick Log needs no selection. Routine requires an existing routine and native Edit Widget selection; no implicit first-routine selection. Log saves a single simple due check-in in the background, while names open details and + opens the quantity logger. Routines advance through due pending steps without changing schedules or completing every member. Routine completion is scoped to today’s exported steps; no-due is distinct from all logged. Older Progress/Attention Home Screen widgets are retired; users with an old placement should remove it and add Quick Log or Routine.

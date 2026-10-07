@@ -31,7 +31,7 @@ struct CloudBackupView: View {
             }
             Section("What Is Included") {
                 Text("Eligible habits and their history, manual attention tracking, routines and appearance preferences.")
-                Text("Health-connected habits, health/fitness habits, Health-imported history and private notes stay on this device. They are excluded from Avela cloud backups.")
+                Text("Health-connected habits, health/fitness habits, Health-imported history and private notes (including habit reasons) stay on this device. They are excluded from Avela cloud backups.")
                 Text("Keep sensitive health tracking in Health/Fitness categories; don’t use other categories to include it in cloud recovery.").foregroundStyle(.secondary)
                 Text("Recovery copies are kept until you delete them and use iCloud storage. No separate Avela account or paid tier is required.")
             }
