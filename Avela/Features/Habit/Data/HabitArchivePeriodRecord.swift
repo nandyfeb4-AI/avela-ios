@@ -10,6 +10,14 @@ final class HabitArchivePeriodRecord {
     var habitID: UUID
     var archivedAt: Date
     var reactivatedAt: Date?
+    /// Lossless local recovery decoding; validation happens before insertion.
+    init(backup row: BackupPayload.HabitArchivePeriodRecordRow) {
+        self.id = row.id
+        self.habitID = row.habitID
+        self.archivedAt = row.archivedAt
+        self.reactivatedAt = row.reactivatedAt
+    }
+
 
     init(id: UUID, habitID: UUID, archivedAt: Date, reactivatedAt: Date?) {
         self.id = id

@@ -12,13 +12,30 @@ import SwiftData
 /// one-time reset step this requires on existing dev installs.
 @MainActor
 enum AppPersistence {
+    /// App Intents execute in the app target. Share the launch container and
+    /// main context instead of opening another writer against the same store.
+    static let liveContainer: Result<ModelContainer, Error> = Result {
+        #if DEBUG
+        if let path = ProcessInfo.processInfo.environment["AVELA_UI_TEST_STORE_PATH"] {
+            return try makeContainer(storeURL: URL(fileURLWithPath: path))
+        }
+        #endif
+        return try makeContainer()
+    }
+
     static func makeContainer(
         inMemory: Bool = false,
         storeURL: URL? = nil
     ) throws -> ModelContainer {
         let schema = Schema([
+            HealthHabitConnectionRecord.self,
             HabitReminderRecord.self,
             HabitRecord.self,
+            HabitActivityConfigurationRecord.self,
+            HabitActivityEntryRecord.self,
+            HabitTimerRecord.self,
+            RoutineRecord.self,
+            WeeklyReflectionRecord.self,
             HabitConfigurationSnapshotRecord.self,
             CompletionRecord.self,
             SkipRecord.self,
@@ -28,7 +45,9 @@ enum AppPersistence {
             AttentionUsageEntryRecord.self,
             AttentionCheckInRecord.self,
             AttentionSessionRecord.self,
+            IntentionSessionLinkRecord.self,
             CompanionProfileRecord.self,
+            AppAppearanceRecord.self,
         ])
         let configuration: ModelConfiguration
         if let storeURL {

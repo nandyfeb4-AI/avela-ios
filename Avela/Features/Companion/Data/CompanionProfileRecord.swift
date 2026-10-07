@@ -8,6 +8,15 @@ final class CompanionProfileRecord {
     var companionEnabled: Bool
     var hapticsEnabled: Bool
     var onboardingCompleted: Bool
+    /// Lossless local recovery decoding; validation happens before insertion.
+    init(backup row: BackupPayload.CompanionProfileRecordRow) {
+        self.profileID = row.profileID
+        self.selectedAnimalRaw = row.selectedAnimalRaw
+        self.companionEnabled = row.companionEnabled
+        self.hapticsEnabled = row.hapticsEnabled
+        self.onboardingCompleted = row.onboardingCompleted
+    }
+
 
     init(profile: CompanionProfile) {
         profileID = "primary"

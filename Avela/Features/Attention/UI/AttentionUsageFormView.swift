@@ -32,7 +32,8 @@ struct AttentionUsageFormView: View {
                     Text("Enter 0–1,440 minutes. Logging 0 explicitly reports no usage; leaving a day unlogged means unknown.")
                 }
             }
-            .navigationTitle(isEditing ? "Correct Usage" : "Log Usage")
+            .appThemeCanvas()
+        .navigationTitle(isEditing ? "Correct Usage" : "Log Usage")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

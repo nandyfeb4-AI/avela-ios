@@ -450,4 +450,138 @@ final class SwiftDataHabitRepositoryTests: XCTestCase {
         let results = try repository.completions(in: DateInterval(start: day1.addingTimeInterval(-3600), end: day2.addingTimeInterval(86_400)))
         XCTAssertTrue(results.contains { $0.id == completion.id }, "archiving a habit must not hide its past completions from a cross-habit query")
     }
+
+    // MARK: - Presentation ordering
+
+    func testReorderedHabitsSurviveDiskRelaunchWithoutChangingHistoryOrTimestamps() throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let storeURL = directory.appendingPathComponent("HabitOrder.store")
+        var expected: [Habit] = []
+        var completionID: UUID!
+        var skipID: UUID!
+        var configurationIDs: [UUID] = []
+        var archivePeriodID: UUID!
+        do {
+            let container = try AppPersistence.makeContainer(storeURL: storeURL)
+            let repository = SwiftDataHabitRepository(modelContext: container.mainContext, calendar: calendar)
+            let habits = try ["Read", "Walk", "Quiet"].map { try createOrderingHabit($0, repository: repository) }
+            completionID = try repository.recordCompletion(habitID: habits[0].id, at: day1,
+                                                           source: .app, note: "Keep this note").id
+            skipID = try repository.recordSkip(habitID: habits[0].id, on: day2, reason: .travel).id
+            var edited = HabitDraft(name: "Read more", iconName: "book.fill", category: .learning,
+                                   polarity: .positive, schedule: .timesPerWeek(3))
+            _ = try repository.updateHabit(id: habits[0].id, with: edited, at: day2)
+            edited.polarity = .avoidance
+            _ = try repository.updateHabit(id: habits[0].id, with: edited, at: day2)
+            try repository.archiveHabit(id: habits[0].id, at: day2)
+            try repository.reactivateHabit(id: habits[0].id, at: day2.addingTimeInterval(3600))
+            configurationIDs = try repository.configurationHistory(for: habits[0].id).map(\.id)
+            archivePeriodID = try repository.archivePeriods(for: habits[0].id).first?.id
+            let before = try repository.fetchHabits(includeArchived: false)
+            try repository.reorderHabits(ids: [habits[2].id, habits[0].id, habits[1].id])
+            expected = try repository.fetchHabits(includeArchived: false)
+            XCTAssertEqual(expected.map(\.id), [habits[2].id, habits[0].id, habits[1].id])
+            for habit in expected {
+                let original = try XCTUnwrap(before.first { $0.id == habit.id })
+                XCTAssertEqual(habit.createdAt, original.createdAt)
+                XCTAssertEqual(habit.updatedAt, original.updatedAt)
+                XCTAssertEqual(habit.schedule, original.schedule)
+                XCTAssertEqual(habit.polarity, original.polarity)
+            }
+        }
+        let reopened = try AppPersistence.makeContainer(storeURL: storeURL)
+        let repository = SwiftDataHabitRepository(modelContext: reopened.mainContext, calendar: calendar)
+        XCTAssertEqual(try repository.fetchHabits(includeArchived: false), expected)
+        let tracked = expected[1]
+        let history = DateInterval(start: .distantPast, end: .distantFuture)
+        let completions = try repository.completions(for: tracked.id, in: history)
+        XCTAssertEqual(completions.map(\.id), [completionID!])
+        XCTAssertEqual(completions.first?.note, "Keep this note")
+        XCTAssertEqual(try repository.skips(for: tracked.id, in: history).map(\.id), [skipID!])
+        XCTAssertEqual(try repository.configurationHistory(for: tracked.id).map(\.id), configurationIDs)
+        XCTAssertEqual(try repository.archivePeriods(for: tracked.id).map(\.id), [archivePeriodID!])
+    }
+
+    func testInvalidHabitOrdersAreRejectedBeforeAnyMutation() throws {
+        let repository = try makeRepository()
+        let a = try createOrderingHabit("A", repository: repository)
+        let b = try createOrderingHabit("B", repository: repository)
+        let archived = try createOrderingHabit("Archived", repository: repository)
+        try repository.archiveHabit(id: archived.id, at: day2)
+        let before = try repository.fetchHabits(includeArchived: true)
+        for invalid in [[], [a.id], [a.id, a.id], [a.id, UUID()], [a.id, archived.id], [a.id, b.id, archived.id]] {
+            XCTAssertThrowsError(try repository.reorderHabits(ids: invalid)) { error in
+                XCTAssertEqual(error as? HabitRepositoryError, .invalidHabitOrder)
+            }
+            XCTAssertEqual(try repository.fetchHabits(includeArchived: true), before)
+        }
+    }
+
+    func testStaleOrderAfterCreationOrArchiveCannotOverwriteCurrentOrder() throws {
+        let repository = try makeRepository()
+        let a = try createOrderingHabit("A", repository: repository)
+        let b = try createOrderingHabit("B", repository: repository)
+        let c = try createOrderingHabit("C", repository: repository)
+        let afterCreation = try repository.fetchHabits(includeArchived: true)
+        XCTAssertThrowsError(try repository.reorderHabits(ids: [b.id, a.id]))
+        XCTAssertEqual(try repository.fetchHabits(includeArchived: true), afterCreation)
+        try repository.archiveHabit(id: c.id, at: day2)
+        let afterArchive = try repository.fetchHabits(includeArchived: true)
+        XCTAssertThrowsError(try repository.reorderHabits(ids: [c.id, b.id, a.id]))
+        XCTAssertEqual(try repository.fetchHabits(includeArchived: true), afterArchive)
+    }
+
+    func testReorderingKeepsArchivedSlotAndNewHabitsAppendAfterReactivation() throws {
+        let repository = try makeRepository()
+        let habits = try ["A", "B", "C", "D"].map { try createOrderingHabit($0, repository: repository) }
+        try repository.archiveHabit(id: habits[1].id, at: day2)
+        let archived = try XCTUnwrap(repository.fetchHabit(id: habits[1].id))
+        try repository.reorderHabits(ids: [habits[3].id, habits[2].id, habits[0].id])
+        XCTAssertEqual(try repository.fetchHabits(includeArchived: false).map(\.sortOrder), [0, 2, 3])
+        XCTAssertEqual(try repository.fetchHabit(id: archived.id), archived)
+        try repository.reactivateHabit(id: archived.id, at: day2.addingTimeInterval(3600))
+        XCTAssertEqual(try repository.fetchHabits(includeArchived: false).map(\.id),
+                       [habits[3].id, habits[1].id, habits[2].id, habits[0].id])
+        let appended = try createOrderingHabit("E", repository: repository)
+        XCTAssertEqual(appended.sortOrder, 4)
+        XCTAssertEqual(try repository.fetchHabits(includeArchived: false).last?.id, appended.id)
+    }
+
+    func testLegacyDuplicateOrdersFetchDeterministicallyAndCanBeRepaired() throws {
+        let repository = try makeRepository()
+        let active = try ["A", "B", "C"].map { try createOrderingHabit($0, repository: repository) }
+        let archived = try createOrderingHabit("Archived", repository: repository)
+        try repository.archiveHabit(id: archived.id, at: day2)
+        let context = try XCTUnwrap(container).mainContext
+        let records = try context.fetch(FetchDescriptor<HabitRecord>())
+        for record in records { record.sortOrder = 0 }
+        try context.save()
+        let expectedLegacy = active.map(\.id).sorted { $0.uuidString < $1.uuidString }
+        XCTAssertEqual(try repository.fetchHabits(includeArchived: false).map(\.id), expectedLegacy)
+        let archivedBefore = try XCTUnwrap(repository.fetchHabit(id: archived.id))
+        let requested = Array(expectedLegacy.reversed())
+        try repository.reorderHabits(ids: requested)
+        XCTAssertEqual(try repository.fetchHabits(includeArchived: false).map(\.id), requested)
+        XCTAssertEqual(try repository.fetchHabits(includeArchived: false).map(\.sortOrder), [1, 2, 3])
+        XCTAssertEqual(try repository.fetchHabit(id: archived.id), archivedBefore)
+    }
+
+    func testEmptyActiveOrderAcceptsEmptyInputWithoutChangingArchivedHabit() throws {
+        let repository = try makeRepository()
+        try repository.reorderHabits(ids: [])
+        let habit = try createOrderingHabit("Paused", repository: repository)
+        try repository.archiveHabit(id: habit.id, at: day2)
+        let before = try repository.fetchHabits(includeArchived: true)
+        try repository.reorderHabits(ids: [])
+        XCTAssertEqual(try repository.fetchHabits(includeArchived: true), before)
+        XCTAssertThrowsError(try repository.reorderHabits(ids: [habit.id]))
+    }
+
+    private func createOrderingHabit(_ name: String, repository: SwiftDataHabitRepository) throws -> Habit {
+        try repository.createHabit(HabitDraft(name: name, iconName: "book.fill", category: .learning,
+                                             polarity: .positive, schedule: .daily), at: day1)
+    }
+
 }

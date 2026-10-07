@@ -26,6 +26,11 @@ struct HabitReminderView: View {
             } footer: {
                 Text(scheduleDescription)
             }
+            Section {
+                Text("Press and hold a reminder, then choose Review & log. Avela shows the habit before you confirm success. Opening the reminder alone never logs anything.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
             if model.isEnabled && model.permission == .denied {
                 Section {
                     Text("Notifications are turned off for Avela. Your reminder is saved; allow notifications in Settings to receive it. You can keep using Avela without them.")
@@ -48,6 +53,7 @@ struct HabitReminderView: View {
                 }
             }
         }
+        .appThemeCanvas()
         .navigationTitle("Reminder")
         .navigationBarTitleDisplayMode(.inline)
         .task { await model.load() }

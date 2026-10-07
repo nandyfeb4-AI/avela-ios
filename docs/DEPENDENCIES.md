@@ -17,6 +17,8 @@ No external package installation required for:
 - StoreKit 2
 - WidgetKit
 - ActivityKit
+- AppIntents
+- HealthKit (optional steps/exercise reads; app entitlement required)
 
 These ship with Apple's SDKs.
 
@@ -83,3 +85,11 @@ Removal strategy:
 - remote-config SDKs
 - crash tools that collect unnecessary user data
 - UI component kits that compromise native design consistency
+
+
+## Optional recovery — 2026-10-05
+
+CloudKit (private Apple iCloud database) and CryptoKit (SHA-256 integrity check)
+are native frameworks used by owner-approved recovery. No third-party dependency,
+backend, analytics, generative AI or network framework is introduced. A real signed
+CloudKit container is required; placeholder builds remain local-only.

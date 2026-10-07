@@ -1,5 +1,6 @@
 #if DEBUG
 import Foundation
+import SwiftData
 
 /// DEBUG-only seed data for exercising *populated* Insights states — real
 /// variety, ties, a balanced week, a valid trend, and an unavailable
@@ -11,9 +12,8 @@ import Foundation
 /// already redirects `AvelaApp` to (see `AvelaApp.makeContainer()`) — never
 /// the ordinary app store. This file is wrapped in `#if DEBUG`, exactly like
 /// that store-path override, so it is physically absent from Release
-/// binaries, not merely inert. Every fixture uses nothing but the existing
-/// public `HabitRepository` API (`createHabit`, `recordCompletion`,
-/// `updateHabit`) — the same calls any real use of the app would make — so
+/// binaries, not merely inert. Every fixture uses existing public repository APIs (habits, attention
+/// sessions and explicit intention links) — the same calls real app flows use — so
 /// no production type (repository, calculator, view model) carries any
 /// fixture-specific logic.
 @MainActor
@@ -22,6 +22,9 @@ enum DebugFixtures {
         /// Three habits with distinct, non-tied, non-balanced results: a
         /// clear strongest habit, a clear habit needing attention, and a
         /// week-over-week trend for at least one of them.
+        case visualInsights
+        case recoveryProgress
+        case progressEnrichment
         case populated
         /// Two habits landing on the exact same (non-zero, non-100%)
         /// percentage this week — the "balanced week" neutral-summary case.
@@ -38,9 +41,15 @@ enum DebugFixtures {
         case noComparableData
     }
 
-    static func seed(_ fixture: Fixture, into repository: HabitRepository, calendar: Calendar) {
+    static func seed(_ fixture: Fixture, into repository: HabitRepository, calendar: Calendar, context: ModelContext? = nil) {
         do {
             switch fixture {
+            case .visualInsights:
+                if let context { try seedVisualInsights(repository, calendar, context) }
+            case .recoveryProgress:
+                try seedRecoveryProgress(repository, calendar, context)
+            case .progressEnrichment:
+                if let context { try seedProgressEnrichment(repository, calendar, context) }
             case .populated: try seedPopulated(repository, calendar)
             case .balancedIdentical: try seedBalancedIdentical(repository, calendar)
             case .tiedExtremes: try seedTiedExtremes(repository, calendar)
@@ -80,6 +89,54 @@ enum DebugFixtures {
     }
 
     // MARK: - Fixtures
+
+    private static func seedVisualInsights(_ repository: HabitRepository, _ calendar: Calendar, _ context: ModelContext) throws {
+        try seedPopulated(repository, calendar)
+        let week = lastCompletedWeek(calendar: calendar)
+        let created = calendar.date(byAdding: .day, value: -90, to: week.start)!
+        let swim = try repository.createHabit(HabitDraft(name: "Swim", iconName: "figure.pool.swim", category: .fitness, polarity: .positive, schedule: .timesPerWeek(2)), at: created)
+        for offset in [0, 2] { try repository.recordCompletion(habitID: swim.id, at: day(offset, in: week, calendar: calendar), source: .app, note: nil) }
+        try repository.archiveHabit(id: swim.id, at: week.end)
+        let attention = SwiftDataAttentionRepository(modelContext: context, calendar: calendar)
+        let goal = try attention.createGoal(AttentionGoalDraft(name: "Social media", appOrCategoryLabel: "Social", type: .maxDurationPerDay, targetValue: 30, unit: .minutes), at: week.start)
+        for (offset, amount) in [(0, 10.0), (2, 35.0), (4, 30.0)] {
+            try attention.recordUsage(goalID: goal.id, amount: amount, at: day(offset, in: week, calendar: calendar), source: .manual)
+        }
+    }
+
+    private static func seedRecoveryProgress(_ repository: HabitRepository, _ calendar: Calendar, _ context: ModelContext?) throws {
+        let today = calendar.startOfDay(for: Date())
+        let start = calendar.date(byAdding: .day, value: -4, to: today)!
+        let read = try repository.createHabit(HabitDraft(name: "Read", iconName: "book.fill", category: .learning, polarity: .positive, schedule: .daily), at: start)
+        for offset in [-2, -1] {
+            let date = calendar.date(byAdding: .day, value: offset, to: today)!.addingTimeInterval(12 * 3600)
+            try repository.recordCompletion(habitID: read.id, at: date, source: .app, note: nil)
+        }
+        if let context {
+            let activity = SwiftDataHabitActivityRepository(context: context, habits: repository, calendar: calendar)
+            try activity.configure(habitID: read.id, target: nil, smallerAction: "Read one paragraph", at: start)
+        }
+    }
+
+    private static func seedProgressEnrichment(_ repository: HabitRepository, _ calendar: Calendar, _ context: ModelContext) throws {
+        try seedPopulated(repository, calendar)
+        let week = lastCompletedWeek(calendar: calendar)
+        guard let read = try repository.fetchHabits(includeArchived: true).first(where: { $0.name == "Read" }) else { return }
+        for offset in [-3, -2, -1] {
+            try repository.recordCompletion(habitID: read.id, at: day(offset, in: week, calendar: calendar), source: .app, note: nil)
+        }
+        let attention = SwiftDataAttentionRepository(modelContext: context, calendar: calendar)
+        let links = SwiftDataIntentionSessionLinkRepository(modelContext: context)
+        let goal = try attention.createGoal(AttentionGoalDraft(name: "Reading space", appOrCategoryLabel: nil,
+            type: .phoneFreeSession, targetValue: 15, unit: .minutes), at: read.createdAt)
+        for offset in 0...2 {
+            let start = day(offset, in: week, calendar: calendar)
+            let session = try attention.startSession(goalID: goal.id, at: start)
+            try links.save(IntentionSessionLink(id: UUID(), habitID: read.id, sessionID: session.id, createdAt: start))
+            if offset == 0 { try attention.finishSession(id: session.id, outcome: .kept, at: start.addingTimeInterval(15 * 60)) }
+            else if offset == 1 { try attention.finishSession(id: session.id, outcome: .interrupted, at: start.addingTimeInterval(5 * 60)) }
+        }
+    }
 
     private static func seedPopulated(_ repository: HabitRepository, _ calendar: Calendar) throws {
         let week = lastCompletedWeek(calendar: calendar)

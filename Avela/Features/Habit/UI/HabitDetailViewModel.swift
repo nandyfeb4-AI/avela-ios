@@ -41,6 +41,7 @@ struct HabitDetailDisplay: Equatable {
 final class HabitDetailViewModel {
     private(set) var display: HabitDetailDisplay?
     private(set) var draft: HabitDraft?
+    private(set) var adjustmentProposal: HabitAdjustmentProposal?
     var isShowingEditForm = false
     var isShowingArchiveConfirmation = false
     var errorMessage: String?
@@ -48,6 +49,7 @@ final class HabitDetailViewModel {
     private(set) var didArchive = false
 
     let habitID: UUID
+    var habitsRepository: HabitRepository { repository }
     private let repository: HabitRepository
     private let calendar: Calendar
     private static let logger = Logger(subsystem: "com.example.Avela", category: "HabitDetailViewModel")
@@ -61,6 +63,7 @@ final class HabitDetailViewModel {
     }
 
     func load(asOf date: Date = Date()) {
+        adjustmentProposal = nil
         do {
             guard let habit = try repository.fetchHabit(id: habitID) else {
                 errorMessage = Self.friendlyErrorMessage
@@ -79,6 +82,10 @@ final class HabitDetailViewModel {
             let skips = try repository.skips(for: habitID, in: historyInterval)
             let archivePeriods = try repository.archivePeriods(for: habitID)
 
+            adjustmentProposal = HabitAdjustmentCalculator.proposal(
+                for: habit, snapshots: snapshots, completions: completions, skips: skips,
+                archivePeriods: archivePeriods, asOf: date, calendar: calendar
+            )
             let streak = HabitProgressCalculator.streak(
                 for: habit, snapshots: snapshots, completions: completions, skips: skips,
                 archivePeriods: archivePeriods, asOf: date, calendar: calendar
@@ -136,6 +143,18 @@ final class HabitDetailViewModel {
         }
     }
 
+    func makeAdjustmentViewModel() -> HabitAdjustmentViewModel {
+        HabitAdjustmentViewModel(habitID: habitID, repository: repository, calendar: calendar)
+    }
+
+    func makeLifetimeViewModel(activity: HabitActivityRepository?) -> HabitLifetimeViewModel {
+        HabitLifetimeViewModel(habitID: habitID, habits: repository, activity: activity)
+    }
+
+    func makeCalendarViewModel() -> HabitCalendarViewModel {
+        HabitCalendarViewModel(habitID: habitID, repository: repository, calendar: calendar)
+    }
+
     func saveEdits(_ updatedDraft: HabitDraft, asOf date: Date = Date()) {
         do {
             _ = try repository.updateHabit(id: habitID, with: updatedDraft, at: date)
@@ -176,7 +195,9 @@ final class HabitDetailViewModel {
 
     private func handle(_ error: Error) {
         Self.logger.error("Habit detail view model operation failed: \(String(describing: error), privacy: .private)")
-        errorMessage = Self.friendlyErrorMessage
+        errorMessage = (error as? HabitRepositoryError) == .manualQuantityRequiresPositivePolarity
+            ? "Turn off the manual quantity target in Progress Setup before changing this habit to Cut Down. Your history will be kept."
+            : Self.friendlyErrorMessage
     }
 
     private static func streakLabel(_ count: Int, unit: HabitProgressCalculator.StreakUnit, zeroText: String) -> String {

@@ -1,5 +1,111 @@
 # Development Setup
 
+## Habit ideas verification — 2026-10-05
+
+New Habit → Browse Habit Ideas opens the optional local catalog. Today and
+onboarding share the same form. Selecting an idea fills draft fields; edit them
+and tap Save to create a normal habit. Back and Cancel do not create records.
+No Health connection, reminder, permission prompt or additional package is added
+by choosing an idea.
+
+`/tmp/avela-starter-final-tests.log` records **285 unit + 4 targeted UI tests,
+zero failures** on the separate iPhone 18 Pro Max simulator. The UI methods are
+`MVPFlowTests/testHabitIdeaCanBeCustomizedSavedAndEditedAfterRelaunch`,
+`MVPFlowTests/testBrowsingIdeasAndCancellingDoesNotCreateAHabit`,
+`MVPFlowTests/testAvoidanceIdeaKeepsHonestSuccessCopyAtLargeText`, and the existing
+`AvelaUITests/testCreatingADailyHabitShowsItInTheTodayList`. Use the Debug command
+in the integrations section below with these `-only-testing:` selections and
+`-only-testing:AvelaTests`. This is focused UI coverage, not the full UI suite.
+
+The first native AX3 run failed because a long introduction pushed the search
+result behind the keyboard. Its video was examined; the introduction was
+shortened/hidden during filtering and interactive keyboard dismissal added.
+The three starter flows then passed. Native screenshot review also prompted a
+bounded decorative-icon size and plain-language cut-down copy; text still scales
+through AX3. `/tmp/avela-starter-visual-check.log` records all three focused reruns passing.
+Final native screenshot attachments were exported to
+`/tmp/AvelaStarterPolishedCaptures` and visually reviewed.
+`/tmp/avela-starter-release.log` records unsigned iPhone SDK Release compilation.
+No schema/entitlement change is introduced by the library. Project membership
+checks found both new source files correctly registered; DEBUG hooks remain
+absent in Release. Real-device VoiceOver, dark-mode/Increase Contrast and older
+supported-iOS checks are not established by these screenshots or test results.
+
+## Native logging integrations — 2026-10-04
+
+Siri/Shortcuts actions are bundled in the app target, with extracted App Intents
+metadata and no separate writer/extension. Run the app once, then open Settings
+→ Siri & Shortcuts or find Avela in Apple's Shortcuts app. Select the exact habit
+or daily budget and parameters. “Log a habit in Avela” and “Log attention in
+Avela” are the advertised Siri phrases. Habit logging is idempotent; each minute
+invocation adds a self-reported entry. Actions deliberately open Avela and require
+local authentication; fully background execution is not supported.
+
+Apple Health is optional: active Build Up habit detail → Apple Health → choose
+steps or exercise minutes and a target → Connect. Read permission is requested
+only there. The app entitlement enables HealthKit, with a read usage description;
+for physical-device signing, enable HealthKit on the production app ID/profile.
+The widget target receives no HealthKit entitlement. Simulator compilation does
+not verify account provisioning or real Health source aggregation.
+
+No accessible samples does not prove read denial or measured zero. Test both
+permission denial/revocation and real steps/exercise on a signed device. Avela
+checks today's data on foreground/Refresh, not continuously while suspended.
+Disconnect stops new imports while preserving history; a still-connected target
+may reimport after undo. No raw samples, Health writes, background delivery,
+third-party dependencies or network secrets are used. The added optional
+connection model has a disk-store migration regression; **do not reset a current
+MVP store** just to add this feature. Old pre-Habit scaffold resets below concern
+only the original throwaway schema.
+
+## Integration verification evidence — 2026-10-04
+
+Separate iPhone 18 Pro Max / iOS 27 simulator used for this pass:
+`2ACFE418-44EC-4A44-9B2A-1B45BDF1EF38`. The owner's booted iPhone 18 Pro was not
+used or reset. Discover a currently available destination rather than copying
+these historical UUIDs blindly.
+
+```bash
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild \
+  -project Avela.xcodeproj -scheme Avela -configuration Debug \
+  -destination 'platform=iOS Simulator,id=2ACFE418-44EC-4A44-9B2A-1B45BDF1EF38' \
+  -derivedDataPath /tmp/AvelaCodexMVP -parallel-testing-enabled NO \
+  CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- \
+  -only-testing:AvelaTests -only-testing:AvelaUITests/MVPFlowTests test
+
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild \
+  -project Avela.xcodeproj -scheme Avela -configuration Release \
+  -sdk iphoneos -destination 'generic/platform=iOS' \
+  -derivedDataPath /tmp/AvelaIntegrationsRelease CODE_SIGNING_ALLOWED=NO build
+```
+
+`/tmp/avela-integrations-final-tests.log`: 284 units and all 10 MVP UI flows
+passed, including Health setup, Shortcuts guide, skip/relaunch, sessions, native
+Live Activity, onboarding, companion and privacy/Premium flows. After safe Health
+fetch-error handling, the extra error regression and parameter-registration
+polish, `/tmp/avela-integrations-recheck.log` records **285 units + 4 focused UI
+checks**, all passing. Those four are Health setup, Shortcuts guide, habit
+completion/undo and attention quick-log/undo. This is 12 distinct UI methods over
+the two runs; no claim of a full rerun of every older UI method.
+
+`/tmp/avela-integrations-registration-check.log` reruns all units and the guide
+after moving suggestion refresh to app startup/guide opening rather than every
+persistence write. `/tmp/avela-integrations-release.log` records the final unsigned
+iPhone SDK Release build. Binary inspection found no test store, seed fixture or
+Live Activity test hooks; bundled Info.plist has the Health read purpose and
+`Metadata.appintents` contains extracted actions. Project membership checks found
+all 9 new Swift files correctly registered. Setup screenshot attachments were
+exported to `/tmp/AvelaIntegrationNativeCaptures` and visually reviewed.
+
+An initial StoreKit run on the fresh simulator failed native product loading;
+rechecking after it initialized passed all three native StoreKit tests and the
+subsequent complete unit runs. No StoreKit code was changed to hide the failure.
+The unit host also emitted `LinkDaemon` parameter-refresh errors during an
+attempt to register on every persistence write. That broad hook was removed;
+system discovery and spoken Siri are still unverified, irrespective of passing
+logging service tests or compiled metadata. Real Health data/permission behavior
+also needs a signed device. No distribution archive/upload occurred.
+
 ## Required
 
 - macOS capable of running the current stable Xcode
@@ -29,6 +135,8 @@ import UserNotifications
 import StoreKit
 import WidgetKit
 import ActivityKit
+import AppIntents
+import HealthKit
 ```
 
 Future optional imports:
@@ -1176,3 +1284,390 @@ a positive control. App/widget privacy manifests and widget artwork catalogs
 are included; no local `.storekit` resource is shipped. Project/plist lint, exact
 source membership for all six new files and `git diff --check` pass. No commits,
 pushes, archive validation or upload were performed.
+
+### Testing reminder actions
+
+Enable a habit's reminder explicitly and allow notifications. When delivered,
+press and hold it, choose **Review & log**, then confirm the named habit or
+Cancel. Ordinary tapping never logs. Past-day reminders are rejected. Test on
+a signed device for lock-screen/unlock behavior; simulator testing alone does
+not prove authentication behavior.
+
+Native UI automation can set `AVELA_UI_TEST_REMINDER_DELIVERY=1` together with
+an isolated `AVELA_UI_TEST_STORE_PATH`. Saving an authorized enabled reminder
+then delivers one real system notification after 8 seconds. This DEBUG-only
+hook bypasses neither permission nor the response handler and is absent from
+Release. Run these tests on the dedicated Pro Max simulator, not the owner's
+working Pro simulator.
+
+## Calendar history and app themes verification — 2026-10-05
+
+Built the native read-only habit calendar and five curated app accents. New
+production files: `HabitCalendarCalculator.swift`, `HabitCalendarViewModel.swift`,
+`HabitCalendarView.swift`, `AppTheme.swift`, `AppAppearanceRecord.swift`,
+`AppThemeViewModel.swift`, `AppThemeView.swift`, and `AppPalette.swift`. New unit
+files: `HabitCalendarTests.swift` (17 tests) and `AppThemeTests.swift` (8 tests).
+Existing targets and dependencies are unchanged.
+
+**Verified:** 321 unit tests, zero failures; 12 distinct targeted native UI flows,
+zero failures, across the feature and regression runs. This is not a re-run of
+all existing UI tests. The selected flows cover month navigation/read-only history,
+weekly history at AX3, theme selection/relaunch, onboarding, completion and
+attention undo, habit editing, History filtering, comparable Insights trends,
+archive/reactivate cycles, companion preferences and native reminder cancellation.
+
+Final unit/palette verification and theme/onboarding native checks:
+
+```bash
+export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
+xcodebuild -project Avela.xcodeproj -scheme Avela \
+  -destination 'platform=iOS Simulator,id=2ACFE418-44EC-4A44-9B2A-1B45BDF1EF38' \
+  -derivedDataPath /tmp/AvelaCodexMVP -parallel-testing-enabled NO \
+  CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- \
+  -only-testing:AvelaTests \
+  -only-testing:AvelaUITests/MVPFlowTests/testAppThemeAppliesImmediatelyAndSurvivesRelaunch \
+  -only-testing:AvelaUITests/MVPFlowTests/testOnboardingOptionalStepsCanBeSkippedAndCompletionSurvivesRelaunch test
+# TEST SUCCEEDED — 321 unit + 2 UI tests, zero failures
+```
+
+Actual evidence:
+
+- `/tmp/avela-theme-native-fill.log`: final unit suite and deep-fill native checks;
+  result `Test-Avela-2026.10.05_10-58-41--0600.xcresult` under
+  `/tmp/AvelaCodexMVP/Logs/Test/`.
+- `/tmp/avela-calendar-theme-final.log`: 321 units and four feature/onboarding
+  flows in dark mode; calendar AX3 and month navigation passed.
+- `/tmp/avela-calendar-theme-regressions.log`: eight existing native flows passed.
+- `/tmp/avela-calendar-themes-light-final.log`: final light-mode theme/month
+  navigation passed. System appearance was set with `xcrun simctl ui` on the
+  isolated iPhone 18 Pro Max simulator, and restored to light afterwards.
+- `/tmp/avela-calendar-theme-release-complete.log`: final unsigned Release device
+  build succeeded using `/tmp/AvelaCalendarThemesRelease`. Binary inspection
+  found no store-path/seed/reminder-delivery DEBUG marker or DebugFixtures symbol,
+  with calendar/theme symbols present as a sanity check.
+
+```bash
+xcodebuild -project Avela.xcodeproj -scheme Avela -configuration Release \
+  -sdk iphoneos -destination 'generic/platform=iOS' \
+  -derivedDataPath /tmp/AvelaCalendarThemesRelease CODE_SIGNING_ALLOWED=NO build
+# BUILD SUCCEEDED
+```
+
+`plutil -lint` and project membership checks pass: 145 Swift file references,
+including six deliberately shared with the widget target, with no duplicate
+membership within any target. `git diff --check` is clean.
+
+A real previous 13-model on-disk store was reopened under the 14-model schema,
+preserving its habit/configuration, completion ID/note, skip ID and companion
+preferences. No user store reset is required. Calendar navigation uses stored fact
+months as bounds, so dates remain reachable after time-zone travel.
+
+Visual review caught native glass toolbar buttons forcing white template icons;
+filled controls now use a separate deep accent with white foreground, rather
+than pale dark-mode progress accents. All theme pairs/filled controls pass native
+opaque-colour contrast checks. The remaining physical glass/OLED/Increase Contrast
+and VoiceOver checks have not been performed.
+
+[Native light/dark and large-text previews](verification/calendar-themes/README.md)
+are captured from isolated DEBUG stores, not the owner's simulator data. The
+owner's iPhone 18 Pro was not reset or otherwise used by these checks. Themes
+currently apply to app screens; widgets and Live Activities retain Tidewater.
+No commits, pushes, new permissions, secrets or packages are involved.
+
+## Personal habit ordering verification — 2026-10-05
+
+Free personal ordering uses existing `HabitRecord.sortOrder`, without a schema
+change/reset, additional permission or dependency. New production files:
+`HabitOrderViewModel.swift`, `HabitOrderView.swift`. New unit file:
+`HabitOrderViewModelTests.swift` (four tests); six additional repository tests
+cover actual disk relaunch, fact/timestamp preservation, invalid/stale orders,
+archive/reactivate slots, appends and legacy collisions. Today/Settings entry
+points and required repository operation are registered in existing targets.
+
+Final Debug verification: **331 unit tests + four targeted UI flows, zero
+failures**, followed by **one native drag UI flow, zero failures**. This is five
+distinct UI flows, not a repeat of every existing UI test. The four-flow run
+includes ordering Cancel/Save/relaunch/History/undo, Settings ordering at AX3,
+existing theme persistence and Done/undo regression. A typo in the new test's
+Undo identifier caused the initial run to fail after its ordering assertions;
+the corrected final run retains all assertions and passes.
+
+```bash
+export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
+xcodebuild -project Avela.xcodeproj -scheme Avela -configuration Debug \
+  -destination 'platform=iOS Simulator,id=2ACFE418-44EC-4A44-9B2A-1B45BDF1EF38' \
+  -derivedDataPath /tmp/AvelaCodexMVP -parallel-testing-enabled NO \
+  CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- \
+  -only-testing:AvelaTests \
+  -only-testing:AvelaUITests/MVPFlowTests/testHabitOrderCancelSaveAndRelaunchPreserveTracking \
+  -only-testing:AvelaUITests/MVPFlowTests/testHabitOrderingFromSettingsAtAccessibilityTextSize \
+  -only-testing:AvelaUITests/MVPFlowTests/testAppThemeAppliesImmediatelyAndSurvivesRelaunch \
+  -only-testing:AvelaUITests/AvelaUITests/testCompletedHabitRowCollapsesIntoDoneGroupAndCanStillBeUndoneAfterward test
+```
+
+Final combined log: `/tmp/avela-order-final-tests.log`; result bundle:
+`/tmp/AvelaCodexMVP/Logs/Test/Test-Avela-2026.10.05_12-24-31--0600.xcresult`.
+Native drag uses the same command without those selections and with
+`-only-testing:AvelaUITests/MVPFlowTests/testNativeHabitOrderDragHandleChangesDraftOnlyUntilSave`.
+Its log is `/tmp/avela-order-drag-test.log`; result bundle:
+`/tmp/AvelaCodexMVP/Logs/Test/Test-Avela-2026.10.05_12-27-42--0600.xcresult`.
+
+Native light and accessibility XXXL screenshots were visually reviewed and
+saved under [verification/habit-order](verification/habit-order/README.md).
+The isolated Pro Max test simulator was used; the owner's Pro store was untouched.
+No ordering change modifies historical facts, schedules or metrics. Physical
+VoiceOver custom-action/focus behavior and keyboard/drag ergonomics remain manual
+release checks. Save-error restoration is implemented without global rollback;
+a real disk-save failure was not artificially injected for a passing test.
+Concurrent order edits with identical active IDs are last-save-wins; membership
+changes are rejected with an explicit Reload path. No commits or pushes.
+
+Final unsigned iPhone SDK Release build **BUILD SUCCEEDED**:
+
+```bash
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild \
+  -project Avela.xcodeproj -scheme Avela -configuration Release \
+  -sdk iphoneos -destination 'generic/platform=iOS' \
+  -derivedDataPath /tmp/AvelaCalendarThemesRelease CODE_SIGNING_ALLOWED=NO build
+```
+
+Log: `/tmp/avela-order-release.log`. Release binary contains HabitOrder production
+symbols and zero store-path/fixture/reminder-delivery DEBUG markers. Project lint
+and membership checks pass: 148 Swift references, each new file registered once,
+no duplicate per-target source membership. `git diff --check` passes. This is an
+unsigned device compilation, not an archive, physical-device run or upload.
+
+### Expanded themes and optional lighter schedule — verified 2026-10-05
+
+Final Debug run: **345 unit tests + 5 targeted UI tests, zero failures, TEST
+SUCCEEDED**. This adds 12 meaningful adjustment tests, two theme persistence/
+legacy tests and three native UI flows; two existing completion/editing flows
+were also selected. It does not claim a new full-UI-suite run.
+
+```bash
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild \
+  -project Avela.xcodeproj -scheme Avela -configuration Debug \
+  -destination 'platform=iOS Simulator,id=2ACFE418-44EC-4A44-9B2A-1B45BDF1EF38' \
+  -derivedDataPath /tmp/AvelaCodexMVP -parallel-testing-enabled NO \
+  CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- \
+  -only-testing:AvelaTests \
+  -only-testing:AvelaUITests/MVPFlowTests/testLighterScheduleCancelConfirmAndRelaunch \
+  -only-testing:AvelaUITests/MVPFlowTests/testAdditionalThemesSurviveRelaunch \
+  -only-testing:AvelaUITests/MVPFlowTests/testLighterScheduleAtAccessibilityTextSize \
+  -only-testing:AvelaUITests/AvelaUITests/testCompletedHabitRowCollapsesIntoDoneGroupAndCanStillBeUndoneAfterward \
+  -only-testing:AvelaUITests/AvelaUITests/testEditingHabitFromDetailUpdatesTodayWithoutLosingPriorCompletion test
+```
+
+Log: `/tmp/avela-recovery-complete-tests.log`. Result bundle:
+`/tmp/AvelaCodexMVP/Logs/Test/Test-Avela-2026.10.05_13-18-55--0600.xcresult`.
+The isolated Pro Max simulator was set to dark via `simctl ui ... appearance
+dark`; regular light previews were captured in an earlier run. The owner Pro
+simulator/store was untouched. Native screenshots were visually reviewed and
+saved in [verification/recovery-themes](verification/recovery-themes/README.md).
+
+Early failures were a test's incorrect Sunday epoch and incorrect schedule-label
+expectation, then lazy AX3 rows/off-screen header assertions. Tests now scroll
+before querying lazy rows and respect retained detail scroll position. No app
+layout reset or font reduction was used to force a pass. The local StoreKit
+purchase test also uses its existing bounded authoritative-entitlement polling
+rather than assuming the sequence updates immediately after purchase.
+
+No schema change/reset, new permission or dependency. Recovery choices are
+explicit editable defaults, not validated adherence outcomes. Physical VoiceOver,
+keyboard and Increase Contrast remain manual release checks. No commits/pushes.
+
+Final unsigned iPhone SDK Release compilation: **BUILD SUCCEEDED**.
+
+```bash
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild \
+  -project Avela.xcodeproj -scheme Avela -configuration Release \
+  -sdk iphoneos -destination 'generic/platform=iOS' \
+  -derivedDataPath /tmp/AvelaCalendarThemesRelease CODE_SIGNING_ALLOWED=NO build
+```
+
+Log: `/tmp/avela-recovery-release.log`. The final Release binary contains the new
+HabitAdjustment/AppTheme production symbols and zero store-path, seed-fixture,
+DebugFixtures or reminder-delivery DEBUG markers. Project lint/membership checks
+pass: 152 Swift references, four new files registered once and no duplicate
+per-target sources. `git diff --check` passes. This is an unsigned compilation,
+not a signed archive, physical-device run or TestFlight upload.
+
+
+## Full-theme and streak presentation verification — 2026-10-05
+
+Page gradients, tinted custom cards, deep progress heroes and connected calendar success ribbons are presentation-only. No schema, metric or permission change was required. Native previews are in [verification/full-themes](verification/full-themes/README.md).
+
+Debug verification used the isolated iPhone 18 Pro Max simulator (`2ACFE418-44EC-4A44-9B2A-1B45BDF1EF38`), `/tmp/AvelaCodexMVP`, ad-hoc signing (`CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=-`) and parallel testing disabled. The owner simulator/store was untouched. The isolated simulator was restored to light appearance afterward.
+
+- **346 unit tests and four targeted UI tests passed**, zero failures: `/tmp/avela-immersive-theme-tests.log`; result bundle `Test-Avela-2026.10.05_13-55-17--0600.xcresult` under `/tmp/AvelaCodexMVP/Logs/Test/`.
+- Targeted flows: immersive theme selection/persistence/read-only streak calendar; month navigation without logging; accessible weekly commitment explanation; completion/Done-group undo.
+- Dark-mode rerun: **346 unit tests and two targeted UI tests passed**, zero failures: `/tmp/avela-immersive-dark-tests.log`.
+- Final light immersive flow and final dark AX3 weekly flow passed separately after presentation refinements: `/tmp/avela-immersive-light-final.log`, `/tmp/avela-immersive-ax-final.log`.
+- Standalone Debug build succeeded: `/tmp/avela-immersive-debug-build.log`.
+- Unsigned iPhone SDK Release build succeeded using the preceding Release command: `/tmp/avela-immersive-release.log`. Its binary has zero store-path, seed-fixture, DebugFixtures and reminder-delivery test markers, with AppPalette production symbols present.
+- Project plist lint and `git diff --check` pass.
+
+This pass did not rerun the entire UI suite. Native screenshots were reviewed in light, dark and accessibility XXXL; physical-device accessibility remains a release check. No signed archive or TestFlight upload is implied.
+
+
+## Design quality execution verification — 2026-10-05
+
+Implemented the first code-backed pass from DESIGN_QUALITY_PLAN.md. Journey coverage and remaining evidence are tracked in [QUALITY_EXECUTION.md](QUALITY_EXECUTION.md); native screenshots are in [verification/design-quality](verification/design-quality/README.md).
+
+The final combined Debug run passed **349 unit tests and six quality-focused UI tests, zero failures**, including selected native accessibility audits, largest-text weekday creation/persistence, confirmation dismissal/Done undo, onboarding and a launch measurement. Log: `/tmp/avela-quality-complete.log`; result: `/tmp/AvelaCodexMVP/Logs/Test/Test-Avela-2026.10.05_16-03-45--0600.xcresult`.
+
+```bash
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild \
+  -project Avela.xcodeproj -scheme Avela -configuration Debug \
+  -destination 'platform=iOS Simulator,id=2ACFE418-44EC-4A44-9B2A-1B45BDF1EF38' \
+  -derivedDataPath /tmp/AvelaCodexMVP -parallel-testing-enabled NO \
+  CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- \
+  -only-testing:AvelaTests \
+  -only-testing:AvelaUITests/MVPFlowTests/testCoreScreensPassNativeAccessibilityAudit \
+  -only-testing:AvelaUITests/MVPFlowTests/testSupportingScreensPassNativeAccessibilityAudit \
+  -only-testing:AvelaUITests/MVPFlowTests/testWeekdayFormAtLargestTextHasComfortableTargetsAndPersists \
+  -only-testing:AvelaUITests/MVPFlowTests/testDismissConfirmationPreservesLoggingAndDoneUndo \
+  -only-testing:AvelaUITests/MVPFlowTests/testOnboardingWelcomePassesNativeAccessibilityAudit \
+  -only-testing:AvelaUITests/MVPFlowTests/testApplicationLaunchPerformanceBaseline test
+```
+
+Five existing targeted UI regressions passed earlier in `/tmp/avela-quality-verified.log`: quick attention logging/undo, completion toast undo, Done-group undo, and regular/largest-text icon target sizes. That run's supporting-screen audit failed on Settings text clipping; the final combined run above includes the corrected wrapping labels and passes without suppressing audit issues. This pass did **not** rerun the entire UI suite.
+
+Four quality UI checks passed in dark appearance in `/tmp/avela-quality-dark.log`. The subsequently refined inline accessibility-size picker is separately checked in `/tmp/avela-quality-dark-inline.log`. Appearance is set via `xcrun simctl ui <id> appearance dark`, not a launch argument. All runs use isolated UI-test stores on the Pro Max; the owner's Pro simulator/store is untouched. Restore the test simulator to light after capturing previews.
+
+Selected audits cover hit regions, sufficient descriptions, clipped text and traits. They do not establish physical VoiceOver focus, Switch Control operation, every theme's contrast, or an Accessibility Nutrition Label. Visual inspection caught a large-text menu clipping issue missed by the automated audit; inline choices replaced that menu.
+
+Simulator measurements are baselines only: the three-year daily-history calculator averaged about **6 ms** over ten iterations; Debug responsive launch averaged **2.910 s** over five iterations (about 7.3% relative deviation). These are not physical-device release budgets, scroll/memory/energy profiles or evidence of an adherence benefit.
+
+Final unsigned iPhone SDK Release build passed (`/tmp/avela-quality-release-complete.log`) using the existing Release command. Binary inspection found zero store-path, seed-fixture, DebugFixtures and reminder-delivery DEBUG markers, with AppPalette production symbols present. Project plist lint and `git diff --check` pass. No signed archive, TestFlight upload, commit or push occurred.
+
+
+## Quantity, routine, reflection and Watch expansion — 2026-10-05
+
+The expanded candidate adds a native `AvelaWatch` target, embedded by the existing Avela scheme. There are still no third-party packages or runtime secrets. Watch SDK compilation is available; there is no paired watchOS simulator runtime here. Physical pairing/background delivery remain a release gate.
+
+All **411 unit tests pass** in `/tmp/avela-enrichment-verified.log`. **Nine distinct targeted UI flows pass** across `/tmp/avela-enrichment-final.log` and `/tmp/avela-enrichment-verified.log`: quantity/smaller-action persistence, routines, reflection, manageable-week pause, restart confirmation, phone-free intention/manual outcome separation, largest-text setup, core accessibility/calendar and existing toast Undo. The earlier combined run had a calendar-link query fail because the newly inserted detail actions moved it outside the List's instantiated area; bounded scrolling fixed the test, and the final core audit passed without suppressing accessibility findings. The entire UI suite was not rerun.
+
+```bash
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild \
+  -project Avela.xcodeproj -scheme Avela -configuration Debug \
+  -destination 'platform=iOS Simulator,id=2ACFE418-44EC-4A44-9B2A-1B45BDF1EF38' \
+  -derivedDataPath /tmp/AvelaCodexMVP -parallel-testing-enabled NO \
+  CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- \
+  -only-testing:AvelaTests \
+  -only-testing:AvelaUITests/MVPFlowTests/testCoreScreensPassNativeAccessibilityAudit \
+  -only-testing:AvelaUITests/MVPFlowTests/testManageableWeekRestartRequiresSelectionAndExplicitConfirmation \
+  -only-testing:AvelaUITests/MVPFlowTests/testQuantityProgressAndSmallerActionRemainDistinctAcrossRelaunch test
+```
+
+Largest-text setup additionally passes in real simulator dark appearance (`/tmp/avela-enrichment-dark.log`); light is restored afterward. Native audit types are hit regions, sufficient description, clipping and traits, not a physical VoiceOver or every-color contrast audit.
+
+Unsigned iPhone SDK Release builds pass, with the embedded Watch executable present and all four existing DEBUG-only store/fixture/reminder markers absent. Project membership checks find 183 Swift source paths correctly assigned, including intentional app/widget and app/Watch shared files. No signed archive, TestFlight upload, commit or push.
+
+See [native enrichment previews](verification/enrichment/README.md). Quantity setup lives in Habit Detail → Progress, Timer & History Corrections; routines/manageable-week review are on Today; reflection is in Settings/Insights; phone-free intentions are in Habit Detail → Make Room. Enable Watch sharing explicitly in Settings.
+
+The expansion uses SwiftData lightweight schema changes and a default-false completion attribute, with no destructive store reset. A native test opens a store without the six new model types, preserves habit/completion IDs and notes, and creates a new quantity configuration. This test does not represent every old binary/schema variant. Hardware Siri, Health permissions, Watch, VoiceOver, energy and distribution signing remain pending.
+
+Final screenshot-driven routine polish uses explicit system secondary text instead of a secondary style inheriting the button's accent. Restart explanatory copy is shorter; the precise counting rules remain in DATA_MODEL.md. Both routine/restart UI regressions pass again in `/tmp/avela-enrichment-routine-polish.log`; final unsigned Release passes in `/tmp/avela-enrichment-release-polish.log`, with DEBUG marker exclusions rechecked.
+
+
+## Full-suite verification — 2026-10-05
+
+A clean, unrestricted `test` action passed **411 unit tests + 82 UI tests**, with **zero failures and zero skips**, confirmed by `xcresulttool get test-results summary` (493 passed). It includes native reminder actions, Dynamic Island/Live Activity, all older app flows, enrichment, performance and accessibility checks. The owner's Pro simulator/store was untouched.
+
+```bash
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild \
+  -project Avela.xcodeproj -scheme Avela -configuration Debug \
+  -destination 'platform=iOS Simulator,id=2ACFE418-44EC-4A44-9B2A-1B45BDF1EF38' \
+  -derivedDataPath /tmp/AvelaCodexMVP -parallel-testing-enabled NO \
+  CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- test
+```
+
+Log: `/tmp/avela-full-suite-verified.log`. Result: `/tmp/AvelaCodexMVP/Logs/Test/Test-Avela-2026.10.05_19-29-27--0600.xcresult`. An earlier attempt was stopped after an older Archived Habits query failed to scroll; bounded native scrolling fixes the test without removing assertions. The restarted full run passed.
+
+The successful run printed a nonblocking post-run diagnostics collection error because a child `xcrun` resolved the Command Line Tools environment and could not find `simctl`. The test action exited 0, and the result bundle is valid; explicit Xcode `DEVELOPER_DIR` works for normal `simctl` commands. Simulator appearance is restored to light.
+
+Physical VoiceOver, paired Watch, real Health/Siri delivery, energy and distribution signing remain device/release gates. Full simulator coverage does not establish those.
+
+The full run also recorded two SwiftUI publication warnings during reminder-alert dismissal. `AppShellView` now defers clearing the published pending action until after the view update, guarded so a newer reminder is not consumed. After that localized fix, **all 411 unit tests plus the three affected native reminder UI tests passed (414 total, zero failures/skips and zero runtime warnings)**. The entire 82-test UI suite was not repeated after this fix. Follow-up result: `/tmp/AvelaCodexMVP/Logs/Test/Test-Avela-2026.10.05_20-11-51--0600.xcresult`; log: `/tmp/avela-full-suite-warning-fix.log`.
+
+The latest unsigned iPhone SDK Release build also passes (`/tmp/avela-full-suite-release.log`), with all four DEBUG-only markers independently rechecked as absent.
+
+## Factual weekly reflection — 2026-10-05
+
+Reflection now shows recorded per-habit progress for the selected week alongside private notes. Insights preserves its review week when opening Reflection. Notes are not analyzed; counts describe recorded commitments, not inferred causes. No schema, AI runtime/service, dependency or permission was added.
+
+[Native populated reflection preview](verification/enrichment/reflection-recorded-progress.png) was exported from the passing UI test and visually reviewed. **11 reflection unit tests + 2 native UI tests passed**, zero failures/skips/runtime warnings, in `/tmp/AvelaCodexMVP/Logs/Test/Test-Avela-2026.10.05_21-27-00--0600.xcresult` (`/tmp/avela-factual-reflection.log`). The final wording polish was rechecked by the populated UI test in `/tmp/AvelaCodexMVP/Logs/Test/Test-Avela-2026.10.05_21-29-08--0600.xcresult` (`/tmp/avela-factual-reflection-copy.log`). Unsigned iPhone SDK Release builds pass (`/tmp/avela-factual-reflection-release.log`). This is focused verification, not a repeat of the complete suite. Physical VoiceOver and large-text presentation of this addition remain device checks. No commit or push.
+
+
+## Configure optional iCloud recovery — 2026-10-05
+
+Current placeholder builds deliberately leave backup unavailable. Simulator fake
+provider tests prove local flow only, not CloudKit provisioning or real recovery.
+No runtime secret is required.
+
+1. Register real app bundle IDs and a developer team. Add iCloud/CloudKit capability
+   to the main app with a private container you own. Keep existing App Groups and
+   HealthKit capabilities intact; widget/Watch targets do not need cloud access.
+2. Merge CloudBackup.entitlements.template into the app's real signing entitlements,
+   replacing its container placeholder. Set AVELA_CLOUD_BACKUP_CONTAINER to that
+   exact identifier; the Info.plist value reads the setting. The template alone is
+   not active signing configuration. CKContainer is never initialized for an
+   unset setting, com.example container or isolated UI-test store.
+3. In CloudKit Console configure AvelaRecoverySnapshot with payload (Asset),
+   snapshotDate (Date), deviceID (String), and the indexes needed for an all-record
+   query (including queryable recordName). Verify pagination. Deploy the schema to
+   Production before TestFlight; development schema alone is insufficient.
+4. On signed devices test actual opt-in/upload, successful server acknowledgement,
+   offline/limited quota, iCloud sign-out/account switch and explicit deletion.
+   Restore on a separate otherwise empty installation; cancellation writes nothing,
+   IDs/history survive restart, reminders remain off and timers are paused. Test
+   Health/fitness exclusions and private-note omissions against the real asset.
+5. Review archive privacy report, App Store Connect disclosures and published
+   privacy policy/contact. Check system-device-backup handling of Health-derived
+   local data before release; do not interpret these cloud tests as that check.
+
+Progress Protection is in Settings → Your Data. Automatic copies run only while
+Avela can execute after saved changes, at most once per ten minutes. Manual Back
+Up Now is available. Turning off does not delete copies; a request already sent
+may finish. Quota/connectivity failures leave local history intact. Recovery is
+not live sync, and intentionally excluded records are not protected by it.
+
+Debug UI fixture cloudBackupRecovery requires both AVELA_UI_TEST_STORE_PATH and
+AVELA_UI_TEST_SEED_FIXTURE. It creates an isolated in-memory fake cloud copy; never
+use its screenshots or passing tests as evidence of real CloudKit availability.
+
+Unconfigured Release builds hide the Progress Protection entry. Debug builds
+show its unavailable state for development; no CloudKit calls are made.
+
+## Progress enrichment verification — 2026-10-06
+
+Lifetime progress/milestones, personal quick amounts, and the selected-week intention review are implemented. Full native unit suite: **454 tests, zero failures** (31 new tests). Five distinct affected native UI flows pass: lifetime + milestone + relaunch/Undo; populated read-only selected-week review; preset Cancel/Save/log/Undo/relaunch; existing quantity/smaller-action regression; largest-text navigation. Debug simulator and unsigned iPhoneOS Release builds succeed. DEBUG fixture/store hooks are absent from the Release executable, with production symbols checked as a sanity control. Project membership and whitespace checks pass.
+
+Evidence and precise commands: `docs/verification/progress-enrichment/README.md`. The full UI suite was not rerun for this bounded slice. Physical-device VoiceOver/interaction checks remain pending. Presets are device-local convenience preferences, not included in logical iCloud recovery; progress is derived from the existing records. Cloud recovery remains gated by the signing/container/device-verification prerequisites already documented.
+
+Next: a cohesive premium UI/interaction polish pass using real screens. Prioritize action hierarchy, crowded habit-detail navigation, text density, logging controls, and consistent spacing/typography/icon treatment. This pass did not perform that global redesign.
+
+## Cohesive native UI polish — 2026-10-06
+
+Implemented quieter habit recovery counts, grouped detail tools, consistent icon tiles, clearer logging/review hierarchy, Settings grouping and shared spacing/theme refinements across the main iPhone screens. Existing progress, provenance, privacy and purchase behavior is preserved; no schema, permission or dependency was added.
+
+Verification: **454 unit tests and 14 distinct affected UI flows pass**, plus two repeated dark-mode screen-tour/AX3-navigation checks. Debug simulator and unsigned iPhoneOS Release builds succeed; DEBUG fixture/store hooks are absent from Release. Project integrity and whitespace checks pass. The entire UI suite was not rerun. Physical VoiceOver, OLED and private usability checks remain pending; signed cloud/device integration gates are unchanged.
+
+[Native light/dark gallery, exact scope and reproduction commands](verification/ui-polish/README.md).
+
+## Atmospheric themes verification — 2026-10-06
+
+The first coordinated design pass is implemented: neutral reading surfaces, complementary theme atmosphere, original static calendar/picker landscapes, action-focused Today and consistent multicolor habit identity. Existing saved theme values, progress/history, manual provenance and commercial rules remain unchanged; no schema, package or permission was added.
+
+**455 unit tests and seven distinct affected UI flows pass**, with nine UI executions across light/dark. Debug and unsigned iPhoneOS Release builds succeed. DEBUG store/fixture/recovery markers are absent from Release; production scenery symbols are present. Project membership and whitespace checks pass. The entire UI suite was not rerun. Physical VoiceOver, OLED, Increase Contrast and private usability checks remain pending; signed platform/cloud release gates are unchanged.
+
+[Native screenshots, exact scope and reproduction](verification/atmospheric-themes/README.md). The dedicated simulator is restored to light appearance. No commits or pushes.
+
+### Recovery-card DEBUG fixture
+
+`AVELA_UI_TEST_SEED_FIXTURE=recoveryProgress` creates an isolated daily reading habit with two previous successful days after two misses and an optional smaller action. Like all fixtures, it requires `AVELA_UI_TEST_STORE_PATH`, applies only to an empty redirected store and is compiled out of Release. It uses the real current civil day and public repositories, with no production clock override.
+
+### Visual Insights DEBUG fixture
+
+`AVELA_UI_TEST_SEED_FIXTURE=visualInsights` uses public repositories to seed daily and archived flexible-weekly habits plus partial manual attention coverage. The rounded habit score is 68%, below-budget result 33%, coverage 3/7 goal-days. Like other fixtures, it requires an empty isolated `AVELA_UI_TEST_STORE_PATH` store and is compiled out of Release. It never affects an ordinary store or changes the production clock.

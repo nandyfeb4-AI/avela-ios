@@ -1,947 +1,3571 @@
 // !$*UTF8*$!
 {
-	archiveVersion = 1;
-	classes = {};
-	objectVersion = 56;
-	objects = {
-
-/* Begin PBXBuildFile section */
-		8464565395CA480AB53D8C0B = { isa = PBXBuildFile; fileRef = 38F5FFD260E1D1E91F6338AC; };
-		42376078E52BF632F4B50338 = { isa = PBXBuildFile; fileRef = D7360AE37E28CA2077F913AC; };
-		EDD96DA354FD345B4D52EF7E = { isa = PBXBuildFile; fileRef = 47F97734D39C2482BA80694D; };
-		38B12F368EAB4E39402E6A4E = { isa = PBXBuildFile; fileRef = B3A817580C23BB85A759895A; };
-		8AF272842EAFB9E80EB7B26F = { isa = PBXBuildFile; fileRef = 79669938CA756588A73ABF61; };
-		FD2B5A5C6CCE66F2BD3911AC = { isa = PBXBuildFile; fileRef = F9BA393299CCEFE9670D789C; };
-		7BE32390068C7DE7160DFEE8 = { isa = PBXBuildFile; fileRef = 477AEC8C127FCCBEECE67382; };
-		CE8BB3D2CD96728917F204AC = { isa = PBXBuildFile; fileRef = 1001433A70BC9DB7C28DE376; settings = { ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		48AFDBE4881D87F2B74FEB5E = { isa = PBXBuildFile; fileRef = A33FC34214F540599C1FA259; };
-		9114D589DC3B6C2640571DBB = { isa = PBXBuildFile; fileRef = 4D9F2EBF1D9A784CFA6FB366; };
-		ECDD275E262F78CB8FA56E5F = { isa = PBXBuildFile; fileRef = E201FFA6BFFD260571841EAF; };
-		DBC1EBA051CE1FF2D1102726 = { isa = PBXBuildFile; fileRef = 84DABF851511566B54C6D014; };
-		B7249493BB6249C2B406894D = { isa = PBXBuildFile; fileRef = 3A1C055D1C584CD4AA373973; };
-		5C4E9DEB87D74CB693F26991 = { isa = PBXBuildFile; fileRef = B949CE4B76AE424A8F04D0A0; };
-		322E82932A61474DBD8DB355 = { isa = PBXBuildFile; fileRef = 18A9C3A8236D47C98E7BB174; };
-		7A8D615F4025470589BFCFEB = { isa = PBXBuildFile; fileRef = C02AF07D1F58446C80B3A61A; };
-		9B39A364509F4BA881C146FA = { isa = PBXBuildFile; fileRef = 156766C612F04230A7DB525E; };
-		F80D041C89FE4723BB503549 = { isa = PBXBuildFile; fileRef = 2AC49447A79D48A3A1E41BEB; };
-		3393B5FACAFD40AEA057C101 = { isa = PBXBuildFile; fileRef = B52BAA84AD3D40CA8080B777; };
-		D351E67D3C2A4FFAB05833FF = { isa = PBXBuildFile; fileRef = 1D15BE61F800423F88CE374F; };
-		19AA4B2BC89E4D70949E04FA = { isa = PBXBuildFile; fileRef = F2482EBE9E4C45C98E7EDF3F; };
-		D8C563FADA364E13B4EBC8BC = { isa = PBXBuildFile; fileRef = 4BABD231442748829B0811AF; };
-		FEABED43DB1B49CDB4D63B84 = { isa = PBXBuildFile; fileRef = 717CC06C4ABC462F9417BEA7; };
-		A90958EC9C244BDC85358E05 = { isa = PBXBuildFile; fileRef = F22D495D42A54C3AABD40BB9; };
-		4DFC11AE6A634DA1B8EACC6F = { isa = PBXBuildFile; fileRef = 72DA8755A72B48E08FBB1CDC; };
-		1A8CCB766FC04CCD83D2AB90 = { isa = PBXBuildFile; fileRef = A22AADD22A7547A8AE5F57FF; };
-		A916EFF916BE48618DD77AB5 = { isa = PBXBuildFile; fileRef = 4CD028A252414DC68F26588E; };
-		332EE70B555A4B2699FCBCCD = { isa = PBXBuildFile; fileRef = DA9D7B1005DA4F1F99A23983; };
-		106DF8ED39D54A41953BDE1F = { isa = PBXBuildFile; fileRef = C4F5F8B3E12745BC9DBBFBF6; };
-		06665B7F55E74E448AB0D5D8 = { isa = PBXBuildFile; fileRef = 79B5E45BD7EE48F1B9281553; };
-		7D6105CFB7FB4C4C9381F853 = { isa = PBXBuildFile; fileRef = 39F122DF7683405497404B9C; };
-		355FC67BB19D46BFB9DE66EA = { isa = PBXBuildFile; fileRef = 1ED85F920DAE45AC84D78965; };
-		DFBB1315BCA247468296D020 = { isa = PBXBuildFile; fileRef = A9E422954F5246328C4B707A; };
-		2091EEED7B1C467EB77A553E = { isa = PBXBuildFile; fileRef = B36F97CDA4C64B6B8EE2DE3E; };
-		9397413EC68743B99D6FEAFC = { isa = PBXBuildFile; fileRef = FC63C10F25A941B29728D89F; };
-		6939574CC69C45A3B40B7BC3 = { isa = PBXBuildFile; fileRef = 9E409E1FD982488082234886; };
-		4B9DFD7226824CCAAEA1A99E = { isa = PBXBuildFile; fileRef = E928FAB528374491B4643D97; };
-		99ABECF3D68747BD8EEC6CA6 = { isa = PBXBuildFile; fileRef = 70799ACC7F2548629DCB89D4; };
-		33D06904FC194145A3D393C8 = { isa = PBXBuildFile; fileRef = BF6B447910544851893D8BB0; };
-		093BD9A1C09F4C7BAD7C7B9C = { isa = PBXBuildFile; fileRef = E493CFB705D2457CAC6AED8D; };
-		0836B76A8DA845E68FA4458F = { isa = PBXBuildFile; fileRef = 2C4B85B1E747488C871FA412; };
-		3787F32E5B4247188EA7F73A = { isa = PBXBuildFile; fileRef = 4EC9BC83374F443889194BCD; };
-		F4D2204F09AE61FE141C6D12 = { isa = PBXBuildFile; fileRef = 49EBB977245609535DB290D1; };
-		7289B3EFF6F53F6B865AA21A = { isa = PBXBuildFile; fileRef = D751C9FC6531D185088F0ED9; };
-		C701D3F978EF4A499632EEBF = { isa = PBXBuildFile; fileRef = 7B17B4638F6F4031B71B73EB; };
-		D8DF0A2BE4E94EE183333B86 = { isa = PBXBuildFile; fileRef = B7098707542A4683BD1DEFF2; };
-		FA9DBBA3218C4123BA0EC5B0 = { isa = PBXBuildFile; fileRef = 11648CE5C026409C9703B7D3; };
-		17358D8A0BE04DDEAD20519B = { isa = PBXBuildFile; fileRef = 7726828FDD314E9B9AF84298; };
-		458BEDFF7C344EA9A2591A60 = { isa = PBXBuildFile; fileRef = 1F00599EDDE64AC0BD1A240C; };
-		78A0CEE2605AF75BD3CA083E = { isa = PBXBuildFile; fileRef = 4B49AB94C0EAB42268AAD2D5; };
-		1F61B38FD685E5D96F412FE9 = { isa = PBXBuildFile; fileRef = 16741EB35151AD528C43793D; };
-		5DC2D6F54994B224D58489AA = { isa = PBXBuildFile; fileRef = 929A63C1E41A840BABF89EF8; };
-		BBE275367F77B5AA16F6BC20 = { isa = PBXBuildFile; fileRef = 29813CCD6E9944E785363836; };
-		D5EFD22BB437CBD6D2743164 = { isa = PBXBuildFile; fileRef = 7970D23993D5634B309F24FF; };
-		9EC7D3F6D5CC474ABE380810 = { isa = PBXBuildFile; fileRef = 613C348F4AE24A8C875E7667; };
-		26CEE0E86935442A8A95BC82 = { isa = PBXBuildFile; fileRef = E4940704B3034748B31593EA; };
-		5C57457303CA425286717F23 = { isa = PBXBuildFile; fileRef = 1056BEA959224215800509A7; };
-		6E049E947D1E4F9F85831815 = { isa = PBXBuildFile; fileRef = FCCA239567C543E897B506DE; };
-		FB443C4EB5ED423E96109D1D = { isa = PBXBuildFile; fileRef = 2A3BC5C704D74426B5B251E2; };
-		187E03C01B5D459C93FEAF8D = { isa = PBXBuildFile; fileRef = 3EABBDF3066F4F4F92431BFB; };
-		972107866DA1416F848B567E = { isa = PBXBuildFile; fileRef = 9D65B40E3F284C888A9BFF7C; };
-		6C668D7327B349B7B22EA470 = { isa = PBXBuildFile; fileRef = B86586D149614F6DAB7BFA81; };
-		9B2C15E097274CC9863B61E6 = { isa = PBXBuildFile; fileRef = 34C7C4F3C3F14BA18A299389; };
-		ABFB9B2E4353477780994ED9 = { isa = PBXBuildFile; fileRef = 21EE23BD8EE04690917501B0; };
-		15790B3B0BBF495AB1732EA4 = { isa = PBXBuildFile; fileRef = F0FC37D41430433CACC83C82; };
-		0328C9E950B74F78AD48B9CB = { isa = PBXBuildFile; fileRef = ACA7CE9DFD2D49A1BC9300B0; };
-		081461561C04488986B67559 = { isa = PBXBuildFile; fileRef = BE17DB316C9A46D6A536A93B; };
-		F7FABEB01DD548CDB5FB5AAD = { isa = PBXBuildFile; fileRef = 3DF7F1AF643C4DC09EBDF7DF; };
-		B5078B2E8CA34EA3A8184DA4 = { isa = PBXBuildFile; fileRef = E01EC8C1E9AE4FB497E6F95C; };
-		CEEEC06034294AAA96C7A0C7 = { isa = PBXBuildFile; fileRef = 2EA990E0BA804AEF981B0DC3; };
-		AD59BE93D33D4C2D8411E9C7 = { isa = PBXBuildFile; fileRef = 74807CF2AFA745449825A01B; };
-		5E7B92A1F7BF47ACBDC38E28 = { isa = PBXBuildFile; fileRef = A22E964A389A4D01A25EB539; };
-		651AD25AB56446058AB82C99 = { isa = PBXBuildFile; fileRef = 9C474857AB0D4884A582BFF7; };
-		D3427B52AC704FE6A7181DB2 = { isa = PBXBuildFile; fileRef = 1FC870C368A04CE98846B516; };
-		B65002B88EF94F559EE08A94 = { isa = PBXBuildFile; fileRef = BEB7EB8AE2E64150A37A6CC8; };
-		BEF693F55D564E0DA7A4DD58 = { isa = PBXBuildFile; fileRef = A4667A5550E94051B6E6C199; };
-		5BE0D8570D054AA996F76CE8 = { isa = PBXBuildFile; fileRef = 519C9AB5A71A4FF6BCEE72CB; };
-		994CABF001464AFC8D75FBD2 = { isa = PBXBuildFile; fileRef = 2BDE3574E2D2460FB05EE2ED; };
-		5C6EB0D792365A24AE628A7F = { isa = PBXBuildFile; fileRef = FFA5869E0B3051C7B4DF1B00; };
-		6582301AC0A05C198E86A754 = { isa = PBXBuildFile; fileRef = 50979BD41D085628B60B6308; };
-		5344DC26E6CD57E88F8F6F19 = { isa = PBXBuildFile; fileRef = 6C0202C5DB0F5A839BCA1A2C; };
-		A3FECE7B532A5B4C8E06612B = { isa = PBXBuildFile; fileRef = 9B26AA72FD875F728E5A9A81; };
-		7C3E4E3BC52459879D53B0A1 = { isa = PBXBuildFile; fileRef = 0DCDE075BF00584FA605D5AA; };
-		024F19AA7A995E41B9EC605C = { isa = PBXBuildFile; fileRef = C87F01FC848B55EDA8447F08; };
-		2999EB7681635C2B840B4F5C = { isa = PBXBuildFile; fileRef = C24F1EAB50E5582F98F81E7E; };
-		5ADC09AFCDD55F6180E44A60 = { isa = PBXBuildFile; fileRef = 06962ECA57ED5C0DB0DD17FA; };
-		CFC7BB003F1055B8B6EDE666 = { isa = PBXBuildFile; fileRef = 4495E41F3A6A5EFE869CDD0C; };
-		E5712791AE5C5210B2C593A3 = { isa = PBXBuildFile; fileRef = ECCD07C53A725A1DAB80A06E; };
-		D614DAD479595755801D2029 = { isa = PBXBuildFile; fileRef = 32C9A6514DA7514F90D29C88; };
-		7A457A6D63F750329FF0318A = { isa = PBXBuildFile; fileRef = B27B96933B8A5554AE06021E; };
-		C4F7EA533D6056F09783306A = { isa = PBXBuildFile; fileRef = B0F5CDE339AE59649E82EC36; };
-		45492995DF5D5AF89348E707 = { isa = PBXBuildFile; fileRef = F91ED67A47BC523CB7ABEC01; };
-		F1D7CE4FB7E05D81B403789B = { isa = PBXBuildFile; fileRef = FB3C6AA97C395EBD894AE64A; };
-		EA2997DFD56E51C490178CE0 = { isa = PBXBuildFile; fileRef = AB016F84C4135820AEBE327E; };
-		8D5FDCE2F80A542E949017AB = { isa = PBXBuildFile; fileRef = 02F606A039BC57FF90A148CD; };
-		529B6DC457C25292A9303218 = { isa = PBXBuildFile; fileRef = 16CC5FA673735A4294FFA73F; };
-		4A1DE62E5473521B96E3EB25 = { isa = PBXBuildFile; fileRef = 8841A7E8CCDB536DA8D85316; };
-		3B141886E733521CAF068988 = { isa = PBXBuildFile; fileRef = 649372A2A7915E1EAB97B674; };
-		1CDDDC32F71A5D9DB19711CA = { isa = PBXBuildFile; fileRef = 1956DE7D8F5C558A8026C12F; };
-		693C307624BD52CB8F4E3355 = { isa = PBXBuildFile; fileRef = 8234326D34E0526BA576A350; };
-		5EE900B3F41653D0808E3ADE = { isa = PBXBuildFile; fileRef = 039EB7D3E29A5F7696A95176; };
-		77EDE1BDAC245A7E8FC72439 = { isa = PBXBuildFile; fileRef = FEA9B593C65151AEAEA63047; };
-		05BE9FF8C4A6551C9D4B2D31 = { isa = PBXBuildFile; fileRef = F58362B7EE36550FA3C9291F; };
-		07E71640EF3550BC825D3FB0 = { isa = PBXBuildFile; fileRef = 4F19F6C74BFA58C38337D33F; };
-		1C2BB63629015ABDA07E9DDD = { isa = PBXBuildFile; fileRef = 7180172588DE5C6DAB62A4B0; };
-A11111111111111111110002 = {isa = PBXBuildFile; fileRef = A11111111111111111110001; };
-		B946EE05AAE955ADB68E139E = { isa = PBXBuildFile; fileRef = EDF5684832CA5EC18DC067F7; };
-		9864C1EAF4075A5FAEE7A0F9 = { isa = PBXBuildFile; fileRef = F221CE70331C5A2095EB8087; };
-		61D98A1770DF574993ECF8B3 = { isa = PBXBuildFile; fileRef = 7F1D403208E35AC285E7A9B4; };
-		896AF8514B50565C97BBCB88 = { isa = PBXBuildFile; fileRef = A09F7E5A65F75E58B16918A2; };
-		80A276AEF76353A2AFB7CB93 = { isa = PBXBuildFile; fileRef = CEE5F90BE8405C43B5ADC9FC; };
-
-BD7078DC774E5F0FAFCA686D = { isa = PBXBuildFile; fileRef = 7F1D403208E35AC285E7A9B4; };
-418DC77F594955E9BC157764 = { isa = PBXBuildFile; fileRef = CEE5F90BE8405C43B5ADC9FC; };
-3F3FB3F11B3E50BFB3409818 = { isa = PBXBuildFile; fileRef = F221CE70331C5A2095EB8087; };
-75B21F162C735474A2359A93 = { isa = PBXBuildFile; fileRef = 3A1C055D1C584CD4AA373973; };
-		B17560C1E7B65AD69277BE42 = { isa = PBXBuildFile; fileRef = 43C7A3626E15505881812283; };
-		6867B0A4906F5D5F8697F8A4 = { isa = PBXBuildFile; fileRef = 4EE78DB065085FF5AF224DBA; };
-		D6DE3804770E5583AACA0A98 = { isa = PBXBuildFile; fileRef = C6B988811F555614BDDF2261; };
-		2459E6F684AF542DB924E3DE = { isa = PBXBuildFile; fileRef = 473052FCCAEE5F738C135CFD; };
-		693F12284ACC5623980AA0D4 = { isa = PBXBuildFile; fileRef = 583A81AA2BE858CB99E40EF7; };
-A11111111111111111110004 = { isa = PBXBuildFile; fileRef = A11111111111111111110003; };
-A11111111111111111110005 = { isa = PBXBuildFile; fileRef = A11111111111111111110003; };
-
-		76E95566330B55F08D6B7CFD = { isa = PBXBuildFile; fileRef = D5592460D3F152B5B66FA7BC; };
-		3EC4580EFF1F5562B3CEBE49 = { isa = PBXBuildFile; fileRef = DE4F2210677E528DBDBF8EA8; };
-		048CBECC222C5B02AD7C2E02 = { isa = PBXBuildFile; fileRef = DE4F2210677E528DBDBF8EA8; };
-		3FF09E4EB03E5964AE296C23 = { isa = PBXBuildFile; fileRef = 3F1E2FAB87FA5E77A8844B47; };
-		3EEF941FADFF58DC9DFBA267 = { isa = PBXBuildFile; fileRef = 3F1E2FAB87FA5E77A8844B47; };
-		E6BCF100720B5BB59D4ACDC0 = { isa = PBXBuildFile; fileRef = 36AC613AE02E5B31828F9899; };
-		7C59D9A2C5DC5CE09381EC57 = { isa = PBXBuildFile; fileRef = 67C46FBA2E9654639FF87EFB; };
-		FE474507EC9E5D5CB940409B = { isa = PBXBuildFile; fileRef = 4E82FCEC239D58A1938B9F08; };
-		98CB1CFDD6EC5FD9A270733A = { isa = PBXBuildFile; fileRef = FE5B371DF309504C93075328; };
-		2B1AB90AFB5C5220B00A9F9A = { isa = PBXBuildFile; fileRef = 36AC613AE02E5B31828F9899; };
-		0176827C8EF05DDABD0ABFB7 = { isa = PBXBuildFile; fileRef = AAE25320D4BA5E3AB91890F4; };
-		5EF563ABDECA526A8853345D = { isa = PBXBuildFile; fileRef = 24D25A0828E85123A10B195E; };
-/* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		F83F934FB4001512D7DF54DD = { isa = PBXContainerItemProxy; containerPortal = 244210E48437B6556980A702; proxyType = 1; remoteGlobalIDString = C300F2C9E907C523A89F9916; remoteInfo = AvelaWidget; };
-		5414B820ED24ACFE395648C8 = { isa = PBXContainerItemProxy; containerPortal = 244210E48437B6556980A702; proxyType = 1; remoteGlobalIDString = E64C44E110C68927474000A8; remoteInfo = Avela; };
-		C605D5ED92C2A2D2C191ADBB = { isa = PBXContainerItemProxy; containerPortal = 244210E48437B6556980A702; proxyType = 1; remoteGlobalIDString = E64C44E110C68927474000A8; remoteInfo = Avela; };
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		073C34A79D8CA96E4892A560 = { isa = PBXCopyFilesBuildPhase; buildActionMask = 2147483647; dstPath = ""; dstSubfolderSpec = 13; files = (CE8BB3D2CD96728917F204AC, ); name = "Embed App Extensions"; runOnlyForDeploymentPostprocessing = 0; };
-/* End PBXCopyFilesBuildPhase section */
-
-/* Begin PBXFileReference section */
-		38F5FFD260E1D1E91F6338AC = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppShellView.swift"; sourceTree = "<group>"; };
-		D7360AE37E28CA2077F913AC = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppTab.swift"; sourceTree = "<group>"; };
-		47F97734D39C2482BA80694D = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvelaApp.swift"; sourceTree = "<group>"; };
-		B3A817580C23BB85A759895A = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DebugFixtures.swift"; sourceTree = "<group>"; };
-		79669938CA756588A73ABF61 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppPersistence.swift"; sourceTree = "<group>"; };
-		F9BA393299CCEFE9670D789C = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScaffoldPlaceholderView.swift"; sourceTree = "<group>"; };
-		477AEC8C127FCCBEECE67382 = { isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Assets.xcassets"; sourceTree = "<group>"; };
-		A33FC34214F540599C1FA259 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvelaWidget.swift"; sourceTree = "<group>"; };
-		1108B858726A785B22D21795 = { isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info.plist"; sourceTree = "<group>"; };
-		4D9F2EBF1D9A784CFA6FB366 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppPersistenceTests.swift"; sourceTree = "<group>"; };
-		E201FFA6BFFD260571841EAF = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppShellTests.swift"; sourceTree = "<group>"; };
-		84DABF851511566B54C6D014 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvelaUITests.swift"; sourceTree = "<group>"; };
-		3A1C055D1C584CD4AA373973 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocalDay.swift"; sourceTree = "<group>"; };
-		B949CE4B76AE424A8F04D0A0 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Habit.swift"; sourceTree = "<group>"; };
-		18A9C3A8236D47C98E7BB174 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitSchedule.swift"; sourceTree = "<group>"; };
-		C02AF07D1F58446C80B3A61A = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitConfigurationSnapshot.swift"; sourceTree = "<group>"; };
-		156766C612F04230A7DB525E = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitDraft.swift"; sourceTree = "<group>"; };
-		2AC49447A79D48A3A1E41BEB = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Completion.swift"; sourceTree = "<group>"; };
-		B52BAA84AD3D40CA8080B777 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Skip.swift"; sourceTree = "<group>"; };
-		1D15BE61F800423F88CE374F = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitRepository.swift"; sourceTree = "<group>"; };
-		F2482EBE9E4C45C98E7EDF3F = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitScheduleEvaluator.swift"; sourceTree = "<group>"; };
-		4BABD231442748829B0811AF = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitRecord.swift"; sourceTree = "<group>"; };
-		717CC06C4ABC462F9417BEA7 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitConfigurationSnapshotRecord.swift"; sourceTree = "<group>"; };
-		F22D495D42A54C3AABD40BB9 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CompletionRecord.swift"; sourceTree = "<group>"; };
-		72DA8755A72B48E08FBB1CDC = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SkipRecord.swift"; sourceTree = "<group>"; };
-		A22AADD22A7547A8AE5F57FF = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftDataHabitRepository.swift"; sourceTree = "<group>"; };
-		4CD028A252414DC68F26588E = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocalDayTests.swift"; sourceTree = "<group>"; };
-		DA9D7B1005DA4F1F99A23983 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitScheduleEvaluatorTests.swift"; sourceTree = "<group>"; };
-		C4F5F8B3E12745BC9DBBFBF6 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftDataHabitRepositoryTests.swift"; sourceTree = "<group>"; };
-		79B5E45BD7EE48F1B9281553 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitProgressCalculator.swift"; sourceTree = "<group>"; };
-		39F122DF7683405497404B9C = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitProgressCalculatorTests.swift"; sourceTree = "<group>"; };
-		1ED85F920DAE45AC84D78965 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitDetailViewModelTests.swift"; sourceTree = "<group>"; };
-		A9E422954F5246328C4B707A = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedHabitsViewModelTests.swift"; sourceTree = "<group>"; };
-		B36F97CDA4C64B6B8EE2DE3E = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HistoryViewModelTests.swift"; sourceTree = "<group>"; };
-		FC63C10F25A941B29728D89F = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitArchivePeriod.swift"; sourceTree = "<group>"; };
-		9E409E1FD982488082234886 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitArchivePeriodRecord.swift"; sourceTree = "<group>"; };
-		E928FAB528374491B4643D97 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodayViewModel.swift"; sourceTree = "<group>"; };
-		70799ACC7F2548629DCB89D4 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodayView.swift"; sourceTree = "<group>"; };
-		BF6B447910544851893D8BB0 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitFormView.swift"; sourceTree = "<group>"; };
-		E493CFB705D2457CAC6AED8D = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitDetailView.swift"; sourceTree = "<group>"; };
-		2C4B85B1E747488C871FA412 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitDetailViewModel.swift"; sourceTree = "<group>"; };
-		4EC9BC83374F443889194BCD = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitScheduleFormatter.swift"; sourceTree = "<group>"; };
-		49EBB977245609535DB290D1 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitPolarityFormatter.swift"; sourceTree = "<group>"; };
-		D751C9FC6531D185088F0ED9 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HabitPolarityFormatterTests.swift"; sourceTree = "<group>"; };
-		7B17B4638F6F4031B71B73EB = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedHabitsView.swift"; sourceTree = "<group>"; };
-		B7098707542A4683BD1DEFF2 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedHabitsViewModel.swift"; sourceTree = "<group>"; };
-		11648CE5C026409C9703B7D3 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsView.swift"; sourceTree = "<group>"; };
-		7726828FDD314E9B9AF84298 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HistoryViewModel.swift"; sourceTree = "<group>"; };
-		1F00599EDDE64AC0BD1A240C = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HistoryView.swift"; sourceTree = "<group>"; };
-		4B49AB94C0EAB42268AAD2D5 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WeeklyInsightsCalculator.swift"; sourceTree = "<group>"; };
-		16741EB35151AD528C43793D = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InsightsViewModel.swift"; sourceTree = "<group>"; };
-		929A63C1E41A840BABF89EF8 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InsightsView.swift"; sourceTree = "<group>"; };
-		29813CCD6E9944E785363836 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WeeklyInsightsCalculatorTests.swift"; sourceTree = "<group>"; };
-		7970D23993D5634B309F24FF = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InsightsViewModelTests.swift"; sourceTree = "<group>"; };
-		69BAECD7E7218B76436C5BF4 = { isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Avela.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		1001433A70BC9DB7C28DE376 = { isa = PBXFileReference; explicitFileType = wrapper.app-extension; includeInIndex = 0; path = "AvelaWidget.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E1ECE9916A78412BE380C424 = { isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AvelaTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		8100736BC8764210ABB3E1AA = { isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AvelaUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		613C348F4AE24A8C875E7667 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttentionGoal.swift"; sourceTree = "<group>"; };
-		E4940704B3034748B31593EA = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttentionGoalConfigurationSnapshot.swift"; sourceTree = "<group>"; };
-		1056BEA959224215800509A7 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttentionUsageEntry.swift"; sourceTree = "<group>"; };
-		FCCA239567C543E897B506DE = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttentionGoalDraft.swift"; sourceTree = "<group>"; };
-		2A3BC5C704D74426B5B251E2 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttentionGoalEvaluator.swift"; sourceTree = "<group>"; };
-		3EABBDF3066F4F4F92431BFB = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttentionProgressCalculator.swift"; sourceTree = "<group>"; };
-		9D65B40E3F284C888A9BFF7C = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttentionRepository.swift"; sourceTree = "<group>"; };
-		B86586D149614F6DAB7BFA81 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttentionGoalRecord.swift"; sourceTree = "<group>"; };
-		34C7C4F3C3F14BA18A299389 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttentionGoalConfigurationSnapshotRecord.swift"; sourceTree = "<group>"; };
-		21EE23BD8EE04690917501B0 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttentionUsageEntryRecord.swift"; sourceTree = "<group>"; };
-		F0FC37D41430433CACC83C82 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftDataAttentionRepository.swift"; sourceTree = "<group>"; };
-		ACA7CE9DFD2D49A1BC9300B0 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttentionStatusFormatter.swift"; sourceTree = "<group>"; };
-		BE17DB316C9A46D6A536A93B = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttentionSummaryViewModel.swift"; sourceTree = "<group>"; };
-		3DF7F1AF643C4DC09EBDF7DF = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttentionGoalFormView.swift"; sourceTree = "<group>"; };
-		E01EC8C1E9AE4FB497E6F95C = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttentionUsageFormView.swift"; sourceTree = "<group>"; };
-		2EA990E0BA804AEF981B0DC3 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttentionGoalDetailViewModel.swift"; sourceTree = "<group>"; };
-		74807CF2AFA745449825A01B = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttentionGoalDetailView.swift"; sourceTree = "<group>"; };
-		A22E964A389A4D01A25EB539 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttentionProgressCalculatorTests.swift"; sourceTree = "<group>"; };
-		9C474857AB0D4884A582BFF7 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftDataAttentionRepositoryTests.swift"; sourceTree = "<group>"; };
-		1FC870C368A04CE98846B516 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttentionGoalDetailViewModelTests.swift"; sourceTree = "<group>"; };
-		BEB7EB8AE2E64150A37A6CC8 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppColor.swift"; sourceTree = "<group>"; };
-		A4667A5550E94051B6E6C199 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodayViewModelTests.swift"; sourceTree = "<group>"; };
-		519C9AB5A71A4FF6BCEE72CB = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttentionStatusFormatterTests.swift"; sourceTree = "<group>"; };
-		2BDE3574E2D2460FB05EE2ED = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttentionSummaryViewModelTests.swift"; sourceTree = "<group>"; };
-		FFA5869E0B3051C7B4DF1B00 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Notifications/Data/HabitReminderRecord.swift"; sourceTree = SOURCE_ROOT; };
-		50979BD41D085628B60B6308 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Notifications/Data/UserNotificationAdapter.swift"; sourceTree = SOURCE_ROOT; };
-		6C0202C5DB0F5A839BCA1A2C = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Notifications/Domain/HabitReminder.swift"; sourceTree = SOURCE_ROOT; };
-		9B26AA72FD875F728E5A9A81 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Notifications/Domain/HabitReminderService.swift"; sourceTree = SOURCE_ROOT; };
-		0DCDE075BF00584FA605D5AA = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Notifications/UI/HabitReminderView.swift"; sourceTree = SOURCE_ROOT; };
-		C87F01FC848B55EDA8447F08 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Notifications/UI/HabitReminderViewModel.swift"; sourceTree = SOURCE_ROOT; };
-		C24F1EAB50E5582F98F81E7E = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Subscription/Data/StoreKitSubscriptionService.swift"; sourceTree = SOURCE_ROOT; };
-		06962ECA57ED5C0DB0DD17FA = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Subscription/Domain/PremiumAccessPolicy.swift"; sourceTree = SOURCE_ROOT; };
-		4495E41F3A6A5EFE869CDD0C = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Subscription/Domain/SubscriptionService.swift"; sourceTree = SOURCE_ROOT; };
-		ECCD07C53A725A1DAB80A06E = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Subscription/UI/PremiumPaywallView.swift"; sourceTree = SOURCE_ROOT; };
-		32C9A6514DA7514F90D29C88 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Subscription/UI/SubscriptionManager.swift"; sourceTree = SOURCE_ROOT; };
-		B27B96933B8A5554AE06021E = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvelaTests/Notifications/HabitReminderTests.swift"; sourceTree = SOURCE_ROOT; };
-		B0F5CDE339AE59649E82EC36 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Attention/Data/AttentionCheckInRecord.swift"; sourceTree = SOURCE_ROOT; };
-		F91ED67A47BC523CB7ABEC01 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Attention/Domain/AttentionCheckIn.swift"; sourceTree = SOURCE_ROOT; };
-		FB3C6AA97C395EBD894AE64A = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Attention/UI/AttentionWindowDetailView.swift"; sourceTree = SOURCE_ROOT; };
-		AB016F84C4135820AEBE327E = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Attention/UI/AttentionWindowDetailViewModel.swift"; sourceTree = SOURCE_ROOT; };
-		02F606A039BC57FF90A148CD = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Companion/Data/CompanionProfileRecord.swift"; sourceTree = SOURCE_ROOT; };
-		16CC5FA673735A4294FFA73F = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Companion/Domain/Companion.swift"; sourceTree = SOURCE_ROOT; };
-		8841A7E8CCDB536DA8D85316 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Companion/UI/CompanionSettingsView.swift"; sourceTree = SOURCE_ROOT; };
-		649372A2A7915E1EAB97B674 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Companion/UI/CompanionView.swift"; sourceTree = SOURCE_ROOT; };
-		1956DE7D8F5C558A8026C12F = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Onboarding/OnboardingView.swift"; sourceTree = SOURCE_ROOT; };
-		8234326D34E0526BA576A350 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Onboarding/OnboardingViewModel.swift"; sourceTree = SOURCE_ROOT; };
-		039EB7D3E29A5F7696A95176 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvelaTests/Companion/CompanionTests.swift"; sourceTree = SOURCE_ROOT; };
-		FEA9B593C65151AEAEA63047 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvelaTests/Companion/OnboardingTests.swift"; sourceTree = SOURCE_ROOT; };
-		F58362B7EE36550FA3C9291F = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvelaTests/Subscription/PremiumAccessPolicyTests.swift"; sourceTree = SOURCE_ROOT; };
-		4F19F6C74BFA58C38337D33F = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvelaTests/Subscription/StoreKitSubscriptionServiceTests.swift"; sourceTree = SOURCE_ROOT; };
-		7180172588DE5C6DAB62A4B0 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvelaTests/Subscription/SubscriptionManagerTests.swift"; sourceTree = SOURCE_ROOT; };
-A11111111111111111110001 = {isa = PBXFileReference; lastKnownFileType = text; path = Avela/Features/Subscription/Avela.storekit; sourceTree = SOURCE_ROOT; };
-		EDF5684832CA5EC18DC067F7 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Core/Persistence/PersistenceChange.swift"; sourceTree = SOURCE_ROOT; };
-		F221CE70331C5A2095EB8087 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Core/Widgets/WidgetDeepLink.swift"; sourceTree = SOURCE_ROOT; };
-		7F1D403208E35AC285E7A9B4 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Core/Widgets/WidgetSnapshot.swift"; sourceTree = SOURCE_ROOT; };
-		A09F7E5A65F75E58B16918A2 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Core/Widgets/WidgetSnapshotExporter.swift"; sourceTree = SOURCE_ROOT; };
-		CEE5F90BE8405C43B5ADC9FC = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Core/Widgets/WidgetSnapshotStore.swift"; sourceTree = SOURCE_ROOT; };
-
-		43C7A3626E15505881812283 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvelaTests/Widgets/WidgetDeepLinkTests.swift"; sourceTree = SOURCE_ROOT; };
-		4EE78DB065085FF5AF224DBA = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvelaTests/Widgets/WidgetSnapshotTests.swift"; sourceTree = SOURCE_ROOT; };
-		C6B988811F555614BDDF2261 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvelaUITests/MVPFlowTests.swift"; sourceTree = SOURCE_ROOT; };
-		473052FCCAEE5F738C135CFD = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Core/Widgets/WidgetActionHandler.swift"; sourceTree = SOURCE_ROOT; };
-		583A81AA2BE858CB99E40EF7 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvelaTests/Widgets/WidgetActionHandlerTests.swift"; sourceTree = SOURCE_ROOT; };
-A11111111111111111110003 = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Avela/Resources/PrivacyInfo.xcprivacy; sourceTree = SOURCE_ROOT; };
-
-		D5592460D3F152B5B66FA7BC = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Settings/PrivacyView.swift"; sourceTree = SOURCE_ROOT; };
-		DE4F2210677E528DBDBF8EA8 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Core/UI/CompanionArtwork.swift"; sourceTree = SOURCE_ROOT; };
-		3F1E2FAB87FA5E77A8844B47 = { isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Avela/Resources/CompanionAssets.xcassets"; sourceTree = SOURCE_ROOT; };
-		36AC613AE02E5B31828F9899 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Core/LiveActivity/PhoneFreeActivityAttributes.swift"; sourceTree = SOURCE_ROOT; };
-		67C46FBA2E9654639FF87EFB = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/LiveActivity/ActivityKitSessionAdapter.swift"; sourceTree = SOURCE_ROOT; };
-		4E82FCEC239D58A1938B9F08 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/LiveActivity/SessionLiveActivityEnvironment.swift"; sourceTree = SOURCE_ROOT; };
-		FE5B371DF309504C93075328 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/LiveActivity/SessionLiveActivityService.swift"; sourceTree = SOURCE_ROOT; };
-		AAE25320D4BA5E3AB91890F4 = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvelaWidget/PhoneFreeLiveActivityWidget.swift"; sourceTree = SOURCE_ROOT; };
-		24D25A0828E85123A10B195E = { isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvelaTests/LiveActivity/SessionLiveActivityServiceTests.swift"; sourceTree = SOURCE_ROOT; };
-/* End PBXFileReference section */
-
-/* Begin PBXFrameworksBuildPhase section */
-		74B3E0798222A3FCFFDA0C54 = { isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
-		E6A982465E61E15DB94DEEA4 = { isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
-		A5EF2DECBCC06A1D9566FE2A = { isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
-		0568EB43AC8723D91CDD3EAE = { isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
-/* End PBXFrameworksBuildPhase section */
-
-/* Begin PBXGroup section */
-		28C249B99B44A2CF3DCF7C6F = { isa = PBXGroup; children = (
-				38F5FFD260E1D1E91F6338AC,
-				D7360AE37E28CA2077F913AC,
-				47F97734D39C2482BA80694D,
-				B3A817580C23BB85A759895A,
-			); path = "App"; sourceTree = "<group>"; };
-		8A5BDC99B8A4E11461B200F9 = { isa = PBXGroup; children = (
-			); path = "Models"; sourceTree = "<group>"; };
-		42653060503F3A3A7D2F9294 = { isa = PBXGroup; children = (
-				79669938CA756588A73ABF61,
-			); path = "Persistence"; sourceTree = "<group>"; };
-		14A6447CCE92A4DF47C887F4 = { isa = PBXGroup; children = (
-				3A1C055D1C584CD4AA373973,
-			); path = "Utilities"; sourceTree = "<group>"; };
-		844534000A674A5EB08D5C90 = { isa = PBXGroup; children = (
-				BEB7EB8AE2E64150A37A6CC8,
-			); path = "UI"; sourceTree = "<group>"; };
-		F685E6A427A2C2B22A7CAB95 = { isa = PBXGroup; children = (
-				8A5BDC99B8A4E11461B200F9,
-				42653060503F3A3A7D2F9294,
-				14A6447CCE92A4DF47C887F4,
-				844534000A674A5EB08D5C90,
-			); path = "Core"; sourceTree = "<group>"; };
-		E19E2570B519A7B291970A67 = { isa = PBXGroup; children = (
-
-				B86586D149614F6DAB7BFA81,
-				34C7C4F3C3F14BA18A299389,
-				21EE23BD8EE04690917501B0,
-				F0FC37D41430433CACC83C82,
-); path = "Data"; sourceTree = "<group>"; };
-		93AC7C281EC4CF354B6E452E = { isa = PBXGroup; children = (
-
-				613C348F4AE24A8C875E7667,
-				E4940704B3034748B31593EA,
-				1056BEA959224215800509A7,
-				FCCA239567C543E897B506DE,
-				2A3BC5C704D74426B5B251E2,
-				3EABBDF3066F4F4F92431BFB,
-				9D65B40E3F284C888A9BFF7C,
-); path = "Domain"; sourceTree = "<group>"; };
-		AF1016C780C1C213EC6D03EC = { isa = PBXGroup; children = (
-
-				ACA7CE9DFD2D49A1BC9300B0,
-				BE17DB316C9A46D6A536A93B,
-				3DF7F1AF643C4DC09EBDF7DF,
-				E01EC8C1E9AE4FB497E6F95C,
-				2EA990E0BA804AEF981B0DC3,
-				74807CF2AFA745449825A01B,
-); path = "UI"; sourceTree = "<group>"; };
-		65E3CCDC4434E260AC46F1E4 = { isa = PBXGroup; children = (
-				E19E2570B519A7B291970A67,
-				93AC7C281EC4CF354B6E452E,
-				AF1016C780C1C213EC6D03EC,
-			); path = "Attention"; sourceTree = "<group>"; };
-		CBAB3E5CD122978DC0EFBC5C = { isa = PBXGroup; children = (
-			); path = "Companion"; sourceTree = "<group>"; };
-		8E9E984445841ECD303FE72C = { isa = PBXGroup; children = (
-				4BABD231442748829B0811AF,
-				717CC06C4ABC462F9417BEA7,
-				F22D495D42A54C3AABD40BB9,
-				72DA8755A72B48E08FBB1CDC,
-				A22AADD22A7547A8AE5F57FF,
-				9E409E1FD982488082234886,
-			); path = "Data"; sourceTree = "<group>"; };
-		D543A5282D52CF2A7DC42B82 = { isa = PBXGroup; children = (
-				B949CE4B76AE424A8F04D0A0,
-				18A9C3A8236D47C98E7BB174,
-				C02AF07D1F58446C80B3A61A,
-				156766C612F04230A7DB525E,
-				2AC49447A79D48A3A1E41BEB,
-				B52BAA84AD3D40CA8080B777,
-				1D15BE61F800423F88CE374F,
-				F2482EBE9E4C45C98E7EDF3F,
-				79B5E45BD7EE48F1B9281553,
-				FC63C10F25A941B29728D89F,
-			); path = "Domain"; sourceTree = "<group>"; };
-		4E4C8E10E17DD9381AB8B8D1 = { isa = PBXGroup; children = (
-				E928FAB528374491B4643D97,
-				70799ACC7F2548629DCB89D4,
-				BF6B447910544851893D8BB0,
-				E493CFB705D2457CAC6AED8D,
-				2C4B85B1E747488C871FA412,
-				4EC9BC83374F443889194BCD,
-				49EBB977245609535DB290D1,
-				7B17B4638F6F4031B71B73EB,
-				B7098707542A4683BD1DEFF2,
-			); path = "UI"; sourceTree = "<group>"; };
-		61D76D5F6D58B4B7098827F6 = { isa = PBXGroup; children = (
-				8E9E984445841ECD303FE72C,
-				D543A5282D52CF2A7DC42B82,
-				4E4C8E10E17DD9381AB8B8D1,
-			); path = "Habit"; sourceTree = "<group>"; };
-		88B394C6BAF18DD7FA8E1C7F = { isa = PBXGroup; children = (
-				7726828FDD314E9B9AF84298,
-				1F00599EDDE64AC0BD1A240C,
-			); path = "History"; sourceTree = "<group>"; };
-		3CC1750031C6F5E904273505 = { isa = PBXGroup; children = (
-				4B49AB94C0EAB42268AAD2D5,
-			); path = "Domain"; sourceTree = "<group>"; };
-		8DF9481F1BC394326C1EAA2A = { isa = PBXGroup; children = (
-				3CC1750031C6F5E904273505,
-				16741EB35151AD528C43793D,
-				929A63C1E41A840BABF89EF8,
-			); path = "Insights"; sourceTree = "<group>"; };
-		E4078E23A86AF752108D73B1 = { isa = PBXGroup; children = (
-			); path = "LiveActivity"; sourceTree = "<group>"; };
-		1DDB15D9EAE26A99FCF1980D = { isa = PBXGroup; children = (
-			); path = "Notifications"; sourceTree = "<group>"; };
-		3A74F73DD684704372CC0BED = { isa = PBXGroup; children = (
-				11648CE5C026409C9703B7D3,
-			); path = "Settings"; sourceTree = "<group>"; };
-		5E9E8BF516365186E7280935 = { isa = PBXGroup; children = (
-				F9BA393299CCEFE9670D789C,
-			); path = "Shared"; sourceTree = "<group>"; };
-		07A3D04DA5EEAC89B8588720 = { isa = PBXGroup; children = (
-			); path = "Subscription"; sourceTree = "<group>"; };
-		3B393744AADFD3097631B45E = { isa = PBXGroup; children = (
-			); path = "Widgets"; sourceTree = "<group>"; };
-		85E4325DE1B61F9F3918CEA2 = { isa = PBXGroup; children = (
-				65E3CCDC4434E260AC46F1E4,
-				CBAB3E5CD122978DC0EFBC5C,
-				61D76D5F6D58B4B7098827F6,
-				88B394C6BAF18DD7FA8E1C7F,
-				8DF9481F1BC394326C1EAA2A,
-				E4078E23A86AF752108D73B1,
-				1DDB15D9EAE26A99FCF1980D,
-				3A74F73DD684704372CC0BED,
-				5E9E8BF516365186E7280935,
-				07A3D04DA5EEAC89B8588720,
-				3B393744AADFD3097631B45E,
-			); path = "Features"; sourceTree = "<group>"; };
-		CF10170D8C7A9D186D6CB4BD = { isa = PBXGroup; children = (
-				477AEC8C127FCCBEECE67382,
-			); path = "Resources"; sourceTree = "<group>"; };
-		EE8D942788C8A7CE8CE08A0C = { isa = PBXGroup; children = (
-				28C249B99B44A2CF3DCF7C6F,
-				F685E6A427A2C2B22A7CAB95,
-				85E4325DE1B61F9F3918CEA2,
-				CF10170D8C7A9D186D6CB4BD,
-			); path = "Avela"; sourceTree = "<group>"; };
-		015AAAD1E53C3F41CDA9639D = { isa = PBXGroup; children = (
-				A33FC34214F540599C1FA259,
-				1108B858726A785B22D21795,
-			); path = "AvelaWidget"; sourceTree = "<group>"; };
-		1AB92EEFB4D944879FFB9895 = { isa = PBXGroup; children = (
-				A4667A5550E94051B6E6C199,
-				4CD028A252414DC68F26588E,
-				DA9D7B1005DA4F1F99A23983,
-				C4F5F8B3E12745BC9DBBFBF6,
-				39F122DF7683405497404B9C,
-				1ED85F920DAE45AC84D78965,
-				A9E422954F5246328C4B707A,
-				B36F97CDA4C64B6B8EE2DE3E,
-				D751C9FC6531D185088F0ED9,
-			); path = "Habit"; sourceTree = "<group>"; };
-		D434EA08697507E040EC66E6 = { isa = PBXGroup; children = (
-				29813CCD6E9944E785363836,
-				7970D23993D5634B309F24FF,
-			); path = "Insights"; sourceTree = "<group>"; };
-		F8C61F65E40046668325BBF2 = { isa = PBXGroup; children = (
-				519C9AB5A71A4FF6BCEE72CB,
-				2BDE3574E2D2460FB05EE2ED,
-				A22E964A389A4D01A25EB539,
-				9C474857AB0D4884A582BFF7,
-				1FC870C368A04CE98846B516,
-			); path = "Attention"; sourceTree = "<group>"; };
-		9D0EA45D1CD17EEB3AA690D2 = { isa = PBXGroup; children = (
-				4D9F2EBF1D9A784CFA6FB366,
-				E201FFA6BFFD260571841EAF,
-				1AB92EEFB4D944879FFB9895,
-				D434EA08697507E040EC66E6,
-				F8C61F65E40046668325BBF2,
-			); path = "AvelaTests"; sourceTree = "<group>"; };
-		82730F5961304C837085B896 = { isa = PBXGroup; children = (
-				84DABF851511566B54C6D014,
-			); path = "AvelaUITests"; sourceTree = "<group>"; };
-		AE7805B56D1DCAFAA071416F = { isa = PBXGroup; children = (
-				69BAECD7E7218B76436C5BF4,
-				1001433A70BC9DB7C28DE376,
-				E1ECE9916A78412BE380C424,
-				8100736BC8764210ABB3E1AA,
-			); name = Products; sourceTree = "<group>"; };
-		CC5D242D023A9271190EA7C6 = { isa = PBXGroup; children = (
-				AAE25320D4BA5E3AB91890F4,
-				3F1E2FAB87FA5E77A8844B47,A11111111111111111110003,
-				6065D00762DA5F5EA943F916,A11111111111111111110001,
-				BECD61A976645A6799BE28E8,
-				18F98633697A514283028C37,
-				EE8D942788C8A7CE8CE08A0C,
-				015AAAD1E53C3F41CDA9639D,
-				9D0EA45D1CD17EEB3AA690D2,
-				82730F5961304C837085B896,
-				AE7805B56D1DCAFAA071416F,
-			); sourceTree = "<group>"; };
-		18F98633697A514283028C37 = { isa = PBXGroup; children = (FFA5869E0B3051C7B4DF1B00,50979BD41D085628B60B6308,6C0202C5DB0F5A839BCA1A2C,9B26AA72FD875F728E5A9A81,0DCDE075BF00584FA605D5AA,C87F01FC848B55EDA8447F08,C24F1EAB50E5582F98F81E7E,06962ECA57ED5C0DB0DD17FA,4495E41F3A6A5EFE869CDD0C,ECCD07C53A725A1DAB80A06E,32C9A6514DA7514F90D29C88,
-				B0F5CDE339AE59649E82EC36,
-				F91ED67A47BC523CB7ABEC01,
-
-				FB3C6AA97C395EBD894AE64A,
-				AB016F84C4135820AEBE327E,
-				02F606A039BC57FF90A148CD,
-				16CC5FA673735A4294FFA73F,
-				8841A7E8CCDB536DA8D85316,
-				649372A2A7915E1EAB97B674,
-				1956DE7D8F5C558A8026C12F,
-				8234326D34E0526BA576A350,
-
-				EDF5684832CA5EC18DC067F7,
-				F221CE70331C5A2095EB8087,
-				7F1D403208E35AC285E7A9B4,
-				A09F7E5A65F75E58B16918A2,
-				CEE5F90BE8405C43B5ADC9FC,
-
-				473052FCCAEE5F738C135CFD,
-
-				D5592460D3F152B5B66FA7BC,
-
-				DE4F2210677E528DBDBF8EA8,
-
-				36AC613AE02E5B31828F9899,
-				67C46FBA2E9654639FF87EFB,
-				4E82FCEC239D58A1938B9F08,
-				FE5B371DF309504C93075328,
-			); name = "Avela MVP additions"; sourceTree = "<group>"; };
-		BECD61A976645A6799BE28E8 = { isa = PBXGroup; children = (B27B96933B8A5554AE06021E,
-				039EB7D3E29A5F7696A95176,
-				FEA9B593C65151AEAEA63047,
-				F58362B7EE36550FA3C9291F,
-				4F19F6C74BFA58C38337D33F,
-				7180172588DE5C6DAB62A4B0,
-
-				43C7A3626E15505881812283,
-				4EE78DB065085FF5AF224DBA,
-
-				583A81AA2BE858CB99E40EF7,
-
-				24D25A0828E85123A10B195E,
-			); name = "AvelaTests MVP additions"; sourceTree = "<group>"; };
-
-
-
-
-		6065D00762DA5F5EA943F916 = { isa = PBXGroup; children = (C6B988811F555614BDDF2261,); name = "AvelaUITests MVP additions"; sourceTree = "<group>"; };
-
-
-
-
-
-
-/* End PBXGroup section */
-
-/* Begin PBXNativeTarget section */
-		E64C44E110C68927474000A8 = { isa = PBXNativeTarget; buildConfigurationList = DCC64440AB2023B33A968276; buildPhases = (
-				4EBC01CC71406868A48CAFC4,
-				74B3E0798222A3FCFFDA0C54,
-				7BE7515AB13F32293C5DF20E,
-				073C34A79D8CA96E4892A560,
-			); buildRules = (); dependencies = (
-				7B8599F8F644ADC748B215F0,
-			); name = Avela; productName = Avela; productReference = 69BAECD7E7218B76436C5BF4; productType = "com.apple.product-type.application"; };
-		C300F2C9E907C523A89F9916 = { isa = PBXNativeTarget; buildConfigurationList = 083CA4A3E1671DC0191844E3; buildPhases = (
-				B44EAA3080E09062981DE1FC,
-				E6A982465E61E15DB94DEEA4,
-				5E6AC5EB12298D95681E5680,
-			); buildRules = (); dependencies = (
-			); name = AvelaWidget; productName = AvelaWidget; productReference = 1001433A70BC9DB7C28DE376; productType = "com.apple.product-type.app-extension"; };
-		F76B40F72DE3D7FC963A2C44 = { isa = PBXNativeTarget; buildConfigurationList = 33FB17BF72C17F3DD59E5A99; buildPhases = (
-				03CB799B82CAE42CDF6F07E9,
-				A5EF2DECBCC06A1D9566FE2A,
-				D552DD1234B04253436599FD,
-			); buildRules = (); dependencies = (
-				30B39ED829775BA0623A761B,
-			); name = AvelaTests; productName = AvelaTests; productReference = E1ECE9916A78412BE380C424; productType = "com.apple.product-type.bundle.unit-test"; };
-		DDBCF808FD02C01BFC645675 = { isa = PBXNativeTarget; buildConfigurationList = 45F178D7403F69C8FD23150D; buildPhases = (
-				DB6A7E6E512FB31E839B15F8,
-				0568EB43AC8723D91CDD3EAE,
-				9C868ECAE89206C7F1EF42B3,
-			); buildRules = (); dependencies = (
-				4D0372D00A96139AED7720E2,
-			); name = AvelaUITests; productName = AvelaUITests; productReference = 8100736BC8764210ABB3E1AA; productType = "com.apple.product-type.bundle.ui-testing"; };
-/* End PBXNativeTarget section */
-
-/* Begin PBXProject section */
-		244210E48437B6556980A702 = { isa = PBXProject; attributes = { BuildIndependentTargetsInParallel = YES; LastSwiftUpdateCheck = 1600; LastUpgradeCheck = 1600; TargetAttributes = { E64C44E110C68927474000A8 = { CreatedOnToolsVersion = 16.0; };
-C300F2C9E907C523A89F9916 = { CreatedOnToolsVersion = 16.0; };
-F76B40F72DE3D7FC963A2C44 = { CreatedOnToolsVersion = 16.0; TestTargetID = E64C44E110C68927474000A8; };
-DDBCF808FD02C01BFC645675 = { CreatedOnToolsVersion = 16.0; TestTargetID = E64C44E110C68927474000A8; };
- }; }; buildConfigurationList = AF797F0382D714D04A261BC4; compatibilityVersion = "Xcode 14.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en, Base, ); mainGroup = CC5D242D023A9271190EA7C6; productRefGroup = AE7805B56D1DCAFAA071416F; projectDirPath = ""; projectRoot = ""; targets = (
-				E64C44E110C68927474000A8,
-				C300F2C9E907C523A89F9916,
-				F76B40F72DE3D7FC963A2C44,
-				DDBCF808FD02C01BFC645675,
-			); };
-/* End PBXProject section */
-
-/* Begin PBXResourcesBuildPhase section */
-		7BE7515AB13F32293C5DF20E = { isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (
-				3FF09E4EB03E5964AE296C23,A11111111111111111110004,
-				7BE32390068C7DE7160DFEE8,
-			); runOnlyForDeploymentPostprocessing = 0; };
-		5E6AC5EB12298D95681E5680 = { isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (
-				3EEF941FADFF58DC9DFBA267,A11111111111111111110005,
-			); runOnlyForDeploymentPostprocessing = 0; };
-		D552DD1234B04253436599FD = { isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (A11111111111111111110002,
-			); runOnlyForDeploymentPostprocessing = 0; };
-		9C868ECAE89206C7F1EF42B3 = { isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (
-			); runOnlyForDeploymentPostprocessing = 0; };
-/* End PBXResourcesBuildPhase section */
-
-/* Begin PBXSourcesBuildPhase section */
-		4EBC01CC71406868A48CAFC4 = { isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (
-				E6BCF100720B5BB59D4ACDC0,
-				7C59D9A2C5DC5CE09381EC57,
-				FE474507EC9E5D5CB940409B,
-				98CB1CFDD6EC5FD9A270733A,
-				3EC4580EFF1F5562B3CEBE49,
-				76E95566330B55F08D6B7CFD,
-				2459E6F684AF542DB924E3DE,
-				B946EE05AAE955ADB68E139E,
-				9864C1EAF4075A5FAEE7A0F9,
-				61D98A1770DF574993ECF8B3,
-				896AF8514B50565C97BBCB88,
-				80A276AEF76353A2AFB7CB93,
-				F1D7CE4FB7E05D81B403789B,
-				EA2997DFD56E51C490178CE0,
-				8D5FDCE2F80A542E949017AB,
-				529B6DC457C25292A9303218,
-				4A1DE62E5473521B96E3EB25,
-				3B141886E733521CAF068988,
-				1CDDDC32F71A5D9DB19711CA,
-				693C307624BD52CB8F4E3355,
-				C4F7EA533D6056F09783306A,
-				45492995DF5D5AF89348E707,
-				5C6EB0D792365A24AE628A7F,
-				6582301AC0A05C198E86A754,
-				5344DC26E6CD57E88F8F6F19,
-				A3FECE7B532A5B4C8E06612B,
-				7C3E4E3BC52459879D53B0A1,
-				024F19AA7A995E41B9EC605C,
-				2999EB7681635C2B840B4F5C,
-				5ADC09AFCDD55F6180E44A60,
-				CFC7BB003F1055B8B6EDE666,
-				E5712791AE5C5210B2C593A3,
-				D614DAD479595755801D2029,
-				8464565395CA480AB53D8C0B,
-				42376078E52BF632F4B50338,
-				EDD96DA354FD345B4D52EF7E,
-				38B12F368EAB4E39402E6A4E,
-				8AF272842EAFB9E80EB7B26F,
-				FD2B5A5C6CCE66F2BD3911AC,
-				B7249493BB6249C2B406894D,
-				5C4E9DEB87D74CB693F26991,
-				322E82932A61474DBD8DB355,
-				7A8D615F4025470589BFCFEB,
-				9B39A364509F4BA881C146FA,
-				F80D041C89FE4723BB503549,
-				3393B5FACAFD40AEA057C101,
-				D351E67D3C2A4FFAB05833FF,
-				19AA4B2BC89E4D70949E04FA,
-				D8C563FADA364E13B4EBC8BC,
-				FEABED43DB1B49CDB4D63B84,
-				A90958EC9C244BDC85358E05,
-				4DFC11AE6A634DA1B8EACC6F,
-				1A8CCB766FC04CCD83D2AB90,
-				06665B7F55E74E448AB0D5D8,
-				9397413EC68743B99D6FEAFC,
-				6939574CC69C45A3B40B7BC3,
-				4B9DFD7226824CCAAEA1A99E,
-				99ABECF3D68747BD8EEC6CA6,
-				33D06904FC194145A3D393C8,
-				093BD9A1C09F4C7BAD7C7B9C,
-				0836B76A8DA845E68FA4458F,
-				3787F32E5B4247188EA7F73A,
-				F4D2204F09AE61FE141C6D12,
-				C701D3F978EF4A499632EEBF,
-				D8DF0A2BE4E94EE183333B86,
-				FA9DBBA3218C4123BA0EC5B0,
-				17358D8A0BE04DDEAD20519B,
-				458BEDFF7C344EA9A2591A60,
-				78A0CEE2605AF75BD3CA083E,
-				1F61B38FD685E5D96F412FE9,
-				5DC2D6F54994B224D58489AA,
-				9EC7D3F6D5CC474ABE380810,
-				26CEE0E86935442A8A95BC82,
-				5C57457303CA425286717F23,
-				6E049E947D1E4F9F85831815,
-				FB443C4EB5ED423E96109D1D,
-				187E03C01B5D459C93FEAF8D,
-				972107866DA1416F848B567E,
-				6C668D7327B349B7B22EA470,
-				9B2C15E097274CC9863B61E6,
-				ABFB9B2E4353477780994ED9,
-				15790B3B0BBF495AB1732EA4,
-				0328C9E950B74F78AD48B9CB,
-				081461561C04488986B67559,
-				F7FABEB01DD548CDB5FB5AAD,
-				B5078B2E8CA34EA3A8184DA4,
-				CEEEC06034294AAA96C7A0C7,
-				AD59BE93D33D4C2D8411E9C7,
-				B65002B88EF94F559EE08A94,
-			); runOnlyForDeploymentPostprocessing = 0; };
-		B44EAA3080E09062981DE1FC = { isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (
-				0176827C8EF05DDABD0ABFB7,
-				2B1AB90AFB5C5220B00A9F9A,
-				048CBECC222C5B02AD7C2E02,75B21F162C735474A2359A93,3F3FB3F11B3E50BFB3409818,418DC77F594955E9BC157764,BD7078DC774E5F0FAFCA686D,
-				48AFDBE4881D87F2B74FEB5E,
-			); runOnlyForDeploymentPostprocessing = 0; };
-		03CB799B82CAE42CDF6F07E9 = { isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (
-				5EF563ABDECA526A8853345D,
-				693F12284ACC5623980AA0D4,
-				B17560C1E7B65AD69277BE42,
-				6867B0A4906F5D5F8697F8A4,
-				5EE900B3F41653D0808E3ADE,
-				77EDE1BDAC245A7E8FC72439,
-				05BE9FF8C4A6551C9D4B2D31,
-				07E71640EF3550BC825D3FB0,
-				1C2BB63629015ABDA07E9DDD,
-				7A457A6D63F750329FF0318A,
-				9114D589DC3B6C2640571DBB,
-				ECDD275E262F78CB8FA56E5F,
-				A916EFF916BE48618DD77AB5,
-				332EE70B555A4B2699FCBCCD,
-				106DF8ED39D54A41953BDE1F,
-				7D6105CFB7FB4C4C9381F853,
-				355FC67BB19D46BFB9DE66EA,
-				DFBB1315BCA247468296D020,
-				2091EEED7B1C467EB77A553E,
-				BBE275367F77B5AA16F6BC20,
-				D5EFD22BB437CBD6D2743164,
-				7289B3EFF6F53F6B865AA21A,
-				5E7B92A1F7BF47ACBDC38E28,
-				651AD25AB56446058AB82C99,
-				D3427B52AC704FE6A7181DB2,
-				BEF693F55D564E0DA7A4DD58,
-				5BE0D8570D054AA996F76CE8,
-				994CABF001464AFC8D75FBD2,
-			); runOnlyForDeploymentPostprocessing = 0; };
-		DB6A7E6E512FB31E839B15F8 = { isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (
-				D6DE3804770E5583AACA0A98,
-				DBC1EBA051CE1FF2D1102726,
-			); runOnlyForDeploymentPostprocessing = 0; };
-/* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		7B8599F8F644ADC748B215F0 = { isa = PBXTargetDependency; target = C300F2C9E907C523A89F9916; targetProxy = F83F934FB4001512D7DF54DD; };
-		30B39ED829775BA0623A761B = { isa = PBXTargetDependency; target = E64C44E110C68927474000A8; targetProxy = 5414B820ED24ACFE395648C8; };
-		4D0372D00A96139AED7720E2 = { isa = PBXTargetDependency; target = E64C44E110C68927474000A8; targetProxy = C605D5ED92C2A2D2C191ADBB; };
-/* End PBXTargetDependency section */
-
-/* Begin XCBuildConfiguration section */
-		0B8CF9A978C27BD86D8B22D2 = { isa = XCBuildConfiguration; buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("DEBUG=1", "$(inherited)");
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-			}; name = Debug; };
-		9EA3F85534490133C1FD3250 = { isa = XCBuildConfiguration; buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
-				VALIDATE_PRODUCT = YES;
-			}; name = Release; };
-		033D227DB27AC75BF017182F = { isa = XCBuildConfiguration; buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = Avela;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.Avela";
-                CODE_SIGN_ENTITLEMENTS = Avela/Avela.entitlements;
-                INFOPLIST_FILE = Avela/Resources/Info.plist;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			}; name = Debug; };
-		036DBB1E31165BBF14333E3C = { isa = XCBuildConfiguration; buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = Avela;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.Avela";
-                CODE_SIGN_ENTITLEMENTS = Avela/Avela.entitlements;
-                INFOPLIST_FILE = Avela/Resources/Info.plist;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			}; name = Release; };
-		8247FFF4154AB26C407C6ACF = { isa = XCBuildConfiguration; buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = AvelaWidget/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Avela Widgets";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.Avela.widget";
-                CODE_SIGN_ENTITLEMENTS = AvelaWidget/AvelaWidget.entitlements;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			}; name = Debug; };
-		BCB03277DA99DD6EB4B973E7 = { isa = XCBuildConfiguration; buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = AvelaWidget/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Avela Widgets";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.Avela.widget";
-                CODE_SIGN_ENTITLEMENTS = AvelaWidget/AvelaWidget.entitlements;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			}; name = Release; };
-		298AE4C7C7D14FA7DD11704C = { isa = XCBuildConfiguration; buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.AvelaTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Avela.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Avela";
-			}; name = Debug; };
-		FB02341D3E83E05D9921BCE6 = { isa = XCBuildConfiguration; buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.AvelaTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Avela.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Avela";
-			}; name = Release; };
-		06B70DDAAA2FE9AB62DBAF59 = { isa = XCBuildConfiguration; buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.AvelaUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Avela;
-			}; name = Debug; };
-		2D49F1812F582FA642C240CA = { isa = XCBuildConfiguration; buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.AvelaUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Avela;
-			}; name = Release; };
-/* End XCBuildConfiguration section */
-
-/* Begin XCConfigurationList section */
-		AF797F0382D714D04A261BC4 = { isa = XCConfigurationList; buildConfigurations = (
-				0B8CF9A978C27BD86D8B22D2,
-				9EA3F85534490133C1FD3250,
-			); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
-		DCC64440AB2023B33A968276 = { isa = XCConfigurationList; buildConfigurations = (
-				033D227DB27AC75BF017182F,
-				036DBB1E31165BBF14333E3C,
-			); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
-		083CA4A3E1671DC0191844E3 = { isa = XCConfigurationList; buildConfigurations = (
-				8247FFF4154AB26C407C6ACF,
-				BCB03277DA99DD6EB4B973E7,
-			); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
-		33FB17BF72C17F3DD59E5A99 = { isa = XCConfigurationList; buildConfigurations = (
-				298AE4C7C7D14FA7DD11704C,
-				FB02341D3E83E05D9921BCE6,
-			); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
-		45F178D7403F69C8FD23150D = { isa = XCConfigurationList; buildConfigurations = (
-				06B70DDAAA2FE9AB62DBAF59,
-				2D49F1812F582FA642C240CA,
-			); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
-/* End XCConfigurationList section */
+	"classes" = {
 	};
-	rootObject = 244210E48437B6556980A702;
+	"objectVersion" = "56";
+	"archiveVersion" = "1";
+	"objects" = {
+		"C3E1C0AC3A0A42039C60F48D" = {
+			"path" = "AvelaTests/Backup/CloudBackupTests.swift";
+			"isa" = "PBXFileReference";
+			"sourceTree" = "SOURCE_ROOT";
+			"lastKnownFileType" = "sourcecode.swift";
+		};
+		"A11111111111111111110002" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A11111111111111111110001";
+		};
+		"072FE64420BD4B8581EFB5CB" = {
+			"path" = "AvelaTests/Settings/AppThemeTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"634B918B33F941929C1989FF" = {
+			"path" = "Avela/Features/HabitActivity/UI/HabitActivityViewModel.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"1F00599EDDE64AC0BD1A240C" = {
+			"path" = "HistoryView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"CBAB3E5CD122978DC0EFBC5C" = {
+			"path" = "Companion";
+			"isa" = "PBXGroup";
+			"children" = (
+			);
+			"sourceTree" = "<group>";
+		};
+		"D9DE6C3089BA5D4A3678A967" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"LD_RUNPATH_SEARCH_PATHS" = "$(inherited) @executable_path/Frameworks";
+				"SDKROOT" = "watchos";
+				"CURRENT_PROJECT_VERSION" = "1";
+				"INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp" = "NO";
+				"MARKETING_VERSION" = "0.1.0";
+				"TARGETED_DEVICE_FAMILY" = "4";
+				"SKIP_INSTALL" = "YES";
+				"WATCHOS_DEPLOYMENT_TARGET" = "10.0";
+				"SWIFT_EMIT_LOC_STRINGS" = "YES";
+				"GENERATE_INFOPLIST_FILE" = "YES";
+				"INFOPLIST_KEY_CFBundleDisplayName" = "Avela";
+				"SUPPORTED_PLATFORMS" = "watchos watchsimulator";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"ASSETCATALOG_COMPILER_APPICON_NAME" = "AppIcon";
+				"SWIFT_VERSION" = "5.0";
+				"PRODUCT_NAME" = "$(TARGET_NAME)";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "com.example.Avela.watchkitapp";
+				"INFOPLIST_KEY_WKApplication" = "YES";
+				"INFOPLIST_KEY_WKCompanionAppBundleIdentifier" = "com.example.Avela";
+			};
+			"name" = "Release";
+		};
+		"9012289802D34BF28FD2D95A" = {
+			"path" = "Avela/Features/Shortcuts/ShortcutLoggingService.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"AF797F0382D714D04A261BC4" = {
+			"isa" = "XCConfigurationList";
+			"defaultConfigurationIsVisible" = "0";
+			"defaultConfigurationName" = "Release";
+			"buildConfigurations" = (
+				"0B8CF9A978C27BD86D8B22D2",
+				"9EA3F85534490133C1FD3250",
+			);
+		};
+		"F22D495D42A54C3AABD40BB9" = {
+			"path" = "CompletionRecord.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"A3FECE7B532A5B4C8E06612B" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "9B26AA72FD875F728E5A9A81";
+		};
+		"45492995DF5D5AF89348E707" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "F91ED67A47BC523CB7ABEC01";
+		};
+		"244210E48437B6556980A702" = {
+			"buildConfigurationList" = "AF797F0382D714D04A261BC4";
+			"targets" = (
+				"E64C44E110C68927474000A8",
+				"C300F2C9E907C523A89F9916",
+				"F76B40F72DE3D7FC963A2C44",
+				"DDBCF808FD02C01BFC645675",
+				"3CBF2886FF27F3F7DA27AF16",
+			);
+			"developmentRegion" = "en";
+			"knownRegions" = (
+				"en",
+				"Base",
+			);
+			"isa" = "PBXProject";
+			"compatibilityVersion" = "Xcode 14.0";
+			"productRefGroup" = "AE7805B56D1DCAFAA071416F";
+			"projectDirPath" = "";
+			"attributes" = {
+				"LastSwiftUpdateCheck" = "1600";
+				"BuildIndependentTargetsInParallel" = "YES";
+				"LastUpgradeCheck" = "1600";
+				"TargetAttributes" = {
+					"3CBF2886FF27F3F7DA27AF16" = {
+						"ProvisioningStyle" = "Automatic";
+						"CreatedOnToolsVersion" = "27.0";
+					};
+					"E64C44E110C68927474000A8" = {
+						"SystemCapabilities" = {
+							"com.apple.HealthKit" = {
+								"enabled" = "1";
+							};
+						};
+						"CreatedOnToolsVersion" = "16.0";
+					};
+					"C300F2C9E907C523A89F9916" = {
+						"CreatedOnToolsVersion" = "16.0";
+					};
+					"F76B40F72DE3D7FC963A2C44" = {
+						"TestTargetID" = "E64C44E110C68927474000A8";
+						"CreatedOnToolsVersion" = "16.0";
+					};
+					"DDBCF808FD02C01BFC645675" = {
+						"TestTargetID" = "E64C44E110C68927474000A8";
+						"CreatedOnToolsVersion" = "16.0";
+					};
+				};
+			};
+			"hasScannedForEncodings" = "0";
+			"projectRoot" = "";
+			"mainGroup" = "CC5D242D023A9271190EA7C6";
+		};
+		"039EB7D3E29A5F7696A95176" = {
+			"path" = "AvelaTests/Companion/CompanionTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"893A5E43188A3ECC97B25242" = {
+			"isa" = "PBXGroup";
+			"name" = "AvelaWatch";
+			"children" = (
+				"9CA880BC4F05EC0C6F5CA17A",
+				"200E493B837D7C57D7D9494E",
+				"31DA0984167153A50DDF9A2A",
+				"FA0789B253E0EDCB401755EA",
+			);
+			"sourceTree" = "<group>";
+		};
+		"341653658F1C49BBB4801A28" = {
+			"path" = "Avela/Features/Routines/UI/RoutinesView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"F8C61F65E40046668325BBF2" = {
+			"path" = "Attention";
+			"isa" = "PBXGroup";
+			"children" = (
+				"519C9AB5A71A4FF6BCEE72CB",
+				"2BDE3574E2D2460FB05EE2ED",
+				"A22E964A389A4D01A25EB539",
+				"9C474857AB0D4884A582BFF7",
+				"1FC870C368A04CE98846B516",
+			);
+			"sourceTree" = "<group>";
+		};
+		"8247FFF4154AB26C407C6ACF" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"LD_RUNPATH_SEARCH_PATHS" = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				"APPLICATION_EXTENSION_API_ONLY" = "YES";
+				"MARKETING_VERSION" = "0.1.0";
+				"INFOPLIST_FILE" = "AvelaWidget/Info.plist";
+				"SKIP_INSTALL" = "YES";
+				"TARGETED_DEVICE_FAMILY" = "1,2";
+				"GENERATE_INFOPLIST_FILE" = "YES";
+				"INFOPLIST_KEY_CFBundleDisplayName" = "Avela Widgets";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"CODE_SIGN_ENTITLEMENTS" = "AvelaWidget/AvelaWidget.entitlements";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"PRODUCT_NAME" = "$(TARGET_NAME)";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "com.example.Avela.widget";
+				"CURRENT_PROJECT_VERSION" = "1";
+				"SUPPORTS_MACCATALYST" = "NO";
+			};
+			"name" = "Debug";
+		};
+		"24C8CF55138B4F06AA9C07EA" = {
+			"path" = "Avela/Features/Backup/Data/BackupPayload.swift";
+			"isa" = "PBXFileReference";
+			"sourceTree" = "SOURCE_ROOT";
+			"lastKnownFileType" = "sourcecode.swift";
+		};
+		"C02AF07D1F58446C80B3A61A" = {
+			"path" = "HabitConfigurationSnapshot.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"BBE275367F77B5AA16F6BC20" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "29813CCD6E9944E785363836";
+		};
+		"14A6447CCE92A4DF47C887F4" = {
+			"path" = "Utilities";
+			"isa" = "PBXGroup";
+			"children" = (
+				"3A1C055D1C584CD4AA373973",
+			);
+			"sourceTree" = "<group>";
+		};
+		"844534000A674A5EB08D5C90" = {
+			"path" = "UI";
+			"isa" = "PBXGroup";
+			"children" = (
+				"BEB7EB8AE2E64150A37A6CC8",
+			);
+			"sourceTree" = "<group>";
+		};
+		"A4667A5550E94051B6E6C199" = {
+			"path" = "TodayViewModelTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"5414B820ED24ACFE395648C8" = {
+			"isa" = "PBXContainerItemProxy";
+			"containerPortal" = "244210E48437B6556980A702";
+			"remoteGlobalIDString" = "E64C44E110C68927474000A8";
+			"remoteInfo" = "Avela";
+			"proxyType" = "1";
+		};
+		"B235582F81FE44AE9C71F797" = {
+			"path" = "Avela/Features/Habit/Domain/HabitAdjustmentCalculator.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"E8F68E6E28034F1B8C481FB7" = {
+			"path" = "Avela/Features/HabitActivity/Data/SwiftDataHabitActivityRepository.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"E928FAB528374491B4643D97" = {
+			"path" = "TodayViewModel.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"3562825AA28D4B73FA394370" = {
+			"isa" = "PBXSourcesBuildPhase";
+			"buildActionMask" = "2147483647";
+			"files" = (
+				"8EC20939482A6A8BF211DE55",
+				"AB193EE292F5D45AC35C5F54",
+				"80ED7831168162EDF28E1A46",
+				"C6BF86AE4D0A39EE7493ABC4",
+			);
+			"runOnlyForDeploymentPostprocessing" = "0";
+		};
+		"3D80B5D068034062AE1143DA" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "9B53512EFF724379996BE00B";
+		};
+		"1CF0B0E98455198AF468ACE0" = {
+			"buildActionMask" = "2147483647";
+			"dstSubfolderSpec" = "16";
+			"isa" = "PBXCopyFilesBuildPhase";
+			"runOnlyForDeploymentPostprocessing" = "0";
+			"dstPath" = "$(CONTENTS_FOLDER_PATH)/Watch";
+			"files" = (
+				"6D7DBB9F9A3E569C10622966",
+			);
+			"name" = "Embed Watch Content";
+		};
+		"BE17DB316C9A46D6A536A93B" = {
+			"path" = "AttentionSummaryViewModel.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"519C9AB5A71A4FF6BCEE72CB" = {
+			"path" = "AttentionStatusFormatterTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"95E504E2354E4E9F830646A6" = {
+			"path" = "Avela/Features/Backup/Data/BackupArchive.swift";
+			"isa" = "PBXFileReference";
+			"sourceTree" = "SOURCE_ROOT";
+			"lastKnownFileType" = "sourcecode.swift";
+		};
+		"9BD8A2487A224F1186538576" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "B235582F81FE44AE9C71F797";
+		};
+		"3BCB7786AF644819960A332B" = {
+			"path" = "Avela/Features/Backup/UI/CloudBackupView.swift";
+			"isa" = "PBXFileReference";
+			"sourceTree" = "SOURCE_ROOT";
+			"lastKnownFileType" = "sourcecode.swift";
+		};
+		"3DF7F1AF643C4DC09EBDF7DF" = {
+			"path" = "AttentionGoalFormView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"84DABF851511566B54C6D014" = {
+			"path" = "AvelaUITests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"DBC1EBA051CE1FF2D1102726" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "84DABF851511566B54C6D014";
+		};
+		"B5078B2E8CA34EA3A8184DA4" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "E01EC8C1E9AE4FB497E6F95C";
+		};
+		"75B50B44974448E5BEA4E470" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "007BBD4CC4434424A473CF98";
+		};
+		"4B49AB94C0EAB42268AAD2D5" = {
+			"path" = "WeeklyInsightsCalculator.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"FCA1F7AA136B4BEDBC52A249" = {
+			"path" = "Avela/Features/HabitActivity/UI/HabitActivityView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"CEEEC06034294AAA96C7A0C7" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "2EA990E0BA804AEF981B0DC3";
+		};
+		"18F98633697A514283028C37" = {
+			"isa" = "PBXGroup";
+			"name" = "Avela MVP additions";
+			"children" = (
+				"671094981C524783AEC10D07",
+				"282BA450CFAD4CA2827B5628",
+				"B235582F81FE44AE9C71F797",
+				"8447E4775B91461582FE53BD",
+				"5F3DED7098C143E8BF0D7712",
+				"007BBD4CC4434424A473CF98",
+				"78F780E3ECDB4C659C10D2B8",
+				"6C27CCBCF0F943739E4AD641",
+				"65FF63B894964718B9B7DBD4",
+				"6A7EB456C66D47B197D4A114",
+				"BACC440613D74E6D8CCC431D",
+				"85F027B338154CCEAF0A3F57",
+				"5D6266BA22624387925684F9",
+				"289BA0F41FE04163BC026F90",
+				"8EC38A72D9E949F6B48433C2",
+				"D13766A4F1D64F44BA0F1B5B",
+				"E924B7EB009D4D039E932D2B",
+				"FC2E1B9D58E14ACCABC36516",
+				"BE4358EAC05F42D1BFC3C69D",
+				"DA63B89B95D74D5BA014330A",
+				"F4CF09200306484084ED2447",
+				"0493B5019FF0446EBA34D471",
+				"FDEA3E6F5ACD495DB393C35F",
+				"9012289802D34BF28FD2D95A",
+				"FFA5869E0B3051C7B4DF1B00",
+				"50979BD41D085628B60B6308",
+				"6C0202C5DB0F5A839BCA1A2C",
+				"9B26AA72FD875F728E5A9A81",
+				"0DCDE075BF00584FA605D5AA",
+				"C87F01FC848B55EDA8447F08",
+				"C24F1EAB50E5582F98F81E7E",
+				"06962ECA57ED5C0DB0DD17FA",
+				"4495E41F3A6A5EFE869CDD0C",
+				"ECCD07C53A725A1DAB80A06E",
+				"32C9A6514DA7514F90D29C88",
+				"B0F5CDE339AE59649E82EC36",
+				"F91ED67A47BC523CB7ABEC01",
+				"FB3C6AA97C395EBD894AE64A",
+				"AB016F84C4135820AEBE327E",
+				"02F606A039BC57FF90A148CD",
+				"16CC5FA673735A4294FFA73F",
+				"8841A7E8CCDB536DA8D85316",
+				"649372A2A7915E1EAB97B674",
+				"1956DE7D8F5C558A8026C12F",
+				"8234326D34E0526BA576A350",
+				"EDF5684832CA5EC18DC067F7",
+				"F221CE70331C5A2095EB8087",
+				"7F1D403208E35AC285E7A9B4",
+				"A09F7E5A65F75E58B16918A2",
+				"CEE5F90BE8405C43B5ADC9FC",
+				"473052FCCAEE5F738C135CFD",
+				"D5592460D3F152B5B66FA7BC",
+				"DE4F2210677E528DBDBF8EA8",
+				"36AC613AE02E5B31828F9899",
+				"67C46FBA2E9654639FF87EFB",
+				"4E82FCEC239D58A1938B9F08",
+				"FE5B371DF309504C93075328",
+			);
+			"sourceTree" = "<group>";
+		};
+		"F58362B7EE36550FA3C9291F" = {
+			"path" = "AvelaTests/Subscription/PremiumAccessPolicyTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"6E049E947D1E4F9F85831815" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "FCCA239567C543E897B506DE";
+		};
+		"61D98A1770DF574993ECF8B3" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "7F1D403208E35AC285E7A9B4";
+		};
+		"07A3D04DA5EEAC89B8588720" = {
+			"path" = "Subscription";
+			"isa" = "PBXGroup";
+			"children" = (
+			);
+			"sourceTree" = "<group>";
+		};
+		"F11A2A9895F8430191CF1489" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "CA9D543AF4B2467CAF51DA80";
+		};
+		"A09F7E5A65F75E58B16918A2" = {
+			"path" = "Avela/Core/Widgets/WidgetSnapshotExporter.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"791A5B6A830546C4B23EBDE0" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "623B450C2FEA47CCA5EEB703";
+		};
+		"583A81AA2BE858CB99E40EF7" = {
+			"path" = "AvelaTests/Widgets/WidgetActionHandlerTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"ABFB9B2E4353477780994ED9" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "21EE23BD8EE04690917501B0";
+		};
+		"C6B988811F555614BDDF2261" = {
+			"path" = "AvelaUITests/MVPFlowTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"FA0789B253E0EDCB401755EA" = {
+			"path" = "AvelaWatch/Assets.xcassets";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "folder.assetcatalog";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"6C0202C5DB0F5A839BCA1A2C" = {
+			"path" = "Avela/Features/Notifications/Domain/HabitReminder.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"6065D00762DA5F5EA943F916" = {
+			"isa" = "PBXGroup";
+			"name" = "AvelaUITests MVP additions";
+			"children" = (
+				"C6B988811F555614BDDF2261",
+			);
+			"sourceTree" = "<group>";
+		};
+		"403CAF7F441443CB82793D0C" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "8F343E37D9454CC6A557426F";
+		};
+		"FC2E1B9D58E14ACCABC36516" = {
+			"path" = "Avela/Features/Health/HealthKitHabitProvider.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"99DB2A2E0629463D9E483588" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "78F780E3ECDB4C659C10D2B8";
+		};
+		"461F3B4FCF4E4AA889830507" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "0493B5019FF0446EBA34D471";
+		};
+		"E4078E23A86AF752108D73B1" = {
+			"path" = "LiveActivity";
+			"isa" = "PBXGroup";
+			"children" = (
+			);
+			"sourceTree" = "<group>";
+		};
+		"623B450C2FEA47CCA5EEB703" = {
+			"path" = "AvelaTests/Habit/HabitAdjustmentTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"B3D12091671B4849A57FC660" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "5F3DED7098C143E8BF0D7712";
+		};
+		"083CA4A3E1671DC0191844E3" = {
+			"isa" = "XCConfigurationList";
+			"defaultConfigurationIsVisible" = "0";
+			"defaultConfigurationName" = "Release";
+			"buildConfigurations" = (
+				"8247FFF4154AB26C407C6ACF",
+				"BCB03277DA99DD6EB4B973E7",
+			);
+		};
+		"8841A7E8CCDB536DA8D85316" = {
+			"path" = "Avela/Features/Companion/UI/CompanionSettingsView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"033D227DB27AC75BF017182F" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"CODE_SIGN_ENTITLEMENTS" = "Avela/Avela.entitlements";
+				"MARKETING_VERSION" = "0.1.0";
+				"INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad" = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"INFOPLIST_KEY_LSApplicationCategoryType" = "public.app-category.productivity";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "com.example.Avela";
+				"ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME" = "AccentColor";
+				"CURRENT_PROJECT_VERSION" = "1";
+				"INFOPLIST_KEY_CFBundleDisplayName" = "Avela";
+				"INFOPLIST_KEY_UILaunchScreen_Generation" = "YES";
+				"SUPPORTS_MACCATALYST" = "NO";
+				"TARGETED_DEVICE_FAMILY" = "1,2";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"ASSETCATALOG_COMPILER_APPICON_NAME" = "AppIcon";
+				"LD_RUNPATH_SEARCH_PATHS" = "$(inherited) @executable_path/Frameworks";
+				"PRODUCT_NAME" = "$(TARGET_NAME)";
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents" = "YES";
+				"INFOPLIST_KEY_UISupportedInterfaceOrientations" = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation" = "YES";
+				"INFOPLIST_FILE" = "Avela/Resources/Info.plist";
+				"GENERATE_INFOPLIST_FILE" = "YES";
+			};
+			"name" = "Debug";
+		};
+		"6A7EB456C66D47B197D4A114" = {
+			"path" = "Avela/Features/Settings/Domain/AppTheme.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"8F343E37D9454CC6A557426F" = {
+			"path" = "Avela/Features/Routines/Data/SwiftDataRoutineRepository.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"09328011CFFC431084F70888" = {
+			"path" = "Avela/Features/Backup/UI/CloudBackupModel.swift";
+			"isa" = "PBXFileReference";
+			"sourceTree" = "SOURCE_ROOT";
+			"lastKnownFileType" = "sourcecode.swift";
+		};
+		"8556BD1EC7BA9CA59EB388B9" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "FA0789B253E0EDCB401755EA";
+		};
+		"28C249B99B44A2CF3DCF7C6F" = {
+			"path" = "App";
+			"isa" = "PBXGroup";
+			"children" = (
+				"38F5FFD260E1D1E91F6338AC",
+				"D7360AE37E28CA2077F913AC",
+				"47F97734D39C2482BA80694D",
+				"B3A817580C23BB85A759895A",
+			);
+			"sourceTree" = "<group>";
+		};
+		"B5E1B814F9D44095A7508167" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "341653658F1C49BBB4801A28";
+		};
+		"679BDD7A0F274EC784EA50F3" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "072FE64420BD4B8581EFB5CB";
+		};
+		"BCB03277DA99DD6EB4B973E7" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"LD_RUNPATH_SEARCH_PATHS" = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				"APPLICATION_EXTENSION_API_ONLY" = "YES";
+				"MARKETING_VERSION" = "0.1.0";
+				"INFOPLIST_FILE" = "AvelaWidget/Info.plist";
+				"SKIP_INSTALL" = "YES";
+				"TARGETED_DEVICE_FAMILY" = "1,2";
+				"GENERATE_INFOPLIST_FILE" = "YES";
+				"INFOPLIST_KEY_CFBundleDisplayName" = "Avela Widgets";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"CODE_SIGN_ENTITLEMENTS" = "AvelaWidget/AvelaWidget.entitlements";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"PRODUCT_NAME" = "$(TARGET_NAME)";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "com.example.Avela.widget";
+				"CURRENT_PROJECT_VERSION" = "1";
+				"SUPPORTS_MACCATALYST" = "NO";
+			};
+			"name" = "Release";
+		};
+		"05BE9FF8C4A6551C9D4B2D31" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "F58362B7EE36550FA3C9291F";
+		};
+		"169212BA76274871B7F1DECC" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "82F4301F7ABF43ECA2E75907";
+		};
+		"660C941D40694788A9C976C0" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A11111111111111111110003";
+		};
+		"C3C07B529E3748C6947E94CF" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "403E5A7F3F1A4D019F68F8B5";
+		};
+		"3A1C055D1C584CD4AA373973" = {
+			"path" = "LocalDay.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"3CC1750031C6F5E904273505" = {
+			"path" = "Domain";
+			"isa" = "PBXGroup";
+			"children" = (
+				"4B49AB94C0EAB42268AAD2D5",
+			);
+			"sourceTree" = "<group>";
+		};
+		"B7249493BB6249C2B406894D" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "3A1C055D1C584CD4AA373973";
+		};
+		"FEA9B593C65151AEAEA63047" = {
+			"path" = "AvelaTests/Companion/OnboardingTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"298AE4C7C7D14FA7DD11704C" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"LD_RUNPATH_SEARCH_PATHS" = "$(inherited) @executable_path/Frameworks";
+				"BUNDLE_LOADER" = "$(TEST_HOST)";
+				"MARKETING_VERSION" = "0.1.0";
+				"TARGETED_DEVICE_FAMILY" = "1,2";
+				"TEST_HOST" = "$(BUILT_PRODUCTS_DIR)/Avela.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Avela";
+				"GENERATE_INFOPLIST_FILE" = "YES";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"PRODUCT_NAME" = "$(TARGET_NAME)";
+				"CURRENT_PROJECT_VERSION" = "1";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "com.example.AvelaTests";
+				"SUPPORTS_MACCATALYST" = "NO";
+			};
+			"name" = "Debug";
+		};
+		"E19E2570B519A7B291970A67" = {
+			"path" = "Data";
+			"isa" = "PBXGroup";
+			"children" = (
+				"B86586D149614F6DAB7BFA81",
+				"34C7C4F3C3F14BA18A299389",
+				"21EE23BD8EE04690917501B0",
+				"F0FC37D41430433CACC83C82",
+			);
+			"sourceTree" = "<group>";
+		};
+		"D13766A4F1D64F44BA0F1B5B" = {
+			"path" = "Avela/Features/Habit/UI/HabitStarterLibraryView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"6C668D7327B349B7B22EA470" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "B86586D149614F6DAB7BFA81";
+		};
+		"BEB7EB8AE2E64150A37A6CC8" = {
+			"path" = "AppColor.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"FDEA3E6F5ACD495DB393C35F" = {
+			"path" = "Avela/Features/Shortcuts/AvelaAppIntents.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"4130A119FC3448FB991CA942" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "634B918B33F941929C1989FF";
+		};
+		"65FF63B894964718B9B7DBD4" = {
+			"path" = "Avela/Features/Settings/Data/AppAppearanceRecord.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"9CB239D37958412D985A893F" = {
+			"path" = "AvelaTests/Habit/HabitOrderViewModelTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"CC5D242D023A9271190EA7C6" = {
+			"isa" = "PBXGroup";
+			"sourceTree" = "<group>";
+			"children" = (
+				"893A5E43188A3ECC97B25242",
+				"BD26133AE59D48F985623EF5",
+				"58B4208705A44B7A9DE167A5",
+				"AAE25320D4BA5E3AB91890F4",
+				"3F1E2FAB87FA5E77A8844B47",
+				"A11111111111111111110003",
+				"6065D00762DA5F5EA943F916",
+				"A11111111111111111110001",
+				"BECD61A976645A6799BE28E8",
+				"18F98633697A514283028C37",
+				"EE8D942788C8A7CE8CE08A0C",
+				"015AAAD1E53C3F41CDA9639D",
+				"9D0EA45D1CD17EEB3AA690D2",
+				"82730F5961304C837085B896",
+				"AE7805B56D1DCAFAA071416F",
+				"F0095CDA1D5F535171817DA5",
+				"B3FCA4016CAC34673410D318",
+				"66D091AC85BD1523252AC106",
+				"309835850C6211B09FD08452",
+				"0E4A4AAD8C729551563437E9",
+				"6FAFF7B958DD556BB57B63CB",
+				"1A952451A00641FD8CEB18A2",
+				"C3E1C0AC3A0A42039C60F48D",
+				"633AC785EA894C83BAE9500C",
+				"17058B341716448981A2F220",
+			);
+		};
+		"BEF693F55D564E0DA7A4DD58" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A4667A5550E94051B6E6C199";
+		};
+		"82730F5961304C837085B896" = {
+			"path" = "AvelaUITests";
+			"isa" = "PBXGroup";
+			"children" = (
+				"84DABF851511566B54C6D014",
+			);
+			"sourceTree" = "<group>";
+		};
+		"30B39ED829775BA0623A761B" = {
+			"isa" = "PBXTargetDependency";
+			"target" = "E64C44E110C68927474000A8";
+			"targetProxy" = "5414B820ED24ACFE395648C8";
+		};
+		"E64C44E110C68927474000A8" = {
+			"productType" = "com.apple.product-type.application";
+			"productReference" = "69BAECD7E7218B76436C5BF4";
+			"buildConfigurationList" = "DCC64440AB2023B33A968276";
+			"productName" = "Avela";
+			"isa" = "PBXNativeTarget";
+			"buildPhases" = (
+				"4EBC01CC71406868A48CAFC4",
+				"74B3E0798222A3FCFFDA0C54",
+				"7BE7515AB13F32293C5DF20E",
+				"073C34A79D8CA96E4892A560",
+				"1CF0B0E98455198AF468ACE0",
+			);
+			"dependencies" = (
+				"7B8599F8F644ADC748B215F0",
+				"38E4096668C7F41AA5061C84",
+			);
+			"name" = "Avela";
+			"buildRules" = (
+			);
+		};
+		"A9E422954F5246328C4B707A" = {
+			"path" = "ArchivedHabitsViewModelTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"1C3A8F609FB24A3D927AD94F" = {
+			"path" = "Avela/Features/HabitActivity/Domain/HabitActivity.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"7180172588DE5C6DAB62A4B0" = {
+			"path" = "AvelaTests/Subscription/SubscriptionManagerTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"02F606A039BC57FF90A148CD" = {
+			"path" = "Avela/Features/Companion/Data/CompanionProfileRecord.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"A90958EC9C244BDC85358E05" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "F22D495D42A54C3AABD40BB9";
+		};
+		"71E4B6B712D547F6B3FC7327" = {
+			"path" = "Avela/Features/Routines/Data/RoutineRecord.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"9114D589DC3B6C2640571DBB" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "4D9F2EBF1D9A784CFA6FB366";
+		};
+		"DA63B89B95D74D5BA014330A" = {
+			"path" = "Avela/Features/Health/HealthHabitConnectionRecord.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"7C59D9A2C5DC5CE09381EC57" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "67C46FBA2E9654639FF87EFB";
+		};
+		"E924B7EB009D4D039E932D2B" = {
+			"path" = "Avela/Features/Habit/Domain/HabitStarter.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"BD81159E64D34B7BB2B97F96" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "65FF63B894964718B9B7DBD4";
+		};
+		"473052FCCAEE5F738C135CFD" = {
+			"path" = "Avela/Core/Widgets/WidgetActionHandler.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"86107CF198AC41DFBDB82DC8" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "1C3A8F609FB24A3D927AD94F";
+		};
+		"9E409E1FD982488082234886" = {
+			"path" = "HabitArchivePeriodRecord.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"4495E41F3A6A5EFE869CDD0C" = {
+			"path" = "Avela/Features/Subscription/Domain/SubscriptionService.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"201B3EF56108BB11F62A5458" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "B3FCA4016CAC34673410D318";
+		};
+		"5F3DED7098C143E8BF0D7712" = {
+			"path" = "Avela/Features/Habit/UI/HabitOrderView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"4D9F2EBF1D9A784CFA6FB366" = {
+			"path" = "AppPersistenceTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"C701D3F978EF4A499632EEBF" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "7B17B4638F6F4031B71B73EB";
+		};
+		"74B3E0798222A3FCFFDA0C54" = {
+			"isa" = "PBXFrameworksBuildPhase";
+			"buildActionMask" = "2147483647";
+			"files" = (
+			);
+			"runOnlyForDeploymentPostprocessing" = "0";
+		};
+		"45F178D7403F69C8FD23150D" = {
+			"isa" = "XCConfigurationList";
+			"defaultConfigurationIsVisible" = "0";
+			"defaultConfigurationName" = "Release";
+			"buildConfigurations" = (
+				"06B70DDAAA2FE9AB62DBAF59",
+				"2D49F1812F582FA642C240CA",
+			);
+		};
+		"8AF272842EAFB9E80EB7B26F" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "79669938CA756588A73ABF61";
+		};
+		"10EF738F2C1D4E4C8C147F04" = {
+			"path" = "Avela/Features/WatchIntegration/Domain/WatchHabitLoggingService.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"75B21F162C735474A2359A93" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "3A1C055D1C584CD4AA373973";
+		};
+		"529B6DC457C25292A9303218" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "16CC5FA673735A4294FFA73F";
+		};
+		"D6DE3804770E5583AACA0A98" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "C6B988811F555614BDDF2261";
+		};
+		"1C2BB63629015ABDA07E9DDD" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "7180172588DE5C6DAB62A4B0";
+		};
+		"AE7805B56D1DCAFAA071416F" = {
+			"isa" = "PBXGroup";
+			"name" = "Products";
+			"children" = (
+				"69BAECD7E7218B76436C5BF4",
+				"1001433A70BC9DB7C28DE376",
+				"E1ECE9916A78412BE380C424",
+				"8100736BC8764210ABB3E1AA",
+				"AE0354A0031398130C95C23A",
+			);
+			"sourceTree" = "<group>";
+		};
+		"AD59BE93D33D4C2D8411E9C7" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "74807CF2AFA745449825A01B";
+		};
+		"3B393744AADFD3097631B45E" = {
+			"path" = "Widgets";
+			"isa" = "PBXGroup";
+			"children" = (
+			);
+			"sourceTree" = "<group>";
+		};
+		"3B141886E733521CAF068988" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "649372A2A7915E1EAB97B674";
+		};
+		"2B1AB90AFB5C5220B00A9F9A" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "36AC613AE02E5B31828F9899";
+		};
+		"1ED85F920DAE45AC84D78965" = {
+			"path" = "HabitDetailViewModelTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"7A8D615F4025470589BFCFEB" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "C02AF07D1F58446C80B3A61A";
+		};
+		"5EF563ABDECA526A8853345D" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "24D25A0828E85123A10B195E";
+		};
+		"32C9A6514DA7514F90D29C88" = {
+			"path" = "Avela/Features/Subscription/UI/SubscriptionManager.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"693F12284ACC5623980AA0D4" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "583A81AA2BE858CB99E40EF7";
+		};
+		"D614DAD479595755801D2029" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "32C9A6514DA7514F90D29C88";
+		};
+		"6582301AC0A05C198E86A754" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "50979BD41D085628B60B6308";
+		};
+		"79B5E45BD7EE48F1B9281553" = {
+			"path" = "HabitProgressCalculator.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"F80D041C89FE4723BB503549" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "2AC49447A79D48A3A1E41BEB";
+		};
+		"C6BF86AE4D0A39EE7493ABC4" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "EF1D6DC1924F42A2A6A04019";
+		};
+		"A11111111111111111110005" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A11111111111111111110003";
+		};
+		"8A5BDC99B8A4E11461B200F9" = {
+			"path" = "Models";
+			"isa" = "PBXGroup";
+			"children" = (
+			);
+			"sourceTree" = "<group>";
+		};
+		"51A37B3566E648BDBFD8FC64" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "D13766A4F1D64F44BA0F1B5B";
+		};
+		"16741EB35151AD528C43793D" = {
+			"path" = "InsightsViewModel.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"98CB1CFDD6EC5FD9A270733A" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "FE5B371DF309504C93075328";
+		};
+		"0F1476191A654B049F076E62" = {
+			"path" = "Avela/Features/Reflection/Data/SwiftDataReflectionRepository.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"7970D23993D5634B309F24FF" = {
+			"path" = "InsightsViewModelTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"C4F5F8B3E12745BC9DBBFBF6" = {
+			"path" = "SwiftDataHabitRepositoryTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"8464565395CA480AB53D8C0B" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "38F5FFD260E1D1E91F6338AC";
+		};
+		"EC560F1179554892B0CD8A26" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "24C8CF55138B4F06AA9C07EA";
+		};
+		"5C6EB0D792365A24AE628A7F" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "FFA5869E0B3051C7B4DF1B00";
+		};
+		"187E03C01B5D459C93FEAF8D" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "3EABBDF3066F4F4F92431BFB";
+		};
+		"3FF09E4EB03E5964AE296C23" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "3F1E2FAB87FA5E77A8844B47";
+		};
+		"BE0B3E8102F940759BF1E599" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "27C9B04D62344F53AF9F3B19";
+		};
+		"AA71C6CD0DBC48998142F9B1" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "82FE84914E05493680D94D3B";
+		};
+		"DA9D7B1005DA4F1F99A23983" = {
+			"path" = "HabitScheduleEvaluatorTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"332EE70B555A4B2699FCBCCD" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "DA9D7B1005DA4F1F99A23983";
+		};
+		"AB193EE292F5D45AC35C5F54" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "200E493B837D7C57D7D9494E";
+		};
+		"AAE25320D4BA5E3AB91890F4" = {
+			"path" = "AvelaWidget/PhoneFreeLiveActivityWidget.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"49EBB977245609535DB290D1" = {
+			"path" = "HabitPolarityFormatter.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"4EC9BC83374F443889194BCD" = {
+			"path" = "HabitScheduleFormatter.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"B52BAA84AD3D40CA8080B777" = {
+			"path" = "Skip.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"2091EEED7B1C467EB77A553E" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "B36F97CDA4C64B6B8EE2DE3E";
+		};
+		"610FA18D59C5438CB27562C7" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "3CEE5094FFBE47E7BC3649FE";
+		};
+		"85E4325DE1B61F9F3918CEA2" = {
+			"path" = "Features";
+			"isa" = "PBXGroup";
+			"children" = (
+				"65E3CCDC4434E260AC46F1E4",
+				"CBAB3E5CD122978DC0EFBC5C",
+				"61D76D5F6D58B4B7098827F6",
+				"88B394C6BAF18DD7FA8E1C7F",
+				"8DF9481F1BC394326C1EAA2A",
+				"E4078E23A86AF752108D73B1",
+				"1DDB15D9EAE26A99FCF1980D",
+				"3A74F73DD684704372CC0BED",
+				"5E9E8BF516365186E7280935",
+				"07A3D04DA5EEAC89B8588720",
+				"3B393744AADFD3097631B45E",
+			);
+			"sourceTree" = "<group>";
+		};
+		"EDF5684832CA5EC18DC067F7" = {
+			"path" = "Avela/Core/Persistence/PersistenceChange.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"5ADC09AFCDD55F6180E44A60" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "06962ECA57ED5C0DB0DD17FA";
+		};
+		"AE0354A0031398130C95C23A" = {
+			"path" = "AvelaWatch.app";
+			"isa" = "PBXFileReference";
+			"includeInIndex" = "0";
+			"explicitFileType" = "wrapper.application";
+			"sourceTree" = "BUILT_PRODUCTS_DIR";
+		};
+		"355FC67BB19D46BFB9DE66EA" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "1ED85F920DAE45AC84D78965";
+		};
+		"36AC613AE02E5B31828F9899" = {
+			"path" = "Avela/Core/LiveActivity/PhoneFreeActivityAttributes.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"3266278561528492A514722C" = {
+			"isa" = "PBXContainerItemProxy";
+			"containerPortal" = "244210E48437B6556980A702";
+			"remoteGlobalIDString" = "3CBF2886FF27F3F7DA27AF16";
+			"remoteInfo" = "AvelaWatch";
+			"proxyType" = "1";
+		};
+		"0568EB43AC8723D91CDD3EAE" = {
+			"isa" = "PBXFrameworksBuildPhase";
+			"buildActionMask" = "2147483647";
+			"files" = (
+			);
+			"runOnlyForDeploymentPostprocessing" = "0";
+		};
+		"289BA0F41FE04163BC026F90" = {
+			"path" = "Avela/App/AvelaNotificationDelegate.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"B86586D149614F6DAB7BFA81" = {
+			"path" = "AttentionGoalRecord.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"39F122DF7683405497404B9C" = {
+			"path" = "HabitProgressCalculatorTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"D552DD1234B04253436599FD" = {
+			"isa" = "PBXResourcesBuildPhase";
+			"buildActionMask" = "2147483647";
+			"files" = (
+				"A11111111111111111110002",
+			);
+			"runOnlyForDeploymentPostprocessing" = "0";
+		};
+		"32E1E66B24DD4352B93FE905" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "CCC4E520ED2844809F02F308";
+		};
+		"DCC64440AB2023B33A968276" = {
+			"isa" = "XCConfigurationList";
+			"defaultConfigurationIsVisible" = "0";
+			"defaultConfigurationName" = "Release";
+			"buildConfigurations" = (
+				"033D227DB27AC75BF017182F",
+				"036DBB1E31165BBF14333E3C",
+			);
+		};
+		"8EC38A72D9E949F6B48433C2" = {
+			"path" = "Avela/Features/Notifications/Domain/ReminderActionHandler.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"E5712791AE5C5210B2C593A3" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "ECCD07C53A725A1DAB80A06E";
+		};
+		"2C4B85B1E747488C871FA412" = {
+			"path" = "HabitDetailViewModel.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"5D6266BA22624387925684F9" = {
+			"path" = "Avela/Features/Habit/Domain/HabitCalendarCalculator.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"8FA6E915C9144EA88714D28D" = {
+			"path" = "AvelaTests/Reflection/WeeklyReflectionTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"5C57457303CA425286717F23" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "1056BEA959224215800509A7";
+		};
+		"74807CF2AFA745449825A01B" = {
+			"path" = "AttentionGoalDetailView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"928AA11D7F3D4DFE88C0D5E2" = {
+			"path" = "AvelaTests/WatchIntegration/WatchHabitLoggingServiceTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"3F3FB3F11B3E50BFB3409818" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "F221CE70331C5A2095EB8087";
+		};
+		"8DB2B00562C74B43B0073F39" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "DA63B89B95D74D5BA014330A";
+		};
+		"FD2B5A5C6CCE66F2BD3911AC" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "F9BA393299CCEFE9670D789C";
+		};
+		"5C4E9DEB87D74CB693F26991" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "B949CE4B76AE424A8F04D0A0";
+		};
+		"5E9E8BF516365186E7280935" = {
+			"path" = "Shared";
+			"isa" = "PBXGroup";
+			"children" = (
+				"F9BA393299CCEFE9670D789C",
+			);
+			"sourceTree" = "<group>";
+		};
+		"4EE78DB065085FF5AF224DBA" = {
+			"path" = "AvelaTests/Widgets/WidgetSnapshotTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"972107866DA1416F848B567E" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "9D65B40E3F284C888A9BFF7C";
+		};
+		"6939574CC69C45A3B40B7BC3" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "9E409E1FD982488082234886";
+		};
+		"4B9DFD7226824CCAAEA1A99E" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "E928FAB528374491B4643D97";
+		};
+		"F0095CDA1D5F535171817DA5" = {
+			"path" = "Avela/Features/Routines/UI/ManageableWeekView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"0C4B642B9F014EC9A2C04C16" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "85F027B338154CCEAF0A3F57";
+		};
+		"C4F7EA533D6056F09783306A" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "B0F5CDE339AE59649E82EC36";
+		};
+		"82FE84914E05493680D94D3B" = {
+			"path" = "AvelaTests/Health/HealthHabitServiceTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"9C868ECAE89206C7F1EF42B3" = {
+			"isa" = "PBXResourcesBuildPhase";
+			"buildActionMask" = "2147483647";
+			"files" = (
+			);
+			"runOnlyForDeploymentPostprocessing" = "0";
+		};
+		"F4CF09200306484084ED2447" = {
+			"path" = "Avela/Features/Health/HealthHabitService.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"34C7C4F3C3F14BA18A299389" = {
+			"path" = "AttentionGoalConfigurationSnapshotRecord.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"9864C1EAF4075A5FAEE7A0F9" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "F221CE70331C5A2095EB8087";
+		};
+		"4D0372D00A96139AED7720E2" = {
+			"isa" = "PBXTargetDependency";
+			"target" = "E64C44E110C68927474000A8";
+			"targetProxy" = "C605D5ED92C2A2D2C191ADBB";
+		};
+		"D5592460D3F152B5B66FA7BC" = {
+			"path" = "Avela/Features/Settings/PrivacyView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"79669938CA756588A73ABF61" = {
+			"path" = "AppPersistence.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"3393B5FACAFD40AEA057C101" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "B52BAA84AD3D40CA8080B777";
+		};
+		"EE8D942788C8A7CE8CE08A0C" = {
+			"path" = "Avela";
+			"isa" = "PBXGroup";
+			"children" = (
+				"28C249B99B44A2CF3DCF7C6F",
+				"F685E6A427A2C2B22A7CAB95",
+				"85E4325DE1B61F9F3918CEA2",
+				"CF10170D8C7A9D186D6CB4BD",
+			);
+			"sourceTree" = "<group>";
+		};
+		"BECD61A976645A6799BE28E8" = {
+			"isa" = "PBXGroup";
+			"name" = "AvelaTests MVP additions";
+			"children" = (
+				"623B450C2FEA47CCA5EEB703",
+				"9CB239D37958412D985A893F",
+				"072FE64420BD4B8581EFB5CB",
+				"CCC4E520ED2844809F02F308",
+				"DE54BF5C6E054C2CB140F651",
+				"82FE84914E05493680D94D3B",
+				"CA9D543AF4B2467CAF51DA80",
+				"B27B96933B8A5554AE06021E",
+				"039EB7D3E29A5F7696A95176",
+				"FEA9B593C65151AEAEA63047",
+				"F58362B7EE36550FA3C9291F",
+				"4F19F6C74BFA58C38337D33F",
+				"7180172588DE5C6DAB62A4B0",
+				"43C7A3626E15505881812283",
+				"4EE78DB065085FF5AF224DBA",
+				"583A81AA2BE858CB99E40EF7",
+				"24D25A0828E85123A10B195E",
+			);
+			"sourceTree" = "<group>";
+		};
+		"E2966A3CE422D552915EA78A" = {
+			"isa" = "PBXResourcesBuildPhase";
+			"buildActionMask" = "2147483647";
+			"files" = (
+				"8556BD1EC7BA9CA59EB388B9",
+				"660C941D40694788A9C976C0",
+			);
+			"runOnlyForDeploymentPostprocessing" = "0";
+		};
+		"9397413EC68743B99D6FEAFC" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "FC63C10F25A941B29728D89F";
+		};
+		"CA9D543AF4B2467CAF51DA80" = {
+			"path" = "AvelaTests/Shortcuts/ShortcutLoggingServiceTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"093BD9A1C09F4C7BAD7C7B9C" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "E493CFB705D2457CAC6AED8D";
+		};
+		"31DA0984167153A50DDF9A2A" = {
+			"path" = "AvelaWatch/WatchDashboardView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"2459E6F684AF542DB924E3DE" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "473052FCCAEE5F738C135CFD";
+		};
+		"7BE32390068C7DE7160DFEE8" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "477AEC8C127FCCBEECE67382";
+		};
+		"16CC5FA673735A4294FFA73F" = {
+			"path" = "Avela/Features/Companion/Domain/Companion.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"418DC77F594955E9BC157764" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "CEE5F90BE8405C43B5ADC9FC";
+		};
+		"8447E4775B91461582FE53BD" = {
+			"path" = "Avela/Features/Habit/UI/HabitOrderViewModel.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"B15F2037A4814E78A0E45C9A" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "55AC724AF52145F6A704A351";
+		};
+		"26CEE0E86935442A8A95BC82" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "E4940704B3034748B31593EA";
+		};
+		"38F5FFD260E1D1E91F6338AC" = {
+			"path" = "AppShellView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"CD39008251B54D7CADFB2E58" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "96FFFBE0B965426BB96F9B29";
+		};
+		"C605D5ED92C2A2D2C191ADBB" = {
+			"isa" = "PBXContainerItemProxy";
+			"containerPortal" = "244210E48437B6556980A702";
+			"remoteGlobalIDString" = "E64C44E110C68927474000A8";
+			"remoteInfo" = "Avela";
+			"proxyType" = "1";
+		};
+		"8DF9481F1BC394326C1EAA2A" = {
+			"path" = "Insights";
+			"isa" = "PBXGroup";
+			"children" = (
+				"3CC1750031C6F5E904273505",
+				"16741EB35151AD528C43793D",
+				"929A63C1E41A840BABF89EF8",
+			);
+			"sourceTree" = "<group>";
+		};
+		"A11111111111111111110003" = {
+			"path" = "Avela/Resources/PrivacyInfo.xcprivacy";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "text.xml";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"0493B5019FF0446EBA34D471" = {
+			"path" = "Avela/Features/Shortcuts/ShortcutsGuideView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"11648CE5C026409C9703B7D3" = {
+			"path" = "SettingsView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"1DDB15D9EAE26A99FCF1980D" = {
+			"path" = "Notifications";
+			"isa" = "PBXGroup";
+			"children" = (
+			);
+			"sourceTree" = "<group>";
+		};
+		"1108B858726A785B22D21795" = {
+			"path" = "Info.plist";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "text.plist.xml";
+			"sourceTree" = "<group>";
+		};
+		"649372A2A7915E1EAB97B674" = {
+			"path" = "Avela/Features/Companion/UI/CompanionView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"DB6A7E6E512FB31E839B15F8" = {
+			"isa" = "PBXSourcesBuildPhase";
+			"buildActionMask" = "2147483647";
+			"files" = (
+				"D6DE3804770E5583AACA0A98",
+				"DBC1EBA051CE1FF2D1102726",
+			);
+			"runOnlyForDeploymentPostprocessing" = "0";
+		};
+		"D8C563FADA364E13B4EBC8BC" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "4BABD231442748829B0811AF";
+		};
+		"6C27CCBCF0F943739E4AD641" = {
+			"path" = "Avela/Features/Settings/UI/AppThemeView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"671094981C524783AEC10D07" = {
+			"path" = "Avela/Features/Habit/UI/HabitAdjustmentView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"8E9E984445841ECD303FE72C" = {
+			"path" = "Data";
+			"isa" = "PBXGroup";
+			"children" = (
+				"4BABD231442748829B0811AF",
+				"717CC06C4ABC462F9417BEA7",
+				"F22D495D42A54C3AABD40BB9",
+				"72DA8755A72B48E08FBB1CDC",
+				"A22AADD22A7547A8AE5F57FF",
+				"9E409E1FD982488082234886",
+			);
+			"sourceTree" = "<group>";
+		};
+		"B36F97CDA4C64B6B8EE2DE3E" = {
+			"path" = "HistoryViewModelTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"BACC440613D74E6D8CCC431D" = {
+			"path" = "Avela/Features/Habit/UI/HabitCalendarView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"FE474507EC9E5D5CB940409B" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "4E82FCEC239D58A1938B9F08";
+		};
+		"7C3E4E3BC52459879D53B0A1" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "0DCDE075BF00584FA605D5AA";
+		};
+		"4EBC01CC71406868A48CAFC4" = {
+			"isa" = "PBXSourcesBuildPhase";
+			"buildActionMask" = "2147483647";
+			"files" = (
+				"3D80B5D068034062AE1143DA",
+				"FEE4EBBDA28E41589BB2E260",
+				"86107CF198AC41DFBDB82DC8",
+				"AC15C40023104AD3969FB012",
+				"4130A119FC3448FB991CA942",
+				"6DEC2494604741FBB129EE9A",
+				"403CAF7F441443CB82793D0C",
+				"BE0B3E8102F940759BF1E599",
+				"B5E1B814F9D44095A7508167",
+				"B15F2037A4814E78A0E45C9A",
+				"CC271F3DFE244EC08731DEC6",
+				"C3C07B529E3748C6947E94CF",
+				"169212BA76274871B7F1DECC",
+				"361A73C8952F48F0AF49FDAD",
+				"CD39008251B54D7CADFB2E58",
+				"610FA18D59C5438CB27562C7",
+				"6A77175464BF42CC8E758C24",
+				"488A68FC7A6E4A6499825749",
+				"9B6A05D0F1F44912B03CC39A",
+				"3F2744AAD4C3489DAF1E4EE2",
+				"9BD8A2487A224F1186538576",
+				"DBFE81D44AF0420594A55B26",
+				"B3D12091671B4849A57FC660",
+				"75B50B44974448E5BEA4E470",
+				"99DB2A2E0629463D9E483588",
+				"845ACEE8FC00413F94968993",
+				"BD81159E64D34B7BB2B97F96",
+				"9DC3FB38CD27451B8C6AF950",
+				"76A620C29E27447D994E5F5B",
+				"0C4B642B9F014EC9A2C04C16",
+				"C05EBD4E347B43659EE228DA",
+				"A7537D7144DA4F56AB446762",
+				"CF0419CC763740E9B903C6BE",
+				"51A37B3566E648BDBFD8FC64",
+				"60576A9B0587486C9C2302AF",
+				"406BAA92D1FD4F40B5682403",
+				"B8C9D49B18724CBEB26D5803",
+				"8DB2B00562C74B43B0073F39",
+				"FB3E6407C75E4047A3B4BD2B",
+				"461F3B4FCF4E4AA889830507",
+				"B1E046FA51E94F0993781A60",
+				"68B9F6AF8FE24F8AB52470A1",
+				"E6BCF100720B5BB59D4ACDC0",
+				"7C59D9A2C5DC5CE09381EC57",
+				"FE474507EC9E5D5CB940409B",
+				"98CB1CFDD6EC5FD9A270733A",
+				"3EC4580EFF1F5562B3CEBE49",
+				"76E95566330B55F08D6B7CFD",
+				"2459E6F684AF542DB924E3DE",
+				"B946EE05AAE955ADB68E139E",
+				"9864C1EAF4075A5FAEE7A0F9",
+				"61D98A1770DF574993ECF8B3",
+				"896AF8514B50565C97BBCB88",
+				"80A276AEF76353A2AFB7CB93",
+				"F1D7CE4FB7E05D81B403789B",
+				"EA2997DFD56E51C490178CE0",
+				"8D5FDCE2F80A542E949017AB",
+				"529B6DC457C25292A9303218",
+				"4A1DE62E5473521B96E3EB25",
+				"3B141886E733521CAF068988",
+				"1CDDDC32F71A5D9DB19711CA",
+				"693C307624BD52CB8F4E3355",
+				"C4F7EA533D6056F09783306A",
+				"45492995DF5D5AF89348E707",
+				"5C6EB0D792365A24AE628A7F",
+				"6582301AC0A05C198E86A754",
+				"5344DC26E6CD57E88F8F6F19",
+				"A3FECE7B532A5B4C8E06612B",
+				"7C3E4E3BC52459879D53B0A1",
+				"024F19AA7A995E41B9EC605C",
+				"2999EB7681635C2B840B4F5C",
+				"5ADC09AFCDD55F6180E44A60",
+				"CFC7BB003F1055B8B6EDE666",
+				"E5712791AE5C5210B2C593A3",
+				"D614DAD479595755801D2029",
+				"8464565395CA480AB53D8C0B",
+				"42376078E52BF632F4B50338",
+				"EDD96DA354FD345B4D52EF7E",
+				"38B12F368EAB4E39402E6A4E",
+				"8AF272842EAFB9E80EB7B26F",
+				"FD2B5A5C6CCE66F2BD3911AC",
+				"B7249493BB6249C2B406894D",
+				"5C4E9DEB87D74CB693F26991",
+				"322E82932A61474DBD8DB355",
+				"7A8D615F4025470589BFCFEB",
+				"9B39A364509F4BA881C146FA",
+				"F80D041C89FE4723BB503549",
+				"3393B5FACAFD40AEA057C101",
+				"D351E67D3C2A4FFAB05833FF",
+				"19AA4B2BC89E4D70949E04FA",
+				"D8C563FADA364E13B4EBC8BC",
+				"FEABED43DB1B49CDB4D63B84",
+				"A90958EC9C244BDC85358E05",
+				"4DFC11AE6A634DA1B8EACC6F",
+				"1A8CCB766FC04CCD83D2AB90",
+				"06665B7F55E74E448AB0D5D8",
+				"9397413EC68743B99D6FEAFC",
+				"6939574CC69C45A3B40B7BC3",
+				"4B9DFD7226824CCAAEA1A99E",
+				"99ABECF3D68747BD8EEC6CA6",
+				"33D06904FC194145A3D393C8",
+				"093BD9A1C09F4C7BAD7C7B9C",
+				"0836B76A8DA845E68FA4458F",
+				"3787F32E5B4247188EA7F73A",
+				"F4D2204F09AE61FE141C6D12",
+				"C701D3F978EF4A499632EEBF",
+				"D8DF0A2BE4E94EE183333B86",
+				"FA9DBBA3218C4123BA0EC5B0",
+				"17358D8A0BE04DDEAD20519B",
+				"458BEDFF7C344EA9A2591A60",
+				"78A0CEE2605AF75BD3CA083E",
+				"1F61B38FD685E5D96F412FE9",
+				"5DC2D6F54994B224D58489AA",
+				"9EC7D3F6D5CC474ABE380810",
+				"26CEE0E86935442A8A95BC82",
+				"5C57457303CA425286717F23",
+				"6E049E947D1E4F9F85831815",
+				"FB443C4EB5ED423E96109D1D",
+				"187E03C01B5D459C93FEAF8D",
+				"972107866DA1416F848B567E",
+				"6C668D7327B349B7B22EA470",
+				"9B2C15E097274CC9863B61E6",
+				"ABFB9B2E4353477780994ED9",
+				"15790B3B0BBF495AB1732EA4",
+				"0328C9E950B74F78AD48B9CB",
+				"081461561C04488986B67559",
+				"F7FABEB01DD548CDB5FB5AAD",
+				"B5078B2E8CA34EA3A8184DA4",
+				"CEEEC06034294AAA96C7A0C7",
+				"AD59BE93D33D4C2D8411E9C7",
+				"B65002B88EF94F559EE08A94",
+				"13A09BF975A37F97F023B028",
+				"201B3EF56108BB11F62A5458",
+				"2260E698E656D6F72C6CEDD0",
+				"AAF9E32F369F002E6A60FE9D",
+				"4B7C0F589FC31E77D17C33C4",
+				"E9F25A52508D41BD9054BC85",
+				"EC560F1179554892B0CD8A26",
+				"FEFAFF22BADF4AF6B336E880",
+				"8CD08180872E426DBAEA2C0F",
+				"7C0DB1BDC02644119E35A84B",
+				"FCC3649AABDB4DB6A4D9B74A",
+				"72D090C943B7400CAFEED3AD",
+				"66606A9DBB514296B74F7672",
+				"FFBA7FC65DC449E0BD03EAC8",
+				"50E6A4280CC647A5B6DB86E0",
+				"8CCDE3E7C6C641D7ABCBCF8C",
+				"E45659AA82954E6396734D67",
+			);
+			"runOnlyForDeploymentPostprocessing" = "0";
+		};
+		"7C0DB1BDC02644119E35A84B" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "3BCB7786AF644819960A332B";
+		};
+		"33FB17BF72C17F3DD59E5A99" = {
+			"isa" = "XCConfigurationList";
+			"defaultConfigurationIsVisible" = "0";
+			"defaultConfigurationName" = "Release";
+			"buildConfigurations" = (
+				"298AE4C7C7D14FA7DD11704C",
+				"FB02341D3E83E05D9921BCE6",
+			);
+		};
+		"6867B0A4906F5D5F8697F8A4" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "4EE78DB065085FF5AF224DBA";
+		};
+		"007BBD4CC4434424A473CF98" = {
+			"path" = "Avela/Core/UI/AppPalette.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"403E5A7F3F1A4D019F68F8B5" = {
+			"path" = "Avela/Features/Reflection/Data/WeeklyReflectionRecord.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"AC15C40023104AD3969FB012" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "FCA1F7AA136B4BEDBC52A249";
+		};
+		"3EABBDF3066F4F4F92431BFB" = {
+			"path" = "AttentionProgressCalculator.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"E201FFA6BFFD260571841EAF" = {
+			"path" = "AppShellTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"FA9DBBA3218C4123BA0EC5B0" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "11648CE5C026409C9703B7D3";
+		};
+		"4BABD231442748829B0811AF" = {
+			"path" = "HabitRecord.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"5E6AC5EB12298D95681E5680" = {
+			"isa" = "PBXResourcesBuildPhase";
+			"buildActionMask" = "2147483647";
+			"files" = (
+				"3EEF941FADFF58DC9DFBA267",
+				"A11111111111111111110005",
+			);
+			"runOnlyForDeploymentPostprocessing" = "0";
+		};
+		"89C4142103F1582215A0B776" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "6FAFF7B958DD556BB57B63CB";
+		};
+		"EA2997DFD56E51C490178CE0" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "AB016F84C4135820AEBE327E";
+		};
+		"FC63C10F25A941B29728D89F" = {
+			"path" = "HabitArchivePeriod.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"0B8CF9A978C27BD86D8B22D2" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"ONLY_ACTIVE_ARCH" = "YES";
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS" = "DEBUG $(inherited)";
+				"DEBUG_INFORMATION_FORMAT" = "dwarf";
+				"CLANG_WARN_DOCUMENTATION_COMMENTS" = "YES";
+				"CLANG_ENABLE_MODULES" = "YES";
+				"GCC_C_LANGUAGE_STANDARD" = "gnu17";
+				"CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER" = "YES";
+				"ENABLE_TESTABILITY" = "YES";
+				"ENABLE_USER_SCRIPT_SANDBOXING" = "YES";
+				"GCC_OPTIMIZATION_LEVEL" = "0";
+				"SWIFT_OPTIMIZATION_LEVEL" = "-Onone";
+				"ALWAYS_SEARCH_USER_PATHS" = "NO";
+				"SDKROOT" = "iphoneos";
+				"GCC_PREPROCESSOR_DEFINITIONS" = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				"SWIFT_EMIT_LOC_STRINGS" = "YES";
+				"IPHONEOS_DEPLOYMENT_TARGET" = "17.0";
+				"CLANG_ENABLE_OBJC_ARC" = "YES";
+				"SWIFT_VERSION" = "5.0";
+			};
+			"name" = "Debug";
+		};
+		"19AA4B2BC89E4D70949E04FA" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "F2482EBE9E4C45C98E7EDF3F";
+		};
+		"B8C9D49B18724CBEB26D5803" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "BE4358EAC05F42D1BFC3C69D";
+		};
+		"13A09BF975A37F97F023B028" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "F0095CDA1D5F535171817DA5";
+		};
+		"47F97734D39C2482BA80694D" = {
+			"path" = "AvelaApp.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"55442BA3D0B345CA862CCC19" = {
+			"path" = "AvelaTests/HabitActivity/SwiftDataHabitActivityTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"4F19F6C74BFA58C38337D33F" = {
+			"path" = "AvelaTests/Subscription/StoreKitSubscriptionServiceTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"FEE4EBBDA28E41589BB2E260" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "E8F68E6E28034F1B8C481FB7";
+		};
+		"3787F32E5B4247188EA7F73A" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "4EC9BC83374F443889194BCD";
+		};
+		"43C7A3626E15505881812283" = {
+			"path" = "AvelaTests/Widgets/WidgetDeepLinkTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"2260E698E656D6F72C6CEDD0" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "66D091AC85BD1523252AC106";
+		};
+		"073C34A79D8CA96E4892A560" = {
+			"buildActionMask" = "2147483647";
+			"dstSubfolderSpec" = "13";
+			"isa" = "PBXCopyFilesBuildPhase";
+			"runOnlyForDeploymentPostprocessing" = "0";
+			"dstPath" = "";
+			"name" = "Embed App Extensions";
+			"files" = (
+				"CE8BB3D2CD96728917F204AC",
+			);
+		};
+		"47070AF894614DE180AE8FFF" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "DE54BF5C6E054C2CB140F651";
+		};
+		"309835850C6211B09FD08452" = {
+			"path" = "Avela/Features/Attention/UI/IntentionSessionView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"845ACEE8FC00413F94968993" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "6C27CCBCF0F943739E4AD641";
+		};
+		"A22E964A389A4D01A25EB539" = {
+			"path" = "AttentionProgressCalculatorTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"F0FC37D41430433CACC83C82" = {
+			"path" = "SwiftDataAttentionRepository.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"5BE0D8570D054AA996F76CE8" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "519C9AB5A71A4FF6BCEE72CB";
+		};
+		"7289B3EFF6F53F6B865AA21A" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "D751C9FC6531D185088F0ED9";
+		};
+		"D543A5282D52CF2A7DC42B82" = {
+			"path" = "Domain";
+			"isa" = "PBXGroup";
+			"children" = (
+				"B949CE4B76AE424A8F04D0A0",
+				"18A9C3A8236D47C98E7BB174",
+				"C02AF07D1F58446C80B3A61A",
+				"156766C612F04230A7DB525E",
+				"2AC49447A79D48A3A1E41BEB",
+				"B52BAA84AD3D40CA8080B777",
+				"1D15BE61F800423F88CE374F",
+				"F2482EBE9E4C45C98E7EDF3F",
+				"79B5E45BD7EE48F1B9281553",
+				"FC63C10F25A941B29728D89F",
+			);
+			"sourceTree" = "<group>";
+		};
+		"88B394C6BAF18DD7FA8E1C7F" = {
+			"path" = "History";
+			"isa" = "PBXGroup";
+			"children" = (
+				"7726828FDD314E9B9AF84298",
+				"1F00599EDDE64AC0BD1A240C",
+			);
+			"sourceTree" = "<group>";
+		};
+		"29813CCD6E9944E785363836" = {
+			"path" = "WeeklyInsightsCalculatorTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"024F19AA7A995E41B9EC605C" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "C87F01FC848B55EDA8447F08";
+		};
+		"896AF8514B50565C97BBCB88" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A09F7E5A65F75E58B16918A2";
+		};
+		"1D15BE61F800423F88CE374F" = {
+			"path" = "HabitRepository.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"E9F25A52508D41BD9054BC85" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "95E504E2354E4E9F830646A6";
+		};
+		"9EC7D3F6D5CC474ABE380810" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "613C348F4AE24A8C875E7667";
+		};
+		"B949CE4B76AE424A8F04D0A0" = {
+			"path" = "Habit.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"048CBECC222C5B02AD7C2E02" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "DE4F2210677E528DBDBF8EA8";
+		};
+		"F1D7CE4FB7E05D81B403789B" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "FB3C6AA97C395EBD894AE64A";
+		};
+		"5E7B92A1F7BF47ACBDC38E28" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A22E964A389A4D01A25EB539";
+		};
+		"C24F1EAB50E5582F98F81E7E" = {
+			"path" = "Avela/Features/Subscription/Data/StoreKitSubscriptionService.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"3CEE5094FFBE47E7BC3649FE" = {
+			"path" = "Avela/Features/WatchIntegration/Data/WatchConnectivityCoordinator.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"42BB53A27A726E177F3FE8F9" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"LD_RUNPATH_SEARCH_PATHS" = "$(inherited) @executable_path/Frameworks";
+				"SDKROOT" = "watchos";
+				"CURRENT_PROJECT_VERSION" = "1";
+				"INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp" = "NO";
+				"MARKETING_VERSION" = "0.1.0";
+				"TARGETED_DEVICE_FAMILY" = "4";
+				"SKIP_INSTALL" = "YES";
+				"WATCHOS_DEPLOYMENT_TARGET" = "10.0";
+				"SWIFT_EMIT_LOC_STRINGS" = "YES";
+				"GENERATE_INFOPLIST_FILE" = "YES";
+				"INFOPLIST_KEY_CFBundleDisplayName" = "Avela";
+				"SUPPORTED_PLATFORMS" = "watchos watchsimulator";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"ASSETCATALOG_COMPILER_APPICON_NAME" = "AppIcon";
+				"SWIFT_VERSION" = "5.0";
+				"PRODUCT_NAME" = "$(TARGET_NAME)";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "com.example.Avela.watchkitapp";
+				"INFOPLIST_KEY_WKApplication" = "YES";
+				"INFOPLIST_KEY_WKCompanionAppBundleIdentifier" = "com.example.Avela";
+			};
+			"name" = "Debug";
+		};
+		"9B6A05D0F1F44912B03CC39A" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "671094981C524783AEC10D07";
+		};
+		"651AD25AB56446058AB82C99" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "9C474857AB0D4884A582BFF7";
+		};
+		"66D091AC85BD1523252AC106" = {
+			"path" = "Avela/Features/Attention/Data/IntentionSessionLinkRecord.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"60576A9B0587486C9C2302AF" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "E924B7EB009D4D039E932D2B";
+		};
+		"9B26AA72FD875F728E5A9A81" = {
+			"path" = "Avela/Features/Notifications/Domain/HabitReminderService.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"D3427B52AC704FE6A7181DB2" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "1FC870C368A04CE98846B516";
+		};
+		"A22AADD22A7547A8AE5F57FF" = {
+			"path" = "SwiftDataHabitRepository.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"B65002B88EF94F559EE08A94" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "BEB7EB8AE2E64150A37A6CC8";
+		};
+		"DDBCF808FD02C01BFC645675" = {
+			"productType" = "com.apple.product-type.bundle.ui-testing";
+			"productReference" = "8100736BC8764210ABB3E1AA";
+			"buildConfigurationList" = "45F178D7403F69C8FD23150D";
+			"productName" = "AvelaUITests";
+			"isa" = "PBXNativeTarget";
+			"buildPhases" = (
+				"DB6A7E6E512FB31E839B15F8",
+				"0568EB43AC8723D91CDD3EAE",
+				"9C868ECAE89206C7F1EF42B3",
+			);
+			"dependencies" = (
+				"4D0372D00A96139AED7720E2",
+			);
+			"name" = "AvelaUITests";
+			"buildRules" = (
+			);
+		};
+		"58B4208705A44B7A9DE167A5" = {
+			"isa" = "PBXGroup";
+			"name" = "Avela Progress Enrichment";
+			"children" = (
+				"9B53512EFF724379996BE00B",
+				"E8F68E6E28034F1B8C481FB7",
+				"1C3A8F609FB24A3D927AD94F",
+				"FCA1F7AA136B4BEDBC52A249",
+				"634B918B33F941929C1989FF",
+				"71E4B6B712D547F6B3FC7327",
+				"8F343E37D9454CC6A557426F",
+				"27C9B04D62344F53AF9F3B19",
+				"341653658F1C49BBB4801A28",
+				"55AC724AF52145F6A704A351",
+				"0F1476191A654B049F076E62",
+				"403E5A7F3F1A4D019F68F8B5",
+				"82F4301F7ABF43ECA2E75907",
+				"D10394CC231B460489B420B6",
+				"96FFFBE0B965426BB96F9B29",
+				"3CEE5094FFBE47E7BC3649FE",
+				"10EF738F2C1D4E4C8C147F04",
+				"EF1D6DC1924F42A2A6A04019",
+			);
+			"sourceTree" = "<group>";
+		};
+		"3CBF2886FF27F3F7DA27AF16" = {
+			"productType" = "com.apple.product-type.application";
+			"productReference" = "AE0354A0031398130C95C23A";
+			"buildConfigurationList" = "6A27DF99C335C4933CC512A1";
+			"productName" = "AvelaWatch";
+			"isa" = "PBXNativeTarget";
+			"buildPhases" = (
+				"3562825AA28D4B73FA394370",
+				"0181CD819934284EBB5B2357",
+				"E2966A3CE422D552915EA78A",
+			);
+			"dependencies" = (
+			);
+			"name" = "AvelaWatch";
+			"buildRules" = (
+			);
+		};
+		"081461561C04488986B67559" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "BE17DB316C9A46D6A536A93B";
+		};
+		"361A73C8952F48F0AF49FDAD" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "D10394CC231B460489B420B6";
+		};
+		"A916EFF916BE48618DD77AB5" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "4CD028A252414DC68F26588E";
+		};
+		"A11111111111111111110001" = {
+			"path" = "Avela/Features/Subscription/Avela.storekit";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "text";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"DE54BF5C6E054C2CB140F651" = {
+			"path" = "AvelaTests/Notifications/ReminderActionTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"15790B3B0BBF495AB1732EA4" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "F0FC37D41430433CACC83C82";
+		};
+		"17358D8A0BE04DDEAD20519B" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "7726828FDD314E9B9AF84298";
+		};
+		"F685E6A427A2C2B22A7CAB95" = {
+			"path" = "Core";
+			"isa" = "PBXGroup";
+			"children" = (
+				"8A5BDC99B8A4E11461B200F9",
+				"42653060503F3A3A7D2F9294",
+				"14A6447CCE92A4DF47C887F4",
+				"844534000A674A5EB08D5C90",
+			);
+			"sourceTree" = "<group>";
+		};
+		"D351E67D3C2A4FFAB05833FF" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "1D15BE61F800423F88CE374F";
+		};
+		"6A27DF99C335C4933CC512A1" = {
+			"isa" = "XCConfigurationList";
+			"defaultConfigurationIsVisible" = "0";
+			"defaultConfigurationName" = "Release";
+			"buildConfigurations" = (
+				"42BB53A27A726E177F3FE8F9",
+				"D9DE6C3089BA5D4A3678A967",
+			);
+		};
+		"2A3BC5C704D74426B5B251E2" = {
+			"path" = "AttentionGoalEvaluator.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"2E8C9B78417043388A7D863D" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "55442BA3D0B345CA862CCC19";
+		};
+		"21EE23BD8EE04690917501B0" = {
+			"path" = "AttentionUsageEntryRecord.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"282BA450CFAD4CA2827B5628" = {
+			"path" = "Avela/Features/Habit/UI/HabitAdjustmentViewModel.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"CF0419CC763740E9B903C6BE" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "8EC38A72D9E949F6B48433C2";
+		};
+		"39E169983E5A4D8AB9ED3340" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "8FA6E915C9144EA88714D28D";
+		};
+		"9D65B40E3F284C888A9BFF7C" = {
+			"path" = "AttentionRepository.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"488A68FC7A6E4A6499825749" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "EF1D6DC1924F42A2A6A04019";
+		};
+		"3EC4580EFF1F5562B3CEBE49" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "DE4F2210677E528DBDBF8EA8";
+		};
+		"0181CD819934284EBB5B2357" = {
+			"isa" = "PBXFrameworksBuildPhase";
+			"buildActionMask" = "2147483647";
+			"files" = (
+			);
+			"runOnlyForDeploymentPostprocessing" = "0";
+		};
+		"0328C9E950B74F78AD48B9CB" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "ACA7CE9DFD2D49A1BC9300B0";
+		};
+		"D7360AE37E28CA2077F913AC" = {
+			"path" = "AppTab.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"4CD028A252414DC68F26588E" = {
+			"path" = "LocalDayTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"BE4358EAC05F42D1BFC3C69D" = {
+			"path" = "Avela/Features/Health/HealthHabitView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"2AC49447A79D48A3A1E41BEB" = {
+			"path" = "Completion.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"458BEDFF7C344EA9A2591A60" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "1F00599EDDE64AC0BD1A240C";
+		};
+		"717CC06C4ABC462F9417BEA7" = {
+			"path" = "HabitConfigurationSnapshotRecord.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"FE5B371DF309504C93075328" = {
+			"path" = "Avela/Features/LiveActivity/SessionLiveActivityService.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"406BAA92D1FD4F40B5682403" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "FC2E1B9D58E14ACCABC36516";
+		};
+		"0E4A4AAD8C729551563437E9" = {
+			"path" = "Avela/Features/Attention/UI/IntentionSessionViewModel.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"6D7DBB9F9A3E569C10622966" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "AE0354A0031398130C95C23A";
+			"settings" = {
+				"ATTRIBUTES" = (
+					"RemoveHeadersOnCopy",
+				);
+			};
+		};
+		"68B9F6AF8FE24F8AB52470A1" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "9012289802D34BF28FD2D95A";
+		};
+		"F83F934FB4001512D7DF54DD" = {
+			"isa" = "PBXContainerItemProxy";
+			"containerPortal" = "244210E48437B6556980A702";
+			"remoteGlobalIDString" = "C300F2C9E907C523A89F9916";
+			"remoteInfo" = "AvelaWidget";
+			"proxyType" = "1";
+		};
+		"96FFFBE0B965426BB96F9B29" = {
+			"path" = "Avela/Features/Reflection/UI/ReflectionViewModel.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"B1E046FA51E94F0993781A60" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "FDEA3E6F5ACD495DB393C35F";
+		};
+		"27C9B04D62344F53AF9F3B19" = {
+			"path" = "Avela/Features/Routines/Domain/HabitRoutine.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"C05EBD4E347B43659EE228DA" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "5D6266BA22624387925684F9";
+		};
+		"F9BA393299CCEFE9670D789C" = {
+			"path" = "ScaffoldPlaceholderView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"2999EB7681635C2B840B4F5C" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "C24F1EAB50E5582F98F81E7E";
+		};
+		"E6A982465E61E15DB94DEEA4" = {
+			"isa" = "PBXFrameworksBuildPhase";
+			"buildActionMask" = "2147483647";
+			"files" = (
+			);
+			"runOnlyForDeploymentPostprocessing" = "0";
+		};
+		"DBFE81D44AF0420594A55B26" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "8447E4775B91461582FE53BD";
+		};
+		"B3A817580C23BB85A759895A" = {
+			"path" = "DebugFixtures.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"0D95D9492D224026AFC76286" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "4AF72BC37B4B43AAA1D4F25D";
+		};
+		"FB443C4EB5ED423E96109D1D" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "2A3BC5C704D74426B5B251E2";
+		};
+		"1CDDDC32F71A5D9DB19711CA" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "1956DE7D8F5C558A8026C12F";
+		};
+		"BD7078DC774E5F0FAFCA686D" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "7F1D403208E35AC285E7A9B4";
+		};
+		"FEABED43DB1B49CDB4D63B84" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "717CC06C4ABC462F9417BEA7";
+		};
+		"F6DC56EAC1784D869B894AC8" = {
+			"path" = "Avela/Features/Backup/Data/CloudBackupProvider.swift";
+			"isa" = "PBXFileReference";
+			"sourceTree" = "SOURCE_ROOT";
+			"lastKnownFileType" = "sourcecode.swift";
+		};
+		"06962ECA57ED5C0DB0DD17FA" = {
+			"path" = "Avela/Features/Subscription/Domain/PremiumAccessPolicy.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"E6BCF100720B5BB59D4ACDC0" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "36AC613AE02E5B31828F9899";
+		};
+		"8EC20939482A6A8BF211DE55" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "9CA880BC4F05EC0C6F5CA17A";
+		};
+		"42653060503F3A3A7D2F9294" = {
+			"path" = "Persistence";
+			"isa" = "PBXGroup";
+			"children" = (
+				"79669938CA756588A73ABF61",
+			);
+			"sourceTree" = "<group>";
+		};
+		"4E82FCEC239D58A1938B9F08" = {
+			"path" = "Avela/Features/LiveActivity/SessionLiveActivityEnvironment.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"FCCA239567C543E897B506DE" = {
+			"path" = "AttentionGoalDraft.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"38E4096668C7F41AA5061C84" = {
+			"isa" = "PBXTargetDependency";
+			"target" = "3CBF2886FF27F3F7DA27AF16";
+			"targetProxy" = "3266278561528492A514722C";
+		};
+		"B3FCA4016CAC34673410D318" = {
+			"path" = "Avela/Features/Attention/Domain/IntentionSessionLink.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"FB3E6407C75E4047A3B4BD2B" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "F4CF09200306484084ED2447";
+		};
+		"CC271F3DFE244EC08731DEC6" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "0F1476191A654B049F076E62";
+		};
+		"F221CE70331C5A2095EB8087" = {
+			"path" = "Avela/Core/Widgets/WidgetDeepLink.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"929A63C1E41A840BABF89EF8" = {
+			"path" = "InsightsView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"9B53512EFF724379996BE00B" = {
+			"path" = "Avela/Features/HabitActivity/Data/HabitActivityRecords.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"48AFDBE4881D87F2B74FEB5E" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A33FC34214F540599C1FA259";
+		};
+		"38B12F368EAB4E39402E6A4E" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "B3A817580C23BB85A759895A";
+		};
+		"5DC2D6F54994B224D58489AA" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "929A63C1E41A840BABF89EF8";
+		};
+		"CE8BB3D2CD96728917F204AC" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "1001433A70BC9DB7C28DE376";
+			"settings" = {
+				"ATTRIBUTES" = (
+					"RemoveHeadersOnCopy",
+				);
+			};
+		};
+		"AAF9E32F369F002E6A60FE9D" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "309835850C6211B09FD08452";
+		};
+		"03CB799B82CAE42CDF6F07E9" = {
+			"isa" = "PBXSourcesBuildPhase";
+			"buildActionMask" = "2147483647";
+			"files" = (
+				"2E8C9B78417043388A7D863D",
+				"0D95D9492D224026AFC76286",
+				"39E169983E5A4D8AB9ED3340",
+				"9E690C17E01A44579E377AC3",
+				"791A5B6A830546C4B23EBDE0",
+				"7D40CF5C70A842E8AB0AD1E1",
+				"679BDD7A0F274EC784EA50F3",
+				"32E1E66B24DD4352B93FE905",
+				"47070AF894614DE180AE8FFF",
+				"AA71C6CD0DBC48998142F9B1",
+				"F11A2A9895F8430191CF1489",
+				"5EF563ABDECA526A8853345D",
+				"693F12284ACC5623980AA0D4",
+				"B17560C1E7B65AD69277BE42",
+				"6867B0A4906F5D5F8697F8A4",
+				"5EE900B3F41653D0808E3ADE",
+				"77EDE1BDAC245A7E8FC72439",
+				"05BE9FF8C4A6551C9D4B2D31",
+				"07E71640EF3550BC825D3FB0",
+				"1C2BB63629015ABDA07E9DDD",
+				"7A457A6D63F750329FF0318A",
+				"9114D589DC3B6C2640571DBB",
+				"ECDD275E262F78CB8FA56E5F",
+				"A916EFF916BE48618DD77AB5",
+				"332EE70B555A4B2699FCBCCD",
+				"106DF8ED39D54A41953BDE1F",
+				"7D6105CFB7FB4C4C9381F853",
+				"355FC67BB19D46BFB9DE66EA",
+				"DFBB1315BCA247468296D020",
+				"2091EEED7B1C467EB77A553E",
+				"BBE275367F77B5AA16F6BC20",
+				"D5EFD22BB437CBD6D2743164",
+				"7289B3EFF6F53F6B865AA21A",
+				"5E7B92A1F7BF47ACBDC38E28",
+				"651AD25AB56446058AB82C99",
+				"D3427B52AC704FE6A7181DB2",
+				"BEF693F55D564E0DA7A4DD58",
+				"5BE0D8570D054AA996F76CE8",
+				"994CABF001464AFC8D75FBD2",
+				"89C4142103F1582215A0B776",
+				"F6F85A4767274F7F8B4C84C5",
+				"6C1DD41DCDE143F5AE9CFC60",
+				"BCB0317F466240CB856C49A5",
+				"06F3EA8694F04F6AB44BCB29",
+				"F5FF42B523B4468692D2A2A8",
+			);
+			"runOnlyForDeploymentPostprocessing" = "0";
+		};
+		"477AEC8C127FCCBEECE67382" = {
+			"path" = "Assets.xcassets";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "folder.assetcatalog";
+			"sourceTree" = "<group>";
+		};
+		"3A74F73DD684704372CC0BED" = {
+			"path" = "Settings";
+			"isa" = "PBXGroup";
+			"children" = (
+				"11648CE5C026409C9703B7D3",
+			);
+			"sourceTree" = "<group>";
+		};
+		"2BDE3574E2D2460FB05EE2ED" = {
+			"path" = "AttentionSummaryViewModelTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"F91ED67A47BC523CB7ABEC01" = {
+			"path" = "Avela/Features/Attention/Domain/AttentionCheckIn.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"4A1DE62E5473521B96E3EB25" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "8841A7E8CCDB536DA8D85316";
+		};
+		"67C46FBA2E9654639FF87EFB" = {
+			"path" = "Avela/Features/LiveActivity/ActivityKitSessionAdapter.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"A7537D7144DA4F56AB446762" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "289BA0F41FE04163BC026F90";
+		};
+		"9B2C15E097274CC9863B61E6" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "34C7C4F3C3F14BA18A299389";
+		};
+		"1FC870C368A04CE98846B516" = {
+			"path" = "AttentionGoalDetailViewModelTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"7B8599F8F644ADC748B215F0" = {
+			"isa" = "PBXTargetDependency";
+			"target" = "C300F2C9E907C523A89F9916";
+			"targetProxy" = "F83F934FB4001512D7DF54DD";
+		};
+		"994CABF001464AFC8D75FBD2" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "2BDE3574E2D2460FB05EE2ED";
+		};
+		"9E690C17E01A44579E377AC3" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "928AA11D7F3D4DFE88C0D5E2";
+		};
+		"1056BEA959224215800509A7" = {
+			"path" = "AttentionUsageEntry.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"322E82932A61474DBD8DB355" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "18A9C3A8236D47C98E7BB174";
+		};
+		"1A952451A00641FD8CEB18A2" = {
+			"isa" = "PBXGroup";
+			"name" = "Progress Protection";
+			"sourceTree" = "<group>";
+			"children" = (
+				"95E504E2354E4E9F830646A6",
+				"24C8CF55138B4F06AA9C07EA",
+				"F6DC56EAC1784D869B894AC8",
+				"09328011CFFC431084F70888",
+				"3BCB7786AF644819960A332B",
+			);
+		};
+		"E493CFB705D2457CAC6AED8D" = {
+			"path" = "HabitDetailView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"F76B40F72DE3D7FC963A2C44" = {
+			"productType" = "com.apple.product-type.bundle.unit-test";
+			"productReference" = "E1ECE9916A78412BE380C424";
+			"buildConfigurationList" = "33FB17BF72C17F3DD59E5A99";
+			"productName" = "AvelaTests";
+			"isa" = "PBXNativeTarget";
+			"buildPhases" = (
+				"03CB799B82CAE42CDF6F07E9",
+				"A5EF2DECBCC06A1D9566FE2A",
+				"D552DD1234B04253436599FD",
+			);
+			"dependencies" = (
+				"30B39ED829775BA0623A761B",
+			);
+			"name" = "AvelaTests";
+			"buildRules" = (
+			);
+		};
+		"06665B7F55E74E448AB0D5D8" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "79B5E45BD7EE48F1B9281553";
+		};
+		"D10394CC231B460489B420B6" = {
+			"path" = "Avela/Features/Reflection/UI/ReflectionView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"1001433A70BC9DB7C28DE376" = {
+			"path" = "AvelaWidget.appex";
+			"isa" = "PBXFileReference";
+			"includeInIndex" = "0";
+			"explicitFileType" = "wrapper.app-extension";
+			"sourceTree" = "BUILT_PRODUCTS_DIR";
+		};
+		"2EA990E0BA804AEF981B0DC3" = {
+			"path" = "AttentionGoalDetailViewModel.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"7D40CF5C70A842E8AB0AD1E1" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "9CB239D37958412D985A893F";
+		};
+		"1A8CCB766FC04CCD83D2AB90" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A22AADD22A7547A8AE5F57FF";
+		};
+		"106DF8ED39D54A41953BDE1F" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "C4F5F8B3E12745BC9DBBFBF6";
+		};
+		"7A457A6D63F750329FF0318A" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "B27B96933B8A5554AE06021E";
+		};
+		"EDD96DA354FD345B4D52EF7E" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "47F97734D39C2482BA80694D";
+		};
+		"93AC7C281EC4CF354B6E452E" = {
+			"path" = "Domain";
+			"isa" = "PBXGroup";
+			"children" = (
+				"613C348F4AE24A8C875E7667",
+				"E4940704B3034748B31593EA",
+				"1056BEA959224215800509A7",
+				"FCCA239567C543E897B506DE",
+				"2A3BC5C704D74426B5B251E2",
+				"3EABBDF3066F4F4F92431BFB",
+				"9D65B40E3F284C888A9BFF7C",
+			);
+			"sourceTree" = "<group>";
+		};
+		"4AF72BC37B4B43AAA1D4F25D" = {
+			"path" = "AvelaTests/Routines/RoutineTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"DE4F2210677E528DBDBF8EA8" = {
+			"path" = "Avela/Core/UI/CompanionArtwork.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"D8DF0A2BE4E94EE183333B86" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "B7098707542A4683BD1DEFF2";
+		};
+		"9CA880BC4F05EC0C6F5CA17A" = {
+			"path" = "AvelaWatch/AvelaWatchApp.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"72DA8755A72B48E08FBB1CDC" = {
+			"path" = "SkipRecord.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"7726828FDD314E9B9AF84298" = {
+			"path" = "HistoryViewModel.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"FB02341D3E83E05D9921BCE6" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"LD_RUNPATH_SEARCH_PATHS" = "$(inherited) @executable_path/Frameworks";
+				"BUNDLE_LOADER" = "$(TEST_HOST)";
+				"MARKETING_VERSION" = "0.1.0";
+				"TARGETED_DEVICE_FAMILY" = "1,2";
+				"TEST_HOST" = "$(BUILT_PRODUCTS_DIR)/Avela.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Avela";
+				"GENERATE_INFOPLIST_FILE" = "YES";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"PRODUCT_NAME" = "$(TARGET_NAME)";
+				"CURRENT_PROJECT_VERSION" = "1";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "com.example.AvelaTests";
+				"SUPPORTS_MACCATALYST" = "NO";
+			};
+			"name" = "Release";
+		};
+		"76A620C29E27447D994E5F5B" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "BACC440613D74E6D8CCC431D";
+		};
+		"78F780E3ECDB4C659C10D2B8" = {
+			"path" = "Avela/Features/Settings/UI/AppThemeViewModel.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"A33FC34214F540599C1FA259" = {
+			"path" = "AvelaWidget.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"18A9C3A8236D47C98E7BB174" = {
+			"path" = "HabitSchedule.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"036DBB1E31165BBF14333E3C" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"CODE_SIGN_ENTITLEMENTS" = "Avela/Avela.entitlements";
+				"MARKETING_VERSION" = "0.1.0";
+				"INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad" = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"INFOPLIST_KEY_LSApplicationCategoryType" = "public.app-category.productivity";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "com.example.Avela";
+				"ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME" = "AccentColor";
+				"CURRENT_PROJECT_VERSION" = "1";
+				"INFOPLIST_KEY_CFBundleDisplayName" = "Avela";
+				"INFOPLIST_KEY_UILaunchScreen_Generation" = "YES";
+				"SUPPORTS_MACCATALYST" = "NO";
+				"TARGETED_DEVICE_FAMILY" = "1,2";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"ASSETCATALOG_COMPILER_APPICON_NAME" = "AppIcon";
+				"LD_RUNPATH_SEARCH_PATHS" = "$(inherited) @executable_path/Frameworks";
+				"PRODUCT_NAME" = "$(TARGET_NAME)";
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents" = "YES";
+				"INFOPLIST_KEY_UISupportedInterfaceOrientations" = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation" = "YES";
+				"INFOPLIST_FILE" = "Avela/Resources/Info.plist";
+				"GENERATE_INFOPLIST_FILE" = "YES";
+			};
+			"name" = "Release";
+		};
+		"B27B96933B8A5554AE06021E" = {
+			"path" = "AvelaTests/Notifications/HabitReminderTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"AB016F84C4135820AEBE327E" = {
+			"path" = "Avela/Features/Attention/UI/AttentionWindowDetailViewModel.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"0DCDE075BF00584FA605D5AA" = {
+			"path" = "Avela/Features/Notifications/UI/HabitReminderView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"F7FABEB01DD548CDB5FB5AAD" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "3DF7F1AF643C4DC09EBDF7DF";
+		};
+		"82F4301F7ABF43ECA2E75907" = {
+			"path" = "Avela/Features/Reflection/Domain/WeeklyReflection.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"B7098707542A4683BD1DEFF2" = {
+			"path" = "ArchivedHabitsViewModel.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"65E3CCDC4434E260AC46F1E4" = {
+			"path" = "Attention";
+			"isa" = "PBXGroup";
+			"children" = (
+				"E19E2570B519A7B291970A67",
+				"93AC7C281EC4CF354B6E452E",
+				"AF1016C780C1C213EC6D03EC",
+			);
+			"sourceTree" = "<group>";
+		};
+		"CEE5F90BE8405C43B5ADC9FC" = {
+			"path" = "Avela/Core/Widgets/WidgetSnapshotStore.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"3F2744AAD4C3489DAF1E4EE2" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "282BA450CFAD4CA2827B5628";
+		};
+		"ECCD07C53A725A1DAB80A06E" = {
+			"path" = "Avela/Features/Subscription/UI/PremiumPaywallView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"3EEF941FADFF58DC9DFBA267" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "3F1E2FAB87FA5E77A8844B47";
+		};
+		"200E493B837D7C57D7D9494E" = {
+			"path" = "AvelaWatch/WatchDashboardModel.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"85F027B338154CCEAF0A3F57" = {
+			"path" = "Avela/Features/Habit/UI/HabitCalendarViewModel.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"A11111111111111111110004" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A11111111111111111110003";
+		};
+		"DFBB1315BCA247468296D020" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "A9E422954F5246328C4B707A";
+		};
+		"5344DC26E6CD57E88F8F6F19" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "6C0202C5DB0F5A839BCA1A2C";
+		};
+		"693C307624BD52CB8F4E3355" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "8234326D34E0526BA576A350";
+		};
+		"B946EE05AAE955ADB68E139E" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "EDF5684832CA5EC18DC067F7";
+		};
+		"0836B76A8DA845E68FA4458F" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "2C4B85B1E747488C871FA412";
+		};
+		"5EE900B3F41653D0808E3ADE" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "039EB7D3E29A5F7696A95176";
+		};
+		"F4D2204F09AE61FE141C6D12" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "49EBB977245609535DB290D1";
+		};
+		"F2482EBE9E4C45C98E7EDF3F" = {
+			"path" = "HabitScheduleEvaluator.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"24D25A0828E85123A10B195E" = {
+			"path" = "AvelaTests/LiveActivity/SessionLiveActivityServiceTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"B44EAA3080E09062981DE1FC" = {
+			"isa" = "PBXSourcesBuildPhase";
+			"buildActionMask" = "2147483647";
+			"files" = (
+				"0176827C8EF05DDABD0ABFB7",
+				"2B1AB90AFB5C5220B00A9F9A",
+				"048CBECC222C5B02AD7C2E02",
+				"75B21F162C735474A2359A93",
+				"3F3FB3F11B3E50BFB3409818",
+				"418DC77F594955E9BC157764",
+				"BD7078DC774E5F0FAFCA686D",
+				"48AFDBE4881D87F2B74FEB5E",
+			);
+			"runOnlyForDeploymentPostprocessing" = "0";
+		};
+		"70799ACC7F2548629DCB89D4" = {
+			"path" = "TodayView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"61D76D5F6D58B4B7098827F6" = {
+			"path" = "Habit";
+			"isa" = "PBXGroup";
+			"children" = (
+				"8E9E984445841ECD303FE72C",
+				"D543A5282D52CF2A7DC42B82",
+				"4E4C8E10E17DD9381AB8B8D1",
+			);
+			"sourceTree" = "<group>";
+		};
+		"B17560C1E7B65AD69277BE42" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "43C7A3626E15505881812283";
+		};
+		"C87F01FC848B55EDA8447F08" = {
+			"path" = "Avela/Features/Notifications/UI/HabitReminderViewModel.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"FB3C6AA97C395EBD894AE64A" = {
+			"path" = "Avela/Features/Attention/UI/AttentionWindowDetailView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"F6F85A4767274F7F8B4C84C5" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "C3E1C0AC3A0A42039C60F48D";
+		};
+		"6FAFF7B958DD556BB57B63CB" = {
+			"path" = "AvelaTests/Attention/IntentionSessionViewModelTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"78A0CEE2605AF75BD3CA083E" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "4B49AB94C0EAB42268AAD2D5";
+		};
+		"69BAECD7E7218B76436C5BF4" = {
+			"path" = "Avela.app";
+			"isa" = "PBXFileReference";
+			"includeInIndex" = "0";
+			"explicitFileType" = "wrapper.application";
+			"sourceTree" = "BUILT_PRODUCTS_DIR";
+		};
+		"A5EF2DECBCC06A1D9566FE2A" = {
+			"isa" = "PBXFrameworksBuildPhase";
+			"buildActionMask" = "2147483647";
+			"files" = (
+			);
+			"runOnlyForDeploymentPostprocessing" = "0";
+		};
+		"E01EC8C1E9AE4FB497E6F95C" = {
+			"path" = "AttentionUsageFormView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"9EA3F85534490133C1FD3250" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"CLANG_WARN_DOCUMENTATION_COMMENTS" = "YES";
+				"DEBUG_INFORMATION_FORMAT" = "dwarf-with-dsym";
+				"CLANG_ENABLE_MODULES" = "YES";
+				"GCC_C_LANGUAGE_STANDARD" = "gnu17";
+				"CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER" = "YES";
+				"SWIFT_COMPILATION_MODE" = "wholemodule";
+				"ENABLE_USER_SCRIPT_SANDBOXING" = "YES";
+				"SWIFT_OPTIMIZATION_LEVEL" = "-O";
+				"ALWAYS_SEARCH_USER_PATHS" = "NO";
+				"SDKROOT" = "iphoneos";
+				"SWIFT_EMIT_LOC_STRINGS" = "YES";
+				"SWIFT_VERSION" = "5.0";
+				"IPHONEOS_DEPLOYMENT_TARGET" = "17.0";
+				"CLANG_ENABLE_OBJC_ARC" = "YES";
+				"VALIDATE_PRODUCT" = "YES";
+			};
+			"name" = "Release";
+		};
+		"E4940704B3034748B31593EA" = {
+			"path" = "AttentionGoalConfigurationSnapshot.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"6A77175464BF42CC8E758C24" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "10EF738F2C1D4E4C8C147F04";
+		};
+		"1956DE7D8F5C558A8026C12F" = {
+			"path" = "Avela/Features/Onboarding/OnboardingView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"50979BD41D085628B60B6308" = {
+			"path" = "Avela/Features/Notifications/Data/UserNotificationAdapter.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"80A276AEF76353A2AFB7CB93" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "CEE5F90BE8405C43B5ADC9FC";
+		};
+		"EF1D6DC1924F42A2A6A04019" = {
+			"path" = "Avela/Features/WatchIntegration/Domain/WatchHabitTransfer.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"1AB92EEFB4D944879FFB9895" = {
+			"path" = "Habit";
+			"isa" = "PBXGroup";
+			"children" = (
+				"A4667A5550E94051B6E6C199",
+				"4CD028A252414DC68F26588E",
+				"DA9D7B1005DA4F1F99A23983",
+				"C4F5F8B3E12745BC9DBBFBF6",
+				"39F122DF7683405497404B9C",
+				"1ED85F920DAE45AC84D78965",
+				"A9E422954F5246328C4B707A",
+				"B36F97CDA4C64B6B8EE2DE3E",
+				"D751C9FC6531D185088F0ED9",
+			);
+			"sourceTree" = "<group>";
+		};
+		"2D49F1812F582FA642C240CA" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"GENERATE_INFOPLIST_FILE" = "YES";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"MARKETING_VERSION" = "0.1.0";
+				"LD_RUNPATH_SEARCH_PATHS" = "$(inherited) @executable_path/Frameworks";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "com.example.AvelaUITests";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"SUPPORTS_MACCATALYST" = "NO";
+				"TEST_TARGET_NAME" = "Avela";
+				"TARGETED_DEVICE_FAMILY" = "1,2";
+				"PRODUCT_NAME" = "$(TARGET_NAME)";
+				"CURRENT_PROJECT_VERSION" = "1";
+			};
+			"name" = "Release";
+		};
+		"9D0EA45D1CD17EEB3AA690D2" = {
+			"path" = "AvelaTests";
+			"isa" = "PBXGroup";
+			"children" = (
+				"4D9F2EBF1D9A784CFA6FB366",
+				"E201FFA6BFFD260571841EAF",
+				"1AB92EEFB4D944879FFB9895",
+				"D434EA08697507E040EC66E6",
+				"F8C61F65E40046668325BBF2",
+			);
+			"sourceTree" = "<group>";
+		};
+		"07E71640EF3550BC825D3FB0" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "4F19F6C74BFA58C38337D33F";
+		};
+		"7F1D403208E35AC285E7A9B4" = {
+			"path" = "Avela/Core/Widgets/WidgetSnapshot.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"CF10170D8C7A9D186D6CB4BD" = {
+			"path" = "Resources";
+			"isa" = "PBXGroup";
+			"children" = (
+				"477AEC8C127FCCBEECE67382",
+			);
+			"sourceTree" = "<group>";
+		};
+		"CCC4E520ED2844809F02F308" = {
+			"path" = "AvelaTests/Habit/HabitCalendarTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"E1ECE9916A78412BE380C424" = {
+			"path" = "AvelaTests.xctest";
+			"isa" = "PBXFileReference";
+			"includeInIndex" = "0";
+			"explicitFileType" = "wrapper.cfbundle";
+			"sourceTree" = "BUILT_PRODUCTS_DIR";
+		};
+		"99ABECF3D68747BD8EEC6CA6" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "70799ACC7F2548629DCB89D4";
+		};
+		"9C474857AB0D4884A582BFF7" = {
+			"path" = "SwiftDataAttentionRepositoryTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"8D5FDCE2F80A542E949017AB" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "02F606A039BC57FF90A148CD";
+		};
+		"3F1E2FAB87FA5E77A8844B47" = {
+			"path" = "Avela/Resources/CompanionAssets.xcassets";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "folder.assetcatalog";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"9DC3FB38CD27451B8C6AF950" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "6A7EB456C66D47B197D4A114";
+		};
+		"4E4C8E10E17DD9381AB8B8D1" = {
+			"path" = "UI";
+			"isa" = "PBXGroup";
+			"children" = (
+				"E928FAB528374491B4643D97",
+				"70799ACC7F2548629DCB89D4",
+				"BF6B447910544851893D8BB0",
+				"E493CFB705D2457CAC6AED8D",
+				"2C4B85B1E747488C871FA412",
+				"4EC9BC83374F443889194BCD",
+				"49EBB977245609535DB290D1",
+				"7B17B4638F6F4031B71B73EB",
+				"B7098707542A4683BD1DEFF2",
+			);
+			"sourceTree" = "<group>";
+		};
+		"D434EA08697507E040EC66E6" = {
+			"path" = "Insights";
+			"isa" = "PBXGroup";
+			"children" = (
+				"29813CCD6E9944E785363836",
+				"7970D23993D5634B309F24FF",
+			);
+			"sourceTree" = "<group>";
+		};
+		"8234326D34E0526BA576A350" = {
+			"path" = "Avela/Features/Onboarding/OnboardingViewModel.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"1F61B38FD685E5D96F412FE9" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "16741EB35151AD528C43793D";
+		};
+		"80ED7831168162EDF28E1A46" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "31DA0984167153A50DDF9A2A";
+		};
+		"ACA7CE9DFD2D49A1BC9300B0" = {
+			"path" = "AttentionStatusFormatter.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"BF6B447910544851893D8BB0" = {
+			"path" = "HabitFormView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"156766C612F04230A7DB525E" = {
+			"path" = "HabitDraft.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"9B39A364509F4BA881C146FA" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "156766C612F04230A7DB525E";
+		};
+		"ECDD275E262F78CB8FA56E5F" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "E201FFA6BFFD260571841EAF";
+		};
+		"AF1016C780C1C213EC6D03EC" = {
+			"path" = "UI";
+			"isa" = "PBXGroup";
+			"children" = (
+				"ACA7CE9DFD2D49A1BC9300B0",
+				"BE17DB316C9A46D6A536A93B",
+				"3DF7F1AF643C4DC09EBDF7DF",
+				"E01EC8C1E9AE4FB497E6F95C",
+				"2EA990E0BA804AEF981B0DC3",
+				"74807CF2AFA745449825A01B",
+			);
+			"sourceTree" = "<group>";
+		};
+		"D751C9FC6531D185088F0ED9" = {
+			"path" = "HabitPolarityFormatterTests.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"55AC724AF52145F6A704A351" = {
+			"path" = "Avela/Features/Routines/UI/RoutinesViewModel.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"7B17B4638F6F4031B71B73EB" = {
+			"path" = "ArchivedHabitsView.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"C300F2C9E907C523A89F9916" = {
+			"productType" = "com.apple.product-type.app-extension";
+			"productReference" = "1001433A70BC9DB7C28DE376";
+			"buildConfigurationList" = "083CA4A3E1671DC0191844E3";
+			"productName" = "AvelaWidget";
+			"isa" = "PBXNativeTarget";
+			"buildPhases" = (
+				"B44EAA3080E09062981DE1FC",
+				"E6A982465E61E15DB94DEEA4",
+				"5E6AC5EB12298D95681E5680",
+			);
+			"dependencies" = (
+			);
+			"name" = "AvelaWidget";
+			"buildRules" = (
+			);
+		};
+		"D5EFD22BB437CBD6D2743164" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "7970D23993D5634B309F24FF";
+		};
+		"06B70DDAAA2FE9AB62DBAF59" = {
+			"isa" = "XCBuildConfiguration";
+			"buildSettings" = {
+				"GENERATE_INFOPLIST_FILE" = "YES";
+				"SUPPORTED_PLATFORMS" = "iphoneos iphonesimulator";
+				"MARKETING_VERSION" = "0.1.0";
+				"LD_RUNPATH_SEARCH_PATHS" = "$(inherited) @executable_path/Frameworks";
+				"PRODUCT_BUNDLE_IDENTIFIER" = "com.example.AvelaUITests";
+				"CODE_SIGN_STYLE" = "Automatic";
+				"SUPPORTS_MACCATALYST" = "NO";
+				"TEST_TARGET_NAME" = "Avela";
+				"TARGETED_DEVICE_FAMILY" = "1,2";
+				"PRODUCT_NAME" = "$(TARGET_NAME)";
+				"CURRENT_PROJECT_VERSION" = "1";
+			};
+			"name" = "Debug";
+		};
+		"6DEC2494604741FBB129EE9A" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "71E4B6B712D547F6B3FC7327";
+		};
+		"8100736BC8764210ABB3E1AA" = {
+			"path" = "AvelaUITests.xctest";
+			"isa" = "PBXFileReference";
+			"includeInIndex" = "0";
+			"explicitFileType" = "wrapper.cfbundle";
+			"sourceTree" = "BUILT_PRODUCTS_DIR";
+		};
+		"77EDE1BDAC245A7E8FC72439" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "FEA9B593C65151AEAEA63047";
+		};
+		"0176827C8EF05DDABD0ABFB7" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "AAE25320D4BA5E3AB91890F4";
+		};
+		"4B7C0F589FC31E77D17C33C4" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "0E4A4AAD8C729551563437E9";
+		};
+		"CFC7BB003F1055B8B6EDE666" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "4495E41F3A6A5EFE869CDD0C";
+		};
+		"613C348F4AE24A8C875E7667" = {
+			"path" = "AttentionGoal.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "<group>";
+		};
+		"8CD08180872E426DBAEA2C0F" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "09328011CFFC431084F70888";
+		};
+		"BD26133AE59D48F985623EF5" = {
+			"isa" = "PBXGroup";
+			"name" = "AvelaTests Progress Enrichment";
+			"children" = (
+				"55442BA3D0B345CA862CCC19",
+				"4AF72BC37B4B43AAA1D4F25D",
+				"8FA6E915C9144EA88714D28D",
+				"928AA11D7F3D4DFE88C0D5E2",
+			);
+			"sourceTree" = "<group>";
+		};
+		"33D06904FC194145A3D393C8" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "BF6B447910544851893D8BB0";
+		};
+		"FFA5869E0B3051C7B4DF1B00" = {
+			"path" = "Avela/Features/Notifications/Data/HabitReminderRecord.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"7D6105CFB7FB4C4C9381F853" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "39F122DF7683405497404B9C";
+		};
+		"42376078E52BF632F4B50338" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "D7360AE37E28CA2077F913AC";
+		};
+		"015AAAD1E53C3F41CDA9639D" = {
+			"path" = "AvelaWidget";
+			"isa" = "PBXGroup";
+			"children" = (
+				"A33FC34214F540599C1FA259",
+				"1108B858726A785B22D21795",
+			);
+			"sourceTree" = "<group>";
+		};
+		"76E95566330B55F08D6B7CFD" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "D5592460D3F152B5B66FA7BC";
+		};
+		"FEFAFF22BADF4AF6B336E880" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "F6DC56EAC1784D869B894AC8";
+		};
+		"4DFC11AE6A634DA1B8EACC6F" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "72DA8755A72B48E08FBB1CDC";
+		};
+		"B0F5CDE339AE59649E82EC36" = {
+			"path" = "Avela/Features/Attention/Data/AttentionCheckInRecord.swift";
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"7BE7515AB13F32293C5DF20E" = {
+			"isa" = "PBXResourcesBuildPhase";
+			"buildActionMask" = "2147483647";
+			"files" = (
+				"3FF09E4EB03E5964AE296C23",
+				"A11111111111111111110004",
+				"7BE32390068C7DE7160DFEE8",
+			);
+			"runOnlyForDeploymentPostprocessing" = "0";
+		};
+		"633AC785EA894C83BAE9500C" = {
+			"isa" = "PBXGroup";
+			"children" = (
+				"89387F8498C643619815875C",
+				"1A40EFEEE4254B2389D99D92",
+				"16B1AF0AF1734CA9A26FE304",
+				"9A700663FCE04CCE960FDFB1",
+				"7EF54D6D542F44FC8E3BEF7A",
+				"7C70C2B2202B408E9380B430",
+				"AC403A9789DF45328C5E9767",
+			);
+			"name" = "Avela Progress Enrichment";
+			"sourceTree" = "<group>";
+		};
+		"89387F8498C643619815875C" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Avela/Features/Attention/UI/MadeRoomReviewViewModel.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"FCC3649AABDB4DB6A4D9B74A" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "89387F8498C643619815875C";
+		};
+		"1A40EFEEE4254B2389D99D92" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Avela/Features/Attention/UI/MadeRoomReviewView.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"72D090C943B7400CAFEED3AD" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "1A40EFEEE4254B2389D99D92";
+		};
+		"16B1AF0AF1734CA9A26FE304" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Avela/Features/Attention/Domain/MadeRoomReviewCalculator.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"66606A9DBB514296B74F7672" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "16B1AF0AF1734CA9A26FE304";
+		};
+		"9A700663FCE04CCE960FDFB1" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Avela/Features/Habit/UI/HabitLifetimeViewModel.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"FFBA7FC65DC449E0BD03EAC8" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "9A700663FCE04CCE960FDFB1";
+		};
+		"7EF54D6D542F44FC8E3BEF7A" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Avela/Features/Habit/UI/HabitLifetimeView.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"50E6A4280CC647A5B6DB86E0" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "7EF54D6D542F44FC8E3BEF7A";
+		};
+		"7C70C2B2202B408E9380B430" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Avela/Features/Habit/Domain/HabitLifetimeCalculator.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"8CCDE3E7C6C641D7ABCBCF8C" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "7C70C2B2202B408E9380B430";
+		};
+		"AC403A9789DF45328C5E9767" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "Avela/Features/HabitActivity/Data/HabitQuickLogPresets.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"E45659AA82954E6396734D67" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "AC403A9789DF45328C5E9767";
+		};
+		"17058B341716448981A2F220" = {
+			"isa" = "PBXGroup";
+			"children" = (
+				"FC9A6D45F5F644709868A5EE",
+				"D90095D649C74DA2829850E4",
+				"D0A22A2DBA3C402B84A20E64",
+				"E07F200F0B0B4BB7A03C573A",
+			);
+			"name" = "AvelaTests Progress Enrichment";
+			"sourceTree" = "<group>";
+		};
+		"FC9A6D45F5F644709868A5EE" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "AvelaTests/Attention/MadeRoomReviewViewModelTests.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"6C1DD41DCDE143F5AE9CFC60" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "FC9A6D45F5F644709868A5EE";
+		};
+		"D90095D649C74DA2829850E4" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "AvelaTests/Attention/MadeRoomReviewCalculatorTests.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"BCB0317F466240CB856C49A5" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "D90095D649C74DA2829850E4";
+		};
+		"D0A22A2DBA3C402B84A20E64" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "AvelaTests/Habit/HabitLifetimeTests.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"06F3EA8694F04F6AB44BCB29" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "D0A22A2DBA3C402B84A20E64";
+		};
+		"E07F200F0B0B4BB7A03C573A" = {
+			"isa" = "PBXFileReference";
+			"lastKnownFileType" = "sourcecode.swift";
+			"path" = "AvelaTests/HabitActivity/HabitQuickLogPresetTests.swift";
+			"sourceTree" = "SOURCE_ROOT";
+		};
+		"F5FF42B523B4468692D2A2A8" = {
+			"isa" = "PBXBuildFile";
+			"fileRef" = "E07F200F0B0B4BB7A03C573A";
+		};
+	};
+	"rootObject" = "244210E48437B6556980A702";
 }

@@ -21,13 +21,23 @@ struct PrivacyView: View {
 
     var body: some View {
         List {
-            Section("Your tracking stays local") {
-                Text("Habits, completions, skips, attention entries, sessions and preferences are saved on your device. Avela doesn't require an account and doesn't send your tracking records to a server.")
+            Section("Local Tracking, Optional Protection") {
+                Text("Tracking is saved on your device. Avela doesn't require its own account. If you enable optional iCloud backup, eligible tracking and preferences are copied to your private Apple iCloud storage.")
                 Text("Avela doesn't track how you use the app or show advertisements. It doesn't automatically monitor Screen Time, block other apps or record your microphone.")
             }
 
             Section("Device backups") {
                 Text("Avela doesn't provide app-managed cloud sync. iOS may include local app data in a device backup according to your Apple backup settings. Manage those backups separately in iOS settings.")
+                Text("Optional Avela iCloud backup keeps dated recovery copies while the app is active. It isn't live sync or a guarantee against every loss. Health-connected habits, health/fitness habits, imported Health history, reflection notes and completion notes are excluded. Local logging remains available offline.")
+                Text("Turn backup off in Progress Protection to stop future upload requests; an upload already sent may finish. Existing cloud copies remain until you explicitly delete them there. Restore is available only before tracking begins on an installation; existing progress is never overwritten. Apple iCloud account availability and storage affect backup delivery.")
+            }
+
+            Section("Optional Siri and Shortcuts") {
+                Text("Apple handles Siri voice processing. Avela doesn't record audio. Habit and budget names may appear in Apple's suggestions and your saved shortcuts. Logging opens Avela and may require device authentication; attention minutes remain self-reported.")
+            }
+
+            Section("Optional Apple Health") {
+                Text("If you connect a Build Up habit, Avela reads today's chosen steps or exercise minutes when you open it or refresh. It saves connection settings and resulting habit successes locally, not raw Health samples. Nothing is written to Apple Health or uploaded. Disconnect to stop future imports; existing history remains. Manage read permissions separately in Apple Health. Missing data isn't treated as failure.")
             }
 
             Section("Optional reminders") {
@@ -63,6 +73,7 @@ struct PrivacyView: View {
                 }
             }
         }
+        .appThemeCanvas()
         .navigationTitle("Privacy")
         .navigationBarTitleDisplayMode(.inline)
         .accessibilityIdentifier("privacy.screen")

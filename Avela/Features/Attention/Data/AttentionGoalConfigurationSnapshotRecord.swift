@@ -16,6 +16,19 @@ final class AttentionGoalConfigurationSnapshotRecord {
     var createdAt: Date
     var windowStartMinute: Int?
     var windowEndMinute: Int?
+    /// Lossless local recovery decoding; validation happens before insertion.
+    init(backup row: BackupPayload.AttentionGoalConfigurationSnapshotRecordRow) {
+        self.id = row.id
+        self.attentionGoalID = row.attentionGoalID
+        self.targetValue = row.targetValue
+        self.unitRaw = row.unitRaw
+        self.effectiveLocalDateKey = row.effectiveLocalDateKey
+        self.revision = row.revision
+        self.createdAt = row.createdAt
+        self.windowStartMinute = row.windowStartMinute
+        self.windowEndMinute = row.windowEndMinute
+    }
+
 
     init(
         id: UUID,

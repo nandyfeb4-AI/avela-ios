@@ -16,4 +16,8 @@ enum CompletionSource: String, Codable, Hashable, Sendable {
     case app
     case widget
     case shortcutFuture
+    case healthKit
+    case notification
+    case quantity
+    case watch
 }

@@ -10,6 +10,17 @@ final class AttentionUsageEntryRecord {
     var recordedAt: Date
     var localDateKey: String
     var sourceRaw: String
+    /// Lossless local recovery decoding; validation happens before insertion.
+    init(backup row: BackupPayload.AttentionUsageEntryRecordRow) {
+        self.id = row.id
+        self.attentionGoalID = row.attentionGoalID
+        self.amount = row.amount
+        self.unitRaw = row.unitRaw
+        self.recordedAt = row.recordedAt
+        self.localDateKey = row.localDateKey
+        self.sourceRaw = row.sourceRaw
+    }
+
 
     init(
         id: UUID,

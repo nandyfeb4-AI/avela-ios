@@ -5,15 +5,17 @@ import SwiftUI
 @main
 @MainActor
 struct AvelaApp: App {
+    @UIApplicationDelegateAdaptor(AvelaNotificationDelegate.self) private var notificationDelegate
     private let persistence: Result<ModelContainer, Error>
 
     init() {
-        persistence = Result { try AvelaApp.makeContainer() }
+        persistence = AppPersistence.liveContainer
         if case .failure(let error) = persistence {
             Logger(subsystem: "com.example.Avela", category: "Persistence")
                 .error("Unable to open local store: \(error.localizedDescription, privacy: .private)")
         }
         AvelaApp.seedDebugFixtureIfRequested(into: persistence)
+        AvelaShortcuts.updateAppShortcutParameters()
     }
 
     /// Seeds a deterministic past-week fixture for UI tests that need to see
@@ -36,7 +38,7 @@ struct AvelaApp: App {
               case .success(let container) = persistence
         else { return }
         let repository = SwiftDataHabitRepository(modelContext: container.mainContext)
-        DebugFixtures.seed(fixture, into: repository, calendar: .current)
+        DebugFixtures.seed(fixture, into: repository, calendar: .current, context: container.mainContext)
         #endif
     }
 
@@ -44,7 +46,7 @@ struct AvelaApp: App {
         WindowGroup {
             switch persistence {
             case .success(let container):
-                AppShellView()
+                AppShellView(notificationDelegate: notificationDelegate)
                     .modelContainer(container)
             case .failure:
                 ContentUnavailableView(
@@ -56,27 +58,4 @@ struct AvelaApp: App {
         }
     }
 
-    /// Resolves the store `AvelaApp` opens at launch. Normal launches use
-    /// `AppPersistence`'s default on-disk location, untouched. UI tests set
-    /// `AVELA_UI_TEST_STORE_PATH` (via `XCUIApplication.launchEnvironment`) to a
-    /// fresh temporary file per test method, so each UI test gets an isolated,
-    /// empty-at-start store — without it, every UI test would read and write the
-    /// same real app store, making "empty on first launch" and "survives
-    /// relaunch" assertions unreliable across test runs.
-    ///
-    /// The override is wrapped in `#if DEBUG` so it is compiled out of Release
-    /// builds entirely — not merely unset, but physically absent from the
-    /// binary. Checking the environment variable unconditionally would let any
-    /// process able to set environment variables for a shipped app (TestFlight
-    /// or App Store) redirect where it reads and writes the user's entire
-    /// store. `xcodebuild test` builds Debug by default, so this does not
-    /// affect normal UI test runs; a Release/Archive build never evaluates it.
-    private static func makeContainer() throws -> ModelContainer {
-        #if DEBUG
-        if let testStorePath = ProcessInfo.processInfo.environment["AVELA_UI_TEST_STORE_PATH"] {
-            return try AppPersistence.makeContainer(storeURL: URL(fileURLWithPath: testStorePath))
-        }
-        #endif
-        return try AppPersistence.makeContainer()
-    }
 }

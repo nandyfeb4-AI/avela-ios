@@ -139,3 +139,15 @@ Domain must not depend on:
 - Supabase SDK
 
 Platform adapters may depend on domain interfaces.
+
+
+## Private recovery adapter — 2026-10-05
+
+Features/Backup separates typed persistence DTOs/validation (BackupPayload,
+BackupArchive, BackupStore), an Apple CloudKit platform adapter behind
+CloudBackupProvider, observable orchestration and a native review/confirmation UI.
+The composition root owns the service; saved-store events and foreground events
+schedule work. No business rules live in views. The local SwiftData configuration
+remains cloudKitDatabase: .none; no store switch, auto-merge or model-schema change.
+Snapshots read saved records through a fresh context and restore with one save and
+rollback. Versioned logical recovery preserves identifiers and historical dates.

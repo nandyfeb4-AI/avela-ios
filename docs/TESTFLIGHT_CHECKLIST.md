@@ -37,6 +37,25 @@ must match the verified signed binary.
 Apple describes membership and the Xcode distribution workflow in
 [Distributing your app](https://developer.apple.com/documentation/xcode/distributing-your-app-for-beta-testing-and-releases).
 
+## Siri, Shortcuts and Apple Health enrichment
+
+- [ ] Enable HealthKit on the production app ID and signed app profile; confirm
+      the widget has no Health entitlement and app read usage copy matches steps
+      and exercise minutes.
+- [ ] Verify Avela action discovery in system Shortcuts and spoken Siri phrases
+      on a signed device; check UUID selection for duplicate habit names, local
+      authentication, archived/deleted records and idempotent habit logging.
+- [ ] Verify repeated attention actions add self-reported minutes and correction
+      remains available, without implying measured Screen Time.
+- [ ] Verify contextual Health permission, denial/revocation/no accessible data,
+      real phone/watch aggregation, each metric target and one completion/day.
+- [ ] Confirm skips/manual completions survive imports, disconnect preserves
+      history, midnight/time-zone changes stay local-day correct, and existing
+      stores reopen without a reset.
+- [ ] Review Health/Siri privacy disclosures and App Store privacy answers for the
+      actual candidate. On-device reads do not themselves prove off-device data
+      collection; disclose any future transmission if that behavior changes.
+
 ## StoreKit and subscriptions
 
 Current native identifiers are `com.avela.premium.monthly` and
@@ -72,8 +91,10 @@ and [sandbox testing](https://developer.apple.com/documentation/storekit/testing
 ## Privacy manifest and policy
 
 `Avela/Resources/PrivacyInfo.xcprivacy` declares no tracking, no tracking domains
-and no app-collected data. Local SwiftData records and shared-container widget
-snapshots stay on device. StoreKit uses Apple's service; no custom networking,
+and an empty collected-data array pending the final disclosure assessment.
+Local SwiftData and widget snapshots remain on device; optional eligible recovery
+copies use private CloudKit after opt-in in a configured build. StoreKit uses
+Apple's service; no developer-operated networking service,
 analytics SDK, advertising SDK or mandatory user account was found in the
 production source review. This is an implementation assessment, not a completed
 App Store Connect disclosure review. Apple's definition treats solely on-device
@@ -81,12 +102,13 @@ processing differently from off-device collection, and distinguishes Apple's own
 collection from the developer's practices. See
 [App Privacy Details](https://developer.apple.com/app-store/app-privacy-details/).
 
-The required-reason API array is currently empty **because no direct covered API
-call was found**, not because local-first apps are exempt. The reviewed production
-calls to `FileManager` obtain an App Group directory, create a directory and test
-file existence; JSON is read/written without reading file timestamps or disk
-capacity. No `UserDefaults`, `@AppStorage`, boot-time, disk-space or file-timestamp
-API call was found. Tests' temporary files are outside shipped targets.
+The current app and Watch use app-owned UserDefaults / @AppStorage. Their
+PrivacyInfo.xcprivacy resource declares NSPrivacyAccessedAPICategoryUserDefaults
+with approved reason CA92.1. This replaces the earlier empty-array assessment.
+Optional CloudKit recovery uses Apple's private database and transfers eligible
+tracking only after opt-in; assess that behavior in the final privacy responses.
+No private health tracking or notes belong in the CloudKit snapshot. The manifest's
+empty collected-data list is not a completed App Store Connect assessment.
 
 - [ ] Register the manifest in the app's Resources build phase; include the same
       declaration in the widget bundle if its target shares these storage types.
@@ -190,3 +212,92 @@ Describe Live Activity only as an optional manual session timer; do not include
 voice logging, Screen Time metering, sync,
 medical outcomes or other post-MVP claims in metadata. Record the actual first
 TestFlight upload/review result here only after it happens.
+
+### Reminder-action device checks
+
+- [ ] On a signed iPhone, verify Review & log requires unlock and names the
+      correct habit before confirmation, including a cold launch.
+- [ ] Confirm Cancel and ordinary notification opening leave history unchanged.
+- [ ] Verify old reminders cannot log today and repeated confirmation preserves
+      the original entry; verify success remains undoable in Today.
+- [ ] Check notification/action/confirmation with VoiceOver and large text.
+
+Simulator-native confirm/cancel/default-open flows passed; this does not replace
+these device checks.
+
+## Calendar and colour themes enrichment
+
+- [ ] On a signed device, open Habit Detail → Calendar History; verify current
+  and past months, recorded successes, excused skips and archive/reactivate gaps.
+- [ ] Flexible weekly habits show weekly target outcomes rather than daily
+  misses; an unfinished last day of the week remains pending.
+- [ ] Verify light/dark, accessibility text sizes, VoiceOver focus/labels and
+  Increase Contrast for the calendar and all nine theme choices.
+- [ ] Select a theme, relaunch, and confirm the preference and existing tracking
+  history/companion preferences survive the app update. No store reset is needed.
+- [ ] Confirm widgets and session Live Activities still use Tidewater; the
+  Settings footer explains the app-only scope of themes.
+
+## Personal habit ordering
+
+- [ ] Arrange active habits with drag handles and Move Up/Down; Cancel preserves
+  the original order and Save survives relaunch.
+- [ ] Check not-due and completed habits, archive/reactivation, new appends,
+  stale drafts and existing completion/skip/history preservation.
+- [ ] Verify VoiceOver custom actions, large-text wrapping, keyboard activation
+  and drag ergonomics on a signed device.
+
+## Optional lighter-schedule review
+
+- [ ] On a signed device, review an eligible Build Up habit's lighter frequency;
+  Cancel/Keep Current Schedule leave it unchanged, confirmation persists on
+  relaunch, and prior check-ins/calendar history remain available.
+- [ ] Check schedule edits, archive/reactivation, recovery completions and local
+  midnight while review is open; stale confirmation must require Reload.
+- [ ] Verify VoiceOver focus/actions, largest text and Increase Contrast for
+  this flow and all nine colour themes. No automatic Health target change.
+
+### Full theme styling checks
+
+- [ ] Check page gradients, custom card surfaces, calendar hero/ribbons and
+  Today summary in all nine themes, light/dark and Increase Contrast.
+- [ ] Verify long streak numbers, mixed schedule units and largest Dynamic Type
+  with VoiceOver on a signed device; no false daily weekly-goal chain.
+
+### Design quality and assistive journeys
+
+- [ ] Complete the private usability script in QUALITY_EXECUTION.md and record
+  corrections and re-tests, including manual attention interpretation.
+- [ ] With VoiceOver and Switch Control, logging confirmation stays available
+  until dismissed and its row remains stable. Verify Undo and Done-group undo.
+- [ ] Leave confirmation open across local midnight: Undo must not remove a
+  new day's completion or log another one. Repeating Undo changes nothing.
+- [ ] Verify onboarding step focus, inline large-text schedule choices, weekday
+  selection and readable icon names on device with alternative input.
+- [ ] Profile launch, scrolling, memory and energy on supported hardware;
+  simulator measurements are baselines, not a release performance certification.
+
+
+## Expanded progress and Watch checks
+
+- [ ] On device, configure quantity/minute targets and verify partial entries, removal, threshold success and optional smaller actions with VoiceOver/largest text.
+- [ ] Pause/log/reset a timer through suspension, relaunch and midnight; elapsed time alone must never complete a habit.
+- [ ] Correct a dated check-in with Cancel/Confirm, schedule edits and pauses; verify calendar/Insights refresh and stale review rejection.
+- [ ] Save/cancel/reorder routines, select 3/7-day restart groups and confirm other commitments are unchanged.
+- [ ] Save/cancel/delete private reflections and inspect offline/relaunch behavior.
+- [ ] Run Siri Log Habit Progress with invalid amounts, target changes and repeated additive commands.
+- [ ] Test signed paired Watch install, opt-in/disable, expired snapshots, locked/unreachable/background phone, repeated logging and local timer; quantity targets require phone logging.
+- [ ] Check upgrade from the prior candidate with retained data; never reset a failed store silently.
+
+
+Enrichment candidate device checks: pair a physical Apple Watch, opt in to sending active habit summaries, log a due non-quantity habit once and retry without duplication, then revoke the opt-in. Quantity targets must open iPhone logging rather than bypass their target. Check local Watch stopwatch persistence; elapsed time never completes a habit. Review Manageable Week cancellation/individual pause/reactivation and Make Room's manual outcome separation. Test quantity timers across background/relaunch and midnight. These hardware checks remain pending.
+
+## Optional private recovery release gate
+
+- [ ] Real CloudKit container/signing and production schema configured.
+- [ ] Signed device upload, quota/offline/account switch and empty-install restore verified.
+- [ ] Health-related tracking and private notes absent from actual cloud assets.
+- [ ] Policy and App Store Connect disclosures match the shipping feature.
+- [ ] System-device-backup handling for local Health-derived records reviewed.
+- [ ] No unavailable backup control shipped as a supposedly working feature; either
+      complete these gates or omit the cloud entry from the submission build.

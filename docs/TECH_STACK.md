@@ -18,6 +18,8 @@ System capabilities:
 - StoreKit 2
 - WidgetKit
 - ActivityKit
+- AppIntents (Siri and Apple Shortcuts)
+- HealthKit (optional steps/exercise reads; app entitlement required)
 
 Future / optional:
 - FamilyControls
@@ -80,3 +82,11 @@ The project must declare:
 - required app capabilities
 
 in the Xcode project and document them in `SETUP.md`.
+
+
+## Optional recovery — 2026-10-05
+
+Native CloudKit private-database snapshots protect eligible tracking after opt-in.
+CryptoKit computes payload integrity checks. Local SwiftData uses .none for
+CloudKit and remains the primary store. This is logical backup, not SwiftData
+cloud synchronization; no uniqueness constraints are removed.

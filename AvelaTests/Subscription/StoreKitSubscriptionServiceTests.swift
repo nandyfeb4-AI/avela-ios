@@ -39,8 +39,8 @@ final class StoreKitSubscriptionServiceTests: XCTestCase {
 
         let outcome = try await service.purchase(productID: PremiumProductID.monthly)
         XCTAssertEqual(outcome, .purchased)
-        let entitlements = await service.currentEntitlements()
-        XCTAssertTrue(PremiumAccessPolicy.hasPremium(entitlements, asOf: Date()))
+        let purchased = try await waitForPremium(true, service: service)
+        XCTAssertTrue(purchased, "Verified purchase must become visible in authoritative entitlements")
         try await service.restore()
         let restored = await service.currentEntitlements()
         XCTAssertTrue(PremiumAccessPolicy.hasPremium(restored, asOf: Date()))

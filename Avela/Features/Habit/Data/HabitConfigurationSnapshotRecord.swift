@@ -15,6 +15,19 @@ final class HabitConfigurationSnapshotRecord {
     var effectiveLocalDateKey: String
     var revision: Int
     var createdAt: Date
+    /// Lossless local recovery decoding; validation happens before insertion.
+    init(backup row: BackupPayload.HabitConfigurationSnapshotRecordRow) {
+        self.id = row.id
+        self.habitID = row.habitID
+        self.polarityRaw = row.polarityRaw
+        self.scheduleKindRaw = row.scheduleKindRaw
+        self.scheduleWeekdaysRaw = row.scheduleWeekdaysRaw
+        self.scheduleTimesPerWeek = row.scheduleTimesPerWeek
+        self.effectiveLocalDateKey = row.effectiveLocalDateKey
+        self.revision = row.revision
+        self.createdAt = row.createdAt
+    }
+
 
     init(
         id: UUID,

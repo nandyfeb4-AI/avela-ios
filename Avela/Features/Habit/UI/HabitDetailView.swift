@@ -5,10 +5,17 @@ import SwiftUI
 /// Today's row control. All data comes from `HabitDetailViewModel`; this view
 /// neither queries SwiftData nor computes scheduling/progress itself.
 struct HabitDetailView: View {
+    @Environment(\.appPalette) private var palette
     @Environment(\.scenePhase) private var scenePhase
     @Bindable var viewModel: HabitDetailViewModel
+    @State private var showingAdjustment = false
+    @State private var showingActivity = false
+    @Environment(\.habitActivityRepository) private var activityRepository
+    @Environment(\.attentionIntentionRepository) private var attentionIntentionRepository
+    @Environment(\.intentionLinkRepository) private var intentionLinks
     var onViewHistory: (UUID) -> Void = { _ in }
     @Environment(\.habitReminderService) private var reminderService
+    @Environment(\.healthHabitService) private var healthService
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -17,20 +24,18 @@ struct HabitDetailView: View {
                 List {
                     Section {
                         HStack(spacing: 12) {
-                            Image(systemName: display.iconName)
-                                .font(.largeTitle)
-                                .foregroundStyle(display.isArchived ? Color.secondary : Color.accentColor)
+                            HabitIconBadge(symbol: display.iconName, isArchived: display.isArchived)
                                 .accessibilityHidden(true)
-                            VStack(alignment: .leading, spacing: 2) {
+                            VStack(alignment: .leading, spacing: 6) {
                                 Text(display.name)
-                                    .font(.title3)
+                                    .font(.title2.weight(.semibold))
                                     .accessibilityIdentifier("habitDetail.name")
                                 Text("\(display.categoryLabel) · \(display.polarityLabel)")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                             }
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, 12)
                     }
 
                     Section("Schedule") {
@@ -49,30 +54,79 @@ struct HabitDetailView: View {
                             }
                             .accessibilityIdentifier("habitDetail.skipButton")
                         } footer: {
-                            Text("A skipped day neither extends nor breaks your streak and is excluded from consistency. Weekly targets still count completed days.")
+                            Text("Skips are excused. They don’t break or extend a streak. Weekly targets still count completed days.")
                         }
                     }
 
-                    if !display.isArchived, let reminderService, let schedule = viewModel.draft?.schedule {
-                        Section {
-                            NavigationLink("Reminder") {
-                                HabitReminderView(habitID: viewModel.habitID, schedule: schedule, service: reminderService)
-                            }.accessibilityIdentifier("habitDetail.reminderLink")
-                        }
-                    }
                     Section("Streak") {
+                        NavigationLink {
+                            HabitCalendarView(viewModel: viewModel.makeCalendarViewModel())
+                        } label: {
+                            Label("Calendar History", systemImage: "calendar")
+                        }.accessibilityIdentifier("habitDetail.calendarLink")
                         detailRow("Current", value: display.currentStreakLabel, identifier: "habitDetail.currentStreak")
                         detailRow("Best", value: display.bestStreakLabel, identifier: "habitDetail.bestStreak")
                         if let recoveryMessage = display.recoveryMessage {
-                            Text(recoveryMessage)
-                                .foregroundStyle(Color.appRecovery)
-                                .accessibilityIdentifier("habitDetail.recoveryMessage")
+                            Label {
+                                Text(recoveryMessage)
+                                    .font(.subheadline)
+                                    .accessibilityIdentifier("habitDetail.recoveryMessage")
+                            } icon: {
+                                Image(systemName: "leaf")
+                                    .accessibilityHidden(true)
+                            }
+                            .foregroundStyle(Color.appInkSecondary)
+                            .padding(.vertical, 6)
                         }
                     }
 
                     Section(display.consistencyRangeLabel) {
                         Text(display.consistencyLabel)
                             .accessibilityIdentifier("habitDetail.consistency")
+                    }
+
+                    Section("Explore Progress") {
+                        NavigationLink {
+                            HabitLifetimeView(viewModel: viewModel.makeLifetimeViewModel(activity: activityRepository))
+                        } label: {
+                            toolLabel("Lifetime Progress", symbol: "chart.bar")
+                        }.accessibilityIdentifier("habitDetail.lifetimeProgress")
+                        if activityRepository != nil {
+                            Button { showingActivity = true } label: {
+                                toolLabel("Log Progress", symbol: "slider.horizontal.3", subtitle: "Quick amounts, timer and past check-ins")
+                                    .accessibilityLabel("Progress, Timer & History Corrections")
+                            }
+                            .accessibilityIdentifier("habitDetail.activity")
+                        }
+                    }
+                    if !display.isArchived {
+                        Section("Support Your Habit") {
+                            if let attentionIntentionRepository, let intentionLinks {
+                                NavigationLink {
+                                    IntentionSessionView(viewModel: IntentionSessionViewModel(habitID: viewModel.habitID, habits: viewModel.habitsRepository, attention: attentionIntentionRepository, links: intentionLinks))
+                                } label: {
+                                    toolLabel("Make Room", symbol: "moon", subtitle: "A phone-free session for this habit")
+                                        .accessibilityLabel("Make Room with a Phone-Free Session")
+                                }.accessibilityIdentifier("habitDetail.intention")
+                            }
+                            if let reminderService, let schedule = viewModel.draft?.schedule {
+                                NavigationLink {
+                                    HabitReminderView(habitID: viewModel.habitID, schedule: schedule, service: reminderService)
+                                } label: { toolLabel("Reminder", symbol: "bell") }
+                                    .accessibilityIdentifier("habitDetail.reminderLink")
+                            }
+                            if viewModel.adjustmentProposal != nil {
+                                Button { showingAdjustment = true } label: {
+                                    toolLabel("Make It Easier", symbol: "leaf")
+                                }.accessibilityIdentifier("habitDetail.makeEasier")
+                            }
+                            if viewModel.draft?.polarity == .positive, let healthService {
+                                NavigationLink {
+                                    HealthHabitView(habitID: viewModel.habitID, service: healthService)
+                                } label: { toolLabel("Apple Health", symbol: "heart") }
+                                    .accessibilityIdentifier("habitDetail.healthLink")
+                            }
+                        }
                     }
 
                     Section {
@@ -109,7 +163,10 @@ struct HabitDetailView: View {
                 ProgressView()
             }
         }
+        .appThemeCanvas()
         .navigationTitle(viewModel.display?.name ?? "Habit")
+        .navigationBarTitleDisplayMode(.inline)
+        .onReceive(NotificationCenter.default.publisher(for: .avelaHealthDidLog)) { _ in viewModel.load() }
         .toolbar {
             if viewModel.display?.isArchived == false {
                 ToolbarItem(placement: .primaryAction) {
@@ -123,6 +180,17 @@ struct HabitDetailView: View {
         .sheet(isPresented: $viewModel.isShowingEditForm) {
             HabitFormView(initialDraft: viewModel.draft) { updatedDraft in
                 viewModel.saveEdits(updatedDraft)
+            }
+        }
+        .sheet(isPresented: $showingActivity, onDismiss: { viewModel.load() }) {
+            if let activityRepository {
+                HabitActivityView(habitID: viewModel.habitID, repository: activityRepository, habits: viewModel.habitsRepository)
+            }
+        }
+        .sheet(isPresented: $showingAdjustment) {
+            HabitAdjustmentView(viewModel: viewModel.makeAdjustmentViewModel()) {
+                viewModel.load()
+                Task { try? await reminderService?.synchronize() }
             }
         }
         // A plain `.alert`, not `.confirmationDialog`: on this toolchain,
@@ -170,18 +238,48 @@ struct HabitDetailView: View {
         }
     }
 
+    private func toolLabel(_ title: String, symbol: String, subtitle: String? = nil) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: symbol)
+                .font(.system(size: 18, weight: .medium))
+                .foregroundStyle(palette.accent)
+                .frame(width: 30)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title).foregroundStyle(Color.appInk)
+                if let subtitle {
+                    Text(subtitle)
+                        .font(.footnote)
+                        .foregroundStyle(Color.appInkSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+        }
+        .frame(minHeight: 44)
+        .padding(.vertical, subtitle == nil ? 0 : 4)
+    }
+
     /// A title/value row with the value exposed as its own accessibility
     /// element (`identifier`), rather than relying on `LabeledContent`'s
     /// automatic combined accessibility text, so UI tests can read it
     /// directly instead of parsing a concatenated string.
     private func detailRow(_ title: String, value: String, identifier: String = "") -> some View {
-        HStack {
-            Text(title)
-            Spacer()
-            Text(value)
-                .foregroundStyle(.secondary)
-                .accessibilityIdentifier(identifier)
+        ViewThatFits(in: .horizontal) {
+            HStack(alignment: .firstTextBaseline, spacing: 20) {
+                Text(title)
+                Spacer()
+                Text(value)
+                    .foregroundStyle(.secondary)
+                    .accessibilityIdentifier(identifier)
+            }.fixedSize(horizontal: true, vertical: false)
+            VStack(alignment: .leading, spacing: 6) {
+                Text(title)
+                Text(value)
+                    .foregroundStyle(.secondary)
+                    .accessibilityIdentifier(identifier)
+            }
         }
+        .padding(.vertical, 4)
     }
 }
 

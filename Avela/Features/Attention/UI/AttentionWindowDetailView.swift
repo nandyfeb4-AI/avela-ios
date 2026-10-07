@@ -13,7 +13,11 @@ struct AttentionWindowDetailView: View {
     var body: some View {
         List {
             Section("Goal") {
-                Text(viewModel.name).font(.headline)
+                HStack(spacing: 12) {
+                    AppIconBadge(symbol: viewModel.goalType == .phoneFreeSession ? "moon" : "clock")
+                        .accessibilityHidden(true)
+                    Text(viewModel.name).font(.title2.weight(.semibold))
+                }.padding(.vertical, 8)
                 if let summary = viewModel.summary {
                     Text(summary.targetLabel)
                     Text(summary.statusLabel).foregroundStyle(.secondary)
@@ -94,6 +98,7 @@ struct AttentionWindowDetailView: View {
                 }
             }
         }
+        .appThemeCanvas()
         .navigationTitle("Attention Goal")
         .toolbar { Button("Edit") { viewModel.isEditing = true } }
         .sheet(isPresented: $viewModel.isEditing) {

@@ -18,6 +18,22 @@ final class HabitRecord {
     var updatedAt: Date
     var archivedAt: Date?
     var sortOrder: Int
+    /// Lossless local recovery decoding; validation happens before insertion.
+    init(backup row: BackupPayload.HabitRecordRow) {
+        self.id = row.id
+        self.name = row.name
+        self.iconName = row.iconName
+        self.categoryRaw = row.categoryRaw
+        self.polarityRaw = row.polarityRaw
+        self.scheduleKindRaw = row.scheduleKindRaw
+        self.scheduleWeekdaysRaw = row.scheduleWeekdaysRaw
+        self.scheduleTimesPerWeek = row.scheduleTimesPerWeek
+        self.createdAt = row.createdAt
+        self.updatedAt = row.updatedAt
+        self.archivedAt = row.archivedAt
+        self.sortOrder = row.sortOrder
+    }
+
 
     init(
         id: UUID,

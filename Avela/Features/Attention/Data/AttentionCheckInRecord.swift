@@ -11,6 +11,18 @@ final class AttentionCheckInRecord {
     var outcomeRaw: String
     var recordedAt: Date
     var revision: Int
+    /// Lossless local recovery decoding; validation happens before insertion.
+    init(backup row: BackupPayload.AttentionCheckInRecordRow) {
+        self.id = row.id
+        self.attentionGoalID = row.attentionGoalID
+        self.localDateKey = row.localDateKey
+        self.windowStart = row.windowStart
+        self.windowEnd = row.windowEnd
+        self.outcomeRaw = row.outcomeRaw
+        self.recordedAt = row.recordedAt
+        self.revision = row.revision
+    }
+
 
     init(domain value: AttentionCheckIn) {
         id = value.id
@@ -40,6 +52,17 @@ final class AttentionSessionRecord {
     var targetMinutes: Double
     var endedAt: Date?
     var outcomeRaw: String?
+    /// Lossless local recovery decoding; validation happens before insertion.
+    init(backup row: BackupPayload.AttentionSessionRecordRow) {
+        self.id = row.id
+        self.attentionGoalID = row.attentionGoalID
+        self.startedAt = row.startedAt
+        self.expectedEnd = row.expectedEnd
+        self.targetMinutes = row.targetMinutes
+        self.endedAt = row.endedAt
+        self.outcomeRaw = row.outcomeRaw
+    }
+
 
     init(domain value: AttentionSession) {
         id = value.id

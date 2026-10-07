@@ -5,6 +5,8 @@ enum HabitRepositoryError: Error, Equatable {
     case completionNotFound(UUID)
     case skipNotFound(UUID)
     case invalidSchedule
+    case manualQuantityRequiresPositivePolarity
+    case invalidHabitOrder
 }
 
 /// Domain-facing persistence boundary for habits, their configuration history,
@@ -16,6 +18,11 @@ enum HabitRepositoryError: Error, Equatable {
 protocol HabitRepository {
     func fetchHabits(includeArchived: Bool) throws -> [Habit]
     func fetchHabit(id: UUID) throws -> Habit?
+
+    /// Saves the exact ordering of every currently active habit. Duplicated,
+    /// missing, archived or stale IDs are rejected before any record changes.
+    /// Only presentation order changes; tracking facts and timestamps remain intact.
+    func reorderHabits(ids: [UUID]) throws
 
     @discardableResult
     func createHabit(_ draft: HabitDraft, at date: Date) throws -> Habit
@@ -40,6 +47,8 @@ protocol HabitRepository {
 
     /// The snapshot that was in effect on `date`'s local calendar day.
     func activeConfiguration(for habitID: UUID, on date: Date) throws -> HabitConfigurationSnapshot?
+
+    func validateCompletion(habitID: UUID, at date: Date) throws
 
     @discardableResult
     func recordCompletion(
@@ -69,4 +78,9 @@ protocol HabitRepository {
     /// Every skip across every habit (active or archived) whose `localDateKey`
     /// falls in `interval`. See `completions(in:)`.
     func skips(in interval: DateInterval) throws -> [Skip]
+}
+
+// Stores without quantity targets retain the original check-in contract.
+extension HabitRepository {
+    func validateCompletion(habitID: UUID, at date: Date) throws {}
 }

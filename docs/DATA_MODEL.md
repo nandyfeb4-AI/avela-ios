@@ -1,5 +1,89 @@
 # Data Model
 
+## Habit starter library — 2026-10-05
+
+`HabitStarter` is a bundled, Foundation-only catalog of eight editable ideas.
+Catalog IDs identify menu entries, never persisted habit UUIDs. Selecting one
+fills the existing creation form's draft fields; only explicit Save reaches the
+normal repository via Today/onboarding and its existing free-tier checks. Back
+navigation preserves the current draft, and cancelling the creation sheet writes
+nothing. Existing-habit editing does not offer catalog replacement.
+
+Ideas cover movement, learning, quiet pauses and reduced scrolling. Daily and
+flexible-weekly schedules are editable defaults, not medical prescriptions.
+Cut-down ideas retain avoidance polarity and the existing “Log success” wording.
+Optional Health connections and reminders are separate, explicit actions. No
+schema change, starter metadata, tracking event, network fetch or auto-creation
+is introduced. Selection is input collection; business/persistence logic stays
+in the current feature state and repositories. The library uses native search,
+SF Symbols, scalable text, full-row 44pt minimum targets and semantic colors.
+
+## Siri and Shortcuts enrichment — 2026-10-04
+
+Siri actions introduce no schema change. App-target App Intents and entity queries share
+`AppPersistence.liveContainer` with app launch. All writes use the same main
+context on the main actor; no separate extension or shared SwiftData writer.
+The DEBUG test-path override moved into that container resolver and remains
+compiled out of Release. Entity queries return stable UUIDs, not a first matching
+name, so duplicate names never silently choose a record.
+
+Log Habit Success checks current-day due state, creation and archive status,
+replaces an excused skip just like Today, and is idempotent. Existing completions
+retain their source; new shortcut records use the existing persisted raw value
+`shortcutFuture` to avoid changing older decoding. That legacy tag now represents
+actual shortcuts. Log Attention Minutes accepts finite values in (0, 1440], only
+for existing daily duration budgets, and adds a manual entry per invocation.
+Explicit voice reports remain manual, not automatically measured screen usage.
+Existing correction, history and metrics consume these same records.
+
+Intents open the app and require local device authentication. Selected entity
+names are exposed to Apple's Siri/Shortcuts system; success dialogs omit names.
+Avela neither records audio nor invokes an AI/network service. Entity queries
+retrieve active habits and duration budgets; execution revalidates stale IDs.
+Repository errors become safe user messages with private diagnostics. Dedicated
+post-write notification refreshes visible projections in an already-active app.
+
+## Apple Health enrichment — 2026-10-04
+
+One new SwiftData model, `HealthHabitConnectionRecord`, stores one optional
+connection per habit: unique habit UUID, connection UUID, metric (`steps` or
+`exerciseMinutes`), positive bounded target, and connection timestamp. Updating a
+connection replaces its UUID, preventing a suspended query for an old target from
+writing after reconfiguration. No raw Health samples or totals are persisted.
+These settings are prospective import rules, not historical schedule snapshots;
+changing/disconnecting them never changes recorded completions or habit metrics.
+
+Imports create ordinary `Completion` records with the new `healthKit` source.
+The timestamp/day key represents when Avela detected success, not a fabricated
+sample time. Existing source raw values remain unchanged. A disk-backed regression
+opens the previous 12-model schema with this additional model without a reset,
+verifying habit preservation. That integration schema had 13 model types; the appearance enrichment below adds a fourteenth.
+
+Only explicitly connected, active Build Up habits can import. Refresh reads the
+current local day through the refresh instant using HealthKit cumulative
+statistics, when the app opens/returns active or the user taps Refresh. Existing
+activity earlier that same day can meet a newly connected target. Habit progress still measures recorded commitments; a day with no foreground
+check is not retroactively inferred as a target success. No backfill,
+raw phone/watch sample summing (see [Apple DTS guidance](https://developer.apple.com/forums/thread/759709)), background-delivery entitlement, automatic
+permission prompt on launch, Health writes, upload or external service exists.
+Skips and existing completions are authoritative; imports never replace either.
+Due-day evaluation still uses the historical habit configuration. Flexible weekly
+habits count at most one imported completion per local day.
+
+The permission request completing does not establish granted read access.
+Missing/inaccessible samples remain unknown; zero/below-target values never create
+failures. Disconnect and configuration identity are rechecked after async reads,
+as are archive/polarity and the current local day. A query completing after local
+midnight cannot retroactively log yesterday. Unknown access and provider errors
+leave manual tracking available. Connections survive habit archival but do not
+read/import while archived; reactivation resumes prospective checks.
+
+Undoing a Health completion while still connected may import again at the next
+refresh if the target remains met. The setup screen explains disconnecting to
+stop this; disconnecting itself retains imported history. Reopening the app is
+required for suspended-app updates; signed-device Health data and permission
+checks remain release gates, independent from fake-provider unit tests.
+
 The model below is conceptual. Exact SwiftData declarations may evolve without changing domain semantics.
 
 ## Habit
@@ -1400,3 +1484,257 @@ disable until it finishes. The regression uses a deliberately suspended platform
 the local session. Companion preference saves explicitly refresh both Live Activity
 and Home Screen widget adapters. Optional activity controls sit below the primary
 Kept/Interrupted controls rather than displacing them.
+
+### Native reminder review actions — 2026-10-05
+
+`CompletionSource.notification` marks an explicitly confirmed reminder check-in.
+The SwiftData completion still stores a source raw string; no model/schema
+change or migration is needed. `HabitReminderAction` accepts only the owned
+category/action, matching habit UUID and a planner-owned daily/weekday request
+identifier. Default opening/dismissal is ignored. The response uses the actual
+notification delivery timestamp, not a repeating request's creation date.
+
+A retained UIApplication/notification delegate queues review on the main actor.
+The app shell uses its existing repository/context to show the current habit
+name and confirm. Before review and again at confirmation, the domain handler
+checks current-calendar local day, delivery not in the future, habit existence,
+creation date, archive status, due schedule and existing completion. Repeated
+actions preserve the existing entry/source; explicit success replaces an excused
+skip just like Today/Shortcuts. Avoidance means self-reported success, not
+abstinence. There is no free-tier restriction on logging existing habits.
+A successful confirmation returns to Today's root so progress/undo are reachable.
+
+Native system testing caught a crash in UIKit snapshot/state-restoration work
+when the async notification-response delegate bridge completed on a cooperative
+executor. The completion-handler form now queues the response **and calls its
+completion on the main actor**. UI tests exercise real native delivery and the
+foreground action, rather than injecting a pretend notification response.
+
+A DEBUG-only `AVELA_UI_TEST_REMINDER_DELIVERY=1` hook additionally requires
+`AVELA_UI_TEST_STORE_PATH`: an explicitly enabled/authorized reminder gets one
+8-second, nonrepeating trigger in that isolated run. Categories, content, OS
+permission, delegate routing, review and persistence remain production code.
+Normal requests still repeat at local wall-clock times. The hook never requests
+permission itself and is absent from Release.
+
+The review observer uses the payload delivered by `@Published`, rather than
+rereading the publisher's property inside `onReceive` (publication occurs
+before the property's assignment). Native UI tests caught the missed warm-app
+review caused by that ordering. The confirmation captures the reviewed action
+so another notification cannot change the identity being confirmed.
+
+## Calendar history and appearance enrichment — 2026-10-05
+
+Owner-authorized addition: read-only month history for each habit and five free
+app accent themes. Neither adds new habit facts, backdating, permissions or
+entitlement gates.
+
+`HabitProgressCalculator.periods` exposes the same evaluated period sequence
+used by streak, recovery and consistency. Each period carries its outcome, daily
+or weekly unit, half-open evaluated span, distinct completed-day count and target.
+Partial weekly spans stop at schedule edits or archive boundaries. Calendar
+presentation never treats a flexible weekly habit's unlogged day as a daily miss;
+weekly targets and outcomes appear separately below the dated check-ins.
+
+Two existing engine boundary defects were found while adding regression tests:
+an unfinished weekly target on the last day of a natural week was prematurely
+closed as a miss, and archive/reactivate cycles on adjacent days lost the archive
+boundary when there was no full dormant day. The engine now leaves the still-open
+last day pending and honors every closed archive boundary independently of the
+size of its dormant gap. Same-day pause cycles retain the existing civil-day
+resolution: one daily outcome, and no duplicate success unit for a single day.
+Pauses and skips remain neutral; no new misses or streak extension are invented.
+
+The month calculator uses Gregorian civil dates and the user's locale, time zone
+and first weekday. Completions/skips are grouped by their persisted `localDateKey`,
+not a re-derived timestamp. The view model fetches the full fact set before month
+projection so travel cannot drop a boundary record. Navigation bounds include the
+months of stored facts, including a fact dated in the next local month after
+travel; unrecorded future dates remain upcoming. Configuration history governs
+past schedules. Current/best totals are through today regardless of selected
+month; mixed daily/weekly histories are labeled successful commitments rather
+than falsely presenting a homogeneous number of days or weeks.
+
+Habit Detail → Calendar History shows linked daily successes, explicit symbols
+and accessible outcome labels, excused skips, pending/missing daily check-ins,
+unscheduled dates and pauses. Calendar dates are read-only accessibility elements;
+there are no undersized day buttons. Accessibility text sizes use a vertical dated
+list instead of compressing seven columns. No manual historical editing is added.
+
+Appearance uses one separate `AppAppearanceRecord` added to the existing schema;
+it leaves companion-profile fields untouched and requires no store reset. See
+[THEMES.md](THEMES.md) for tokens, environment composition, failure handling,
+upgrade preservation and contrast checks. App themes do not change widget or Live
+Activity palettes in this slice.
+
+Accessibility month lists show tracked/recorded dates, omit unrecorded upcoming
+and pre-creation dates with an explicit explanation, and place weekly commitments
+before the date list so large-text users need not scroll through a whole month
+to find the target outcome. The regular grid still shows every civil date.
+
+## Personal habit ordering — 2026-10-05
+
+`HabitOrderViewModel` owns an unsaved list of every active habit. Cancel or sheet
+dismissal writes nothing; Save calls the required `HabitRepository.reorderHabits`
+operation with the complete ordered ID set. Missing/duplicate/archived/unknown IDs
+or a changed active set are rejected before mutation; the screen explains that
+Reload is needed when its draft became stale.
+
+The repository reuses existing active `HabitRecord.sortOrder` slots. Archived
+rows and all tracking facts, timestamps, snapshots and pauses remain unchanged;
+reactivation restores the retained slot, and new creation appends as before.
+Duplicate legacy active slots are repaired using nonnegative slots excluding
+archived slots. Fetch ties use stable UUID ordering. A save failure restores only
+the changed order fields, never rolls back unrelated context edits. No schema or
+migration is introduced. Normal persistence notifications refresh app projections
+and widget exports; the screen never directly writes SwiftData or widget data.
+
+Today retains its due-date filter and To do / Done grouping. The new ordering
+sheet has native drag handles, explicit 44pt Move Up/Down buttons, VoiceOver
+custom actions, inline modal navigation and an accessibility-size stacked layout.
+Settings offers the same sheet when no habits happen to be due today.
+
+## Optional lighter-schedule review — 2026-10-05
+
+`HabitAdjustmentCalculator` is a pure Foundation projection of the existing
+progress-period engine. An active positive habit qualifies only while recovering
+(fewer than three consecutive successes since the latest miss), with at least
+two resolved misses under the same schedule/polarity in the recent window. The
+window starts 14 local calendar days before today for daily/weekday schedules
+and 28 before today for flexible-weekly schedules. Only periods starting within
+that window and ending by evaluation time count; unfinished, excused and paused
+periods never manufacture misses. Once-weekly schedules have no lower proposal.
+
+Daily suggests an adjustable 3 times/week, with choices 1–6. A weekday schedule
+with N days or a weekly target N suggests N−1, with choices 1 through N−1. These
+are explicitly editable defaults, not evidence-backed prescriptions. Conversion
+to flexible-weekly frequency removes fixed weekdays, which the current/proposed
+schedule review makes visible. Cut Down habits, attention goals and Apple Health
+quantity targets are never changed by this feature.
+
+`HabitAdjustmentViewModel` fetches facts through HabitRepository. Loading or
+dismissing is read-only. Before confirmation it rechecks the local day, active
+positive status, ongoing recovery/eligibility, schedule and configuration
+revision. A stale review requires Reload; it never silently applies a replacement.
+The saved draft uses the latest cosmetic fields and normal updateHabit, appending
+a snapshot effective today. Repeat confirmation cannot append another edit.
+Earlier finished periods and all completion/skip/archive facts are retained; an
+in-progress week may become a partial period under the existing schedule-change
+semantics. No separate recommendation table or dismissal-history record.
+
+The existing updateHabit write now obtains its revision before mutating, and
+restores only the edited habit fields/removes its newly inserted snapshot if
+save throws. It does not roll back unrelated context work. A real disk-save
+failure was not injected during this pass.
+
+Four additional theme enum values reuse the existing appearance record. Legacy
+raw values and unknown-value fallback are unchanged; no schema migration, store
+reset, permission, package, analytics or runtime AI service is introduced.
+
+
+### Full-theme calendar presentation — 2026-10-05
+
+The richer page/card palette and streak hero are presentation-only. Current/best totals, success ribbons, weekly logged/pending states, archive periods and configuration revisions still come from the existing calculator/view-model facts. No model, migration, repository or evaluation rule changed. Theme preference persistence is unchanged. Calendar totals are through today, not recomputed as totals ending in the browsed month. Native previews and verification are linked from SETUP.md.
+
+
+### Exact current-day confirmation Undo
+
+A logging confirmation captures the completion ID. TodayViewModel validates that the habit is active and that this exact fact belongs to the current local day before removing it. A stale/duplicate confirmation is read-only; it never toggles a refreshed row or creates a new completion. No schema change is required. UI accessibility timing and styling are independent of historical metric rules.
+
+
+## Quantity activity, corrections, routines and reflections — 2026-10-05
+
+`HabitActivityConfigurationRecord` stores a habit ID, stable ID, Gregorian local effective day key, per-habit revision, optional positive integer target/unit and optional 160-character smaller-action description. Effective `(dayKey, revision)` resolution preserves prior targets. Quantity targets are 1–10,000 count/pages/glasses/minutes for positive habits without a Health connection; connecting Health is blocked while a manual quantity target is active. Removing a target is another snapshot, not deletion. Changing a habit to Cut Down is rejected while its current manual quantity target remains enabled; turn the target off explicitly first. No failed edit changes historical snapshots. Same-day configuration changes affect subsequent logging; they never retroactively manufacture success.
+
+`HabitActivityEntryRecord` stores a stable fact ID, habit/configuration IDs, captured day key, logging timestamp, amount/unit, kind and captured description. Quantities in the currently applicable unit add together for that day, including earlier same-day revisions in the same unit. A unit change does not reinterpret old amounts. Crossing the target records one canonical Completion; extra amounts remain visible. Removing quantity below target withdraws quantity-derived success while preserving independently recorded check-ins. Smaller-action entries are idempotent per day and never create Completion or excused Skip. They remain visible in Progress & History; the existing aggregate History continues showing canonical completion/skip facts.
+
+`CompletionRecord.isQuantityDerived` defaults false for older records. Generic app/system completions made against an active quantity target retain their actual source and set this flag; reconciliation can withdraw those too. The new quantity source identifies directly generated quantity success, and watch identifies a paired Watch check-in. HabitRepository's validation boundary is checked before shortcut/reminder/widget skip removal, preventing an invalid attempt from erasing an excused skip. Widgets with unmet targets open Today rather than tick them. Quantity creation and reconciliation share a transaction in a private autosave-disabled context; failures roll back only this feature. Existing repositories see persisted facts through their own reads.
+
+`HabitTimerRecord` stores one current habit/day timer with optional start timestamp and accumulated seconds, bounded to one day. It is an elapsed-time aid, not proof of reading or phone-free behavior. Date/time arithmetic includes background elapsed time; clock rollback cannot add negative duration. Timers are day-scoped, require an active minute target, and never auto-log. Paused whole-minute logging inserts the quantity, reconciles completion and deletes the timer atomically, so a retry cannot duplicate a successfully consumed timer. Logging whole minutes discards the remaining sub-minute seconds and resets the timer.
+
+Dated corrections compare captured completion/skip IDs plus activity/schedule configuration IDs before writing. Dates use historical schedules and archive periods, reject future civil days, pre-tracking days, pauses and unscheduled days, and keep the selected Gregorian day key. Today timestamps are capped to the current instant. Success/skip/clear replaces only canonical facts; quantity/smaller-action entries are retained. A quantity correction requires its target and remains quantity-derived. Deleted facts cannot be restored through a transient Undo toggle; a further explicit correction is required.
+
+`RoutineRecord` references ordered stable habit IDs and an optional 3/7-day restart duration. Save validates selected active IDs and an 80-character name; cancellation persists nothing. Archived references remain stored but disappear from the runner. Deleting a routine leaves habits/history untouched. Restart review dates use calendar-day arithmetic; neither creation nor expiry changes a schedule, pauses a habit or completes anything.
+
+`WeeklyReflectionRecord` uses a unique captured civil start/end week key, boundary dates/timezone metadata, two optional 500-character answers and creation/update timestamps. At least one nonblank answer is needed to save. Explicit Save/Cancel/Delete operate independently of calculated metrics. No reflection content enters widgets, companion, Watch, analytics or network services. Private contexts isolate rollback in routines and reflections.
+
+The expanded schema adds six model types and the default-false completion attribute. SwiftData's lightweight transition is used; no destructive reset is requested. Tests cover prior schema model additions/disk reopen, not a universal migration guarantee across every development build. Back up valuable test data before installing candidate builds; never silently delete a store that fails to open.
+
+
+### Manageable Week and linked phone-free intentions
+
+Manageable Week is read-only until the user confirms an individually named pause or creates a selected 3/7-day restart group. Pause uses existing archive-period history; other habits are untouched, and reminders are synchronized. Restart progress counts successful commitments whose period starts on or after the plan's civil start day; earlier same-day successes count, while a flexible week's prior start does not. Smaller actions remain distinct. The review date is informational, never a automatic target or schedule change.
+
+`IntentionSessionLinkRecord` is the sixth new schema model in this expansion. It stores stable ID, habit ID, unique session ID and creation timestamp. Associations are immutable; retrying the same association is idempotent. Make Room starts an existing phone-free goal explicitly, then persists the link in its own autosave-disabled context. This is two writes: link failure discloses that the session already started and preserves its detail destination. Session elapsed time/manual results never create habit completion. The existing session detail controls optional Live Activity presentation separately.
+
+Progress view models bind loaded facts to a captured local day. Date changes require reload, and backdate confirmation captures the reviewed date; a midnight reload cannot redirect the confirmed write to another day. Corrections also validate historical schedule/configuration revisions and existing fact IDs.
+
+## Factual reflection context — 2026-10-05
+
+No schema changes. ReflectionViewModel reads the selected week's completion/skip records and each habit's configuration/archive history through HabitRepository. HabitProgressCalculator.consistency remains the only per-habit metric authority. Results are derived, not saved; filtering by habit ID prevents cross-habit attribution. Notes remain independent WeeklyReflection records, with no text analysis. Progress and note errors are independent; failed progress refresh clears results rather than showing a prior week's facts. Insights creates the reflection model with its selected week's start and injected calendar.
+
+
+## Optional iCloud recovery snapshots — 2026-10-05
+
+No stored model properties or schema constraints were changed. BackupPayload has
+explicit Codable rows for all 20 current model types, with lossless restore
+initializers. Capture reads committed rows with a fresh ModelContext. Archive v1
+has a UUID, capture date, exclusion count, sorted JSON payload and SHA-256 checksum
+(for corruption detection, not encryption or authenticity). Limits: 40 MiB payload,
+80 MiB envelope and 200,000 rows; duplicate IDs, invalid dates/day keys/scalars and
+dangling references are rejected before writes.
+
+Before serialization, remove Health connections and whole habits categorized
+health/fitness, currently connected to Health, or with any Health-imported success.
+Remove their histories, reminders, activity/timers and intention links; filter
+routine membership and omit empty routines. Remove all reflection records and
+completion notes. The same restrictions are enforced when decoding. Eligible
+tracking and profile/theme preferences retain original IDs/dates/revisions.
+
+Restore is restricted to zero tracking rows across all tracking types; existing
+profile/theme defaults can be replaced then. Pending local edits block it. One
+save commits the validated graph, with rollback on failure. Reminders are restored
+disabled; running habit timers pause at the captured elapsed duration. Unfinished
+phone-free sessions end at capture time with no outcome. No completion is inferred.
+
+Cloud records are immutable UUID-addressed AvelaRecoverySnapshot rows in the
+private database. Keep every dated snapshot until explicit user deletion; quotas
+can stop uploads. Local consent/device ID/last-success live in app-owned defaults.
+Account changes revoke consent and invalidate previews. Automatic uploads debounce
+15 seconds and throttle to 10 minutes while the app can execute; foreground/save
+or manual action retries errors. No continuous background guarantee or live sync.
+The existing isolated test hooks can select cloudBackupRecovery only in Debug;
+its fake provider uses an in-memory source and never contacts CloudKit. Release
+contains neither that provider nor its fixture selector.
+
+## Lifetime progress, quick amounts and intention review — 2026-10-06
+
+No SwiftData model/schema changes or stored aggregate counters are introduced. `HabitLifetimeCalculator` counts distinct surviving `Completion.localDateKey` values for the habit through the as-of instant. Milestones are 10, 25, 50, 100, 250, 500 and 1,000 successful check-in days; these are days, not streaks or successful weekly commitments. Misses/pauses do not erase totals, while Undo/corrections recompute them honestly. Activity entries are deduplicated by ID, filtered by their actual write timestamp, and quantity totals are grouped by captured unit. Smaller-action days stay separate. Reads include all stored civil keys so changing time zones cannot hide the first or latest logged day.
+
+`HabitActivityRepository.entries(for:in:)` returns stored civil days intersecting a half-open interval. Midnight end excludes that day; a partial end includes its intersecting day. Membership uses captured day keys, not entry write timestamps, so backdated entries remain in their recorded day. Lifetime reads all keys and applies its as-of write cutoff separately.
+
+`HabitQuickLogPresets` stores one to three unique integers (1–10,000) per habit UUID and unit in app-owned UserDefaults. Defaults: count/glasses 1/2/3, pages 1/5/10, minutes 5/10/20. Save validates the currently reviewed configuration and day; Cancel never writes. Quick logging uses the existing repository validation, and Undo removes only the newly inserted entry ID, preserving prior entries and independent successes. Midnight, stale configuration and historical days cannot silently accept a quick action. These preferences do not alter targets or reinterpret history, and are not part of the logical iCloud recovery payload; a new installation uses unit defaults while recovered progress remains intact.
+
+`MadeRoomReviewCalculator` attributes each linked session once by session ID, only when its start is inside the selected completed local week. Kept/interrupted counts require an ended session with that recorded self-report; unfinished/unreported sessions stay neutral. Timer minutes sum ended elapsed durations, never verified phone-free time or reclaimed time. Invalid durations (negative, non-finite or over seven days), missing sessions, conflicting copies/owners are omitted with a partial-data message. Sessions ending after the week are attributed to their start week. Linked habits may be archived; current names and separate stored-key successful check-in days are shown. The view model pads timestamp completion reads by two days before applying captured civil-key membership for travel. Opening/refreshing a review never starts a session, logs a habit, or analyzes private notes. Insights passes its selected week to a stable navigation destination.
+
+A new DEBUG-only `progressEnrichment` fixture uses public repositories to exercise lifetime milestones and populated linked-session review in an isolated test store. It shares the existing two-variable gating and is absent from Release.
+
+## UI polish display projection — 2026-10-06
+
+Today’s recovery projection removes the “Rebuilding ·” prefix; the successful-count, unit and existing three-success cutoff are unchanged. Quantity progress remains primary when present. This is copy/layout refinement only: no new model, aggregate, revision, persistence rule or migration. Historical state, excused skips, pauses, manual usage labels, independent session/check-in semantics and Undo guards remain unchanged. Stable screen/action IDs are retained for native regression tests.
+
+## Atmospheric theme presentation — 2026-10-06
+
+No schema, revision, date key, record or derived progress rule changes. Theme raw values are unchanged. HabitIconBadge maps existing SF Symbol names to curated identity colors only; editing names/icons still follows the existing cosmetic/history behavior. The calendar renderer remains read-only. No artwork is selected from private habit text, calendar success or reflection content.
+
+### Recovery-card presentation (2026-10-06)
+
+No schema changes. `TodayRecoveryDisplay` composes recovery count, historical period units and adjustment eligibility from existing calculators. Successful periods since the latest miss are compared with the currently active streak unit; mixed runs are labeled commitments. Only active habits due today enter the card, matching Today's existing row scope. Configured smaller actions for positive habits open the existing activity screen with that section prioritized, never logging on navigation. Their effort records do not affect the recovery count.
+
+Threshold feedback compares the pre/post logging projection. Undo retains the exact completion ID and existing civil-day guard; removing the third success naturally brings the two-success card back. The DEBUG-only `recoveryProgress` fixture uses public repositories for two prior successes following two misses and a configured smaller action. Existing isolated-store guards apply; it is not available in Release.
+
+### Visual Insights projection — 2026-10-06
+
+No schema or calculator changes. The ring renders `overallConsistency` unchanged; per-habit bars render each `eligibleHabits` percentage with successful/resolved counts. The overall score remains an equal-weight average, not pooled commitments. Icons come from currently persisted habit identity, never fabricated historical identity. State-owned detail destinations survive parent refreshes; their View History callback is wired to the existing filtered History tab.
+
+Manual attention's two bars visualize existing successful/logged and logged/eligible ratios separately. Threshold behavior remains healthy <70%, near limit <100%, exceeded >=100%; the correct review label is **below budget**, not “at or below.” Session-only goals retain the review shell/intention review but do not display an absent budget summary. The `visualInsights` DEBUG-only fixture includes daily and archived flexible-weekly habits plus three manual usage days (one below budget, one over, one exactly at budget), giving a 68% rounded habit average and 33% below-budget result with 3/7 coverage. Existing redirected-store guards apply; no production clock or fixture hook is added.

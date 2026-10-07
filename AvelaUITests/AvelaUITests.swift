@@ -214,7 +214,7 @@ final class AvelaUITests: XCTestCase {
             case "History":
                 XCTAssertTrue(app.staticTexts["history.emptyState.title"].waitForExistence(timeout: 5))
             case "Settings":
-                XCTAssertTrue(app.buttons["settings.archivedHabitsLink"].waitForExistence(timeout: 5))
+                XCTAssertTrue(revealDetailElement(app.buttons["settings.archivedHabitsLink"], in: app).isHittable)
             default:
                 XCTAssertTrue(
                     app.staticTexts["placeholder.\(destination.lowercased())"].waitForExistence(timeout: 5)
@@ -348,7 +348,7 @@ final class AvelaUITests: XCTestCase {
             XCTAssertTrue(app.staticTexts["today.emptyState.title"].waitForExistence(timeout: 5), "cycle \(cycle): archiving must remove it from Today")
 
             app.tabBars.buttons["Settings"].tap()
-            app.buttons["settings.archivedHabitsLink"].tap()
+            revealDetailElement(app.buttons["settings.archivedHabitsLink"], in: app).tap()
             let reactivateButton = app.buttons["Reactivate Walk"]
             XCTAssertTrue(reactivateButton.waitForExistence(timeout: 5), "cycle \(cycle): the archived habit must appear in Settings")
             reactivateButton.tap()
@@ -374,7 +374,7 @@ final class AvelaUITests: XCTestCase {
         app.launch()
 
         app.tabBars.buttons["Settings"].tap()
-        app.buttons["settings.archivedHabitsLink"].tap()
+        revealDetailElement(app.buttons["settings.archivedHabitsLink"], in: app).tap()
         let reactivateButton = app.buttons["Reactivate Walk"]
         XCTAssertTrue(reactivateButton.waitForExistence(timeout: 10), "the archive must survive a relaunch")
         reactivateButton.tap()
@@ -542,7 +542,7 @@ final class AvelaUITests: XCTestCase {
         // Unchanged archive history: no period was ever opened, so Settings'
         // Archived Habits list must still be empty.
         app.tabBars.buttons["Settings"].tap()
-        app.buttons["settings.archivedHabitsLink"].tap()
+        revealDetailElement(app.buttons["settings.archivedHabitsLink"], in: app).tap()
         XCTAssertTrue(app.staticTexts["archivedHabits.emptyState.title"].waitForExistence(timeout: 5), "cancelling must not record any archive period")
     }
 

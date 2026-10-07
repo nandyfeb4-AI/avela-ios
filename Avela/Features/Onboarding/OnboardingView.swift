@@ -1,6 +1,9 @@
 import SwiftUI
 
 struct OnboardingView: View {
+    @Environment(\.appPalette) private var palette
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    @AccessibilityFocusState private var isStepTitleFocused: Bool
     @State private var viewModel: OnboardingViewModel
     let onFinished: () -> Void
 
@@ -14,10 +17,18 @@ struct OnboardingView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
+                    HStack(spacing: 6) {
+                        ForEach(OnboardingStep.allCases, id: \.rawValue) { step in
+                            Capsule().fill(step.rawValue <= model.step.rawValue ? palette.accent : palette.accentSoft)
+                                .frame(height: 4)
+                        }
+                    }.accessibilityHidden(true)
                     Text("\(model.step.rawValue + 1) of \(OnboardingStep.allCases.count)")
                         .font(.caption).foregroundStyle(.secondary)
                     Text(title).font(.largeTitle.weight(.semibold))
                         .accessibilityIdentifier("onboarding.title")
+                        .accessibilityAddTraits(.isHeader)
+                        .accessibilityFocused($isStepTitleFocused)
                     Text(description).foregroundStyle(.secondary)
                     stepContent
                 }
@@ -25,13 +36,15 @@ struct OnboardingView: View {
                 .frame(maxWidth: 640, alignment: .leading)
                 .frame(maxWidth: .infinity)
             }
-            .background(Color.appBackground)
+            .appThemeCanvas()
             .safeAreaInset(edge: .bottom) {
                 VStack(spacing: 8) {
                     Button(model.step == .finish ? "Start My Day" : "Continue") {
                         if model.step == .finish { model.finish() } else { model.advance() }
                     }
+                    .foregroundStyle(palette.prominentInk)
                     .buttonStyle(.borderedProminent)
+                    .tint(palette.prominentFill)
                     .frame(minHeight: 44)
                     .accessibilityIdentifier("onboarding.continue")
                     if [.habit, .attention, .companion, .reminder].contains(model.step) {
@@ -40,7 +53,11 @@ struct OnboardingView: View {
                             .accessibilityIdentifier("onboarding.skip")
                     }
                 }
-                .frame(maxWidth: .infinity).padding(16).background(.regularMaterial)
+                .frame(maxWidth: .infinity).padding(16)
+                .background {
+                    if reduceTransparency { palette.surface }
+                    else { Rectangle().fill(.regularMaterial) }
+                }
             }
             .navigationBarTitleDisplayMode(.inline)
         }
@@ -51,6 +68,7 @@ struct OnboardingView: View {
             AttentionGoalFormView { model.createAttentionGoal($0) }
         }
         .task { model.load() }
+        .onChange(of: model.step) { _, _ in isStepTitleFocused = true }
         .onChange(of: model.didFinish) { _, finished in if finished { onFinished() } }
         .alert("Changes Couldn’t Be Saved", isPresented: Binding(
             get: { model.errorMessage != nil }, set: { if !$0 { model.errorMessage = nil } }

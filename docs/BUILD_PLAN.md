@@ -1,5 +1,38 @@
 # Build Plan
 
+## Habit setup enrichment — 2026-10-05
+
+Added an optional eight-idea starter library in the shared new-habit form.
+Selection pre-fills editable fields; saving and free-tier checks remain in the
+existing creation flow. Editing existing habits does not expose replacement.
+Local search, native symbols and scalable rows require no new dependency,
+entitlement or schema. The same form is used by Today and onboarding.
+
+Native tests exercise customization/save/relaunch/edit, cancellation without
+creation and avoidance wording at AX3. Large-text testing caught the long intro
+pushing a result behind the search keyboard; the intro was shortened, omitted
+while filtering, and interactive keyboard dismissal enabled. See `SETUP.md`
+for final validation evidence: 285 units + 4 targeted UI checks pass, and
+unsigned iPhone SDK Release compilation succeeds. Real-device VoiceOver remains
+a release check.
+
+## Owner-approved logging enrichment — 2026-10-04
+
+Added Siri/Shortcuts logging (8 service tests, native guide UI) and opt-in Apple
+Health steps/exercise targets (13 provider/persistence tests, native setup UI).
+Existing tracking remains available on Free; no backend or external dependency.
+Health configuration adds one optional model and preserves a prior MVP disk store.
+
+Current evidence: **285 unit tests, zero failures**; **10 MVP UI flow tests,
+zero failures**, plus focused completion/undo and attention quick-log regression
+checks. This is targeted UI coverage, not a rerun of the entire earlier UI suite.
+Debug tests and unsigned iPhone SDK Release compilation pass; DEBUG hooks are
+absent in Release, read-purpose copy is bundled, and App Intents metadata is
+extracted. Exact logs/commands are in `SETUP.md`. Native setup screenshots were
+reviewed. Spoken Siri, system action discovery and real Health read authorization/
+source aggregation remain signed-device release gates. In-app microphone voice,
+sleep/mindfulness interpretation and automatic Screen Time remain deferred.
+
 ## Current implementation status — 2026-10-04
 
 The sections below retain the earlier slice history. Current code additionally
@@ -252,3 +285,130 @@ reconciliation through a native adapter. No outcome inferred from expiry, no
 permanent pet, no new target/dependency/schema. Final source: 264 units and the
 native ActivityKit UI flow pass; see SETUP.md for exact evidence and remaining
 real-device/Lock Screen/minimal-layout checks.
+
+### Owner-approved reminder enrichment — 2026-10-05
+
+Implemented native Review & log actions, with generic notification previews and
+an unlocked, named habit confirmation. Domain guards reject stale/non-due/
+archived/unknown requests and preserve existing completions on repeated taps.
+Ordinary opening and Cancel are read-only. Completion provenance is persisted
+as `notification`; successful confirmation returns to Today for normal undo.
+No new dependency, entitlement, permission, model table or remote service.
+
+Verification: 296 unit tests + 10 targeted UI tests pass; Release unsigned
+iPhone build passes and DEBUG hooks are absent. Native OS notification action
+and confirmation screenshots reviewed. Signed-device authentication/cold-launch
+and accessibility checks remain; this does not claim the full UI suite or
+TestFlight readiness.
+
+Competitor cue: Habitify describes completing a reading habit from its reminder
+([official example](https://habitify.me/blog/develop-reading-habit-with-habitify-reading-habit-tracker)).
+Avela adds identity confirmation because its existing notification text is
+generic for privacy. Native action behavior follows Apple's
+[notification-action guidance](https://developer.apple.com/documentation/usernotifications/handling-notifications-and-notification-related-actions).
+
+### Calendar and colour themes enrichment — 2026-10-05
+
+Implemented owner-approved, read-only per-habit month history, connected daily
+successes, separate flexible-weekly commitment outcomes, accessible date lists and
+five free local app themes. Historical facts and scheduling still come from the
+existing repository/progress engine; no backend or dependency is added. Theme
+storage adds one appearance entity without altering companion-profile fields.
+
+Regression work corrected unfinished-week closure and adjacent-day archive
+boundary handling, and preserves access to stored dates across travel/month
+boundaries. Native verification evidence is recorded in SETUP.md. Signed-device
+accessibility, production signing/configuration and release readiness remain
+separate work; this addition is not a TestFlight upload or App Store approval.
+
+### Personal habit ordering enrichment — 2026-10-05
+
+Free active-habit ordering is implemented via a cancellable native sheet, with
+Save/Cancel, drag handles, Move Up/Down, large-text reflow and entry points from
+Today and Settings. The existing sortOrder field is used; no schema, permission,
+dependency or tracking change. Stale drafts are rejected and reloaded explicitly.
+Verification results belong in SETUP.md; physical-device accessibility remains
+part of the release checklist rather than a simulator-derived claim.
+
+### Additional themes and lighter-schedule review — 2026-10-05
+
+Implemented four more free app accents (Indigo, Forest, Coral, Gold), for nine
+choices, and a small optional Make It Easier flow in habit detail. A pure domain
+calculator offers an adjustable lower flexible-weekly frequency during repeated
+misses/ongoing recovery; a dedicated view model revalidates the review before
+explicit confirmation. Normal configuration snapshots preserve prior facts.
+There is no automatic schedule edit, AI coaching or new permission/schema.
+Native verification results and previews are recorded in SETUP.md. Signed-device
+accessibility and distribution remain independent release gates.
+
+### Full themes and streak styling refinement — 2026-10-05
+
+Expanded the nine existing choices from accents into shared page gradients,
+custom reading surfaces and deep hero styling. Today and Calendar History have
+stronger themed progress hierarchy; other main screens and logging forms share
+the canvas. No domain engine or persistence change. Native verification and
+previews are recorded in SETUP.md; signed-device accessibility remains open.
+
+
+## Design quality implementation
+
+Applied the quality plan to core V1 journeys: adaptive weekday/picker controls, readable icon labels and progress context, scalable summaries, stable assistive-navigation confirmation, exact current-day Undo, informational calendar traits, reduced-transparency onboarding and wrapping Settings labels. Native audits and calculator/launch benchmarks are part of verification, not proof of complete device accessibility or award eligibility. See QUALITY_EXECUTION.md and SETUP.md for evidence and remaining gates.
+
+
+## Owner approved feature expansion — 2026-10-05
+
+Implemented optional manual quantity targets, additive quick increments, explicit elapsed-minute timers, separate smaller-action records, dated correction review, routine groups/3–7-day restart plans, private weekly reflection and a native Apple Watch target/WatchConnectivity adapter. Siri adds Log Habit Progress. These extend the candidate beyond the original MVP boundary under the owner's explicit request.
+
+A Manageable Week review adds named, individually confirmed pauses and restart selection. Make Room links a phone-free session to a habit intention; its manually reported result remains separate from habit success. Neither implements automatic difficult-week rescheduling. Voice remains Siri/Shortcuts; external services, automatic Screen Time and cloud sync remain deferred. Native verification and paired Watch limitations are recorded in SETUP.md.
+
+Enrichment verification completed: 411 unit tests and nine distinct targeted UI flows pass; largest-text setup additionally passes in dark appearance. Final Debug and unsigned iPhone/Watch Release builds pass. Native captures are in `docs/verification/enrichment/`; paired Watch and physical accessibility remain pending, and the full UI suite was not rerun.
+
+## Factual reflection deepening — 2026-10-05
+
+Implemented recorded per-habit weekly results beside private reflection notes, with skips/pending/pauses excluded through the existing calculator. Insights opens the selected review week instead of today. Notes are never analyzed, and no AI runtime/service, dependency or schema is introduced. That pass deferred backup/restore and dedicated lifetime milestones; subsequent cloud-recovery and progress-enrichment sections below record their implementation. A more unified recovery journey remains a separate design follow-up.
+
+
+## Progress protection status — 2026-10-05
+
+Optional private iCloud backup and explicit empty-install recovery implemented.
+Health-related tracking and private notes are deliberately excluded. Native
+CloudKit provisioning, production schema and signed-device recovery remain release
+gates. This does not claim shipping readiness or enable cross-device live sync.
+
+Unconfigured Release builds hide the Progress Protection entry. Debug builds
+show its unavailable state for development; no CloudKit calls are made.
+
+Recovery verification: **423 unit tests + 4 targeted UI tests, zero failures**.
+Details and native screenshot: [private recovery verification](verification/cloud-recovery/README.md).
+
+## Progress enrichment verification — 2026-10-06
+
+Lifetime progress/milestones, personal quick amounts, and the selected-week intention review are implemented. Full native unit suite: **454 tests, zero failures** (31 new tests). Five distinct affected native UI flows pass: lifetime + milestone + relaunch/Undo; populated read-only selected-week review; preset Cancel/Save/log/Undo/relaunch; existing quantity/smaller-action regression; largest-text navigation. Debug simulator and unsigned iPhoneOS Release builds succeed. DEBUG fixture/store hooks are absent from the Release executable, with production symbols checked as a sanity control. Project membership and whitespace checks pass.
+
+Evidence and precise commands: `docs/verification/progress-enrichment/README.md`. The full UI suite was not rerun for this bounded slice. Physical-device VoiceOver/interaction checks remain pending. Presets are device-local convenience preferences, not included in logical iCloud recovery; progress is derived from the existing records. Cloud recovery remains gated by the signing/container/device-verification prerequisites already documented.
+
+Next: a cohesive premium UI/interaction polish pass using real screens. Prioritize action hierarchy, crowded habit-detail navigation, text density, logging controls, and consistent spacing/typography/icon treatment. This pass did not perform that global redesign.
+
+## Cohesive native UI polish — 2026-10-06
+
+Implemented quieter habit recovery counts, grouped detail tools, consistent icon tiles, clearer logging/review hierarchy, Settings grouping and shared spacing/theme refinements across the main iPhone screens. Existing progress, provenance, privacy and purchase behavior is preserved; no schema, permission or dependency was added.
+
+Verification: **454 unit tests and 14 distinct affected UI flows pass**, plus two repeated dark-mode screen-tour/AX3-navigation checks. Debug simulator and unsigned iPhoneOS Release builds succeed; DEBUG fixture/store hooks are absent from Release. Project integrity and whitespace checks pass. The entire UI suite was not rerun. Physical VoiceOver, OLED and private usability checks remain pending; signed cloud/device integration gates are unchanged.
+
+[Native light/dark gallery, exact scope and reproduction commands](verification/ui-polish/README.md).
+
+## Atmospheric themes verification — 2026-10-06
+
+The first coordinated design pass is implemented: neutral reading surfaces, complementary theme atmosphere, original static calendar/picker landscapes, action-focused Today and consistent multicolor habit identity. Existing saved theme values, progress/history, manual provenance and commercial rules remain unchanged; no schema, package or permission was added.
+
+**455 unit tests and seven distinct affected UI flows pass**, with nine UI executions across light/dark. Debug and unsigned iPhoneOS Release builds succeed. DEBUG store/fixture/recovery markers are absent from Release; production scenery symbols are present. Project membership and whitespace checks pass. The entire UI suite was not rerun. Physical VoiceOver, OLED, Increase Contrast and private usability checks remain pending; signed platform/cloud release gates are unchanged.
+
+[Native screenshots, exact scope and reproduction](verification/atmospheric-themes/README.md). The dedicated simulator is restored to light appearance. No commits or pushes.
+
+### Recovery presentation slice — 2026-10-06
+
+Implemented typed Today recovery projection and one Build Momentum card, existing support-tool entry points, threshold confirmation and accessible exact-record Undo. No new progress engine, storage, dependency or permission. Verification/screenshots: [recovery-card](verification/recovery-card/README.md). Weekly-review composition and optional companion expansion remain separate later design work.
+
+### Visual Insights slice — 2026-10-06
+
+Completed-week presentation rebuilt around an equal-weight ring, exact per-habit bars and separate manual-attention performance/coverage. Existing metric, tie, historical and trend rules are preserved. Habit detail/History navigation stays functional, and session-only goals no longer show an absent budget card. Native evidence and verification: [visual-insights](verification/visual-insights/README.md).

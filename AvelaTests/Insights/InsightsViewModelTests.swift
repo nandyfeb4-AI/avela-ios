@@ -180,4 +180,34 @@ final class InsightsViewModelTests: XCTestCase {
         XCTAssertEqual(model.attentionWeek?.eligibleGoalDays, 0)
     }
 
+    func testArchivedHabitBreakdownKeepsIdentityAndDetailNavigationDoesNotWrite() throws {
+        let repository = try makeRepository()
+        let habit = try repository.createHabit(HabitDraft(name: "Read", iconName: "book.fill", category: .learning, polarity: .positive, schedule: .daily), at: day(-7))
+        let completion = try repository.recordCompletion(habitID: habit.id, at: day(-4), source: .app, note: nil)
+        try repository.archiveHabit(id: habit.id, at: day(0))
+        let model = InsightsViewModel(repository: repository, calendar: calendar)
+        model.load(asOf: day(3))
+        let summary = try XCTUnwrap(model.insights?.eligibleHabits.first)
+        XCTAssertTrue(summary.isArchived)
+        XCTAssertEqual(summary.successfulUnits, 1)
+        XCTAssertEqual(model.habitIcons[habit.id], "book.fill")
+        let detail = model.habitDetailModel(for: habit.id)
+        detail.load(asOf: day(3))
+        XCTAssertTrue(try XCTUnwrap(detail.display).isArchived)
+        XCTAssertEqual(try repository.completions(for: habit.id, in: DateInterval(start: day(-10), end: day(4))).map(\.id), [completion.id])
+        XCTAssertEqual(try repository.configurationHistory(for: habit.id).count, 1)
+    }
+
+    func testSessionOnlyReviewDoesNotInventAnAttentionBudget() throws {
+        let repository = try makeRepository()
+        let attention = SwiftDataAttentionRepository(modelContext: try XCTUnwrap(container).mainContext, calendar: calendar)
+        _ = try attention.createGoal(AttentionGoalDraft(name: "Reading space", appOrCategoryLabel: nil, type: .phoneFreeSession, targetValue: 15, unit: .minutes), at: day(-7))
+        let model = InsightsViewModel(repository: repository, attentionRepository: attention, calendar: calendar)
+        model.load(asOf: day(3))
+        XCTAssertTrue(model.hasAnyGoals)
+        XCTAssertTrue(model.hasAnyAttentionGoals)
+        XCTAssertFalse(model.hasAnyAttentionBudgets)
+        XCTAssertNil(model.attentionWeek?.successRate)
+    }
+
 }

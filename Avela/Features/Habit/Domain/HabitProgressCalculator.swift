@@ -191,22 +191,36 @@ enum HabitProgressCalculator {
 
     // MARK: - Shared unit sequence
 
-    private enum Outcome {
+    enum Outcome: Equatable, Sendable {
         case success
         case skip
         case miss
-        /// The one period (at most) touching the evaluation end that has not
-        /// yet been determined. Excluded from every calculation above.
+        /// An unfinished period touching evaluation or an archive boundary.
+        /// Excluded from streak, consistency and recovery scans.
         case pending
     }
 
-    private struct Unit {
+    struct ProgressPeriod: Equatable, Sendable {
         let outcome: Outcome
         let periodStart: Date
         let localDateKey: String
+        /// Half-open evaluated span; partial weeks stop at edits or pauses.
+        let periodEnd: Date
+        let unit: StreakUnit
+        let completedCount: Int
+        let target: Int
     }
 
-    private static func scan(_ units: [Unit]) -> (current: Int, best: Int, lastMissKey: String?) {
+    /// Read-only history for calendar presentation, sharing the exact streak engine.
+    static func periods(
+        for habit: Habit, snapshots: [HabitConfigurationSnapshot], completions: [Completion],
+        skips: [Skip], archivePeriods: [HabitArchivePeriod], asOf date: Date, calendar: Calendar
+    ) -> [ProgressPeriod] {
+        buildUnitSequence(habit: habit, snapshots: snapshots, completions: completions,
+                          skips: skips, archivePeriods: archivePeriods, asOf: date, calendar: calendar)
+    }
+
+    private static func scan(_ units: [ProgressPeriod]) -> (current: Int, best: Int, lastMissKey: String?) {
         var current = 0
         var best = 0
         var lastMissKey: String?
@@ -221,7 +235,7 @@ enum HabitProgressCalculator {
                 current = 0
                 lastMissKey = unit.localDateKey
             case .pending:
-                break // never emitted anywhere but last; excluded either way
+                break // unfinished evaluation/archive periods remain neutral
             }
         }
         return (current, best, lastMissKey)
@@ -280,7 +294,7 @@ enum HabitProgressCalculator {
         archivePeriods: [HabitArchivePeriod],
         asOf date: Date,
         calendar: Calendar
-    ) -> [Unit] {
+    ) -> [ProgressPeriod] {
         guard !snapshots.isEmpty else { return [] }
 
         let end = effectiveEnd(for: habit, asOf: date)
@@ -290,6 +304,9 @@ enum HabitProgressCalculator {
 
         let completionDayKeys = Set(completions.filter { $0.habitID == habit.id }.map(\.localDateKey))
         let skipDayKeys = Set(skips.filter { $0.habitID == habit.id }.map(\.localDateKey))
+        let archiveBoundaryDays = Set(archivePeriods
+            .filter { $0.habitID == habit.id && $0.reactivatedAt != nil }
+            .map { calendar.startOfDay(for: $0.archivedAt) })
         let dormantRanges = archivePeriods
             .filter { $0.habitID == habit.id }
             .compactMap { dormantRange(for: $0, calendar: calendar) }
@@ -299,19 +316,22 @@ enum HabitProgressCalculator {
             let weekEndCap: Date
             let target: Int
             var completedDayKeys: Set<String> = []
+            var evaluatedEnd: Date
         }
 
-        var units: [Unit] = []
+        var units: [ProgressPeriod] = []
         var bucket: WeekBucket?
 
         func closeBucket(isFinal: Bool) {
             guard let bucket else { return }
             let metTarget = bucket.completedDayKeys.count >= bucket.target
             let outcome: Outcome = metTarget ? .success : (isFinal ? .pending : .miss)
-            units.append(Unit(
+            units.append(ProgressPeriod(
                 outcome: outcome,
                 periodStart: bucket.weekStart,
-                localDateKey: LocalDay.key(for: bucket.weekStart, calendar: calendar)
+                localDateKey: LocalDay.key(for: bucket.weekStart, calendar: calendar),
+                periodEnd: bucket.evaluatedEnd, unit: .weeks,
+                completedCount: bucket.completedDayKeys.count, target: bucket.target
             ))
         }
 
@@ -338,7 +358,7 @@ enum HabitProgressCalculator {
             // yet would wrongly resolve as a miss once the period is reactivated
             // and the walk continues past it.
             let entersDormancyNext = dormantRanges.contains { next >= $0.start && next < $0.end }
-            let isBoundaryDay = cursor == endDay || entersDormancyNext
+            let isBoundaryDay = cursor == endDay || entersDormancyNext || archiveBoundaryDays.contains(cursor)
 
             guard let config = HabitScheduleEvaluator.activeConfiguration(from: snapshots, on: cursor, calendar: calendar) else {
                 cursor = next
@@ -361,15 +381,18 @@ enum HabitProgressCalculator {
                     } else {
                         outcome = .miss
                     }
-                    units.append(Unit(outcome: outcome, periodStart: cursor, localDateKey: key))
+                    units.append(ProgressPeriod(outcome: outcome, periodStart: cursor, localDateKey: key,
+                                                periodEnd: next, unit: .days,
+                                                completedCount: outcome == .success ? 1 : 0, target: 1))
                 }
 
             case .timesPerWeek(let target):
                 let weekInterval = LocalDay.weekInterval(containing: cursor, calendar: calendar)
                 if bucket == nil || bucket!.target != target {
                     closeBucket(isFinal: false)
-                    bucket = WeekBucket(weekStart: cursor, weekEndCap: weekInterval.end, target: target)
+                    bucket = WeekBucket(weekStart: cursor, weekEndCap: weekInterval.end, target: target, evaluatedEnd: next)
                 }
+                bucket!.evaluatedEnd = next
                 let key = LocalDay.key(for: cursor, calendar: calendar)
                 if completionDayKeys.contains(key) {
                     bucket!.completedDayKeys.insert(key)
@@ -377,7 +400,9 @@ enum HabitProgressCalculator {
             }
 
             if case .timesPerWeek = config.schedule, let currentBucket = bucket, next >= currentBucket.weekEndCap {
-                closeBucket(isFinal: false)
+                // The last calendar day is still open until its midnight.
+                // Evaluation or archiving during it cannot create a miss.
+                closeBucket(isFinal: isBoundaryDay)
                 bucket = nil
             }
             if isBoundaryDay {

@@ -28,9 +28,7 @@ struct ArchivedHabitsView: View {
             } else {
                 List(viewModel.rows) { row in
                     HStack(spacing: 12) {
-                        Image(systemName: row.iconName)
-                            .foregroundStyle(.secondary)
-                            .frame(width: 24)
+                        HabitIconBadge(symbol: row.iconName, isArchived: true)
                             .accessibilityHidden(true)
                         VStack(alignment: .leading, spacing: 2) {
                             Text(row.name)
@@ -49,6 +47,7 @@ struct ArchivedHabitsView: View {
                 }
             }
         }
+        .appThemeCanvas()
         .navigationTitle("Archived Habits")
         .sheet(isPresented: Binding(
             get: { viewModel.isShowingPremium }, set: { viewModel.isShowingPremium = $0 }

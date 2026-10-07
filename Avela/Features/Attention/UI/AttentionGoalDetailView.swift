@@ -13,17 +13,20 @@ struct AttentionGoalDetailView: View {
             if let display = viewModel.display {
                 List {
                     Section {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(display.name)
-                                .font(.title3)
-                                .accessibilityIdentifier("attentionGoalDetail.name")
-                            if let label = display.appOrCategoryLabel {
-                                Text(label)
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
+                        HStack(spacing: 14) {
+                            AppIconBadge(symbol: "hourglass").accessibilityHidden(true)
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text(display.name)
+                                    .font(.title2.weight(.semibold))
+                                    .accessibilityIdentifier("attentionGoalDetail.name")
+                                if let label = display.appOrCategoryLabel {
+                                    Text(label)
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
                             }
                         }
-                        .padding(.vertical, 4)
+                        .padding(.vertical, 10)
                     }
 
                     Section("Today") {
@@ -85,7 +88,9 @@ struct AttentionGoalDetailView: View {
                 ProgressView()
             }
         }
+        .appThemeCanvas()
         .navigationTitle(viewModel.display?.name ?? "Attention Goal")
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button("Edit") {

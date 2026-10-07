@@ -19,11 +19,60 @@ final class SwiftDataHabitRepository: HabitRepository {
         let descriptor = FetchDescriptor<HabitRecord>(sortBy: [SortDescriptor(\.sortOrder)])
         return try modelContext.fetch(descriptor)
             .filter { includeArchived || $0.archivedAt == nil }
+            .sorted {
+                $0.sortOrder != $1.sortOrder
+                    ? $0.sortOrder < $1.sortOrder
+                    : $0.id.uuidString < $1.id.uuidString
+            }
             .map { $0.toDomain() }
     }
 
     func fetchHabit(id: UUID) throws -> Habit? {
         try habitRecord(id: id)?.toDomain()
+    }
+
+    func reorderHabits(ids: [UUID]) throws {
+        let records = try modelContext.fetch(FetchDescriptor<HabitRecord>())
+        let active = records.filter { $0.archivedAt == nil }
+        guard ids.count == active.count,
+              Set(ids).count == ids.count,
+              Set(ids) == Set(active.map(\.id)) else {
+            throw HabitRepositoryError.invalidHabitOrder
+        }
+
+        // Reuse active slots, leaving archived records in their own positions.
+        var slots = active.map(\.sortOrder).sorted()
+        if Set(slots).count != slots.count {
+            // Legacy collisions cannot express a requested order with UUID
+            // tiebreaks alone. Repair active slots without moving archived rows.
+            let reserved = Set(records.filter { $0.archivedAt != nil }.map(\.sortOrder))
+            slots = []
+            var candidate = 0
+            while slots.count < active.count {
+                if !reserved.contains(candidate) { slots.append(candidate) }
+                if slots.count < active.count {
+                    let increment = candidate.addingReportingOverflow(1)
+                    guard !increment.overflow else { throw HabitRepositoryError.invalidHabitOrder }
+                    candidate = increment.partialValue
+                }
+            }
+        }
+        let recordsByID = Dictionary(uniqueKeysWithValues: active.map { ($0.id, $0) })
+        let changes = ids.enumerated().compactMap { index, id -> (HabitRecord, Int, Int)? in
+            guard let record = recordsByID[id], record.sortOrder != slots[index] else { return nil }
+            return (record, record.sortOrder, slots[index])
+        }
+        guard !changes.isEmpty else { return }
+        for (record, _, slot) in changes { record.sortOrder = slot }
+        do {
+            try modelContext.save()
+        } catch {
+            // A shared context may contain unrelated pending writes. Restore
+            // only this operation's fields rather than rolling the context back.
+            for (record, original, _) in changes { record.sortOrder = original }
+            throw error
+        }
+        NotificationCenter.default.post(name: .avelaPersistenceDidChange, object: nil)
     }
 
     @discardableResult
@@ -62,21 +111,37 @@ final class SwiftDataHabitRepository: HabitRepository {
         guard let record = try habitRecord(id: id) else {
             throw HabitRepositoryError.habitNotFound(id)
         }
+        if draft.polarity != .positive,
+           try SwiftDataHabitActivityRepository(context: modelContext, habits: self, calendar: calendar)
+            .configuration(for: id, on: date)?.target != nil {
+            throw HabitRepositoryError.manualQuantityRequiresPositivePolarity
+        }
         let configurationChanged = record.currentSchedule != draft.schedule
             || record.currentPolarity != draft.polarity
+        // Fetch the revision before mutating. A failed edit must not linger in
+        // the context and later autosave as if the user had confirmed it.
+        let revision = configurationChanged ? try nextConfigurationRevision(for: id) : nil
+        let previous = record.toDomain()
+        let previousDraft = HabitDraft(name: previous.name, iconName: previous.iconName,
+            category: previous.category, polarity: previous.polarity, schedule: previous.schedule)
+        var insertedSnapshot: HabitConfigurationSnapshotRecord?
         record.apply(draft: draft, updatedAt: date)
-        if configurationChanged {
-            modelContext.insert(HabitConfigurationSnapshotRecord(domain: HabitConfigurationSnapshot(
-                id: UUID(),
-                habitID: id,
-                polarity: draft.polarity,
-                schedule: draft.schedule,
+        if let revision {
+            let snapshot = HabitConfigurationSnapshotRecord(domain: HabitConfigurationSnapshot(
+                id: UUID(), habitID: id, polarity: draft.polarity, schedule: draft.schedule,
                 effectiveLocalDateKey: LocalDay.key(for: date, calendar: calendar),
-                revision: try nextConfigurationRevision(for: id),
-                createdAt: date
-            )))
+                revision: revision, createdAt: date
+            ))
+            modelContext.insert(snapshot)
+            insertedSnapshot = snapshot
         }
-        try modelContext.save()
+        do {
+            try modelContext.save()
+        } catch {
+            record.apply(draft: previousDraft, updatedAt: previous.updatedAt)
+            if let insertedSnapshot { modelContext.delete(insertedSnapshot) }
+            throw error
+        }
         NotificationCenter.default.post(name: .avelaPersistenceDidChange, object: nil)
         return record.toDomain()
     }
@@ -153,6 +218,7 @@ final class SwiftDataHabitRepository: HabitRepository {
         guard try habitRecord(id: habitID) != nil else {
             throw HabitRepositoryError.habitNotFound(habitID)
         }
+        try validateCompletion(habitID: habitID, at: date)
         let record = CompletionRecord(domain: Completion(
             id: UUID(),
             habitID: habitID,
@@ -161,10 +227,19 @@ final class SwiftDataHabitRepository: HabitRepository {
             source: source,
             note: note
         ))
+        record.isQuantityDerived = try SwiftDataHabitActivityRepository(context: modelContext, habits: self, calendar: calendar).configuration(for: habitID, on: date)?.target != nil
         modelContext.insert(record)
         try modelContext.save()
         NotificationCenter.default.post(name: .avelaPersistenceDidChange, object: nil)
         return record.toDomain()
+    }
+
+    func validateCompletion(habitID: UUID, at date: Date) throws {
+        let activity = SwiftDataHabitActivityRepository(context: modelContext, habits: self, calendar: calendar)
+        if let target = try activity.configuration(for: habitID, on: date)?.target {
+            let total = try activity.entries(for: habitID, on: date).filter { $0.kind == .quantity && $0.unit == target.unit }.reduce(0) { $0 + $1.amount }
+            guard total >= target.amount else { throw HabitActivityError.invalidAmount }
+        }
     }
 
     func undoCompletion(id: UUID) throws {

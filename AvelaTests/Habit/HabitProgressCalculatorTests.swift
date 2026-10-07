@@ -56,6 +56,22 @@ final class HabitProgressCalculatorTests: XCTestCase {
         HabitArchivePeriod(id: UUID(), habitID: habitID, archivedAt: archivedAt, reactivatedAt: reactivatedAt)
     }
 
+    /// Deterministic three-year history baseline; measures calculation, not UI latency.
+    func testThreeYearDailyHistoryPerformanceAndCorrectness() {
+        let start = calendar.startOfDay(for: anchor)
+        let dates = (0..<1_095).map { calendar.date(byAdding: .day, value: $0, to: start)! }
+        let habit = makeHabit(schedule: .daily, createdAt: start)
+        let history = [snapshot(habitID: habit.id, schedule: .daily, effectiveFrom: start, revision: 0)]
+        let completions = dates.map { completion(habit.id, on: $0) }
+        let asOf = dates.last!.addingTimeInterval(3_600)
+        measure {
+            let result = HabitProgressCalculator.streak(for: habit, snapshots: history,
+                completions: completions, skips: [], archivePeriods: [], asOf: asOf, calendar: calendar)
+            XCTAssertEqual(result.currentStreak, 1_095)
+            XCTAssertEqual(result.bestStreak, 1_095)
+        }
+    }
+
     // MARK: - Daily schedule
 
     func testDailyStreakBuildsAndBreaksOnMiss() {
@@ -193,7 +209,7 @@ final class HabitProgressCalculatorTests: XCTestCase {
         XCTAssertEqual(streakAfterWeek1.unit, .weeks)
 
         let streakAfterWeek2 = HabitProgressCalculator.streak(
-            for: habit, snapshots: snapshots, completions: completions, skips: [], archivePeriods: [], asOf: day(12), calendar: calendar
+            for: habit, snapshots: snapshots, completions: completions, skips: [], archivePeriods: [], asOf: day(13), calendar: calendar
         )
         XCTAssertEqual(streakAfterWeek2.currentStreak, 0, "week 2 fell short of target by its natural end")
         XCTAssertEqual(streakAfterWeek2.bestStreak, 1)
@@ -217,7 +233,7 @@ final class HabitProgressCalculatorTests: XCTestCase {
         let completions = [day(0), day(0), day(2)].map { completion(habit.id, on: $0) }
 
         let streak = HabitProgressCalculator.streak(
-            for: habit, snapshots: snapshots, completions: completions, skips: [], archivePeriods: [], asOf: day(5), calendar: calendar // Saturday: natural week end
+            for: habit, snapshots: snapshots, completions: completions, skips: [], archivePeriods: [], asOf: day(6), calendar: calendar // Sunday: prior week has ended
         )
         XCTAssertEqual(streak.currentStreak, 0, "two completions on one day must not count as two distinct days toward the target")
     }
@@ -234,9 +250,9 @@ final class HabitProgressCalculatorTests: XCTestCase {
         // Only Thu completed under the new weekly schedule (1 distinct day < target 2).
         let completions = [day(0), day(1), day(3)].map { completion(habit.id, on: $0) }
 
-        // Evaluate at Saturday (day 5), the natural end of the week containing the edit.
+        // Evaluate Sunday (day 6), after the edited partial week has ended.
         let streak = HabitProgressCalculator.streak(
-            for: habit, snapshots: snapshots, completions: completions, skips: [], archivePeriods: [], asOf: day(5), calendar: calendar
+            for: habit, snapshots: snapshots, completions: completions, skips: [], archivePeriods: [], asOf: day(6), calendar: calendar
         )
         XCTAssertEqual(streak.currentStreak, 0, "the partial week after the edit fell short of its own target")
         XCTAssertEqual(streak.bestStreak, 2, "the two daily successes before the edit must be preserved")

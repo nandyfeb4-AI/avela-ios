@@ -10,12 +10,12 @@ struct HistoryView: View {
     var body: some View {
         VStack(spacing: 0) {
             Text(viewModel.rangeLabel)
-                .font(.caption)
+                .font(.subheadline.weight(.medium))
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal)
-                .padding(.top, 8)
-                .padding(.bottom, 4)
+                .padding(.top, 12)
+                .padding(.bottom, 10)
                 .accessibilityIdentifier("history.rangeLabel")
 
             if viewModel.sections.isEmpty {
@@ -33,6 +33,7 @@ struct HistoryView: View {
                 .listStyle(.insetGrouped)
             }
         }
+        .appThemeCanvas()
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Picker("Filter by Habit", selection: $viewModel.selectedHabitID) {
@@ -82,41 +83,31 @@ struct HistoryView: View {
 }
 
 private struct HistoryRowView: View {
+    @Environment(\.appPalette) private var palette
     let row: HistoryRow
 
     var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: row.kindSymbolName)
-                .font(.title3)
-                .foregroundStyle(row.kindLabel == "Completed" ? Color.accentColor : Color.secondary)
+        HStack(alignment: .top, spacing: 14) {
+            HabitIconBadge(symbol: row.habitIconName, isArchived: row.isHabitArchived)
                 .accessibilityHidden(true)
 
-            VStack(alignment: .leading, spacing: 2) {
-                HStack(spacing: 6) {
-                    Image(systemName: row.habitIconName)
-                        .foregroundStyle(row.isHabitArchived ? Color.secondary : Color.accentColor)
-                        .accessibilityHidden(true)
-                    Text(row.habitName)
-                    if row.isHabitArchived {
-                        Text("Archived")
-                            .font(.caption2)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(Color.secondary.opacity(0.15))
-                            .clipShape(Capsule())
-                    }
-                }
+            VStack(alignment: .leading, spacing: 6) {
+                Text(row.habitName).font(.body.weight(.semibold))
+                    .fixedSize(horizontal: false, vertical: true)
                 Text(subtitle)
-                    .font(.caption)
+                    .font(.subheadline)
                     .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                Label(row.kindLabel, systemImage: row.kindSymbolName)
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(row.kindLabel == "Completed" ? palette.accent : Color.secondary)
+                if row.isHabitArchived {
+                    Text("Archived").font(.caption).foregroundStyle(.secondary)
+                }
             }
-
-            Spacer(minLength: 0)
-
-            Text(row.kindLabel)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .padding(.vertical, 4)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(accessibilityLabel)
     }

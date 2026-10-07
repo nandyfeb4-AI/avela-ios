@@ -7,15 +7,17 @@ import Observation
 /// one cross-habit skips fetch scoped to the two weeks under review, and one
 /// configuration-history and archive-period fetch per habit (not per row) —
 /// then hands the result to `WeeklyInsightsCalculator` for aggregation. Never
-/// mutates anything; attention-budget metrics and day-of-week patterns are
-/// out of scope for this slice (see DATA_MODEL.md's "Phase 1 Insights").
+/// mutates facts. Manually reported attention and weekday patterns are
+/// computed separately from habit consistency.
 @MainActor
 @Observable
 final class InsightsViewModel {
+    private(set) var habitIcons: [UUID: String] = [:]
     private(set) var insights: WeeklyInsightsCalculator.WeeklyInsights?
     private(set) var weekRangeLabel: String = ""
     private(set) var hasAnyHabits = false
     private(set) var hasAnyAttentionGoals = false
+    private(set) var hasAnyAttentionBudgets = false
     private(set) var attentionWeek: SupplementalWeeklyInsightsCalculator.AttentionWeek?
     private(set) var weekdayPattern: SupplementalWeeklyInsightsCalculator.WeekdayPattern?
     var hasAnyGoals: Bool { hasAnyHabits || hasAnyAttentionGoals }
@@ -33,13 +35,15 @@ final class InsightsViewModel {
 
     private let repository: HabitRepository
     private let attentionRepository: AttentionRepository?
+    private let intentionLinks: IntentionSessionLinkRepository?
     private let calendar: Calendar
     private static let logger = Logger(subsystem: "com.example.Avela", category: "InsightsViewModel")
     private static let friendlyErrorMessage = "Something went wrong. Please try again."
 
-    init(repository: HabitRepository, attentionRepository: AttentionRepository? = nil, calendar: Calendar = .autoupdatingCurrent) {
+    init(repository: HabitRepository, attentionRepository: AttentionRepository? = nil, intentionLinks: IntentionSessionLinkRepository? = nil, calendar: Calendar = .autoupdatingCurrent) {
         self.repository = repository
         self.attentionRepository = attentionRepository
+        self.intentionLinks = intentionLinks
         self.calendar = calendar
     }
 
@@ -47,6 +51,7 @@ final class InsightsViewModel {
         do {
             let habits = try repository.fetchHabits(includeArchived: true)
             hasAnyHabits = !habits.isEmpty
+            habitIcons = Dictionary(uniqueKeysWithValues: habits.map { ($0.id, $0.iconName) })
 
             let weekInterval = Self.weekInterval(weeksBeforeLastCompleted: weeksBeforeLastCompleted, asOf: date, calendar: calendar)
             let previousWeekInterval = Self.weekInterval(
@@ -85,6 +90,7 @@ final class InsightsViewModel {
             if let attentionRepository {
                 let goals = try attentionRepository.fetchGoals()
                 hasAnyAttentionGoals = !goals.isEmpty
+                hasAnyAttentionBudgets = goals.contains { $0.type == .maxDurationPerDay }
                 var snapshots: [UUID: [AttentionGoalConfigurationSnapshot]] = [:]
                 for goal in goals { snapshots[goal.id] = try attentionRepository.configurationHistory(for: goal.id) }
                 attentionWeek = SupplementalWeeklyInsightsCalculator.attentionWeek(
@@ -102,6 +108,24 @@ final class InsightsViewModel {
     func goToPreviousWeek(asOf date: Date = Date()) {
         weeksBeforeLastCompleted += 1
         load(asOf: date)
+    }
+
+    func habitDetailModel(for id: UUID) -> HabitDetailViewModel {
+        HabitDetailViewModel(habitID: id, repository: repository, calendar: calendar)
+    }
+
+    func reflectionModel(repository reflections: ReflectionRepository) -> ReflectionViewModel {
+        ReflectionViewModel(repository: reflections, habits: repository, calendar: calendar,
+                            now: insights?.weekInterval.start ?? Date())
+    }
+
+    var hasMadeRoomReview: Bool { attentionRepository != nil && intentionLinks != nil && insights != nil }
+
+    /// Captures the selected completed review week, rather than resetting to today.
+    func madeRoomModel() -> MadeRoomReviewViewModel? {
+        guard let attentionRepository, let intentionLinks, let interval = insights?.weekInterval else { return nil }
+        return MadeRoomReviewViewModel(habits: repository, attention: attentionRepository,
+                                       links: intentionLinks, interval: interval, calendar: calendar)
     }
 
     func goToNextWeek(asOf date: Date = Date()) {

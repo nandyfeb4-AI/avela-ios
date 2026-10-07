@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct PremiumPaywallView: View {
+    @Environment(\.appPalette) private var palette
     @Bindable var manager: SubscriptionManager
     @Environment(\.dismiss) private var dismiss
     @State private var selectedProductID: String?
@@ -26,7 +27,7 @@ struct PremiumPaywallView: View {
                             Text("Subscription options aren't available right now. You can keep using Avela for free.")
                                 .foregroundStyle(.secondary)
                                 .accessibilityIdentifier("premium.productsUnavailable")
-                            Button("Try Again") { Task { await manager.loadPlans() } }
+                            Button { Task { await manager.loadPlans() } } label: { Text("Try Again").frame(minHeight: 44) }
                                 .disabled(manager.isBusy)
                         } else {
                             ForEach(manager.plans) { plan in
@@ -44,7 +45,7 @@ struct PremiumPaywallView: View {
                                     }
                                     .frame(minHeight: 44)
                                     .padding(16)
-                                    .background(Color.appSurface)
+                                    .background(palette.surface)
                                     .clipShape(RoundedRectangle(cornerRadius: 16))
                                 }
                                 .buttonStyle(.plain)
@@ -56,7 +57,9 @@ struct PremiumPaywallView: View {
                                 Button("Subscribe · \(selectedPlan.displayPrice) / \(selectedPlan.billingPeriod)") {
                                     Task { await manager.purchase(productID: selectedPlan.id) }
                                 }
+                                .foregroundStyle(palette.prominentInk)
                                 .buttonStyle(.borderedProminent)
+                                .tint(palette.prominentFill)
                                 .frame(maxWidth: .infinity, minHeight: 44)
                                 .disabled(manager.isBusy)
                                 .accessibilityIdentifier("premium.subscribeButton")
@@ -73,19 +76,19 @@ struct PremiumPaywallView: View {
                             .accessibilityIdentifier("premium.status")
                     }
 
-                    Button("Restore Purchases") { Task { await manager.restorePurchases() } }
+                    Button { Task { await manager.restorePurchases() } } label: { Text("Restore Purchases").frame(minHeight: 44) }
                         .disabled(manager.isBusy)
                         .accessibilityIdentifier("premium.restoreButton")
-                    Link("Manage Subscriptions", destination: URL(string: "https://apps.apple.com/account/subscriptions")!)
-                    Button("Privacy") { isShowingPrivacy = true }
-                    Link("Terms of Use", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
+                    Link(destination: URL(string: "https://apps.apple.com/account/subscriptions")!) { Text("Manage Subscriptions").frame(minHeight: 44) }
+                    Button { isShowingPrivacy = true } label: { Text("Privacy").frame(minHeight: 44) }
+                    Link(destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!) { Text("Terms of Use").frame(minHeight: 44) }
                     Text("If Premium ends, existing active habits, goals and history remain usable. Free limits apply when adding items or reactivating archived habits.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
                 .padding(20)
             }
-            .background(Color.appBackground)
+            .appThemeCanvas()
             .navigationTitle("Avela Premium")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

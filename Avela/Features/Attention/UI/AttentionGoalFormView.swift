@@ -80,7 +80,8 @@ struct AttentionGoalFormView: View {
                 }
                 }
             }
-            .navigationTitle(isEditing ? "Edit Attention Goal" : "New Attention Goal")
+            .appThemeCanvas()
+        .navigationTitle(isEditing ? "Edit Attention Goal" : "New Attention Goal")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

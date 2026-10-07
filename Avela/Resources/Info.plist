@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Avela reads today's steps or exercise minutes only for habits you connect, so it can log success when your chosen target is reached.</string>
 	<key>NSSupportsLiveActivities</key>
 	<true/>
 	<key>CFBundleURLTypes</key>
@@ -15,5 +17,7 @@
 			</array>
 		</dict>
 	</array>
+	<key>AvelaCloudBackupContainer</key>
+	<string>$(AVELA_CLOUD_BACKUP_CONTAINER)</string>
 </dict>
 </plist>

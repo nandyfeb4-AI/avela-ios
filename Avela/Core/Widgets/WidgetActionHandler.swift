@@ -32,6 +32,8 @@ struct WidgetActionHandler {
             if !(try repository.completions(for: habitID, in: range)).isEmpty {
                 return .alreadyCompleted(habitID)
             }
+            do { try repository.validateCompletion(habitID: habitID, at: date) }
+            catch HabitActivityError.invalidAmount { return .openedToday }
             // An explicit completion replaces an excused skip, as it does
             // from Today; do not leave conflicting same-day facts.
             for skip in try repository.skips(for: habitID, in: range) {

@@ -4,8 +4,10 @@ import UIKit
 /// State selection remains in the domain engine; this view only renders the
 /// matching pose and a brief transition. No idle loop or mascot-care mechanics.
 struct CompanionView: View {
+    @Environment(\.appPalette) private var palette
     let profile: CompanionProfile
     let input: CompanionInput
+    var compact = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
@@ -28,14 +30,16 @@ struct CompanionView: View {
                 ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12))
                 : AnyLayout(HStackLayout(alignment: .center, spacing: 16))
             layout {
-                CompanionArtwork(animal: profile.selectedAnimal.rawValue, state: state.rawValue, size: 80)
+                CompanionArtwork(animal: profile.selectedAnimal.rawValue, state: state.rawValue, size: compact ? 48 : 80)
                     .id(state)
                     .transition(reduceMotion ? .identity : .opacity)
                     .scaleEffect(!reduceMotion && state == .celebrating ? 1.04 : 1)
                     .animation(reduceMotion ? nil : .easeInOut(duration: 0.3), value: state)
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Your \(profile.selectedAnimal.title.lowercased()) companion")
-                        .font(.caption).foregroundStyle(Color.appInkSecondary)
+                    if !compact {
+                        Text("Your \(profile.selectedAnimal.title.lowercased()) companion")
+                            .font(.caption).foregroundStyle(Color.appInkSecondary)
+                    }
                     Text(CompanionStateEngine.message(for: input))
                         .font(.subheadline).foregroundStyle(Color.appInk)
                         .fixedSize(horizontal: false, vertical: true)
@@ -43,9 +47,10 @@ struct CompanionView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(16)
-            .background(Color.appSurface)
+            .background(palette.surface)
             .clipShape(RoundedRectangle(cornerRadius: 20))
             .accessibilityElement(children: .combine)
+            .accessibilityLabel("Your \(profile.selectedAnimal.title.lowercased()) companion. \(CompanionStateEngine.message(for: input))")
             .accessibilityIdentifier("companion.summary")
             .accessibilityValue(stateLabel)
         }

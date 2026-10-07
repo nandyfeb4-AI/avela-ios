@@ -12,7 +12,7 @@ struct AttentionGoalNavigationID: Hashable {
 /// sources (a habit completion, a fast attention quick-log) so there is one
 /// toast implementation, not two.
 private enum TodayToastKind: Equatable {
-    case habitCompletion(habitID: UUID)
+    case habitCompletion(habitID: UUID, completionID: UUID)
     case attentionQuickLog
 }
 
@@ -30,6 +30,7 @@ private struct TodayToast: Identifiable {
 /// comes from `TodayViewModel`/`AttentionSummaryViewModel`; this view neither
 /// queries SwiftData nor computes scheduling/progress/threshold math itself.
 struct TodayView: View {
+    @Environment(\.appPalette) private var palette
     @Bindable var viewModel: TodayViewModel
     let repository: HabitRepository
     @Bindable var attentionViewModel: AttentionSummaryViewModel
@@ -40,6 +41,8 @@ struct TodayView: View {
     var onViewHistory: (UUID) -> Void = { _ in }
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityVoiceOverEnabled) private var voiceOverEnabled
+    @Environment(\.accessibilitySwitchControlEnabled) private var switchControlEnabled
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     /// Habits whose completion toggle fired less than `collapseDelay` ago:
@@ -50,7 +53,15 @@ struct TodayView: View {
     /// to extend it with, unlike the web prototype this layout is based on).
     @State private var pendingDoneIDs: Set<UUID> = []
     @State private var isDoneSectionExpanded = false
+    @State private var isShowingHabitOrder = false
     @State private var toast: TodayToast?
+    @State private var activityHabitID: UUID?
+    @State private var recoveryAdjustmentID: UUID?
+    @State private var prioritizesSmallerAction = false
+    @Environment(\.habitActivityRepository) private var activityRepository
+    @Environment(\.habitReminderService) private var reminderService
+    @Environment(\.routineRepository) private var routineRepository
+    @State private var showingRoutines = false
     @State private var toastDismissTask: Task<Void, Never>?
     /// Keyed by habit ID so a still-pending collapse can be cancelled (not
     /// just superseded) — see `scheduleCollapse` and the `.onDisappear` below
@@ -71,22 +82,23 @@ struct TodayView: View {
     }
 
     var body: some View {
-        Group {
-            if viewModel.rows.isEmpty && attentionViewModel.rows.isEmpty {
-                emptyState
-            } else {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 28) {
-                        CompanionView(profile: companionProfile, input: companionInput)
-                        pillarStrip
-                        habitsSection
-                        if !attentionViewModel.rows.isEmpty {
-                            attentionSection
-                        }
+        todayContent
+        .sheet(isPresented: $showingRoutines, onDismiss: { viewModel.load() }) {
+            if let routineRepository { NavigationStack {
+                RoutinesView(repository: routineRepository, habits: repository, onLogHabit: { activityHabitID = $0 })
+                    .sheet(item: Binding(get: { activityHabitID.map(ActivityHabitSelection.init) }, set: { activityHabitID = $0?.id })) { selection in
+                        if let activityRepository { HabitActivityView(habitID: selection.id, repository: activityRepository, habits: repository) }
                     }
-                    .padding(16)
-                }
-                .background(Color.appBackground)
+                    .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Done") { showingRoutines = false } } }
+            } }
+        }
+        .sheet(item: Binding(get: { showingRoutines ? nil : activityHabitID.map(ActivityHabitSelection.init) }, set: { activityHabitID = $0?.id }), onDismiss: { viewModel.load() }) { selection in
+            if let activityRepository { HabitActivityView(habitID: selection.id, repository: activityRepository, habits: repository, prioritizesSmallerAction: prioritizesSmallerAction) }
+        }
+        .sheet(item: Binding(get: { recoveryAdjustmentID.map(ActivityHabitSelection.init) }, set: { recoveryAdjustmentID = $0?.id }), onDismiss: { viewModel.load() }) { selection in
+            HabitAdjustmentView(viewModel: HabitAdjustmentViewModel(habitID: selection.id, repository: repository)) {
+                viewModel.load()
+                Task { try? await reminderService?.synchronize() }
             }
         }
         .safeAreaInset(edge: .bottom, spacing: 0) { toastView }
@@ -101,6 +113,15 @@ struct TodayView: View {
             collapseTasks.removeAll()
             pendingDoneIDs.removeAll()
             hideToast()
+        }
+        .onChange(of: voiceOverEnabled) { _, enabled in
+            if enabled { cancelAutomaticPresentationChanges() }
+        }
+        .onChange(of: dynamicTypeSize) { _, size in
+            if size.isAccessibilitySize { toastDismissTask?.cancel() }
+        }
+        .onChange(of: switchControlEnabled) { _, enabled in
+            if enabled { cancelAutomaticPresentationChanges() }
         }
         .navigationDestination(for: UUID.self) { habitID in
             HabitDetailDestination(
@@ -138,6 +159,11 @@ struct TodayView: View {
         .sheet(isPresented: $viewModel.isShowingCreateHabit) {
             HabitFormView { draft in
                 viewModel.createHabit(draft)
+            }
+        }
+        .sheet(isPresented: $isShowingHabitOrder) {
+            NavigationStack {
+                HabitOrderView(repository: repository) { viewModel.load() }
             }
         }
         .sheet(isPresented: $attentionViewModel.isShowingCreateGoal) {
@@ -180,6 +206,34 @@ struct TodayView: View {
         }
     }
 
+    private var todayContent: some View {
+        Group {
+            if viewModel.rows.isEmpty && attentionViewModel.rows.isEmpty {
+                emptyState
+            } else {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 28) {
+                        pillarStrip
+                        habitsSection
+                        recoveryCard
+                        if !attentionViewModel.rows.isEmpty {
+                            attentionSection
+                        }
+                        if routineRepository != nil {
+                            Button("Routines & Restart Plans", systemImage: "list.bullet.rectangle") { prepareForNavigation(); showingRoutines = true }
+                                .frame(minHeight: 44).accessibilityIdentifier("today.routines")
+                        }
+                        CompanionView(profile: companionProfile, input: companionInput, compact: true)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 16)
+                }
+                .appThemeCanvas()
+            }
+        }
+        .appThemeCanvas()
+    }
+
     private var companionInput: CompanionInput {
         CompanionInput(
             loggedAttentionStates: attentionViewModel.rows.filter { $0.goalType == .maxDurationPerDay }.compactMap(\.state),
@@ -212,17 +266,17 @@ struct TodayView: View {
         return VStack(alignment: .leading, spacing: 4) {
             Text("Habits")
                 .font(.footnote.weight(.semibold))
-                .foregroundStyle(Color.appInkSecondary)
+                .foregroundStyle(.white)
             Text("\(done) of \(total)")
-                .font(.system(size: 26, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.accentColor)
+                .font(.title2.weight(.bold)).fontDesign(.rounded)
+                .foregroundStyle(.white)
                 .monospacedDigit()
             if total > 0 && total <= 12 {
                 HStack(spacing: 5) {
                     ForEach(viewModel.rows) { row in
                         Circle()
-                            .strokeBorder(Color.appInkTertiary, lineWidth: 1.6)
-                            .background(Circle().fill(row.isCompletedToday ? Color.accentColor : Color.clear))
+                            .strokeBorder(Color.white.opacity(0.8), lineWidth: 1.6)
+                            .background(Circle().fill(row.isCompletedToday ? Color.white : Color.clear))
                             .frame(width: 9, height: 9)
                     }
                 }
@@ -231,7 +285,7 @@ struct TodayView: View {
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.appSurface)
+        .background(palette.heroGradient)
         .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Habits: \(done) of \(total) done")
@@ -245,12 +299,12 @@ struct TodayView: View {
                 .font(.footnote.weight(.semibold))
                 .foregroundStyle(Color.appInkSecondary)
             Text(label)
-                .font(.system(size: 26, weight: .bold, design: .rounded))
+                .font(.title2.weight(.bold)).fontDesign(.rounded)
                 .foregroundStyle(pillarColor(pillarState))
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.appSurface)
+        .background(palette.surface)
         .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Attention: \(label)")
@@ -275,11 +329,21 @@ struct TodayView: View {
         VStack(alignment: .leading, spacing: 8) {
             if !viewModel.rows.isEmpty {
                 HStack {
-                    Text("Habits").font(.subheadline.weight(.semibold)).foregroundStyle(Color.appInkSecondary)
+                    Text("Habits").font(.title3.weight(.semibold)).foregroundStyle(Color.appInk).accessibilityAddTraits(.isHeader)
                     Spacer()
+                    if viewModel.activeHabitCount > 1 {
+                        Button {
+                            prepareForNavigation()
+                            isShowingHabitOrder = true
+                        } label: {
+                            Image(systemName: "arrow.up.arrow.down").font(.subheadline.weight(.medium)).frame(minWidth: 44, minHeight: 44)
+                        }
+                        .accessibilityLabel("Arrange habit order")
+                        .accessibilityIdentifier("today.habitOrderButton")
+                    }
                     Text("\(viewModel.rows.filter(\.isCompletedToday).count) of \(viewModel.rows.count)")
                         .font(.subheadline)
-                        .foregroundStyle(Color.appInkTertiary)
+                        .foregroundStyle(Color.appInkSecondary)
                 }
                 habitsCard
             }
@@ -304,7 +368,7 @@ struct TodayView: View {
             }
         }
         .padding(.horizontal, 12)
-        .background(Color.appSurface)
+        .background(palette.surface)
         .clipShape(RoundedRectangle(cornerRadius: AppMetrics.cardCornerRadius, style: .continuous))
     }
 
@@ -318,7 +382,7 @@ struct TodayView: View {
                     .foregroundStyle(Color.appInkSecondary)
                 Spacer()
                 Image(systemName: "chevron.down")
-                    .foregroundStyle(Color.appInkTertiary)
+                    .foregroundStyle(Color.appInkSecondary)
                     .rotationEffect(.degrees(isDoneSectionExpanded ? 180 : 0))
             }
             .frame(minHeight: 44)
@@ -330,7 +394,73 @@ struct TodayView: View {
         )
     }
 
+    // One calm card replaces repeated recovery captions under habit names.
+    // Only habits due today appear here; opening a tool never records success.
+    @ViewBuilder
+    private var recoveryCard: some View {
+        let recovering = viewModel.rows.filter { $0.recovery != nil }
+        if !recovering.isEmpty {
+            VStack(alignment: .leading, spacing: 18) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Label("Build momentum", systemImage: "sunrise")
+                        .font(.headline).foregroundStyle(Color.appInk)
+                        .accessibilityAddTraits(.isHeader)
+                    Text("One commitment at a time. Skips and pauses leave your progress intact.")
+                        .font(.footnote).foregroundStyle(Color.appInkSecondary)
+                }
+                ForEach(recovering) { row in
+                    if let recovery = row.recovery {
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack(spacing: 12) {
+                                HabitIconBadge(symbol: row.iconName)
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(row.name).font(.subheadline.weight(.semibold))
+                                    Text(recovery.progressLabel).font(.subheadline).foregroundStyle(Color.appInkSecondary)
+                                        .accessibilityIdentifier("today.recovery.progress.\(row.name)")
+                                }
+                            }
+                            HStack(spacing: 6) {
+                                ForEach(0..<recovery.target, id: \.self) { index in
+                                    RoundedRectangle(cornerRadius: 4)
+                                        .fill(index < recovery.completed ? palette.accent : palette.accentSoft)
+                                        .overlay(RoundedRectangle(cornerRadius: 4).stroke(palette.accent, lineWidth: 1))
+                                        .frame(height: 7)
+                                }
+                            }.accessibilityHidden(true)
+                            let actionsLayout = isAccessibilitySize
+                                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 4))
+                                : AnyLayout(HStackLayout(spacing: 16))
+                            actionsLayout { recoveryActions(row, recovery: recovery) }
+                        }
+                        if row.id != recovering.last?.id { Divider() }
+                    }
+                }
+            }
+            .padding(18).background(palette.surface, in: RoundedRectangle(cornerRadius: AppMetrics.cardCornerRadius))
+            .accessibilityElement(children: .contain)
+            .accessibilityIdentifier("today.recovery.card")
+        }
+    }
+
+    @ViewBuilder
+    private func recoveryActions(_ row: TodayHabitRow, recovery: TodayRecoveryDisplay) -> some View {
+        NavigationLink(value: row.id) { Text("View progress").font(.subheadline.weight(.medium)).frame(minHeight: 44) }
+            .accessibilityLabel("View recovery progress for \(row.name)")
+            .simultaneousGesture(TapGesture().onEnded { prepareForNavigation() })
+        if recovery.canMakeEasier {
+            Button("Make it easier") { prepareForNavigation(); recoveryAdjustmentID = row.id }
+                .font(.subheadline.weight(.medium)).frame(minHeight: 44)
+                .accessibilityLabel("Make \(row.name) easier")
+        }
+        if recovery.smallerAction != nil && activityRepository != nil {
+            Button("Smaller action") { prepareForNavigation(); prioritizesSmallerAction = true; activityHabitID = row.id }
+                .font(.subheadline.weight(.medium)).frame(minHeight: 44)
+                .accessibilityLabel("Smaller action for \(row.name)")
+        }
+    }
+
     private func toggle(_ row: TodayHabitRow) {
+        if row.requiresQuantityLogging && !row.isCompletedToday { prepareForNavigation(); prioritizesSmallerAction = false; activityHabitID = row.id; return }
         let wasCompleted = row.isCompletedToday
         viewModel.toggleCompletion(for: row)
         guard let updatedRow = viewModel.rows.first(where: { $0.id == row.id }),
@@ -343,14 +473,19 @@ struct TodayView: View {
             )
         } else {
             withAnimation(reduceMotion ? nil : .default) { pendingDoneIDs.insert(row.id) }
-            let message = HabitPolarityFormatter.toastMessage(habitName: row.name, polarity: row.polarity)
-            showToast(message: message, kind: .habitCompletion(habitID: row.id))
+            let restored = row.recovery != nil && updatedRow.recovery == nil
+            let message = restored ? "Momentum restored for \(row.name)" : HabitPolarityFormatter.toastMessage(habitName: row.name, polarity: row.polarity)
+            if let completionID = updatedRow.todaysCompletionID {
+                showToast(message: message, kind: .habitCompletion(habitID: row.id, completionID: completionID))
+            }
             announce(message + ". Undo available.")
             scheduleCollapse(for: row.id)
         }
     }
 
     private func scheduleCollapse(for habitID: UUID) {
+        // Keep the focused completion control in place for assistive navigation.
+        guard !voiceOverEnabled && !switchControlEnabled else { return }
         collapseTasks[habitID]?.cancel()
         collapseTasks[habitID] = Task {
             try? await Task.sleep(for: Self.collapseDelay)
@@ -362,6 +497,12 @@ struct TodayView: View {
             }
             collapseTasks[habitID] = nil
         }
+    }
+
+    private func cancelAutomaticPresentationChanges() {
+        toastDismissTask?.cancel()
+        for task in collapseTasks.values { task.cancel() }
+        collapseTasks.removeAll()
     }
 
     /// Settle presentation state before pointer/touch navigation. VoiceOver
@@ -378,7 +519,7 @@ struct TodayView: View {
 
     private var attentionSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Attention").font(.subheadline.weight(.semibold)).foregroundStyle(Color.appInkSecondary)
+            Text("Attention").font(.subheadline.weight(.semibold)).foregroundStyle(Color.appInkSecondary).accessibilityAddTraits(.isHeader)
             attentionCard
         }
     }
@@ -397,7 +538,7 @@ struct TodayView: View {
             }
         }
         .padding(.horizontal, 12)
-        .background(Color.appSurface)
+        .background(palette.surface)
         .clipShape(RoundedRectangle(cornerRadius: AppMetrics.cardCornerRadius, style: .continuous))
     }
 
@@ -420,27 +561,40 @@ struct TodayView: View {
                 ? AnyLayout(VStackLayout(alignment: .leading, spacing: 10))
                 : AnyLayout(HStackLayout(spacing: 10))
             layout {
-                Image(systemName: "checkmark")
-                    .foregroundStyle(Color.appToastIcon)
+                if !isAccessibilitySize {
+                    Image(systemName: "checkmark")
+                        .foregroundStyle(palette.toastIcon)
+                        .accessibilityHidden(true)
+                }
                 Text(toast.message)
                     .font(.subheadline.weight(.medium))
-                    .foregroundStyle(Color.appToastInk)
+                    .foregroundStyle(palette.toastInk)
                     .fixedSize(horizontal: false, vertical: true)
                 if !isAccessibilitySize { Spacer(minLength: 0) }
+                HStack(spacing: 10) {
                 Button("Undo") { performUndo(for: toast) }
                     .buttonStyle(.plain)
                     .padding(.horizontal, 16)
                     .frame(minHeight: 44)
-                    .background(Color.appToastInk)
-                    .foregroundStyle(Color.appToastBackground)
+                    .background(palette.toastInk)
+                    .foregroundStyle(palette.toastBackground)
                     .fontWeight(.semibold)
                     .clipShape(Capsule())
                     .accessibilityIdentifier("today.undoToast.undoButton")
+                if isAccessibilitySize { Spacer(minLength: 8) }
+                Button { hideToast() } label: {
+                    Image(systemName: "xmark").frame(minWidth: 44, minHeight: 44)
+                }
+                .foregroundStyle(palette.toastInk)
+                .accessibilityLabel("Dismiss logging confirmation")
+                .accessibilityIdentifier("today.undoToast.dismissButton")
+                }
+
             }
             .padding(.leading, 18)
             .padding(.trailing, 6)
             .padding(.vertical, 6)
-            .background(Color.appToastBackground)
+            .background(palette.toastBackground)
             .clipShape(RoundedRectangle(cornerRadius: isAccessibilitySize ? 20 : 30, style: .continuous))
             .padding(.horizontal, 16)
             .padding(.bottom, 8)
@@ -455,6 +609,9 @@ struct TodayView: View {
         withAnimation(reduceMotion ? nil : .default) {
             toast = TodayToast(message: message, kind: kind)
         }
+        // Assistive navigation may need more than four seconds to reach Undo.
+        // Keep confirmation until an explicit action when these services run.
+        guard !voiceOverEnabled && !switchControlEnabled && !isAccessibilitySize else { return }
         toastDismissTask = Task {
             try? await Task.sleep(for: Self.toastDuration)
             guard !Task.isCancelled else { return }
@@ -469,10 +626,8 @@ struct TodayView: View {
 
     private func performUndo(for toast: TodayToast) {
         switch toast.kind {
-        case .habitCompletion(let habitID):
-            if let freshRow = viewModel.rows.first(where: { $0.id == habitID }) {
-                viewModel.toggleCompletion(for: freshRow)
-            }
+        case .habitCompletion(let habitID, let completionID):
+            viewModel.undoTodayCompletion(id: completionID, habitID: habitID)
             withAnimation(reduceMotion ? nil : .default) { pendingDoneIDs.remove(habitID) }
         case .attentionQuickLog:
             attentionViewModel.undoLastQuickLog()
@@ -511,14 +666,14 @@ struct TodayView: View {
     @ViewBuilder
     private func addButton(label: String, systemImage: String, identifier: String, action: @escaping () -> Void) -> some View {
         if #available(iOS 26, *) {
-            Button(action: action) { Label(label, systemImage: systemImage) }
+            Button(action: action) { Label(label, systemImage: systemImage).foregroundStyle(palette.prominentInk) }
                 .buttonStyle(.glassProminent)
-                .tint(Color.accentColor)
+                .tint(palette.prominentFill)
                 .accessibilityIdentifier(identifier)
         } else {
-            Button(action: action) { Label(label, systemImage: systemImage) }
+            Button(action: action) { Label(label, systemImage: systemImage).foregroundStyle(palette.prominentInk) }
                 .buttonStyle(.borderedProminent)
-                .tint(Color.accentColor)
+                .tint(palette.prominentFill)
                 .accessibilityIdentifier(identifier)
         }
     }
@@ -567,6 +722,8 @@ private struct AttentionGoalDetailDestination: View {
 }
 
 private struct HabitRowView: View {
+    @Environment(\.appPalette) private var palette
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let row: TodayHabitRow
     let isAccessibilitySize: Bool
     let onToggle: () -> Void
@@ -578,10 +735,11 @@ private struct HabitRowView: View {
                 openLink
                 Button(action: onToggle) {
                     Text(row.isCompletedToday ? toggleLabel.done : toggleLabel.pending)
+                        .foregroundStyle(palette.prominentInk)
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(Color.accentColor)
+                .tint(palette.prominentFill)
                 .accessibilityIdentifier("today.completeButton.\(row.id.uuidString)")
                 .accessibilityLabel(accessibilityToggleLabel)
             }
@@ -591,7 +749,7 @@ private struct HabitRowView: View {
                 openLink
                 toggleControl
             }
-            .padding(.vertical, 4)
+            .padding(.vertical, 10)
         }
     }
 
@@ -603,32 +761,29 @@ private struct HabitRowView: View {
         // completion, so the two controls must stay independent.
         NavigationLink(value: row.id) {
             HStack(spacing: 12) {
-                Image(systemName: row.iconName)
-                    .font(.title2)
-                    .foregroundStyle(Color.accentColor)
-                    .frame(width: isAccessibilitySize ? nil : 32)
+                HabitIconBadge(symbol: row.iconName)
                     .accessibilityHidden(true)
 
-                VStack(alignment: .leading, spacing: 2) {
+                VStack(alignment: .leading, spacing: 5) {
                     Text(row.name)
                         .font(.body.weight(.semibold))
                         .foregroundStyle(Color.appInk)
-                    if let recoveryContext = row.recoveryContext {
-                        Label(recoveryContext, systemImage: "arrow.clockwise")
-                            .labelStyle(.titleAndIcon)
-                            .font(.caption)
-                            .foregroundStyle(Color.appRecovery)
-                    } else {
-                        Text(subtitle)
-                            .font(.caption)
-                            .foregroundStyle(Color.appInkSecondary)
-                    }
+                    Text(row.quantityProgress ?? subtitle)
+                        .font(.subheadline)
+                        .foregroundStyle(Color.appInkSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
+
                 }
 
                 Spacer(minLength: 0)
             }
+            .frame(minHeight: 44)
+            .contentShape(Rectangle())
         }
         .accessibilityLabel("Open \(row.name) details")
+        .accessibilityValue([row.quantityProgress, row.recoveryContext, row.quantityProgress == nil ? subtitle : nil].compactMap { $0 }.joined(separator: ". "))
+        .accessibilityHint("View progress, edit, or review history")
+        .frame(minHeight: 44)
         // Fires synchronously on tap, before the push — see
         // `TodayView.prepareForNavigation`'s doc comment for why this can't
         // wait for `.onDisappear`.
@@ -639,32 +794,34 @@ private struct HabitRowView: View {
         Button(action: onToggle) {
             ZStack {
                 Circle()
-                    .strokeBorder(Color.accentColor, lineWidth: 2.5)
+                    .strokeBorder(palette.accent, lineWidth: 2.5)
                     .opacity(row.isCompletedToday ? 0 : 1)
                 Circle()
-                    .fill(Color.accentColor)
+                    .fill(palette.accent)
                     .opacity(row.isCompletedToday ? 1 : 0)
-                Image(systemName: "checkmark")
+                Image(systemName: row.requiresQuantityLogging && !row.isCompletedToday ? "plus" : "checkmark")
                     .font(.body.weight(.semibold))
-                    .foregroundStyle(Color.appOnAccent)
-                    .opacity(row.isCompletedToday ? 1 : 0)
+                    .foregroundStyle(row.isCompletedToday ? palette.onAccent : palette.accent)
+                    .opacity(row.isCompletedToday || row.requiresQuantityLogging ? 1 : 0)
             }
             .frame(width: 44, height: 44)
             .contentShape(Circle())
         }
         .buttonStyle(.plain)
-        .contentTransition(.symbolEffect(.replace))
+        .contentTransition(reduceMotion ? .identity : .symbolEffect(.replace))
         .accessibilityIdentifier("today.completeButton.\(row.id.uuidString)")
         .accessibilityLabel(accessibilityToggleLabel)
     }
 
     private var accessibilityToggleLabel: String {
-        row.isCompletedToday
+        if row.requiresQuantityLogging && !row.isCompletedToday { return "Log progress for " + row.name }
+        return row.isCompletedToday
             ? HabitPolarityFormatter.undoActionLabel(habitName: row.name, polarity: row.polarity)
             : HabitPolarityFormatter.completionActionLabel(habitName: row.name, polarity: row.polarity)
     }
 
     private var toggleLabel: (pending: String, done: String) {
+        if row.requiresQuantityLogging { return ("Log progress", "Done") }
         switch row.polarity {
         case .positive: return ("Mark done", "Done")
         case .avoidance: return ("Log success", "Logged")
@@ -672,6 +829,7 @@ private struct HabitRowView: View {
     }
 
     private var subtitle: String {
+        if let progress = row.quantityProgress { return progress }
         if row.isSkippedToday { return "Skipped today · " + row.scheduleDescription }
         if let weeklyProgress = row.weeklyProgress {
             return "\(row.scheduleDescription) — \(weeklyProgress.completed)/\(weeklyProgress.target) this week"
@@ -681,6 +839,7 @@ private struct HabitRowView: View {
 }
 
 private struct AttentionGoalRowView: View {
+    @Environment(\.appPalette) private var palette
     let row: AttentionGoalSummaryRow
     let isAccessibilitySize: Bool
     let onOpenQuickLogSheet: () -> Void
@@ -694,10 +853,7 @@ private struct AttentionGoalRowView: View {
             // never also log usage.
             NavigationLink(value: AttentionGoalNavigationID(id: row.id)) {
                 HStack(spacing: 12) {
-                    Image(systemName: "hourglass")
-                        .font(.title2)
-                        .foregroundStyle(stateColor)
-                        .frame(width: isAccessibilitySize ? nil : 32)
+                    AppIconBadge(symbol: "hourglass", ink: stateColor)
                         .accessibilityHidden(true)
 
                     VStack(alignment: .leading, spacing: 2) {
@@ -713,6 +869,9 @@ private struct AttentionGoalRowView: View {
                 }
             }
             .accessibilityLabel("Open \(row.name) details")
+            .accessibilityValue(row.statusLabel)
+            .accessibilityHint("Review this goal and its logged entries")
+            .frame(minHeight: 44)
             .simultaneousGesture(TapGesture().onEnded(onNavigate))
 
             if row.goalType == .maxDurationPerDay { chipRow }
@@ -750,8 +909,8 @@ private struct AttentionGoalRowView: View {
                 .frame(maxWidth: isAccessibilitySize ? .infinity : nil)
         }
         .buttonStyle(.plain)
-        .foregroundStyle(Color.accentColor)
-        .background(Color.appAccentSoft)
+        .foregroundStyle(palette.accent)
+        .background(palette.accentSoft)
         .clipShape(Capsule())
     }
 
@@ -784,3 +943,5 @@ private struct AttentionGoalRowView: View {
         )
     }
 }
+
+private struct ActivityHabitSelection: Identifiable { let id: UUID }

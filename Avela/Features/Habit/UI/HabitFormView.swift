@@ -8,10 +8,12 @@ import SwiftUI
 /// Habit" title) without changing any other behavior — the caller decides
 /// whether `onSave` means create or update.
 struct HabitFormView: View {
+    @Environment(\.appPalette) private var palette
     let initialDraft: HabitDraft?
     let onSave: (HabitDraft) -> Void
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var name: String
     @State private var iconName: String
     @State private var category: HabitCategory
@@ -105,6 +107,18 @@ struct HabitFormView: View {
     var body: some View {
         NavigationStack {
             Form {
+                if !isEditing {
+                    Section {
+                        NavigationLink {
+                            HabitStarterLibraryView { applyStarter($0) }
+                        } label: {
+                            Label("Browse Habit Ideas", systemImage: "sparkles")
+                        }
+                        .accessibilityIdentifier("habitForm.ideasLink")
+                    } footer: {
+                        Text("Start with an editable idea, or create your own below.")
+                    }
+                }
                 Section("Name") {
                     TextField("Habit name", text: $name)
                         .accessibilityIdentifier("habitForm.nameField")
@@ -122,14 +136,17 @@ struct HabitFormView: View {
                             Button {
                                 iconName = candidate
                             } label: {
-                                Image(systemName: candidate)
-                                    .font(.title2)
-                                    .frame(minWidth: 44, minHeight: 44)
-                                    .background(candidate == iconName ? Color.accentColor.opacity(0.2) : Color.clear)
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                HabitIconBadge(symbol: candidate)
+                                    .overlay {
+                                        if candidate == iconName {
+                                            RoundedRectangle(cornerRadius: 14)
+                                                .strokeBorder(palette.accent, lineWidth: 2)
+                                        }
+                                    }
                             }
                             .buttonStyle(.plain)
-                            .accessibilityLabel("Icon \(candidate)")
+                            .accessibilityIdentifier("Icon \(candidate)")
+                            .accessibilityLabel(Self.iconLabel(candidate))
                             .accessibilityAddTraits(candidate == iconName ? .isSelected : [])
                         }
                     }
@@ -149,7 +166,7 @@ struct HabitFormView: View {
                         Text("Build Up").tag(HabitPolarity.positive)
                         Text("Cut Down").tag(HabitPolarity.avoidance)
                     }
-                    .pickerStyle(.segmented)
+                    .modifier(AdaptiveHabitPickerStyle())
                     .accessibilityIdentifier("habitForm.polarityPicker")
                 }
 
@@ -159,7 +176,7 @@ struct HabitFormView: View {
                             Text(kind.title).tag(kind)
                         }
                     }
-                    .pickerStyle(.segmented)
+                    .modifier(AdaptiveHabitPickerStyle())
                     .accessibilityIdentifier("habitForm.scheduleTypePicker")
 
                     switch scheduleKind {
@@ -173,6 +190,8 @@ struct HabitFormView: View {
                     }
                 }
             }
+            .scrollDismissesKeyboard(.interactively)
+            .appThemeCanvas()
             .navigationTitle(isEditing ? "Edit Habit" : "New Habit")
             // Compact, centered title — not the default large-title style —
             // matching the standard iOS convention for quick-entry modal
@@ -194,7 +213,7 @@ struct HabitFormView: View {
     }
 
     private var weekdaySelector: some View {
-        HStack {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: dynamicTypeSize.isAccessibilitySize ? 140 : 44), spacing: 8)], spacing: 8) {
             ForEach(Weekday.allCases, id: \.self) { weekday in
                 let isSelected = selectedWeekdays.contains(weekday)
                 Button {
@@ -204,19 +223,35 @@ struct HabitFormView: View {
                         selectedWeekdays.insert(weekday)
                     }
                 } label: {
-                    Text(Self.shortLabel(for: weekday))
-                        .font(.caption)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 6)
-                        .background(isSelected ? Color.accentColor.opacity(0.25) : Color.clear)
+                    Text(dynamicTypeSize.isAccessibilitySize ? Self.fullLabel(for: weekday) : Self.shortLabel(for: weekday))
+                        .font(.body)
+                        .frame(maxWidth: .infinity, minHeight: 44)
+                        .background(isSelected ? palette.accent.opacity(0.25) : Color.clear)
                         .clipShape(RoundedRectangle(cornerRadius: 6))
                 }
                 .buttonStyle(.plain)
                 .accessibilityIdentifier("habitForm.weekday.\(weekday.rawValue)")
                 .accessibilityLabel(Self.fullLabel(for: weekday))
+                .accessibilityValue(isSelected ? "Selected" : "Not selected")
                 .accessibilityAddTraits(isSelected ? .isSelected : [])
             }
         }
+    }
+
+    private func applyStarter(_ draft: HabitDraft) {
+        name = draft.name
+        iconName = draft.iconName
+        category = draft.category
+        polarity = draft.polarity
+        switch draft.schedule {
+        case .daily: scheduleKind = .daily
+        case .weekdays: scheduleKind = .weekdays
+        case .timesPerWeek: scheduleKind = .timesPerWeek
+        }
+        if case .weekdays(let days) = draft.schedule { selectedWeekdays = days }
+        else { selectedWeekdays = [] }
+        if case .timesPerWeek(let count) = draft.schedule { timesPerWeek = count }
+        else { timesPerWeek = 3 }
     }
 
     private var isValid: Bool {
@@ -242,6 +277,26 @@ struct HabitFormView: View {
         onSave(draft)
     }
 
+    /// Readable names for assistive technology; symbol identifiers stay internal.
+    private static func iconLabel(_ symbol: String) -> String {
+        let labels = [
+            "drop.fill": "Water", "pills.fill": "Medication", "fork.knife": "Meal",
+            "bed.double.fill": "Rest", "heart.fill": "Heart", "figure.walk": "Walking",
+            "figure.run": "Running", "dumbbell.fill": "Weights", "figure.yoga": "Yoga",
+            "bicycle": "Cycling", "book.fill": "Book", "graduationcap.fill": "Learning",
+            "character.book.closed.fill": "Language", "music.note": "Music", "leaf.fill": "Leaf",
+            "moon.stars.fill": "Night", "pencil.line": "Writing", "sparkles": "Sparkles",
+            "wind": "Breathing", "checklist": "Checklist", "laptopcomputer": "Computer",
+            "tray.full.fill": "Inbox", "timer": "Timer", "person.2.fill": "People",
+            "phone.fill": "Phone", "envelope.fill": "Message", "banknote.fill": "Money",
+            "chart.pie.fill": "Budget", "cart.fill": "Shopping", "star.fill": "Star",
+            "tag.fill": "Tag", "circle.grid.2x2.fill": "Grid", "checkmark.circle.fill": "Checkmark",
+            "iphone.slash": "Phone break", "nosign": "Limit",
+            "cup.and.saucer.fill": "Cup", "takeoutbag.and.cup.and.straw.fill": "Takeout"
+        ]
+        return "\(labels[symbol] ?? "Habit") icon"
+    }
+
     private static func shortLabel(for weekday: Weekday) -> String {
         let symbols = Calendar(identifier: .gregorian).veryShortWeekdaySymbols
         return symbols[weekday.rawValue - 1]
@@ -261,4 +316,15 @@ struct HabitFormView: View {
     HabitFormView(initialDraft: HabitDraft(
         name: "Read", iconName: "book.fill", category: .learning, polarity: .positive, schedule: .timesPerWeek(3)
     )) { _ in }
+}
+
+/// Long segmented labels must not truncate when someone requests larger text.
+private struct AdaptiveHabitPickerStyle: ViewModifier {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @ViewBuilder func body(content: Content) -> some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            content.labelsHidden().pickerStyle(.inline)
+        }
+        else { content.pickerStyle(.segmented) }
+    }
 }

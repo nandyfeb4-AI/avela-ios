@@ -25,6 +25,32 @@ final class TodayViewModelTests: XCTestCase {
         return SwiftDataHabitRepository(modelContext: container.mainContext, calendar: calendar)
     }
 
+    func testConfirmationUndoIsIdempotentAndDoesNotLogAgain() throws {
+        let repository = try makeRepository()
+        let habit = try repository.createHabit(HabitDraft(name: "Read", iconName: "book.fill", category: .other, polarity: .positive, schedule: .daily), at: day0)
+        let completion = try repository.recordCompletion(habitID: habit.id, at: day0, source: .app, note: nil)
+        let model = TodayViewModel(repository: repository, calendar: calendar)
+        model.undoTodayCompletion(id: completion.id, habitID: habit.id, asOf: day0)
+        model.undoTodayCompletion(id: completion.id, habitID: habit.id, asOf: day0)
+        XCTAssertFalse(try XCTUnwrap(model.rows.first).isCompletedToday)
+        XCTAssertTrue(try repository.completions(for: habit.id, in: DateInterval(start: day(-1), end: day(2))).isEmpty)
+    }
+
+    func testStaleConfirmationCannotChangeNextDaysCompletion() throws {
+        let repository = try makeRepository()
+        let habit = try repository.createHabit(HabitDraft(name: "Read", iconName: "book.fill", category: .other, polarity: .positive, schedule: .daily), at: day0)
+        let old = try repository.recordCompletion(habitID: habit.id, at: day0, source: .app, note: nil)
+        let next = try repository.recordCompletion(habitID: habit.id, at: day(1), source: .app, note: nil)
+        let model = TodayViewModel(repository: repository, calendar: calendar)
+        model.undoTodayCompletion(id: old.id, habitID: habit.id, asOf: day(1))
+        XCTAssertEqual(model.rows.first?.todaysCompletionID, next.id)
+        XCTAssertEqual(Set(try repository.completions(for: habit.id, in: DateInterval(start: day(-1), end: day(2))).map(\.id)), Set([old.id, next.id]))
+        model.undoTodayCompletion(id: next.id, habitID: habit.id, asOf: day(1))
+        XCTAssertFalse(try XCTUnwrap(model.rows.first).isCompletedToday)
+        model.undoTodayCompletion(id: old.id, habitID: habit.id, asOf: day(1))
+        XCTAssertFalse(try XCTUnwrap(model.rows.first).isCompletedToday, "Old Undo must never become a fresh log")
+    }
+
     func testCreationLimitBlocksNewHabitButPreservesTracking() throws {
         let repository = try makeRepository()
         let draft = HabitDraft(name: "Read", iconName: "book.fill", category: .other, polarity: .positive, schedule: .daily)
@@ -80,7 +106,7 @@ final class TodayViewModelTests: XCTestCase {
         let viewModel = TodayViewModel(repository: repository, calendar: calendar)
 
         viewModel.load(asOf: day(1))
-        XCTAssertEqual(viewModel.rows.first?.recoveryContext, "Rebuilding · 1 of 3 good days")
+        XCTAssertEqual(viewModel.rows.first?.recoveryContext, "1 of 3 good days")
 
         viewModel.load(asOf: day(3))
         XCTAssertNil(viewModel.rows.first?.recoveryContext, "recovery framing must stop once the 3-success threshold is reached")
@@ -105,6 +131,50 @@ final class TodayViewModelTests: XCTestCase {
         let viewModel = TodayViewModel(repository: repository, calendar: calendar)
         viewModel.load(asOf: day(8))
 
-        XCTAssertEqual(viewModel.rows.first?.recoveryContext, "Rebuilding · 1 of 3 good weeks")
+        XCTAssertEqual(viewModel.rows.first?.recoveryContext, "1 of 3 good weeks")
     }
+    func testRecoveryCardCompositionAndExactUndoRestoreTwoCommitments() throws {
+        let repository = try makeRepository()
+        let habit = try repository.createHabit(HabitDraft(name: "Read", iconName: "book.fill", category: .learning, polarity: .positive, schedule: .daily), at: day0)
+        for offset in [2, 3] { try repository.recordCompletion(habitID: habit.id, at: day(offset), source: .app, note: nil) }
+        let activity = SwiftDataHabitActivityRepository(context: try XCTUnwrap(container).mainContext, habits: repository, calendar: calendar)
+        try activity.configure(habitID: habit.id, target: nil, smallerAction: "Read one paragraph", at: day0)
+        let model = TodayViewModel(repository: repository, calendar: calendar)
+        model.activityRepository = activity
+        model.load(asOf: day(4))
+        let before = try XCTUnwrap(model.rows.first)
+        XCTAssertEqual(before.recovery?.completed, 2)
+        XCTAssertEqual(before.recovery?.smallerAction, "Read one paragraph")
+        XCTAssertEqual(before.recovery?.canMakeEasier, true)
+        model.toggleCompletion(for: before, asOf: day(4))
+        let completed = try XCTUnwrap(model.rows.first)
+        XCTAssertNil(completed.recovery)
+        model.undoTodayCompletion(id: try XCTUnwrap(completed.todaysCompletionID), habitID: habit.id, asOf: day(4))
+        XCTAssertEqual(model.rows.first?.recovery?.completed, 2)
+        XCTAssertEqual(try repository.configurationHistory(for: habit.id).count, 1)
+    }
+
+    func testMixedScheduleRecoveryIsLabeledAsCommitments() throws {
+        let repository = try makeRepository()
+        let habit = try repository.createHabit(HabitDraft(name: "Read", iconName: "book.fill", category: .learning, polarity: .positive, schedule: .daily), at: day0)
+        try repository.recordCompletion(habitID: habit.id, at: day(1), source: .app, note: nil)
+        _ = try repository.updateHabit(id: habit.id, with: HabitDraft(name: habit.name, iconName: habit.iconName, category: habit.category, polarity: habit.polarity, schedule: .timesPerWeek(2)), at: day(2))
+        let model = TodayViewModel(repository: repository, calendar: calendar)
+        model.load(asOf: day(2))
+        XCTAssertEqual(model.rows.first?.recovery?.progressLabel, "1 of 3 good commitments")
+    }
+
+    func testAvoidanceRecoveryOffersNoPositiveHabitTools() throws {
+        let repository = try makeRepository()
+        let habit = try repository.createHabit(HabitDraft(name: "Less scrolling", iconName: "iphone", category: .other, polarity: .avoidance, schedule: .daily), at: day0)
+        let activity = SwiftDataHabitActivityRepository(context: try XCTUnwrap(container).mainContext, habits: repository, calendar: calendar)
+        try activity.configure(habitID: habit.id, target: nil, smallerAction: "Put phone away", at: day0)
+        let model = TodayViewModel(repository: repository, calendar: calendar)
+        model.activityRepository = activity
+        model.load(asOf: day(2))
+        XCTAssertNotNil(model.rows.first?.recovery)
+        XCTAssertNil(model.rows.first?.recovery?.smallerAction)
+        XCTAssertEqual(model.rows.first?.recovery?.canMakeEasier, false)
+    }
+
 }

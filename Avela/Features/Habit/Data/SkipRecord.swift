@@ -8,6 +8,15 @@ final class SkipRecord {
     var localDateKey: String
     var reasonRaw: String?
     var createdAt: Date
+    /// Lossless local recovery decoding; validation happens before insertion.
+    init(backup row: BackupPayload.SkipRecordRow) {
+        self.id = row.id
+        self.habitID = row.habitID
+        self.localDateKey = row.localDateKey
+        self.reasonRaw = row.reasonRaw
+        self.createdAt = row.createdAt
+    }
+
 
     init(
         id: UUID,

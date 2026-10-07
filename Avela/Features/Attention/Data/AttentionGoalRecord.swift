@@ -12,6 +12,16 @@ final class AttentionGoalRecord {
     var typeRaw: String
     var createdAt: Date
     var updatedAt: Date
+    /// Lossless local recovery decoding; validation happens before insertion.
+    init(backup row: BackupPayload.AttentionGoalRecordRow) {
+        self.id = row.id
+        self.name = row.name
+        self.appOrCategoryLabel = row.appOrCategoryLabel
+        self.typeRaw = row.typeRaw
+        self.createdAt = row.createdAt
+        self.updatedAt = row.updatedAt
+    }
+
 
     init(
         id: UUID,

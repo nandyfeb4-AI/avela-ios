@@ -9,6 +9,18 @@ final class CompletionRecord {
     var localDateKey: String
     var sourceRaw: String
     var note: String?
+    var isQuantityDerived: Bool = false
+    /// Lossless local recovery decoding; validation happens before insertion.
+    init(backup row: BackupPayload.CompletionRecordRow) {
+        self.id = row.id
+        self.habitID = row.habitID
+        self.occurredAt = row.occurredAt
+        self.localDateKey = row.localDateKey
+        self.sourceRaw = row.sourceRaw
+        self.note = row.note
+        self.isQuantityDerived = row.isQuantityDerived
+    }
+
 
     init(
         id: UUID,

@@ -7,6 +7,14 @@ final class HabitReminderRecord {
     var isEnabled: Bool
     var hour: Int
     var minute: Int
+    /// Lossless local recovery decoding; validation happens before insertion.
+    init(backup row: BackupPayload.HabitReminderRecordRow) {
+        self.habitID = row.habitID
+        self.isEnabled = row.isEnabled
+        self.hour = row.hour
+        self.minute = row.minute
+    }
+
 
     init(_ reminder: HabitReminder) {
         habitID = reminder.habitID

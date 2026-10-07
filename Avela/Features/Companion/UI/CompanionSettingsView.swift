@@ -41,6 +41,7 @@ struct CompanionSettingsView: View {
             Button("Save Preferences") { model.save() }
                 .accessibilityIdentifier("companion.savePreferences")
         }
+        .appThemeCanvas()
         .navigationTitle("Companion & Feedback")
         .task { model.load() }
         .alert("Preferences Couldn’t Be Saved", isPresented: Binding(

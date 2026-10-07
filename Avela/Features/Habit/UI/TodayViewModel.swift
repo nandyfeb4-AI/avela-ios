@@ -14,14 +14,24 @@ struct TodayHabitRow: Identifiable, Equatable {
     let isCompletedToday: Bool
     let todaysCompletionID: UUID?
     let weeklyProgress: WeeklyProgressDisplay?
-    /// Short recovery framing ("Rebuilding · 2 of 3 good days") shown instead
-    /// of the plain schedule context while `RecoveryProgress.isRecovering` is
-    /// true — the same rule `HabitDetailViewModel` already uses, surfaced on
-    /// Today too, since UX.md's priority order puts "what needs recovery?"
-    /// ahead of "what is my attention state?" and Today previously answered
-    /// it nowhere. `nil` whenever recovery framing should not be shown.
+    /// Spoken context remains available on the habit control; the visual
+    /// treatment lives in a dedicated, typed recovery card.
     let recoveryContext: String?
+    var recovery: TodayRecoveryDisplay? = nil
     var isSkippedToday: Bool = false
+    var quantityProgress: String? = nil
+    var requiresQuantityLogging: Bool = false
+}
+
+/// Presentation composed from the same historical periods used by streaks.
+/// Mixed day/week runs are called commitments, never relabeled as days or weeks.
+struct TodayRecoveryDisplay: Equatable {
+    let completed: Int
+    let target: Int
+    let unit: String
+    let canMakeEasier: Bool
+    let smallerAction: String?
+    var progressLabel: String { "\(completed) of \(target) good \(unit)" }
 }
 
 struct WeeklyProgressDisplay: Equatable {
@@ -37,6 +47,7 @@ struct WeeklyProgressDisplay: Equatable {
 @Observable
 final class TodayViewModel {
     private(set) var rows: [TodayHabitRow] = []
+    private(set) var activeHabitCount = 0
     var isShowingCreateHabit = false
     var errorMessage: String?
     var isShowingPremium = false
@@ -50,6 +61,7 @@ final class TodayViewModel {
         } catch { handle(error) }
     }
 
+    var activityRepository: HabitActivityRepository?
     private let repository: HabitRepository
     private let calendar: Calendar
     private static let logger = Logger(subsystem: "com.example.Avela", category: "TodayViewModel")
@@ -63,6 +75,7 @@ final class TodayViewModel {
     func load(asOf date: Date = Date()) {
         do {
             let habits = try repository.fetchHabits(includeArchived: false)
+            activeHabitCount = habits.count
             rows = try habits
                 .filter { HabitScheduleEvaluator.isDue($0.schedule, on: date, calendar: calendar) }
                 .map { try row(for: $0, asOf: date) }
@@ -104,6 +117,21 @@ final class TodayViewModel {
         }
     }
 
+    /// Undo targets the exact logged fact, never a toggle of a refreshed row.
+    /// A confirmation kept open across midnight must not log or undo another day.
+    func undoTodayCompletion(id: UUID, habitID: UUID, asOf date: Date = Date()) {
+        do {
+            let start = calendar.startOfDay(for: date)
+            let end = calendar.date(byAdding: .day, value: 1, to: start)!
+            let active = try repository.fetchHabits(includeArchived: false).contains { $0.id == habitID }
+            let records = try repository.completions(for: habitID, in: DateInterval(start: start, end: end))
+            if active && records.contains(where: { $0.id == id }) {
+                try repository.undoCompletion(id: id)
+            }
+            load(asOf: date)
+        } catch { handle(error) }
+    }
+
     private func row(for habit: Habit, asOf date: Date) throws -> TodayHabitRow {
         let dayStart = calendar.startOfDay(for: date)
         let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart) ?? dayStart.addingTimeInterval(86_400)
@@ -119,6 +147,10 @@ final class TodayViewModel {
             weeklyProgress = WeeklyProgressDisplay(completed: progress.completedCount, target: progress.target)
         }
 
+        let activityConfig = try activityRepository?.configuration(for: habit.id, on: date)
+        let quantity = activityConfig?.target
+        let total = try activityRepository?.entries(for: habit.id, on: date).filter { $0.kind == .quantity && $0.unit == quantity?.unit }.reduce(0) { $0 + $1.amount } ?? 0
+        let recovery = try recoveryDisplay(for: habit, smallerAction: activityConfig?.smallerAction, asOf: date)
         return TodayHabitRow(
             id: habit.id,
             name: habit.name,
@@ -128,12 +160,15 @@ final class TodayViewModel {
             isCompletedToday: todaysCompletion != nil,
             todaysCompletionID: todaysCompletion?.id,
             weeklyProgress: weeklyProgress,
-            recoveryContext: try recoveryContext(for: habit, asOf: date),
-            isSkippedToday: try !repository.skips(for: habit.id, in: DateInterval(start: dayStart, end: dayEnd)).isEmpty
+            recoveryContext: recovery?.progressLabel,
+            recovery: recovery,
+            isSkippedToday: try !repository.skips(for: habit.id, in: DateInterval(start: dayStart, end: dayEnd)).isEmpty,
+            quantityProgress: quantity.map { "\(total) of \($0.amount) \($0.unit.rawValue)" },
+            requiresQuantityLogging: quantity != nil
         )
     }
 
-    private func recoveryContext(for habit: Habit, asOf date: Date) throws -> String? {
+    private func recoveryDisplay(for habit: Habit, smallerAction: String?, asOf date: Date) throws -> TodayRecoveryDisplay? {
         let historyStart = min(habit.createdAt, date)
         let historyEnd = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: date)) ?? date
         let historyInterval = DateInterval(start: historyStart, end: historyEnd)
@@ -151,12 +186,25 @@ final class TodayViewModel {
             for: habit, snapshots: snapshots, completions: completions, skips: skips,
             archivePeriods: archivePeriods, asOf: date, calendar: calendar
         )
-        // Always plural ("of 3 good days"), even when the count itself is 1:
-        // the plural agrees with the "3"-day/week set being measured against,
-        // not with the count, the same way "1 of 3 apples" reads correctly.
-        let plural = streak.unit == .days ? "days" : "weeks"
-        let threshold = HabitProgressCalculator.recoveryCompletionThreshold
-        return "Rebuilding · \(recovery.consecutiveSuccessesSinceMiss) of \(threshold) good \(plural)"
+        let periods = HabitProgressCalculator.periods(
+            for: habit, snapshots: snapshots, completions: completions, skips: skips,
+            archivePeriods: archivePeriods, asOf: date, calendar: calendar
+        )
+        let lastMiss = periods.lastIndex { $0.outcome == .miss }
+        let successes = periods.dropFirst(lastMiss.map { $0 + 1 } ?? 0).filter { $0.outcome == .success }
+        let mixedUnits = successes.contains { $0.unit != streak.unit }
+        let unit = mixedUnits ? "commitments" : (streak.unit == .days ? "days" : "weeks")
+        let proposal = HabitAdjustmentCalculator.proposal(
+            for: habit, snapshots: snapshots, completions: completions, skips: skips,
+            archivePeriods: archivePeriods, asOf: date, calendar: calendar
+        )
+        let action = smallerAction?.trimmingCharacters(in: .whitespacesAndNewlines)
+        return TodayRecoveryDisplay(
+            completed: recovery.consecutiveSuccessesSinceMiss,
+            target: HabitProgressCalculator.recoveryCompletionThreshold,
+            unit: unit, canMakeEasier: proposal != nil,
+            smallerAction: habit.polarity == .positive && action?.isEmpty == false ? action : nil
+        )
     }
 
     private func handle(_ error: Error) {
