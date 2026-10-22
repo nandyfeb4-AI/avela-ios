@@ -1,5 +1,23 @@
 # V1 / MVP Product Contract
 
+## Owner-approved guided setup — October 22, 2026
+
+The six illustrated stages now introduce Welcome → goal → optional obstacle →
+one reviewed starting habit → optional companion → ready/Today. This supersedes
+setup stages that required everyone to visit attention-budget and reminder forms.
+Goal/obstacle choices deterministically rank existing editable ideas; limited-time
+answers never invent a numeric target. There is no demographic, medical or
+personality questionnaire. Back preserves choices; Skip and Explore first keep
+an account-free path. No survey answer supplies progress or companion state.
+
+Only explicit Save creates the first habit through the existing atomic repository
+and free-tier checks. An existing first habit is retained, not duplicated.
+Forgetting can reveal the existing optional reminder editor after saving; focus
+or distraction answers explain the existing Make Room route. Permissions and
+session starts remain separate actions. Accepted companion preferences and the
+existing completion flag use the normal profile repository. Existing users do
+not repeat onboarding. No new schema, backend, runtime AI or dependency is added.
+
 ## Owner approved expressive redesign — October 21, 2026
 
 The subsequent owner review explicitly requests more expressive visual design

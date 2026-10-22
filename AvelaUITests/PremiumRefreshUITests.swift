@@ -30,6 +30,10 @@ final class PremiumRefreshUITests: XCTestCase {
     }
 
     private func tap(_ element: XCUIElement, direction: String = "up", file: StaticString = #filePath, line: UInt = #line) {
+        if revealOnboardingChoiceIfNeeded(element, file: file, line: line) {
+            element.tap()
+            return
+        }
         for _ in 0..<12 {
             if element.exists && element.isHittable { break }
             if direction == "down" { app.swipeDown() } else { app.swipeUp() }
@@ -40,11 +44,57 @@ final class PremiumRefreshUITests: XCTestCase {
     }
 
     private func reveal(_ element: XCUIElement, direction: String = "up", file: StaticString = #filePath, line: UInt = #line) {
+        if revealOnboardingChoiceIfNeeded(element, file: file, line: line) { return }
         for _ in 0..<14 {
             if element.exists && element.isHittable { break }
             if direction == "down" { app.swipeDown() } else { app.swipeUp() }
         }
         XCTAssertTrue(element.exists && element.isHittable, app.debugDescription, file: file, line: line)
+    }
+
+    /// A partly exposed native row can report hittable while its synthesized
+    /// tap lands on the pinned Continue action. Reveal the complete choice in
+    /// the real reading viewport before tapping or checking a retained choice.
+    /// This applies only to setup choices, leaving all other test gestures intact.
+    private func revealOnboardingChoiceIfNeeded(_ element: XCUIElement,
+                                                file: StaticString, line: UInt) -> Bool {
+        let continuation = app.buttons["onboarding.continue"]
+        guard continuation.exists, element.waitForExistence(timeout: 2) else { return false }
+        let identifier = element.identifier
+        guard ["onboarding.goal.", "onboarding.obstacle.", "onboarding.starter.", "companion.select."]
+            .contains(where: { identifier.hasPrefix($0) }) else { return false }
+
+        let scroll = app.scrollViews.firstMatch
+        let progress = app.descendants(matching: .any)["onboarding.progress"].firstMatch
+        XCTAssertTrue(scroll.exists && progress.exists, app.debugDescription, file: file, line: line)
+        var safeFrame = CGRect.zero
+        var fullyVisible = false
+        for _ in 0..<14 {
+            let viewport = scroll.frame
+            let top = max(viewport.minY, progress.frame.maxY + 8)
+            let bottom = min(viewport.maxY, continuation.frame.minY - 16)
+            safeFrame = CGRect(x: viewport.minX, y: top, width: viewport.width, height: bottom - top)
+            let target = element.frame
+            fullyVisible = safeFrame.contains(target) && element.isHittable
+            if fullyVisible { break }
+            guard safeFrame.height > 80, target.height <= safeFrame.height else { break }
+
+            let moveUp = target.maxY > safeFrame.maxY
+            let overflow = moveUp ? target.maxY - safeFrame.maxY : safeFrame.minY - target.minY
+            let distance = min(max(overflow + 12, 72), safeFrame.height * 0.5)
+            let startY = moveUp ? safeFrame.maxY - 20 : safeFrame.minY + 20
+            let endY = startY + (moveUp ? -distance : distance)
+            let centerX = (safeFrame.midX - app.frame.minX) / app.frame.width
+            let start = app.coordinate(withNormalizedOffset: CGVector(
+                dx: centerX, dy: (startY - app.frame.minY) / app.frame.height))
+            let end = app.coordinate(withNormalizedOffset: CGVector(
+                dx: centerX, dy: (endY - app.frame.minY) / app.frame.height))
+            start.press(forDuration: 0.05, thenDragTo: end)
+        }
+        XCTAssertTrue(fullyVisible,
+                      "Reveal the entire setup choice before interacting: \(identifier), target \(element.frame), safe viewport \(safeFrame). \(app.debugDescription)",
+                      file: file, line: line)
+        return true
     }
 
     private func capture(_ name: String) {
@@ -99,9 +149,20 @@ final class PremiumRefreshUITests: XCTestCase {
             let primary = app.buttons["onboarding.continue"]
             let skip = app.buttons["onboarding.skip"]
             XCTAssertTrue(skip.waitForExistence(timeout: 5))
-            XCTAssertTrue(primary.isHittable && skip.isHittable)
+            XCTAssertTrue(primary.exists && skip.isHittable)
+            if primary.isEnabled {
+                XCTAssertTrue(primary.isHittable)
+            } else {
+                XCTAssertTrue([0, 2].contains(step), "Only an unchosen direction or habit blocks Continue; Skip remains usable")
+            }
+            let progress = app.descendants(matching: .any)["onboarding.progress"].firstMatch
+            let toolbarBottom = max(app.buttons["onboarding.back"].frame.maxY,
+                                    app.buttons["onboarding.explore"].frame.maxY)
+            XCTAssertGreaterThanOrEqual(progress.frame.minY.rounded(), toolbarBottom.rounded(),
+                                      "The setup progress must stay below the toolbar when the stage resets its scroll position")
             XCTAssertGreaterThanOrEqual(skip.frame.minY, primary.frame.maxY + 4,
                                       "The two setup actions must never overlap, including during step changes")
+            XCTAssertGreaterThanOrEqual(primary.frame.height.rounded(), 44)
             XCTAssertGreaterThanOrEqual(skip.frame.height.rounded(), 44)
             if step == 0 { capture(largestText ? "Expressive setup actions at largest text" : "Expressive setup actions with separate Skip") }
             tap(skip)
@@ -109,6 +170,177 @@ final class PremiumRefreshUITests: XCTestCase {
         tap(app.buttons["onboarding.continue"])
         XCTAssertTrue(app.staticTexts["today.emptyState.title"].waitForExistence(timeout: 10),
                       "Skipping optional setup cannot create tracking records")
+    }
+
+    func testGuidedOnboardingBackRetainsChoicesAndExploreCreatesNoRecords() {
+        let app = launch(onboarding: true)
+        tap(app.buttons["onboarding.continue"])
+        XCTAssertFalse(app.buttons["onboarding.continue"].isEnabled,
+                       "The optional direction needs a selection before Continue; Skip stays available")
+        tap(app.buttons["onboarding.goal.restart"])
+        XCTAssertEqual(app.buttons["onboarding.goal.restart"].value as? String, "Selected")
+        capture("Guided onboarding selected restart direction")
+        tap(app.buttons["onboarding.continue"])
+        tap(app.buttons["onboarding.obstacle.tooBig"])
+        XCTAssertEqual(app.buttons["onboarding.obstacle.tooBig"].value as? String, "Selected")
+        capture("Guided onboarding selected manageable starting point")
+        tap(app.buttons["onboarding.back"])
+        reveal(app.buttons["onboarding.goal.restart"])
+        XCTAssertEqual(app.buttons["onboarding.goal.restart"].value as? String, "Selected")
+        tap(app.buttons["onboarding.continue"])
+        reveal(app.buttons["onboarding.obstacle.tooBig"])
+        XCTAssertEqual(app.buttons["onboarding.obstacle.tooBig"].value as? String, "Selected")
+        tap(app.buttons["onboarding.continue"])
+        XCTAssertTrue(app.buttons["onboarding.createHabit"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["onboarding.continue"].isEnabled,
+                       "An unchosen suggestion cannot be saved as a habit")
+        tap(app.buttons["onboarding.back"])
+        reveal(app.buttons["onboarding.obstacle.tooBig"])
+        XCTAssertEqual(app.buttons["onboarding.obstacle.tooBig"].value as? String, "Selected")
+        tap(app.buttons["onboarding.explore"])
+        XCTAssertTrue(app.staticTexts["today.emptyState.title"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.staticTexts["onboarding.title"].exists)
+        assertNoPermissionPrompt(in: app)
+        app.terminate(); app.launch()
+        XCTAssertTrue(app.staticTexts["today.emptyState.title"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.staticTexts["onboarding.title"].exists,
+                       "Explore first completes setup without creating progress or repeating the tutorial")
+    }
+
+    func testGuidedOnboardingStarterReviewCancelLeavesTodayEmpty() {
+        let app = launch(onboarding: true)
+        tap(app.buttons["onboarding.continue"])
+        tap(app.buttons["onboarding.goal.routine"])
+        tap(app.buttons["onboarding.continue"])
+        tap(app.buttons["onboarding.skip"])
+        tap(app.buttons["onboarding.starter.read"])
+        XCTAssertEqual(app.buttons["onboarding.starter.read"].value as? String, "Selected")
+        XCTAssertEqual(app.buttons["onboarding.continue"].label, "Review Habit")
+        capture("Guided onboarding selected editable reading idea")
+        tap(app.buttons["onboarding.continue"])
+        assertReadingCreationDraft(in: app)
+        capture("Guided onboarding unsaved ten page reading review")
+        tap(app.buttons["habitForm.cancelButton"])
+        XCTAssertTrue(app.buttons["onboarding.starter.read"].waitForExistence(timeout: 10))
+        XCTAssertEqual(app.buttons["onboarding.starter.read"].value as? String, "Selected")
+        tap(app.buttons["onboarding.createHabit"])
+        let customName = app.textFields["habitForm.nameField"]
+        XCTAssertTrue(customName.waitForExistence(timeout: 10))
+        let customValue = customName.value as? String ?? ""
+        XCTAssertTrue(customValue.isEmpty || customValue == customName.placeholderValue,
+                      "Make it my own opens a blank creation draft rather than the previously selected starter")
+        XCTAssertFalse(app.buttons["habitForm.saveButton"].isEnabled)
+        tap(app.buttons["habitForm.cancelButton"])
+        tap(app.buttons["onboarding.explore"])
+        XCTAssertTrue(app.staticTexts["today.emptyState.title"].waitForExistence(timeout: 10),
+                      "Selecting and cancelling a starter must not create a habit")
+        XCTAssertFalse(app.buttons["Open Read details"].exists)
+        assertNoPermissionPrompt(in: app)
+        app.terminate(); app.launch()
+        XCTAssertTrue(app.staticTexts["today.emptyState.title"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["Open Read details"].exists)
+    }
+
+    func testGuidedOnboardingExplicitSavePreservesAmountAndOffersContextualReminder() {
+        let app = launch(onboarding: true)
+        tap(app.buttons["onboarding.continue"])
+        tap(app.buttons["onboarding.goal.routine"])
+        capture("Guided onboarding routine direction")
+        tap(app.buttons["onboarding.continue"])
+        tap(app.buttons["onboarding.obstacle.forgetting"])
+        capture("Guided onboarding optional forgetting support")
+        tap(app.buttons["onboarding.continue"])
+        tap(app.buttons["onboarding.starter.read"])
+        tap(app.buttons["onboarding.continue"])
+        assertReadingCreationDraft(in: app)
+        tap(app.buttons["habitForm.saveButton"])
+        XCTAssertTrue(app.buttons["companion.select.otter"].waitForExistence(timeout: 10),
+                      "Explicit Save creates the habit and advances to companion choice")
+        tap(app.buttons["companion.select.otter"])
+        capture("Guided onboarding companion choice")
+        tap(app.buttons["onboarding.continue"])
+        reveal(app.buttons["onboarding.setupReminder"])
+        XCTAssertTrue(app.buttons["onboarding.setupReminder"].isHittable,
+                      "Forgetting offers the existing optional reminder only after a habit has been saved")
+        assertNoPermissionPrompt(in: app)
+        capture("Guided onboarding ready with contextual reminder")
+        tap(app.buttons["onboarding.continue"])
+        XCTAssertTrue(app.buttons["Open Read details"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.staticTexts["today.emptyState.title"].exists)
+        tap(app.buttons["Open Read details"])
+        tap(app.buttons["habitDetail.activity"])
+        XCTAssertEqual(app.staticTexts["activity.progress"].label, "0 of 10 pages logged",
+                       "Saving setup never supplies a check-in or quantity")
+        app.terminate(); app.launch()
+        XCTAssertFalse(app.staticTexts["onboarding.title"].exists)
+        tap(app.buttons["Open Read details"])
+        tap(app.buttons["habitDetail.activity"])
+        XCTAssertEqual(app.staticTexts["activity.progress"].label, "0 of 10 pages logged",
+                       "The reviewed quantity configuration survives relaunch without invented progress")
+        assertNoPermissionPrompt(in: app)
+    }
+
+    func testGuidedOnboardingFocusRouteExplainsMakeRoomWithoutStartingSession() {
+        let app = launch(onboarding: true)
+        tap(app.buttons["onboarding.continue"])
+        tap(app.buttons["onboarding.goal.focus"])
+        tap(app.buttons["onboarding.continue"])
+        tap(app.buttons["onboarding.obstacle.distractions"])
+        capture("Guided onboarding focus and distraction direction")
+        tap(app.buttons["onboarding.continue"])
+        tap(app.buttons["onboarding.starter.phone-away"])
+        capture("Guided onboarding focus starting ideas")
+        tap(app.buttons["onboarding.continue"])
+        XCTAssertEqual(app.textFields["habitForm.nameField"].value as? String, "Put my phone away")
+        tap(app.buttons["habitForm.saveButton"])
+        tap(app.buttons["onboarding.skip"])
+        reveal(app.descendants(matching: .any)["onboarding.makeRoomTip"].firstMatch)
+        XCTAssertFalse(app.buttons["onboarding.setupReminder"].exists)
+        capture("Guided onboarding focus handoff with explicit next step")
+        assertNoPermissionPrompt(in: app)
+        tap(app.buttons["onboarding.continue"])
+        XCTAssertTrue(app.buttons["Mark Put my phone away complete"].waitForExistence(timeout: 10),
+                      "Choosing a focus direction must not complete its starting habit")
+        tap(app.buttons["Open Put my phone away details"])
+        tap(app.buttons["habitDetail.intention"])
+        reveal(app.buttons["intentionSession.duration.25"])
+        XCTAssertFalse(app.buttons["intentionSession.start"].exists,
+                       "The onboarding answer must not create a session goal automatically")
+        XCTAssertFalse(app.buttons["intentionSession.openStarted"].exists,
+                       "A session requires a separate reviewed goal and explicit Start")
+        capture("Guided focus handoff still requires session review")
+        assertNoPermissionPrompt(in: app)
+    }
+
+    private func assertReadingCreationDraft(in app: XCUIApplication,
+                                            file: StaticString = #filePath, line: UInt = #line) {
+        XCTAssertTrue(app.navigationBars["New Habit"].waitForExistence(timeout: 10), file: file, line: line)
+        XCTAssertFalse(app.navigationBars["Edit Habit"].exists, file: file, line: line)
+        XCTAssertEqual(app.textFields["habitForm.nameField"].value as? String, "Read", file: file, line: line)
+        reveal(app.textFields["habitForm.targetAmountField"])
+        XCTAssertTrue(app.buttons["Amount"].isSelected, "The starter retains amount tracking", file: file, line: line)
+        XCTAssertEqual(app.textFields["habitForm.targetAmountField"].value as? String, "10", file: file, line: line)
+        let unit = app.descendants(matching: .any)["habitForm.quantityUnitPicker"].firstMatch
+        reveal(unit)
+        // The native failed-run frame shows Pages, but this OS exposes the
+        // outer picker as a Button whose value is not its selected unit text.
+        // Inspect the selected menu item before interacting with any choice.
+        unit.tap()
+        let pages = app.buttons["Pages"]
+        XCTAssertTrue(pages.waitForExistence(timeout: 5), app.debugDescription, file: file, line: line)
+        XCTAssertTrue(pages.isSelected,
+                      "Reading must already select Pages before any menu choice. \(pages.debugDescription)",
+                      file: file, line: line)
+        pages.tap() // Dismiss using the already-selected unit; never repair a draft before asserting it.
+        XCTAssertTrue(app.buttons["habitForm.saveButton"].isEnabled, file: file, line: line)
+    }
+
+    private func assertNoPermissionPrompt(in app: XCUIApplication,
+                                           file: StaticString = #filePath, line: UInt = #line) {
+        XCTAssertFalse(app.alerts.firstMatch.exists, file: file, line: line)
+        XCTAssertFalse(XCUIApplication(bundleIdentifier: "com.apple.springboard").alerts.firstMatch.exists,
+                       "Choosing a direction, previewing a habit or finishing setup needs no system permission",
+                       file: file, line: line)
     }
 
     func testReportLensesAndSharePreviewPreserveRecordedFacts() {
@@ -399,8 +631,10 @@ final class PremiumRefreshUITests: XCTestCase {
         XCTAssertGreaterThanOrEqual(app.buttons["onboarding.continue"].frame.height, 44)
         capture("Luminous onboarding welcome at largest text")
         tap(app.buttons["onboarding.continue"])
-        for step in 0..<4 {
-            XCTAssertFalse(XCUIApplication(bundleIdentifier: "com.apple.springboard").alerts.firstMatch.exists, "Optional setup cannot trigger a permission prompt at step \(step)")
+        for step in ["goal", "obstacle", "habit", "companion"] {
+            assertNoPermissionPrompt(in: app)
+            XCTAssertTrue(app.buttons["onboarding.skip"].isHittable)
+            capture("Guided onboarding \(step) at largest text")
             tap(app.buttons["onboarding.skip"])
         }
         XCTAssertTrue(app.buttons["onboarding.continue"].label.contains("Start My Day"))

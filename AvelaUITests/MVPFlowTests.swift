@@ -845,7 +845,8 @@ final class MVPFlowTests: XCTestCase {
         let capture = XCTAttachment(screenshot: app.screenshot())
         capture.name = "Rilova welcome large text"; capture.lifetime = .keepAlways; add(capture)
         waitAndTap(next)
-        XCTAssertTrue(app.buttons["onboarding.createHabit"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["onboarding.goal.routine"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["onboarding.skip"].isHittable)
     }
 
     func testBrandedTodayAtAccessibilityTextSizePreservesLoggingAndUndo() {
@@ -873,7 +874,17 @@ final class MVPFlowTests: XCTestCase {
         let welcome = XCTAttachment(screenshot: app.screenshot())
         welcome.name = "Quality audit onboarding"; welcome.lifetime = .keepAlways; add(welcome)
         waitAndTap(app.buttons["onboarding.continue"])
-        XCTAssertTrue(app.buttons["onboarding.createHabit"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["onboarding.goal.routine"].waitForExistence(timeout: 10))
+        try app.performAccessibilityAudit(for: [.hitRegion, .sufficientElementDescription, .textClipped, .trait]) { issue in
+            print("Accessibility finding: \(issue.compactDescription); \(issue.element?.debugDescription ?? issue.detailedDescription)")
+            return false
+        }
+        waitAndTap(app.buttons["onboarding.goal.routine"])
+        waitAndTap(app.buttons["onboarding.continue"])
+        try app.performAccessibilityAudit(for: [.hitRegion, .sufficientElementDescription, .textClipped, .trait]) { issue in
+            print("Accessibility finding: \(issue.compactDescription); \(issue.element?.debugDescription ?? issue.detailedDescription)")
+            return false
+        }
     }
 
     func testImmersiveThemeAndStreakCalendarPreserveReadOnlyHistory() {
@@ -1556,11 +1567,13 @@ final class MVPFlowTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["onboarding.brandName"].exists)
         XCTAssertEqual(app.staticTexts["onboarding.brandName"].label, "Rilova")
         let brandCapture = XCTAttachment(screenshot: app.screenshot())
-        brandCapture.name = "Luminous onboarding welcome"; brandCapture.lifetime = .keepAlways; add(brandCapture)
+        brandCapture.name = "Guided onboarding welcome"; brandCapture.lifetime = .keepAlways; add(brandCapture)
         waitAndTap(app.buttons["onboarding.continue"])
-        for step in ["habit", "attention", "companion", "reminders"] {
+        for step in ["goal", "obstacle", "habit", "companion"] {
+            XCTAssertTrue(app.buttons["onboarding.skip"].waitForExistence(timeout: 10))
+            Thread.sleep(forTimeInterval: 0.65)
             let stepCapture = XCTAttachment(screenshot: app.screenshot())
-            stepCapture.name = "Luminous onboarding \(step)"
+            stepCapture.name = "Guided onboarding \(step)"
             stepCapture.lifetime = .keepAlways
             add(stepCapture)
             waitAndTap(app.buttons["onboarding.skip"])
@@ -1569,11 +1582,13 @@ final class MVPFlowTests: XCTestCase {
         XCTAssertTrue(finish.waitForExistence(timeout: 10))
         XCTAssertEqual(finish.label, "Start My Day")
         let readyCapture = XCTAttachment(screenshot: app.screenshot())
-        readyCapture.name = "Luminous onboarding ready"
+        readyCapture.name = "Guided onboarding ready without setup"
         readyCapture.lifetime = .keepAlways
         add(readyCapture)
         finish.tap()
         XCTAssertTrue(app.buttons["today.addHabitButton"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["today.emptyState.title"].exists,
+                      "Skipping choices and previews cannot create a habit")
         app.terminate()
         app.launch()
         XCTAssertTrue(app.buttons["today.addHabitButton"].waitForExistence(timeout: 10))

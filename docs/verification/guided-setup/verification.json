@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-22",
+  "scope": "Optional guided first use over the approved expressive artwork",
+  "baseline_commit": "f6329691e91e4ab1e701ea37ef98ad3e437aff23",
+  "production_source_sha256": {
+    "Avela/App/AppShellView.swift": "20e4b4ab7d53c0a8b07babf8a4795d444b8c18e20d00bb6c3664f583a09998c0",
+    "Avela/Features/Habit/UI/HabitFormView.swift": "00b5e87295c140541859f65e0b2ab3064c64de6d79d81015d370f4e7188003c7",
+    "Avela/Features/Onboarding/OnboardingView.swift": "dc7dfbb98a0bb544d4a18f332d57d16a9cb9216f4283d077ec7ad780b344933e",
+    "Avela/Features/Onboarding/OnboardingViewModel.swift": "c9bbd7f49c90ac59785922f20aa3a4b95df4058e736b2ea025d7313d9c3d0ace"
+  },
+  "unit_tests": {
+    "passed": 640,
+    "failed": 0,
+    "onboarding_cases": 17,
+    "bundle": "/tmp/RilovaGuidedUnits.xcresult"
+  },
+  "native_ui": {
+    "distinct_affected_cases_with_passing_executions": 14,
+    "executions": 31,
+    "current_ui_method_count": 125,
+    "fresh_unfiltered_sweep": false,
+    "run_record": "test-results.json",
+    "current_layout_capture_selection": "Only passed cases from light-layout/light-resolved and the passing dark bundle"
+  },
+  "builds": {
+    "debug_simulator": "passed",
+    "full_unsigned_iphoneos_release": "passed, including Watch/widget/protection monitor",
+    "signed_phone": "passed; temporary harness omits only unregistered Watch embed/dependency",
+    "release_debug_hooks": "absent in all four executable bundles"
+  },
+  "installations": {
+    "owner_simulator": "updated in place",
+    "paired_iphone": "updated in place; devicectl success",
+    "owner_store_reset_or_seeded": false,
+    "owner_ui_tests": false,
+    "owner_app_automatically_launched": false
+  },
+  "preview": {
+    "native_pngs": 40,
+    "light": 24,
+    "dark": 16,
+    "path": "index.html",
+    "provenance": "provenance.json",
+    "desktop": "~/Desktop/Rilova Guided Setup Preview/index.html",
+    "prior_expressive_world_preview": "preserved"
+  },
+  "data_handling": {
+    "goal_and_obstacle": "Ephemeral device memory for starter ranking and contextual support; not persisted, transmitted or used as progress",
+    "habit_creation": "Explicit reviewed Save, canonical atomic repository, creation limits rechecked",
+    "profile": "Existing preference/completion storage; loaded preferences preserved; existing completed users bypass setup",
+    "schema_dependency_entitlement_or_runtime_ai_added": false
+  },
+  "remaining_checks": [
+    "Physical VoiceOver focus/keyboard order",
+    "Physical-device motion/contrast/OLED and supported-device performance review",
+    "Existing integration, signing/distribution and App Store release checklist gates"
+  ]
+}

@@ -1,5 +1,24 @@
 # Apple Compliance
 
+## Optional guided setup — October 22, 2026
+
+Optional goal and obstacle choices stay in memory on device and affect only
+starter ordering and contextual explanatory support. They are not transmitted,
+recorded as telemetry, saved as a new profile, or used to infer health, diagnosis,
+adherence or verified behaviour. No age, gender, medical condition or other
+unnecessary personal field is requested. The existing explicitly saved habit,
+companion preferences and completion flag retain their established storage rules.
+
+Skip/Explore first preserve account-free use. Selecting/reviewing an idea never
+requests access, logs a fact or begins a focus session. The existing reminder
+editor requests notification access only when an enabled reminder is explicitly
+saved; Health, speech, app protection and Live Activity consent remain separate
+contextual actions. There is no new permission string, SDK, network service,
+tracking purpose, data category or entitlement. This follows Apple's
+[onboarding](https://developer.apple.com/design/human-interface-guidelines/onboarding)
+and [privacy guidance](https://developer.apple.com/design/human-interface-guidelines/privacy)
+on postponing setup and requesting only needed access in context.
+
 ## Optional habit ideas — 2026-10-05
 
 The local starter catalog offers editable lifestyle examples, without medical

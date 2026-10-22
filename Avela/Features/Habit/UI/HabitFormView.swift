@@ -6,7 +6,9 @@ import SwiftUI
 /// validation (non-empty name, non-empty weekday selection). Passing
 /// `initialDraft` switches the form into edit mode (pre-filled fields, "Edit
 /// Habit" title) without changing any other behavior — the caller decides
-/// whether `onSave` means create or update.
+/// whether `onSave` means create or update. `creationDraft` instead pre-fills a
+/// new habit for review, including its amount/minute target and smaller action;
+/// it neither enters edit mode nor saves anything before the explicit Save.
 struct HabitFormView: View {
     @Environment(\.appPalette) private var palette
     let initialDraft: HabitDraft?
@@ -29,19 +31,29 @@ struct HabitFormView: View {
     @State private var targetUnit: HabitQuantityUnit = .count
     @State private var smallerAction = ""
 
-    init(initialDraft: HabitDraft? = nil, onSave: @escaping (HabitDraft) -> Void) {
+    init(initialDraft: HabitDraft? = nil, creationDraft: HabitDraft? = nil,
+         onSave: @escaping (HabitDraft) -> Void) {
         self.initialDraft = initialDraft
         self.onSave = onSave
-        _whyItMatters = State(initialValue: initialDraft?.whyItMatters ?? "")
-        _isWhyMemoryHidden = State(initialValue: initialDraft?.isWhyMemoryHidden ?? false)
-        _name = State(initialValue: initialDraft?.name ?? "")
-        _category = State(initialValue: initialDraft?.category ?? .other)
-        _polarity = State(initialValue: initialDraft?.polarity ?? .positive)
-        _iconName = State(initialValue: initialDraft?.iconName ?? Self.iconChoices(
-            for: initialDraft?.category ?? .other, polarity: initialDraft?.polarity ?? .positive
+        // An existing edit always takes precedence if both inputs are passed.
+        // Activity setup is creation-only; ordinary edits retain their existing
+        // versioned configuration through Progress Setup.
+        let draft = initialDraft ?? creationDraft
+        let newTarget = initialDraft == nil && draft?.polarity != .avoidance ? draft?.quantityTarget : nil
+        _whyItMatters = State(initialValue: draft?.whyItMatters ?? "")
+        _isWhyMemoryHidden = State(initialValue: draft?.isWhyMemoryHidden ?? false)
+        _name = State(initialValue: draft?.name ?? "")
+        _category = State(initialValue: draft?.category ?? .other)
+        _polarity = State(initialValue: draft?.polarity ?? .positive)
+        _iconName = State(initialValue: draft?.iconName ?? Self.iconChoices(
+            for: draft?.category ?? .other, polarity: draft?.polarity ?? .positive
         ).first ?? "star.fill")
+        _trackingKind = State(initialValue: newTarget.map { $0.unit == .minutes ? .timed : .amount } ?? .checkIn)
+        _targetAmount = State(initialValue: newTarget.map { String($0.amount) } ?? "10")
+        _targetUnit = State(initialValue: newTarget.map { $0.unit == .minutes ? .count : $0.unit } ?? .count)
+        _smallerAction = State(initialValue: initialDraft == nil ? draft?.smallerAction ?? "" : "")
 
-        switch initialDraft?.schedule {
+        switch draft?.schedule {
         case .none, .some(.daily):
             _scheduleKind = State(initialValue: .daily)
         case .some(.weekdays):
@@ -49,12 +61,12 @@ struct HabitFormView: View {
         case .some(.timesPerWeek):
             _scheduleKind = State(initialValue: .timesPerWeek)
         }
-        if case .some(.weekdays(let days)) = initialDraft?.schedule {
+        if case .some(.weekdays(let days)) = draft?.schedule {
             _selectedWeekdays = State(initialValue: days)
         } else {
             _selectedWeekdays = State(initialValue: [])
         }
-        if case .some(.timesPerWeek(let count)) = initialDraft?.schedule {
+        if case .some(.timesPerWeek(let count)) = draft?.schedule {
             _timesPerWeek = State(initialValue: count)
         } else {
             _timesPerWeek = State(initialValue: 3)

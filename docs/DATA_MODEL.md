@@ -1,5 +1,31 @@
 # Data Model
 
+## Guided setup state — October 22, 2026
+
+`OnboardingGoal`, `OnboardingObstacle`, selected catalog ID and prepared
+`HabitDraft` are ephemeral view-model state. They are neither SwiftData profile
+fields nor analytics, backup, subscription, Health or companion-engine inputs.
+Closing an unfinished setup can discard these answers; any explicitly saved
+habit and accepted preferences remain stored. A successful initial load is
+idempotent so navigation to/from a contextual reminder cannot replace a draft.
+
+Only explicit habit Save invokes the existing atomic creation transaction,
+including optional quantity target and smaller action. `HabitFormView.creationDraft`
+seeds editable creation fields without switching to existing-habit edit mode;
+`initialDraft` retains its existing edit semantics. Limits are checked both
+before opening review and before writing. A loaded or concurrently created
+first active habit prevents another setup creation; returning Back cannot create
+a duplicate. Invalid drafts and persistence errors do not advance or dismiss
+review. Suggestions retain original catalog units; answers never rewrite targets.
+
+Companion Continue persists preferences; Skip restores the last loaded/accepted
+profile. Finish or Explore first saves onboardingCompleted only after successful
+profile loading and persistence, preserving the rest of that profile. A failed
+read cannot replace an existing selection with defaults, and a failed save
+cannot report success. Existing completed profiles bypass the new flow. No
+migration, new model, historical write, completion, skip, attention goal, timer,
+quantity entry, reminder or permission is created by answering or skipping.
+
 ## Habit starter library — 2026-10-05
 
 Historical eight-idea milestone; the October 21 Luminous Tide implementation supersedes this catalog with 40 ideas and creation-time tracking setup.

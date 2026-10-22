@@ -1,5 +1,26 @@
 # Build Plan
 
+## Guided first-use implementation — October 22, 2026
+
+The approved six-stage setup now asks a direction and optional obstacle, suggests
+three existing editable starters, reviews one explicit habit Save, offers a
+companion, and hands off to Today. Back/Skip/Explore first preserve a direct
+account-free path. Reminder support is contextual after saving; focus help points
+to existing Make Room tools. Survey choices remain transient on device and never
+supply progress, targets or companion state. Existing users retain completed setup.
+
+The shared creation form has a distinct creation-draft input so targets, units
+and smaller actions remain editable without entering existing-habit edit mode.
+Canonical repositories, atomic writes, limits, profile persistence and optional
+permission boundaries remain authoritative. No schema, entitlement, package,
+backend, runtime AI or new artwork is introduced.
+
+Full unit suite: 640 passing tests; 14 distinct affected native UI checks have
+passing executions, with actual dark/AX3 captures and native accessibility audits.
+Full iPhoneOS Release and signed phone builds pass. See the
+[verification record](verification/guided-setup/verification.json) for exact runs,
+repairs and installation outcome; broader device/distribution gates remain open.
+
 ## Expressive World follow-up — October 21, 2026
 
 The owner requested a stronger art direction after Luminous Tide. The native

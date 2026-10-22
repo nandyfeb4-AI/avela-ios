@@ -1,0 +1,43 @@
+{
+  "configuration": "Debug",
+  "phone_only_harness": true,
+  "watch_embed_omitted": true,
+  "signatures_verified": true,
+  "live_activities_enabled": true,
+  "purpose_strings_present": [
+    "NSHealthShareUsageDescription",
+    "NSMicrophoneUsageDescription",
+    "NSSpeechRecognitionUsageDescription"
+  ],
+  "development_app_protection_enabled": true,
+  "compiled_asset_catalog_present": true,
+  "bundles": [
+    {
+      "bundle": "Avela.app",
+      "team": "HT6JHUV6WP",
+      "app_group": [
+        "group.com.example.Avela"
+      ],
+      "family_controls": true,
+      "healthkit": true
+    },
+    {
+      "bundle": "AvelaProtectionMonitor.appex",
+      "team": "HT6JHUV6WP",
+      "app_group": [
+        "group.com.example.Avela"
+      ],
+      "family_controls": true,
+      "healthkit": false
+    },
+    {
+      "bundle": "AvelaWidget.appex",
+      "team": "HT6JHUV6WP",
+      "app_group": [
+        "group.com.example.Avela"
+      ],
+      "family_controls": false,
+      "healthkit": false
+    }
+  ]
+}

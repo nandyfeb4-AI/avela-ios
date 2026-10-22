@@ -1,5 +1,41 @@
 # UX Specification
 
+## Guided first use — October 22, 2026
+
+Six stages serve six decisions: welcome, direction, optional obstacle, one habit,
+optional companion, and readiness. The artwork and brief entrance responses stay;
+the task changes from configuring every feature to finding one useful beginning.
+A top-level Explore first action opens Today immediately. Back retains answers
+and the explicitly selected idea, including when earlier answers change the
+suggestions. A selected idea remains visible. Continue and the secondary Skip
+have separate native touch regions; the fixed progress header stays below the
+toolbar. Both actions remain reachable with scrolling at
+accessibility text sizes. Choice rows announce selection without relying on colour.
+
+Goals are build a routine, start again, or protect focus. Obstacles are forgetting,
+limited time, distractions, or a step feeling too big. These optional answers
+only rank existing catalog drafts and select relevant explanatory support. They
+are held in memory for this setup, with no inferred diagnosis or progress state.
+There is no arbitrary time-to-pages/glasses conversion. An idea shows its actual
+schedule and tracking unit. Review Habit opens the editable New Habit form,
+including amounts/minutes and the smaller action; Cancel writes nothing. Custom
+creation and browsing all ideas remain available. Save is the only creation action.
+
+The ready stage identifies the saved habit honestly, including schedules that
+are not due today. Forgetting exposes optional reminder setup without requesting
+access merely by opening it. Focus/distractions explain Habit → Make Room;
+limited-time/large-step answers explain Log Progress and smaller actions. Neither
+route starts a timer, logs effort or prompts for permission automatically. A
+companion change is accepted with Continue; Keep current preference discards
+unaccepted changes. Explore first uses the last accepted profile. Existing completed
+onboarding and all recorded facts are preserved.
+
+Research basis: [Apple onboarding guidance](https://developer.apple.com/design/human-interface-guidelines/onboarding)
+supports postponing nonessential setup; [HabitKit's first-habit guide](https://habitkit.app/help/getting-started/install-habitkit-and-create-your-first-habit)
+shows a direct editable first action; [Finch's documented setup](https://help.finchcare.com/hc/en-us/articles/37779580853005-Creating-Your-Birb)
+shows character/personalization choices. These inform Rilova's design rather than
+establishing a universal competitor questionnaire or measured retention benefit.
+
 ## Expressive Rilova worlds — October 21, 2026
 
 This owner-approved presentation pass supersedes the earlier still-landscape-only

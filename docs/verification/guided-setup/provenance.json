@@ -1,0 +1,769 @@
+{
+  "generator": "rilova-guided-gallery-v1",
+  "selection": "Exact expected test identifier and attachment label; latest timestamp; failure-associated attachments excluded.",
+  "test_result_scope": "The attachment manifest alone is not a test-result record. Consult the separate verification record for whole-test outcomes; this gallery makes no independent test-pass claim.",
+  "pixels": "Original native PNG bytes copied unchanged; no rendering, resize, crop or recompression.",
+  "appearance_scope": "Light and dark labels follow the verified export directory, not pixel inference.",
+  "captures": [
+    {
+      "file": "images/welcome-light.png",
+      "title": "A beginning, at your pace",
+      "mode": "light",
+      "category": "six-stages",
+      "state": "No records created",
+      "description": "Welcome to the optional setup. The scene is decoration, not a record of progress.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "9906fc13030518d276a72f14977151850670b43dd8d41a3e21c857626cd956fb",
+      "testIdentifier": "MVPFlowTests/testOnboardingOptionalStepsCanBeSkippedAndCompletionSurvivesRelaunch()",
+      "sourceattachment": {
+        "exportedFileName": "C1DDFFA6-96CE-44D7-A1E6-BBDC802FC6F6.png",
+        "suggestedHumanReadableName": "Guided onboarding welcome_0_CCC7A90A-0E8A-4CDE-8BB3-94FC0B465218.png",
+        "timestamp": 1792697598.84,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightResolved.xcresult"
+    },
+    {
+      "file": "images/welcome-dark.png",
+      "title": "A beginning, at your pace",
+      "mode": "dark",
+      "category": "six-stages",
+      "state": "No records created",
+      "description": "Welcome to the optional setup. The scene is decoration, not a record of progress.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "58cea4ebffa5f2e1e465ae987193d72c8b88352c00e4bdcc5cdfecf88fddc7f9",
+      "testIdentifier": "MVPFlowTests/testOnboardingOptionalStepsCanBeSkippedAndCompletionSurvivesRelaunch()",
+      "sourceattachment": {
+        "exportedFileName": "BCC54B21-A369-4A1C-96E7-557E6870DDF4.png",
+        "suggestedHumanReadableName": "Guided onboarding welcome_0_05895888-32B0-4087-AC7E-D7FCBC68EFB7.png",
+        "timestamp": 1792697800.86,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedDark.xcresult"
+    },
+    {
+      "file": "images/goal-light.png",
+      "title": "Choose a direction\u2014or skip",
+      "mode": "light",
+      "category": "six-stages",
+      "state": "Optional, unanswered",
+      "description": "A direction changes the starting ideas shown during setup. It does not create a habit.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "d19f3c089bf4f83279a4db084b362307c0297b33534d3fef4a0884fed9228092",
+      "testIdentifier": "MVPFlowTests/testOnboardingOptionalStepsCanBeSkippedAndCompletionSurvivesRelaunch()",
+      "sourceattachment": {
+        "exportedFileName": "629CF8F1-757F-48B9-976D-9D4994CCDEA3.png",
+        "suggestedHumanReadableName": "Guided onboarding goal_0_4DDBE193-76A5-415B-817A-E1F39D7D8767.png",
+        "timestamp": 1792697603.282,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightResolved.xcresult"
+    },
+    {
+      "file": "images/goal-dark.png",
+      "title": "Choose a direction\u2014or skip",
+      "mode": "dark",
+      "category": "six-stages",
+      "state": "Optional, unanswered",
+      "description": "A direction changes the starting ideas shown during setup. It does not create a habit.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "19ee708d0540c3ff6994ec0ad472a6e34230b73b4fe655b7ce4bde9120008314",
+      "testIdentifier": "MVPFlowTests/testOnboardingOptionalStepsCanBeSkippedAndCompletionSurvivesRelaunch()",
+      "sourceattachment": {
+        "exportedFileName": "44C29080-0F53-42D8-9DEC-1D3CCBDFA167.png",
+        "suggestedHumanReadableName": "Guided onboarding goal_0_EB70B862-2B3C-4D9E-8BD9-22DD591E0354.png",
+        "timestamp": 1792697805.201,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedDark.xcresult"
+    },
+    {
+      "file": "images/obstacle-light.png",
+      "title": "What gets in the way?",
+      "mode": "light",
+      "category": "six-stages",
+      "state": "Optional, unanswered",
+      "description": "One optional answer shapes starting ideas or a contextual next step.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "63abb09029885de631a7cee4473a1299dbb0d6c1844c8054cbb92c6a57bbad40",
+      "testIdentifier": "MVPFlowTests/testOnboardingOptionalStepsCanBeSkippedAndCompletionSurvivesRelaunch()",
+      "sourceattachment": {
+        "exportedFileName": "72925A49-C174-40BA-837B-C2703E327E05.png",
+        "suggestedHumanReadableName": "Guided onboarding obstacle_0_44A5D8B9-8571-4F91-AD38-1B535EA6C391.png",
+        "timestamp": 1792697607.773,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightResolved.xcresult"
+    },
+    {
+      "file": "images/obstacle-dark.png",
+      "title": "What gets in the way?",
+      "mode": "dark",
+      "category": "six-stages",
+      "state": "Optional, unanswered",
+      "description": "One optional answer shapes starting ideas or a contextual next step.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "45aa1a66da7e5ba35b7dfbe9ebc16a2b8663d1430c36a0609825639ee9571498",
+      "testIdentifier": "MVPFlowTests/testOnboardingOptionalStepsCanBeSkippedAndCompletionSurvivesRelaunch()",
+      "sourceattachment": {
+        "exportedFileName": "02D98288-5E69-4BDA-B3A5-C5DDDE0F0067.png",
+        "suggestedHumanReadableName": "Guided onboarding obstacle_0_10C98473-08B3-4D49-A722-8FA17A32EC17.png",
+        "timestamp": 1792697809.537,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedDark.xcresult"
+    },
+    {
+      "file": "images/habit-light.png",
+      "title": "A starting point you can edit",
+      "mode": "light",
+      "category": "six-stages",
+      "state": "Unsaved ideas",
+      "description": "An idea must be selected, reviewed and explicitly saved before it becomes a habit.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "03ac7d71c1be3d0e53f98ec17397c033e6dfbcd8de8b0e960fd11a8e4179824d",
+      "testIdentifier": "MVPFlowTests/testOnboardingOptionalStepsCanBeSkippedAndCompletionSurvivesRelaunch()",
+      "sourceattachment": {
+        "exportedFileName": "55E5CD2D-B8C7-4116-AE9E-87B9081F7B95.png",
+        "suggestedHumanReadableName": "Guided onboarding habit_0_291FF11F-ABA2-413A-A8A6-45CACF6C541B.png",
+        "timestamp": 1792697612.268,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightResolved.xcresult"
+    },
+    {
+      "file": "images/habit-dark.png",
+      "title": "A starting point you can edit",
+      "mode": "dark",
+      "category": "six-stages",
+      "state": "Unsaved ideas",
+      "description": "An idea must be selected, reviewed and explicitly saved before it becomes a habit.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "9951ca0ca548ff395b4af4289934dcceb53b24d36bc83f1a7174b53916403575",
+      "testIdentifier": "MVPFlowTests/testOnboardingOptionalStepsCanBeSkippedAndCompletionSurvivesRelaunch()",
+      "sourceattachment": {
+        "exportedFileName": "E1AE834E-2D2F-4F2B-A930-91B5F1E89B06.png",
+        "suggestedHumanReadableName": "Guided onboarding habit_0_B7FB01C1-31D5-4367-91EB-AB41DF5552CC.png",
+        "timestamp": 1792697813.857,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedDark.xcresult"
+    },
+    {
+      "file": "images/companion-light.png",
+      "title": "A little company, your way",
+      "mode": "light",
+      "category": "six-stages",
+      "state": "Preference review",
+      "description": "Choose a companion, keep the existing choice, hide it, or skip. No habit activity is logged.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "64011f471b3a6d8d0a5948a658ebf80e38853ccda66b8261698d17232f19c08b",
+      "testIdentifier": "MVPFlowTests/testOnboardingOptionalStepsCanBeSkippedAndCompletionSurvivesRelaunch()",
+      "sourceattachment": {
+        "exportedFileName": "CA618C16-5CB5-4500-9396-E73A6757E8A5.png",
+        "suggestedHumanReadableName": "Guided onboarding companion_0_FD383FFA-EFFF-43C0-A653-BDA550055050.png",
+        "timestamp": 1792697616.768,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightResolved.xcresult"
+    },
+    {
+      "file": "images/companion-dark.png",
+      "title": "A little company, your way",
+      "mode": "dark",
+      "category": "six-stages",
+      "state": "Preference review",
+      "description": "Choose a companion, keep the existing choice, hide it, or skip. No habit activity is logged.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "c1ffe078350dfab3b9f86eaf92f8ce3f2f7165ad0c405f9db87d798e5bc5630c",
+      "testIdentifier": "MVPFlowTests/testOnboardingOptionalStepsCanBeSkippedAndCompletionSurvivesRelaunch()",
+      "sourceattachment": {
+        "exportedFileName": "EAF0EA0E-6ECB-4AB5-A7A5-89123BD0C67E.png",
+        "suggestedHumanReadableName": "Guided onboarding companion_0_9AB0722A-A1E8-422B-96EF-5F9D7C90997A.png",
+        "timestamp": 1792697818.218,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedDark.xcresult"
+    },
+    {
+      "file": "images/ready-empty-light.png",
+      "title": "Ready, without creating a habit",
+      "mode": "light",
+      "category": "six-stages",
+      "state": "Empty setup",
+      "description": "The optional choices were skipped. Finishing opens Today without adding progress.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "df66f3219cf9c9f18a19b38b9fb4e06fc364a23ff4b1534da7b6c2904547433e",
+      "testIdentifier": "MVPFlowTests/testOnboardingOptionalStepsCanBeSkippedAndCompletionSurvivesRelaunch()",
+      "sourceattachment": {
+        "exportedFileName": "0861BA17-FA3B-4C23-849A-1FBB16E30075.png",
+        "suggestedHumanReadableName": "Guided onboarding ready without setup_0_5B5E9FAD-550A-494E-BFD4-235A22FCDD35.png",
+        "timestamp": 1792697620.564,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightResolved.xcresult"
+    },
+    {
+      "file": "images/ready-empty-dark.png",
+      "title": "Ready, without creating a habit",
+      "mode": "dark",
+      "category": "six-stages",
+      "state": "Empty setup",
+      "description": "The optional choices were skipped. Finishing opens Today without adding progress.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "90930754a71ca8e387009b888763a2da94b029550be1a407890f66e5ef6eddcb",
+      "testIdentifier": "MVPFlowTests/testOnboardingOptionalStepsCanBeSkippedAndCompletionSurvivesRelaunch()",
+      "sourceattachment": {
+        "exportedFileName": "AAE818E3-6AFD-465C-8B77-D83E367B64F4.png",
+        "suggestedHumanReadableName": "Guided onboarding ready without setup_0_82B581BC-785F-43C7-8CC7-8E3DFB0F9095.png",
+        "timestamp": 1792697821.869,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedDark.xcresult"
+    },
+    {
+      "file": "images/restart-direction-light.png",
+      "title": "A direction for starting again",
+      "mode": "light",
+      "category": "choices",
+      "state": "Optional selection",
+      "description": "Start again is selected. The answer is setup context, not a diagnosis or a progress score.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "c9f407171fdb8c9f826a28e845c28243acd503a2ef5ae90b9807ff799d5c7965",
+      "testIdentifier": "PremiumRefreshUITests/testGuidedOnboardingBackRetainsChoicesAndExploreCreatesNoRecords()",
+      "sourceattachment": {
+        "exportedFileName": "049B8236-A109-4F8A-8412-D755DC8669E5.png",
+        "suggestedHumanReadableName": "Guided onboarding selected restart direction_0_DEAE8317-B2D0-45A5-9D5D-201640E8CDB7.png",
+        "timestamp": 1792697638.621,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightResolved.xcresult"
+    },
+    {
+      "file": "images/manageable-start-light.png",
+      "title": "Make the first step manageable",
+      "mode": "light",
+      "category": "choices",
+      "state": "Optional selection",
+      "description": "An obstacle is selected; no target has been changed and no habit has been created.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "08ef092c14e43f21bc7b5ca4b796f3ca9f6ada71fe3fcdfd77508cdf85e8124b",
+      "testIdentifier": "PremiumRefreshUITests/testGuidedOnboardingBackRetainsChoicesAndExploreCreatesNoRecords()",
+      "sourceattachment": {
+        "exportedFileName": "1C6D7905-186E-4FE5-8DF7-2F9EB160A31D.png",
+        "suggestedHumanReadableName": "Guided onboarding selected manageable starting point_0_8619879F-5760-4101-9C3A-0AD5B186EC04.png",
+        "timestamp": 1792697644.675,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightResolved.xcresult"
+    },
+    {
+      "file": "images/reading-idea-light.png",
+      "title": "An idea, chosen for review",
+      "mode": "light",
+      "category": "drafts",
+      "state": "Selected, unsaved",
+      "description": "The reading idea is selected. Selection alone creates neither a habit nor a completion.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "82896fedd0b8436dc4ceb8cc313451a9f1af97ccf26cbf4fa3b8a20d8daf7bc3",
+      "testIdentifier": "PremiumRefreshUITests/testGuidedOnboardingStarterReviewCancelLeavesTodayEmpty()",
+      "sourceattachment": {
+        "exportedFileName": "B8D78C8C-EB3E-4A7F-BF77-F3FC243F8854.png",
+        "suggestedHumanReadableName": "Guided onboarding selected editable reading idea_0_71C3B9C7-EFAC-42AB-8A3A-56DF53FF8F50.png",
+        "timestamp": 1792697301.378,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightFinal.xcresult"
+    },
+    {
+      "file": "images/reading-review-light.png",
+      "title": "Review a 10-page reading target",
+      "mode": "light",
+      "category": "drafts",
+      "state": "Unsaved creation draft",
+      "description": "The editable target is 10 pages; it is not 10 pages of recorded activity. Cancel discards the form.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "e628d887caf130e323df8f352eae7cb1152f8920083250befaf6236655f85d98",
+      "testIdentifier": "PremiumRefreshUITests/testGuidedOnboardingStarterReviewCancelLeavesTodayEmpty()",
+      "sourceattachment": {
+        "exportedFileName": "534FAABF-46F7-4A03-A7E4-5C0CACD26FDD.png",
+        "suggestedHumanReadableName": "Guided onboarding unsaved ten page reading review_0_CBED6CAA-10DD-45CE-A939-715C490C01D6.png",
+        "timestamp": 1792697310.179,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightFinal.xcresult"
+    },
+    {
+      "file": "images/routine-direction-light.png",
+      "title": "A rhythm for the everyday",
+      "mode": "light",
+      "category": "choices",
+      "state": "Optional selection",
+      "description": "Build a routine changes which starting ideas are offered. It does not automatically create a routine.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "9a82feed44d8f8ef53bee76993b005d0301746b5ab02fc2afe5792f56c373687",
+      "testIdentifier": "PremiumRefreshUITests/testGuidedOnboardingExplicitSavePreservesAmountAndOffersContextualReminder()",
+      "sourceattachment": {
+        "exportedFileName": "3A549B2E-110A-4708-AED5-29BC95868562.png",
+        "suggestedHumanReadableName": "Guided onboarding routine direction_0_E5F666C2-6CD2-409C-A777-B34861AD8B5A.png",
+        "timestamp": 1792697686.072,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightResolved.xcresult"
+    },
+    {
+      "file": "images/routine-direction-dark.png",
+      "title": "A rhythm for the everyday",
+      "mode": "dark",
+      "category": "choices",
+      "state": "Optional selection",
+      "description": "Build a routine changes which starting ideas are offered. It does not automatically create a routine.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "0a396a42089719ed8e5a009f7f434d897a5bbad77faf4a511f15bf592367243e",
+      "testIdentifier": "PremiumRefreshUITests/testGuidedOnboardingExplicitSavePreservesAmountAndOffersContextualReminder()",
+      "sourceattachment": {
+        "exportedFileName": "15F0C076-C4C4-4D4D-B6C7-B11F0D168DEE.png",
+        "suggestedHumanReadableName": "Guided onboarding routine direction_0_ACA80908-005A-4CE7-8457-FC5CCBBD7D9D.png",
+        "timestamp": 1792697839.731,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedDark.xcresult"
+    },
+    {
+      "file": "images/forgetting-support-light.png",
+      "title": "A nudge, only if it helps",
+      "mode": "light",
+      "category": "choices",
+      "state": "Optional selection",
+      "description": "Forgetting is selected. A reminder can be reviewed later; no notification permission is requested by this choice.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "43bb76912b98da645dc925653016b03354b3c7bdca1674d6664daec22854ae52",
+      "testIdentifier": "PremiumRefreshUITests/testGuidedOnboardingExplicitSavePreservesAmountAndOffersContextualReminder()",
+      "sourceattachment": {
+        "exportedFileName": "214B2439-0864-442A-9D3F-7F63A72E9DA4.png",
+        "suggestedHumanReadableName": "Guided onboarding optional forgetting support_0_E5E4D40E-FB26-420E-939F-0C3209CB38BB.png",
+        "timestamp": 1792697691.039,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightResolved.xcresult"
+    },
+    {
+      "file": "images/forgetting-support-dark.png",
+      "title": "A nudge, only if it helps",
+      "mode": "dark",
+      "category": "choices",
+      "state": "Optional selection",
+      "description": "Forgetting is selected. A reminder can be reviewed later; no notification permission is requested by this choice.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "cd9285857c5a8493208d89f994432ccaa8e06de58182957bce55840945b306df",
+      "testIdentifier": "PremiumRefreshUITests/testGuidedOnboardingExplicitSavePreservesAmountAndOffersContextualReminder()",
+      "sourceattachment": {
+        "exportedFileName": "09C51445-0545-4FBA-BD94-675E10617D7D.png",
+        "suggestedHumanReadableName": "Guided onboarding optional forgetting support_0_E42792A4-6FF4-443C-91B3-DC2D8FBF0516.png",
+        "timestamp": 1792697844.52,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedDark.xcresult"
+    },
+    {
+      "file": "images/companion-choice-light.png",
+      "title": "Choose your quiet companion",
+      "mode": "light",
+      "category": "handoffs",
+      "state": "Habit saved; no activity logged",
+      "description": "The reviewed reading habit has been saved. The companion preference is being selected; the target remains unlogged.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "28e125087b53ff6164781b6df07166ce2e724c4b6917d1beea6a00040163f48a",
+      "testIdentifier": "PremiumRefreshUITests/testGuidedOnboardingExplicitSavePreservesAmountAndOffersContextualReminder()",
+      "sourceattachment": {
+        "exportedFileName": "8C83EC18-5A5A-4D3B-871B-691CFF025CD1.png",
+        "suggestedHumanReadableName": "Guided onboarding companion choice_0_DC99A48C-47BD-4550-8091-536C5E0E8D45.png",
+        "timestamp": 1792697717.757,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightResolved.xcresult"
+    },
+    {
+      "file": "images/companion-choice-dark.png",
+      "title": "Choose your quiet companion",
+      "mode": "dark",
+      "category": "handoffs",
+      "state": "Habit saved; no activity logged",
+      "description": "The reviewed reading habit has been saved. The companion preference is being selected; the target remains unlogged.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "8e55506a30d604a8e89b604da7be85c7aa4939ce3fe369b9d33d7ed19ddea880",
+      "testIdentifier": "PremiumRefreshUITests/testGuidedOnboardingExplicitSavePreservesAmountAndOffersContextualReminder()",
+      "sourceattachment": {
+        "exportedFileName": "6B675D8C-D21A-451B-93C8-75CDD91403A0.png",
+        "suggestedHumanReadableName": "Guided onboarding companion choice_0_7C41BB17-84FF-4897-AFA0-A0C9F992EF49.png",
+        "timestamp": 1792697868.659,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedDark.xcresult"
+    },
+    {
+      "file": "images/ready-reminder-light.png",
+      "title": "A saved habit and an optional reminder",
+      "mode": "light",
+      "category": "handoffs",
+      "state": "Saved configuration, zero logged pages",
+      "description": "The habit is ready with its reviewed target. Reminder setup is an optional separate action, not an authorization already granted.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "77ded5cb26c7fde0925ef5d0eab9819e2e06750c904e5307796bbd5147ce8d5a",
+      "testIdentifier": "PremiumRefreshUITests/testGuidedOnboardingExplicitSavePreservesAmountAndOffersContextualReminder()",
+      "sourceattachment": {
+        "exportedFileName": "FE67D42F-ADD0-4ABE-8D2A-DFCF1805E6B0.png",
+        "suggestedHumanReadableName": "Guided onboarding ready with contextual reminder_0_5BDF18FB-BF1D-4D7D-9C78-317759329643.png",
+        "timestamp": 1792697722.465,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightResolved.xcresult"
+    },
+    {
+      "file": "images/ready-reminder-dark.png",
+      "title": "A saved habit and an optional reminder",
+      "mode": "dark",
+      "category": "handoffs",
+      "state": "Saved configuration, zero logged pages",
+      "description": "The habit is ready with its reviewed target. Reminder setup is an optional separate action, not an authorization already granted.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "04d6cbe7a385bec76a9fafd5bb372c9ca81f43be4f9d8bd795c263cee9c6de4a",
+      "testIdentifier": "PremiumRefreshUITests/testGuidedOnboardingExplicitSavePreservesAmountAndOffersContextualReminder()",
+      "sourceattachment": {
+        "exportedFileName": "B1CB981E-9244-4B38-B7D4-BDE55FD15297.png",
+        "suggestedHumanReadableName": "Guided onboarding ready with contextual reminder_0_E3AAF098-0931-4BF6-988A-A64E91371A04.png",
+        "timestamp": 1792697873.164,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedDark.xcresult"
+    },
+    {
+      "file": "images/focus-direction-light.png",
+      "title": "Make room for your attention",
+      "mode": "light",
+      "category": "choices",
+      "state": "Optional selection",
+      "description": "Focus and distraction answers shape the next suggestions. They do not start a timer or restrict apps.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "2aaf13803009234968216c834f55a8764aa252ead6163264544d37eee4aa5a4a",
+      "testIdentifier": "PremiumRefreshUITests/testGuidedOnboardingFocusRouteExplainsMakeRoomWithoutStartingSession()",
+      "sourceattachment": {
+        "exportedFileName": "70E73526-0892-4DE0-821A-A32FA73E2ACF.png",
+        "suggestedHumanReadableName": "Guided onboarding focus and distraction direction_0_4A17F220-1CF4-4883-94A8-FE984DEC5804.png",
+        "timestamp": 1792697270.354,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightFinal.xcresult"
+    },
+    {
+      "file": "images/focus-ideas-light.png",
+      "title": "Choose a focus starting point",
+      "mode": "light",
+      "category": "drafts",
+      "state": "Selected, unsaved",
+      "description": "Put my phone away is an editable habit idea, not a running phone-free session.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "5d57538dbcdedd1ccfee7ab574253a89c38b4df804e4c7da3971a50d6b6d7f14",
+      "testIdentifier": "PremiumRefreshUITests/testGuidedOnboardingFocusRouteExplainsMakeRoomWithoutStartingSession()",
+      "sourceattachment": {
+        "exportedFileName": "DBBF4421-D786-4F09-925E-594CADB2B634.png",
+        "suggestedHumanReadableName": "Guided onboarding focus starting ideas_0_8787B377-7ECD-4183-8665-2270F5F0BA3B.png",
+        "timestamp": 1792697274.054,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightFinal.xcresult"
+    },
+    {
+      "file": "images/focus-handoff-light.png",
+      "title": "A deliberate next step for focus",
+      "mode": "light",
+      "category": "handoffs",
+      "state": "Habit saved; no session started",
+      "description": "The focus handoff explains where to review a session. Onboarding has not created a session goal or logged success.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "b5d08472f188fbc3366ed69ffdf39ed432a032164fbd8081469350239b7bb1ef",
+      "testIdentifier": "PremiumRefreshUITests/testGuidedOnboardingFocusRouteExplainsMakeRoomWithoutStartingSession()",
+      "sourceattachment": {
+        "exportedFileName": "098621BC-51D7-41BA-84FD-DFD871F0BA8C.png",
+        "suggestedHumanReadableName": "Guided onboarding focus handoff with explicit next step_0_835BD444-39F1-4843-88DF-A6934F683802.png",
+        "timestamp": 1792697280.107,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightFinal.xcresult"
+    },
+    {
+      "file": "images/focus-review-light.png",
+      "title": "Session setup stays separate",
+      "mode": "light",
+      "category": "handoffs",
+      "state": "No session started",
+      "description": "The Make Room destination still requires an explicit reviewed goal and Start. The habit remains uncompleted.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "d6b0e17d592b807100f096af07467196a62c7a45fe74c595cfbb763b8bca95a7",
+      "testIdentifier": "PremiumRefreshUITests/testGuidedOnboardingFocusRouteExplainsMakeRoomWithoutStartingSession()",
+      "sourceattachment": {
+        "exportedFileName": "7AF42679-5913-489F-B20B-493C822A8256.png",
+        "suggestedHumanReadableName": "Guided focus handoff still requires session review_0_F41AF63E-5349-45A1-8C6B-345B36FCA4E2.png",
+        "timestamp": 1792697287.613,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightFinal.xcresult"
+    },
+    {
+      "file": "images/welcome-ax3-light.png",
+      "title": "Welcome, at AX3 text size",
+      "mode": "light",
+      "category": "large-text",
+      "state": "No records created",
+      "description": "Accessibility XXXL text with a smaller decorative scene; reading text keeps its requested size.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "94185b3fc0d9e39e0c0c04df237afc6f4d6ec13e880bc4a6b0d1e173c56aafb6",
+      "testIdentifier": "PremiumRefreshUITests/testPremiumOnboardingAtLargestTextCanSkipWithoutPermissionPrompts()",
+      "sourceattachment": {
+        "exportedFileName": "0EF5DB9B-128F-4E30-B1E0-8CBF0054843C.png",
+        "suggestedHumanReadableName": "Luminous onboarding welcome at largest text_0_FF10CC6C-30FE-4BF4-9334-3619B2B5825C.png",
+        "timestamp": 1792697377.539,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightFinal.xcresult"
+    },
+    {
+      "file": "images/welcome-ax3-dark.png",
+      "title": "Welcome, at AX3 text size",
+      "mode": "dark",
+      "category": "large-text",
+      "state": "No records created",
+      "description": "Accessibility XXXL text with a smaller decorative scene; reading text keeps its requested size.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "78e754e8c7cea061189ab519ae436f9538469a4b4c6c783080a92f04b4eca006",
+      "testIdentifier": "PremiumRefreshUITests/testPremiumOnboardingAtLargestTextCanSkipWithoutPermissionPrompts()",
+      "sourceattachment": {
+        "exportedFileName": "9819D882-3A49-4D10-8488-DF5865F9C3F3.png",
+        "suggestedHumanReadableName": "Luminous onboarding welcome at largest text_0_E4C108E7-C20E-4123-B107-1B8D58FE3F34.png",
+        "timestamp": 1792697897.363,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedDark.xcresult"
+    },
+    {
+      "file": "images/goal-ax3-light.png",
+      "title": "Direction, at AX3 text size",
+      "mode": "light",
+      "category": "large-text",
+      "state": "Optional, unanswered",
+      "description": "Direction choices grow vertically. Continue and Skip remain separate controls.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "25c9f560be07738f27ed70c362500e8092f5b96fa104ee29f16fe9aa8768c024",
+      "testIdentifier": "PremiumRefreshUITests/testPremiumOnboardingAtLargestTextCanSkipWithoutPermissionPrompts()",
+      "sourceattachment": {
+        "exportedFileName": "E4990037-4BB7-4727-955C-6991FF1670FD.png",
+        "suggestedHumanReadableName": "Guided onboarding goal at largest text_0_DD112E30-8723-4D9F-BAC7-AC4C4DB9F47E.png",
+        "timestamp": 1792697379.881,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightFinal.xcresult"
+    },
+    {
+      "file": "images/goal-ax3-dark.png",
+      "title": "Direction, at AX3 text size",
+      "mode": "dark",
+      "category": "large-text",
+      "state": "Optional, unanswered",
+      "description": "Direction choices grow vertically. Continue and Skip remain separate controls.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "fc1337f52406c2618d8e598b24210aff9565535d6500b93162155dc08290aad1",
+      "testIdentifier": "PremiumRefreshUITests/testPremiumOnboardingAtLargestTextCanSkipWithoutPermissionPrompts()",
+      "sourceattachment": {
+        "exportedFileName": "1C27CAE6-5157-479F-95EE-1216EF3959B9.png",
+        "suggestedHumanReadableName": "Guided onboarding goal at largest text_0_CB1F48A9-04D6-4EE6-87BB-7ED95B88DD2F.png",
+        "timestamp": 1792697900.72,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedDark.xcresult"
+    },
+    {
+      "file": "images/obstacle-ax3-light.png",
+      "title": "Obstacles, at AX3 text size",
+      "mode": "light",
+      "category": "large-text",
+      "state": "Optional, unanswered",
+      "description": "Optional obstacle choices use the same setup behavior at larger text.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "294b0f423c7d20dc4cb7e7df2f5aa7b930d887c30d3c38f6b828268ae440598d",
+      "testIdentifier": "PremiumRefreshUITests/testPremiumOnboardingAtLargestTextCanSkipWithoutPermissionPrompts()",
+      "sourceattachment": {
+        "exportedFileName": "0FE1E317-A2B4-4859-BF4E-DA1A989A13F7.png",
+        "suggestedHumanReadableName": "Guided onboarding obstacle at largest text_0_A773AF07-0AFE-486B-AFE4-E39AA7C8F96C.png",
+        "timestamp": 1792697382.274,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightFinal.xcresult"
+    },
+    {
+      "file": "images/obstacle-ax3-dark.png",
+      "title": "Obstacles, at AX3 text size",
+      "mode": "dark",
+      "category": "large-text",
+      "state": "Optional, unanswered",
+      "description": "Optional obstacle choices use the same setup behavior at larger text.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "5dac0b65d5fec2f1d4804e267744d72973b2817a66eb9c5b63c1bb5bf028b487",
+      "testIdentifier": "PremiumRefreshUITests/testPremiumOnboardingAtLargestTextCanSkipWithoutPermissionPrompts()",
+      "sourceattachment": {
+        "exportedFileName": "3B1D928E-7CF5-4D0F-8498-4003DD0AD0B9.png",
+        "suggestedHumanReadableName": "Guided onboarding obstacle at largest text_0_1586A12A-3140-4073-A859-C3FBB4F9981A.png",
+        "timestamp": 1792697904.056,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedDark.xcresult"
+    },
+    {
+      "file": "images/habit-ax3-light.png",
+      "title": "Starting ideas, at AX3 text size",
+      "mode": "light",
+      "category": "large-text",
+      "state": "Unsaved ideas",
+      "description": "The ideas remain drafts until deliberate review and Save. The native screen can be scrolled.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "db5477d283a8b59c785e4be8a15b5838d285c2e9a86f7092479b86f65a7eece5",
+      "testIdentifier": "PremiumRefreshUITests/testPremiumOnboardingAtLargestTextCanSkipWithoutPermissionPrompts()",
+      "sourceattachment": {
+        "exportedFileName": "07473297-01FF-4AC2-8B23-6795A119F2F9.png",
+        "suggestedHumanReadableName": "Guided onboarding habit at largest text_0_9EE731DC-2FFC-450E-8F98-DE3419A1D173.png",
+        "timestamp": 1792697384.652,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightFinal.xcresult"
+    },
+    {
+      "file": "images/habit-ax3-dark.png",
+      "title": "Starting ideas, at AX3 text size",
+      "mode": "dark",
+      "category": "large-text",
+      "state": "Unsaved ideas",
+      "description": "The ideas remain drafts until deliberate review and Save. The native screen can be scrolled.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "473865f19f508ee37f17922b92e11a9d754d9e4a79d48648f61d73346162e6dd",
+      "testIdentifier": "PremiumRefreshUITests/testPremiumOnboardingAtLargestTextCanSkipWithoutPermissionPrompts()",
+      "sourceattachment": {
+        "exportedFileName": "3025BB1C-39D0-4823-807A-3BD3066F6A4E.png",
+        "suggestedHumanReadableName": "Guided onboarding habit at largest text_0_413F5831-DD32-4394-AF84-074CD88BBDCD.png",
+        "timestamp": 1792697907.456,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedDark.xcresult"
+    },
+    {
+      "file": "images/companion-ax3-light.png",
+      "title": "Companion choice, at AX3 text size",
+      "mode": "light",
+      "category": "large-text",
+      "state": "Preference review",
+      "description": "Companion choice remains optional. Larger labels are not reduced to fit a fixed card.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "277fffc4a4d8735141a5bafcff12ac79bf9aa902cbe5dab2f08c7e59b894bc8f",
+      "testIdentifier": "PremiumRefreshUITests/testPremiumOnboardingAtLargestTextCanSkipWithoutPermissionPrompts()",
+      "sourceattachment": {
+        "exportedFileName": "A30E9335-4D27-4C8E-9B02-264229833390.png",
+        "suggestedHumanReadableName": "Guided onboarding companion at largest text_0_65637804-83C1-459A-9602-A71956F87454.png",
+        "timestamp": 1792697387.018,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightFinal.xcresult"
+    },
+    {
+      "file": "images/companion-ax3-dark.png",
+      "title": "Companion choice, at AX3 text size",
+      "mode": "dark",
+      "category": "large-text",
+      "state": "Preference review",
+      "description": "Companion choice remains optional. Larger labels are not reduced to fit a fixed card.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "e00ffff96deed0149a348f567c2f6be3a61c6d44d03001147ab13f074f2a1d74",
+      "testIdentifier": "PremiumRefreshUITests/testPremiumOnboardingAtLargestTextCanSkipWithoutPermissionPrompts()",
+      "sourceattachment": {
+        "exportedFileName": "55AACDC3-3AA9-432E-8883-B6FDB71A0CCD.png",
+        "suggestedHumanReadableName": "Guided onboarding companion at largest text_0_FABC1B58-09AD-41A6-88A3-5ED5C756D094.png",
+        "timestamp": 1792697910.82,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedDark.xcresult"
+    },
+    {
+      "file": "images/ready-ax3-light.png",
+      "title": "Ready, at AX3 text size",
+      "mode": "light",
+      "category": "large-text",
+      "state": "Empty setup",
+      "description": "Optional setup was skipped. Finishing does not create a habit or a completion.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "cc7331976e0aee97099dba1c1444d41bff06053c50dde4fee850dcb2fcab5005",
+      "testIdentifier": "PremiumRefreshUITests/testPremiumOnboardingAtLargestTextCanSkipWithoutPermissionPrompts()",
+      "sourceattachment": {
+        "exportedFileName": "A7E6DF76-8912-43BC-BEAC-4D1254864F20.png",
+        "suggestedHumanReadableName": "Luminous onboarding ready at largest text_0_0CF92EAD-5894-4690-BFCB-32B73ACBE31F.png",
+        "timestamp": 1792697389.328,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedLightFinal.xcresult"
+    },
+    {
+      "file": "images/ready-ax3-dark.png",
+      "title": "Ready, at AX3 text size",
+      "mode": "dark",
+      "category": "large-text",
+      "state": "Empty setup",
+      "description": "Optional setup was skipped. Finishing does not create a habit or a completion.",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "b4f5a513bfd3e9eeeccd794bbebd831cfdbb9590fb6c46a8351c5eabe01b63b9",
+      "testIdentifier": "PremiumRefreshUITests/testPremiumOnboardingAtLargestTextCanSkipWithoutPermissionPrompts()",
+      "sourceattachment": {
+        "exportedFileName": "C5AC9BD1-FB5C-4648-9A77-CB9620059BF1.png",
+        "suggestedHumanReadableName": "Luminous onboarding ready at largest text_0_D2B083C8-42A1-4D07-84D7-50A258CCE826.png",
+        "timestamp": 1792697914.178,
+        "isAssociatedWithFailure": false
+      },
+      "source_bundle": "/tmp/RilovaGuidedDark.xcresult"
+    }
+  ]
+}

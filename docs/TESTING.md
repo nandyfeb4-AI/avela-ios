@@ -1,5 +1,30 @@
 # Testing Strategy
 
+## Guided setup verification — October 22, 2026
+
+The full unit suite passes **640 tests**. Seventeen onboarding cases cover
+optional answers/exit, exact catalog units, Back/Skip, atomic reviewed creation,
+rollback/retry, both limit checks, duplicate/concurrent creation, existing
+progress, profile failures and completion idempotence. Fourteen distinct affected
+native UI cases have passing executions across focused runs; this is **not** a
+fresh unfiltered sweep of all 125 UI methods.
+
+Native checks cover selected-choice retention, blank custom entry, review/Cancel,
+explicit amount Save and relaunch with zero logged pages, contextual reminders,
+focus handoff without a session, all six optional stages, and ordinary custom/
+template creation and Log/Undo regressions. Welcome, goal and obstacle native
+accessibility audits have no suppressed findings. Normal and AX3 checks guard
+separate footer actions and progress staying below the toolbar. Actual dark
+appearance covers the six stages, reviewed save and largest-text skip flow.
+
+[Run evidence](verification/guided-setup/test-results.json) retains the initial
+picker-selector failure, corrected native-scroll interactions and the QA launch
+failure/reboot, alongside passing reruns. No owner store was seeded, erased or
+used for tests. The [native gallery](verification/guided-setup/index.html) uses
+only current-layout passing-case captures. Physical VoiceOver/focus order,
+Reduce Motion/contrast device review and supported-hardware performance remain
+separate checks; these results do not establish App Store approval.
+
 ## Expressive World coverage — October 21, 2026
 
 The full unit suite passes **628 tests**, including the new nine-theme

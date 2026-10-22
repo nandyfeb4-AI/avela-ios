@@ -284,10 +284,8 @@ struct AppShellView: View {
                 liveActivityService = SessionLiveActivityService(repository: attentionRepository,
                     profiles: profiles, adapter: ActivityKitSessionAdapter())
             }
-            onboardingViewModel = OnboardingViewModel(habits: repository, attention: attentionRepository,
-                profiles: profiles, reminderService: service,
-                habitCreationAllowed: { subscriptionManager.canCreateHabit(activeCount: $0) },
-                attentionCreationAllowed: { subscriptionManager.canCreateAttentionGoal(activeCount: $0) })
+            onboardingViewModel = OnboardingViewModel(habits: repository, profiles: profiles, reminderService: service,
+                habitCreationAllowed: { subscriptionManager.canCreateHabit(activeCount: $0) })
             initializationError = nil
             didInitialize = true
             if let action = notificationDelegate.pendingAction { prepareReminderReview(action) }

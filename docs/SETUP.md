@@ -1,5 +1,32 @@
 # Development Setup
 
+## Guided setup candidate — October 22, 2026
+
+Open the [guided-setup gallery](verification/guided-setup/index.html), also delivered
+as **Desktop/Rilova Guided Setup Preview/index.html**. It contains 40 unaltered
+native captures in light/dark and AX3, including choices, unsaved review, saved
+configuration and optional handoffs. The earlier Expressive World preview remains
+an archive of the preceding flow. Existing users do not repeat onboarding; never
+reset their store to review it.
+
+Use the separate QA simulator and a UUID-isolated DEBUG store via the existing
+UI-test launch helper. The main new methods are
+`PremiumRefreshUITests/testGuidedOnboardingBackRetainsChoicesAndExploreCreatesNoRecords`,
+`testGuidedOnboardingStarterReviewCancelLeavesTodayEmpty`,
+`testGuidedOnboardingExplicitSavePreservesAmountAndOffersContextualReminder`, and
+`testGuidedOnboardingFocusRouteExplainsMakeRoomWithoutStartingSession`.
+The existing optional-steps/relaunch, AX3, geometry, native audit and normal
+creation tests remain active. Pass the desired methods with `-only-testing:`
+using the isolated destination command below; do not run them on an owner's simulator.
+
+Results are 640 full-suite unit passes and passing executions of 14 distinct
+affected UI cases across focused runs, not an unfiltered 125-case sweep. Actual
+dark mode uses simctl appearance and is restored to light after verification.
+[Run records](verification/guided-setup/test-results.json) include failed attempts
+and repairs; [verification.json](verification/guided-setup/verification.json)
+records current builds/installations. StoreKit/Health/Watch/VoiceOver and release
+provisioning still require their existing separate checks.
+
 ## Expressive World candidate — October 21, 2026
 
 Open the [current native gallery](verification/expressive-world/index.html) for

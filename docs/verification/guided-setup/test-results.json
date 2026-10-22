@@ -1,0 +1,3451 @@
+{
+  "date": "2026-10-22",
+  "unit_tests_passed": 640,
+  "distinct_affected_ui_cases_with_passing_executions": 14,
+  "passing_ui_cases": [
+    "AvelaUITests/testCompletingAndUndoingAHabit()",
+    "AvelaUITests/testCreatingADailyHabitShowsItInTheTodayList()",
+    "MVPFlowTests/testBrandedWelcomeAtAccessibilityTextSizeKeepsContinueUsable()",
+    "MVPFlowTests/testHabitIdeaCanBeCustomizedSavedAndEditedAfterRelaunch()",
+    "MVPFlowTests/testOnboardingOptionalStepsCanBeSkippedAndCompletionSurvivesRelaunch()",
+    "MVPFlowTests/testOnboardingWelcomePassesNativeAccessibilityAudit()",
+    "PremiumRefreshUITests/testAmountTemplateReviewSavesAndLogsExplicitly()",
+    "PremiumRefreshUITests/testGuidedOnboardingBackRetainsChoicesAndExploreCreatesNoRecords()",
+    "PremiumRefreshUITests/testGuidedOnboardingExplicitSavePreservesAmountAndOffersContextualReminder()",
+    "PremiumRefreshUITests/testGuidedOnboardingFocusRouteExplainsMakeRoomWithoutStartingSession()",
+    "PremiumRefreshUITests/testGuidedOnboardingStarterReviewCancelLeavesTodayEmpty()",
+    "PremiumRefreshUITests/testIllustratedSetupKeepsContinueAndSkipSeparate()",
+    "PremiumRefreshUITests/testIllustratedSetupKeepsContinueAndSkipSeparateAtLargestText()",
+    "PremiumRefreshUITests/testPremiumOnboardingAtLargestTextCanSkipWithoutPermissionPrompts()"
+  ],
+  "fresh_unfiltered_ui_sweep": false,
+  "runs": [
+    {
+      "id": "units",
+      "bundle": "/tmp/RilovaGuidedUnits.xcresult",
+      "log": "/tmp/rilova-guided-units.log",
+      "result": "Passed",
+      "passed": 640,
+      "failed": 0,
+      "skipped": 0,
+      "start": 1792696418.176,
+      "finish": 1792696448.418,
+      "cases": [
+        {
+          "nodeIdentifier": "AppPersistenceTests/testAddingEnrichmentModelsPreservesExistingStoreFacts()",
+          "result": "Passed",
+          "durationInSeconds": 0.3113069534301758
+        },
+        {
+          "nodeIdentifier": "AppPersistenceTests/testDataSurvivesReopeningDiskStore()",
+          "result": "Passed",
+          "durationInSeconds": 0.018939971923828125
+        },
+        {
+          "nodeIdentifier": "AppPersistenceTests/testInMemoryContainerInitializesEmptyCanonicalSchema()",
+          "result": "Passed",
+          "durationInSeconds": 0.003594040870666504
+        },
+        {
+          "nodeIdentifier": "AppProtectionTests/testAuthorizationDenialLeavesNormalSessionsAvailable()",
+          "result": "Passed",
+          "durationInSeconds": 0.005702972412109375
+        },
+        {
+          "nodeIdentifier": "AppProtectionTests/testClockRollbackAndLateStartCannotExtendProtection()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003319978713989258
+        },
+        {
+          "nodeIdentifier": "AppProtectionTests/testCorruptLeaseRefusesReadAndCanBeDiscarded()",
+          "result": "Passed",
+          "durationInSeconds": 0.012694001197814941
+        },
+        {
+          "nodeIdentifier": "AppProtectionTests/testDurationBoundsRejectShortNonfiniteAndLongProtectionWithoutChangingTimer()",
+          "result": "Passed",
+          "durationInSeconds": 0.0005140304565429688
+        },
+        {
+          "nodeIdentifier": "AppProtectionTests/testEndedOrUnavailableSessionReconcilesProtection()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003370046615600586
+        },
+        {
+          "nodeIdentifier": "AppProtectionTests/testExpiryReleasesAtExactDeadlineNeverMarksKept()",
+          "result": "Passed",
+          "durationInSeconds": 0.002068042755126953
+        },
+        {
+          "nodeIdentifier": "AppProtectionTests/testFailedMonitorRegistrationLeavesSessionUnprotectedAndDisclosesIt()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003420114517211914
+        },
+        {
+          "nodeIdentifier": "AppProtectionTests/testLeaseSurvivesReopenAndIsExcludedFromBackup()",
+          "result": "Passed",
+          "durationInSeconds": 0.006723999977111816
+        },
+        {
+          "nodeIdentifier": "AppProtectionTests/testMakeRoomRejectsUnpreparedProtectionBeforeSavingAnySession()",
+          "result": "Passed",
+          "durationInSeconds": 0.022825002670288086
+        },
+        {
+          "nodeIdentifier": "AppProtectionTests/testOldMonitorCallbackCannotReleaseNewSession()",
+          "result": "Passed",
+          "durationInSeconds": 0.00029098987579345703
+        },
+        {
+          "nodeIdentifier": "AppProtectionTests/testOverlappingStartPreservesExistingProtection()",
+          "result": "Passed",
+          "durationInSeconds": 0.00026094913482666016
+        },
+        {
+          "nodeIdentifier": "AppProtectionTests/testPermissionAndSelectionMustPrecedeStart()",
+          "result": "Passed",
+          "durationInSeconds": 0.0002779960632324219
+        },
+        {
+          "nodeIdentifier": "AppProtectionTests/testPostSaveProtectionFailureKeepsExactlyOneSessionAndNoHabitCompletion()",
+          "result": "Passed",
+          "durationInSeconds": 0.018376946449279785
+        },
+        {
+          "nodeIdentifier": "AppProtectionTests/testRevocationReleasesInsteadOfReapplying()",
+          "result": "Passed",
+          "durationInSeconds": 0.00036394596099853516
+        },
+        {
+          "nodeIdentifier": "AppProtectionTests/testStartCapturesCanonicalSessionWithoutAlteringOutcome()",
+          "result": "Passed",
+          "durationInSeconds": 0.0002570152282714844
+        },
+        {
+          "nodeIdentifier": "AppProtectionTests/testStopReleasesProtectionWithoutEndingSession()",
+          "result": "Passed",
+          "durationInSeconds": 0.00024700164794921875
+        },
+        {
+          "nodeIdentifier": "AppProtectionTests/testUnavailableDoesNotRequestPermissionOrRestrict()",
+          "result": "Passed",
+          "durationInSeconds": 0.0023130178451538086
+        },
+        {
+          "nodeIdentifier": "AppShellTests/testBundledSystemIntegrationConfigurationIsPresent()",
+          "result": "Passed",
+          "durationInSeconds": 0.00046002864837646484
+        },
+        {
+          "nodeIdentifier": "AppShellTests/testNavigationDestinationsHaveStableOrderAndIdentity()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003719329833984375
+        },
+        {
+          "nodeIdentifier": "AppShellTests/testRilovaBrandIsBundledWithoutChangingExistingIntegrationIdentity()",
+          "result": "Passed",
+          "durationInSeconds": 0.0005819797515869141
+        },
+        {
+          "nodeIdentifier": "AppThemeTests/testAddingAppearanceModelPreservesPreviousStoreAndDefaultsTheme()",
+          "result": "Passed",
+          "durationInSeconds": 0.040835022926330566
+        },
+        {
+          "nodeIdentifier": "AppThemeTests/testAllThemeTextAndFeedbackColorsMeetContrastInLightAndDark()",
+          "result": "Passed",
+          "durationInSeconds": 0.0011539459228515625
+        },
+        {
+          "nodeIdentifier": "AppThemeTests/testChangingThemeKeepsOnePreferencesRecord()",
+          "result": "Passed",
+          "durationInSeconds": 0.006152033805847168
+        },
+        {
+          "nodeIdentifier": "AppThemeTests/testExistingStoredThemeValuesRemainSelectedAfterPaletteExpansion()",
+          "result": "Passed",
+          "durationInSeconds": 0.0044820308685302734
+        },
+        {
+          "nodeIdentifier": "AppThemeTests/testExpandedThemesSurviveDiskReopeningWithoutDuplicatingPreferences()",
+          "result": "Passed",
+          "durationInSeconds": 0.021544933319091797
+        },
+        {
+          "nodeIdentifier": "AppThemeTests/testExpressiveAtmosphereAndHabitReadingSurfacesKeepTextContrast()",
+          "result": "Passed",
+          "durationInSeconds": 0.0017189979553222656
+        },
+        {
+          "nodeIdentifier": "AppThemeTests/testHabitIdentitySymbolsRemainVisibleOnTheirTintedTiles()",
+          "result": "Passed",
+          "durationInSeconds": 0.0004029273986816406
+        },
+        {
+          "nodeIdentifier": "AppThemeTests/testLoadFailureDoesNotAllowReplacingAnUnreadPreference()",
+          "result": "Passed",
+          "durationInSeconds": 0.004418015480041504
+        },
+        {
+          "nodeIdentifier": "AppThemeTests/testLuminousHeroesKeepSmallTextReadableUnderTheirBrightestDecoration()",
+          "result": "Passed",
+          "durationInSeconds": 0.0004080533981323242
+        },
+        {
+          "nodeIdentifier": "AppThemeTests/testMissingAppearanceUsesOriginalThemeWithoutWritingARecord()",
+          "result": "Passed",
+          "durationInSeconds": 0.0036780834197998047
+        },
+        {
+          "nodeIdentifier": "AppThemeTests/testScopedBrandGradientsKeepTextReadableAcrossThemesAndAppearances()",
+          "result": "Passed",
+          "durationInSeconds": 0.004904031753540039
+        },
+        {
+          "nodeIdentifier": "AppThemeTests/testSelectionPublishesOnlyAfterSuccessfulSave()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003910064697265625
+        },
+        {
+          "nodeIdentifier": "AppThemeTests/testThemedCanvasesCardsAndHeroMaintainReadableContrast()",
+          "result": "Passed",
+          "durationInSeconds": 0.0015779733657836914
+        },
+        {
+          "nodeIdentifier": "AppThemeTests/testThemeSurvivesRelaunchAndPreservesCompanionPreferences()",
+          "result": "Passed",
+          "durationInSeconds": 0.01182401180267334
+        },
+        {
+          "nodeIdentifier": "AppThemeTests/testUnknownStoredThemeFallsBackWithoutOverwritingFutureValue()",
+          "result": "Passed",
+          "durationInSeconds": 0.004402041435241699
+        },
+        {
+          "nodeIdentifier": "ArchivedHabitsViewModelTests/testListsOnlyArchivedHabits()",
+          "result": "Passed",
+          "durationInSeconds": 0.01653909683227539
+        },
+        {
+          "nodeIdentifier": "ArchivedHabitsViewModelTests/testReactivateRemovesHabitFromArchivedListAndClearsArchivedState()",
+          "result": "Passed",
+          "durationInSeconds": 0.0186920166015625
+        },
+        {
+          "nodeIdentifier": "ArchivedHabitsViewModelTests/testReactivationLimitPreservesArchiveAndHistoryUntilSpaceAvailable()",
+          "result": "Passed",
+          "durationInSeconds": 0.01759803295135498
+        },
+        {
+          "nodeIdentifier": "ArchivedHabitsViewModelTests/testRepeatedArchiveReactivateCyclesLeaveConsistentState()",
+          "result": "Passed",
+          "durationInSeconds": 0.024618029594421387
+        },
+        {
+          "nodeIdentifier": "AttentionGoalDetailViewModelTests/testCorrectingAnEntryChangesItsAmountWithoutCreatingANewOne()",
+          "result": "Passed",
+          "durationInSeconds": 0.017802953720092773
+        },
+        {
+          "nodeIdentifier": "AttentionGoalDetailViewModelTests/testDeletingAnEntryRemovesItFromTodaysList()",
+          "result": "Passed",
+          "durationInSeconds": 0.01697993278503418
+        },
+        {
+          "nodeIdentifier": "AttentionGoalDetailViewModelTests/testEditingBudgetTodayDoesNotChangeYesterdaysResolvedTarget()",
+          "result": "Passed",
+          "durationInSeconds": 0.01637101173400879
+        },
+        {
+          "nodeIdentifier": "AttentionGoalDetailViewModelTests/testFreshGoalReportsNoUsageLoggedRatherThanAZeroStatus()",
+          "result": "Passed",
+          "durationInSeconds": 0.00805199146270752
+        },
+        {
+          "nodeIdentifier": "AttentionGoalDetailViewModelTests/testLoggingUsageUpdatesStatusImmediately()",
+          "result": "Passed",
+          "durationInSeconds": 0.012068033218383789
+        },
+        {
+          "nodeIdentifier": "AttentionGoalDetailViewModelTests/testMultipleEntriesSumForTodaysStatus()",
+          "result": "Passed",
+          "durationInSeconds": 0.016723036766052246
+        },
+        {
+          "nodeIdentifier": "AttentionProgressCalculatorTests/testHistoricalResolutionFallsBackToEarliestSnapshotWhenDatePrecedesAllSnapshots()",
+          "result": "Passed",
+          "durationInSeconds": 0.0005409717559814453
+        },
+        {
+          "nodeIdentifier": "AttentionProgressCalculatorTests/testHistoricalTargetResolutionAcrossABudgetEdit()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003879070281982422
+        },
+        {
+          "nodeIdentifier": "AttentionProgressCalculatorTests/testMultipleEntriesAreSummedNotDeduplicated()",
+          "result": "Passed",
+          "durationInSeconds": 0.0004019737243652344
+        },
+        {
+          "nodeIdentifier": "AttentionProgressCalculatorTests/testNoEntriesMeansMissingDataNotMeasuredZero()",
+          "result": "Passed",
+          "durationInSeconds": 0.00043201446533203125
+        },
+        {
+          "nodeIdentifier": "AttentionProgressCalculatorTests/testProtectedWindowRejectsInvalidBoundsAndUsesNextValidSpringTime()",
+          "result": "Passed",
+          "durationInSeconds": 0.00046503543853759766
+        },
+        {
+          "nodeIdentifier": "AttentionProgressCalculatorTests/testProtectedWindowUsesCalendarAcrossDSTAndOvernight()",
+          "result": "Passed",
+          "durationInSeconds": 0.00036203861236572266
+        },
+        {
+          "nodeIdentifier": "AttentionProgressCalculatorTests/testSameDayEditsResolveByRevisionNotCreatedAt()",
+          "result": "Passed",
+          "durationInSeconds": 0.00038802623748779297
+        },
+        {
+          "nodeIdentifier": "AttentionProgressCalculatorTests/testThresholdAtExactlyOneHundredPercentIsExceeded()",
+          "result": "Passed",
+          "durationInSeconds": 0.00031697750091552734
+        },
+        {
+          "nodeIdentifier": "AttentionProgressCalculatorTests/testThresholdAtExactlySeventyPercentIsNearLimit()",
+          "result": "Passed",
+          "durationInSeconds": 0.00032901763916015625
+        },
+        {
+          "nodeIdentifier": "AttentionProgressCalculatorTests/testThresholdJustBelowOneHundredPercentIsNearLimit()",
+          "result": "Passed",
+          "durationInSeconds": 0.0002989768981933594
+        },
+        {
+          "nodeIdentifier": "AttentionProgressCalculatorTests/testThresholdJustBelowSeventyPercentIsHealthy()",
+          "result": "Passed",
+          "durationInSeconds": 0.0002650022506713867
+        },
+        {
+          "nodeIdentifier": "AttentionProgressCalculatorTests/testUsageBeyondTargetIsExceeded()",
+          "result": "Passed",
+          "durationInSeconds": 0.0002919435501098633
+        },
+        {
+          "nodeIdentifier": "AttentionStatusFormatterTests/testLegacyExtremeAndNonFiniteAmountsFormatWithoutIntegerConversionTrap()",
+          "result": "Passed",
+          "durationInSeconds": 0.00031197071075439453
+        },
+        {
+          "nodeIdentifier": "AttentionStatusFormatterTests/testPillarStateIsHealthyWhenEveryLoggedGoalIsHealthy()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003529787063598633
+        },
+        {
+          "nodeIdentifier": "AttentionStatusFormatterTests/testPillarStateIsNilWhenThereAreNoGoals()",
+          "result": "Passed",
+          "durationInSeconds": 0.0002739429473876953
+        },
+        {
+          "nodeIdentifier": "AttentionStatusFormatterTests/testPillarStateIsNotLoggedYetWhenNoGoalHasUsage()",
+          "result": "Passed",
+          "durationInSeconds": 0.00027298927307128906
+        },
+        {
+          "nodeIdentifier": "AttentionStatusFormatterTests/testPillarStatePrefersTheWorstCaseAcrossGoals()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003629922866821289
+        },
+        {
+          "nodeIdentifier": "AttentionStatusFormatterTests/testWindowReportsCannotImplyExceededUsageInBudgetPillar()",
+          "result": "Passed",
+          "durationInSeconds": 0.0002809762954711914
+        },
+        {
+          "nodeIdentifier": "AttentionSummaryViewModelTests/testActiveSessionSummaryShowsCapturedTargetAfterGoalEdit()",
+          "result": "Passed",
+          "durationInSeconds": 0.017337918281555176
+        },
+        {
+          "nodeIdentifier": "AttentionSummaryViewModelTests/testLogFixedAmountRecordsUsageImmediately()",
+          "result": "Passed",
+          "durationInSeconds": 0.012423038482666016
+        },
+        {
+          "nodeIdentifier": "AttentionSummaryViewModelTests/testNewOvernightGoalBeforeItsStartCannotOfferPreCreationReport()",
+          "result": "Passed",
+          "durationInSeconds": 0.011834025382995605
+        },
+        {
+          "nodeIdentifier": "AttentionSummaryViewModelTests/testOvernightWindowKeepsStartDayConfigurationAfterMorningEdit()",
+          "result": "Passed",
+          "durationInSeconds": 0.018766045570373535
+        },
+        {
+          "nodeIdentifier": "AttentionSummaryViewModelTests/testSameDayWindowEditDoesNotReuseReportForDifferentBounds()",
+          "result": "Passed",
+          "durationInSeconds": 0.016524076461791992
+        },
+        {
+          "nodeIdentifier": "AttentionSummaryViewModelTests/testSessionActivityIsComposedWithoutInferringElapsedSuccess()",
+          "result": "Passed",
+          "durationInSeconds": 0.01702702045440674
+        },
+        {
+          "nodeIdentifier": "AttentionSummaryViewModelTests/testUndoLastQuickLogIsANoOpOnceAlreadyUndone()",
+          "result": "Passed",
+          "durationInSeconds": 0.019875049591064453
+        },
+        {
+          "nodeIdentifier": "AttentionSummaryViewModelTests/testUndoLastQuickLogRemovesExactlyThatEntry()",
+          "result": "Passed",
+          "durationInSeconds": 0.02240896224975586
+        },
+        {
+          "nodeIdentifier": "AttentionSummaryViewModelTests/testWindowPresentationDeadlineOnlyUsesFutureBoundariesAndNeverCompletesSession()",
+          "result": "Passed",
+          "durationInSeconds": 0.01839601993560791
+        },
+        {
+          "nodeIdentifier": "CloudBackupTests/testBackupFeedbackWaitsForUploadAndClearsSuccessBeforeFailedRetry()",
+          "result": "Passed",
+          "durationInSeconds": 0.2760429382324219
+        },
+        {
+          "nodeIdentifier": "CloudBackupTests/testCheckingBackupsShowsEmptyResultAndClearsFeedbackWhileRetrying()",
+          "result": "Passed",
+          "durationInSeconds": 0.06385397911071777
+        },
+        {
+          "nodeIdentifier": "CloudBackupTests/testCorruptionVersionDuplicatesAndDanglingReferencesAreRejectedBeforeWrites()",
+          "result": "Passed",
+          "durationInSeconds": 0.06676101684570312
+        },
+        {
+          "nodeIdentifier": "CloudBackupTests/testDisablingDuringPendingUploadCannotLeaveAFalseAcknowledgment()",
+          "result": "Passed",
+          "durationInSeconds": 0.06342101097106934
+        },
+        {
+          "nodeIdentifier": "CloudBackupTests/testEnableUploadFailureAndAccountChangeNeverClaimProtection()",
+          "result": "Passed",
+          "durationInSeconds": 0.05514204502105713
+        },
+        {
+          "nodeIdentifier": "CloudBackupTests/testExistingProgressAndRepeatRestoreAreNeverOverwritten()",
+          "result": "Passed",
+          "durationInSeconds": 0.1220560073852539
+        },
+        {
+          "nodeIdentifier": "CloudBackupTests/testFocusSessionAndIntentionSurviveLogicalRecoveryWithoutRelabeling()",
+          "result": "Passed",
+          "durationInSeconds": 0.07467401027679443
+        },
+        {
+          "nodeIdentifier": "CloudBackupTests/testHealthHabitsImportedHistoryAndPrivateNotesCannotReachCloud()",
+          "result": "Passed",
+          "durationInSeconds": 0.119392991065979
+        },
+        {
+          "nodeIdentifier": "CloudBackupTests/testMalformedDateAndCrossHabitActivityReferencesAreRejected()",
+          "result": "Passed",
+          "durationInSeconds": 0.0763859748840332
+        },
+        {
+          "nodeIdentifier": "CloudBackupTests/testPlaceholderContainerNeverInitializesCloudKit()",
+          "result": "Passed",
+          "durationInSeconds": 0.00036907196044921875
+        },
+        {
+          "nodeIdentifier": "CloudBackupTests/testPrivateMotivationIsAbsentFromLogicalCloudRecoveryAndRemainsLocal()",
+          "result": "Passed",
+          "durationInSeconds": 0.01903402805328369
+        },
+        {
+          "nodeIdentifier": "CloudBackupTests/testRecoveryPreservesAttentionRoutinesAndActivityWithoutRestartingSideEffects()",
+          "result": "Passed",
+          "durationInSeconds": 0.16309404373168945
+        },
+        {
+          "nodeIdentifier": "CloudBackupTests/testRestorePreservesIDsDatesScheduleHistoryAndProgressOnDisk()",
+          "result": "Passed",
+          "durationInSeconds": 0.05749499797821045
+        },
+        {
+          "nodeIdentifier": "CloudBackupTests/testRestorePreviewCancelConfirmationAndDeletionAreExplicit()",
+          "result": "Passed",
+          "durationInSeconds": 0.07304298877716064
+        },
+        {
+          "nodeIdentifier": "CloudBackupTests/testUnsavedWorkIsNeitherCommittedNorOverwritten()",
+          "result": "Passed",
+          "durationInSeconds": 0.04543602466583252
+        },
+        {
+          "nodeIdentifier": "CompanionTests/testEveryAnimalAndStateLoadsDistinctBundledArtwork()",
+          "result": "Passed",
+          "durationInSeconds": 0.0708470344543457
+        },
+        {
+          "nodeIdentifier": "CompanionTests/testFourPresentationStatesUseDistinctExistingPosesForEveryAnimal()",
+          "result": "Passed",
+          "durationInSeconds": 0.02021801471710205
+        },
+        {
+          "nodeIdentifier": "CompanionTests/testKnownAttentionWarningsRemainVisibleEvenWithMissingGoals()",
+          "result": "Passed",
+          "durationInSeconds": 0.00040400028228759766
+        },
+        {
+          "nodeIdentifier": "CompanionTests/testLargeOnboardingArtworkKeepsCompactWidgetCacheSeparate()",
+          "result": "Passed",
+          "durationInSeconds": 0.013217926025390625
+        },
+        {
+          "nodeIdentifier": "CompanionTests/testMissingAttentionDataDoesNotClaimHealthyOrOnTrack()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003108978271484375
+        },
+        {
+          "nodeIdentifier": "CompanionTests/testMissingRecordsNeverInferOverloadOrHealthyAttention()",
+          "result": "Passed",
+          "durationInSeconds": 0.00036203861236572266
+        },
+        {
+          "nodeIdentifier": "CompanionTests/testNoHabitDoesNotGenerateCelebration()",
+          "result": "Passed",
+          "durationInSeconds": 0.00030791759490966797
+        },
+        {
+          "nodeIdentifier": "CompanionTests/testPresentationKeepsBudgetFactsAndRecoveryAheadOfProgress()",
+          "result": "Passed",
+          "durationInSeconds": 0.00035202503204345703
+        },
+        {
+          "nodeIdentifier": "CompanionTests/testPresentationProgressIsRecordedRatherThanTransientOrInferred()",
+          "result": "Passed",
+          "durationInSeconds": 0.0002789497375488281
+        },
+        {
+          "nodeIdentifier": "CompanionTests/testProfileDefaultsAndUpdatesPreserveOneRecord()",
+          "result": "Passed",
+          "durationInSeconds": 0.0027750730514526367
+        },
+        {
+          "nodeIdentifier": "CompanionTests/testProfileSurvivesDiskReopening()",
+          "result": "Passed",
+          "durationInSeconds": 0.006915092468261719
+        },
+        {
+          "nodeIdentifier": "CompanionTests/testSettingsConfirmationFollowsSaveAndClearsForEveryEditablePreference()",
+          "result": "Passed",
+          "durationInSeconds": 0.00037407875061035156
+        },
+        {
+          "nodeIdentifier": "CompanionTests/testSettingsFailedSaveClearsOldConfirmationAndAllowsRetryWithDraftIntact()",
+          "result": "Passed",
+          "durationInSeconds": 0.0027910470962524414
+        },
+        {
+          "nodeIdentifier": "CompanionTests/testSettingsReloadFailureClearsConfirmationAndPreservesCurrentDraft()",
+          "result": "Passed",
+          "durationInSeconds": 0.00040400028228759766
+        },
+        {
+          "nodeIdentifier": "CompanionTests/testStatePriorityPreservesAttentionWarningsOverCelebration()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003190040588378906
+        },
+        {
+          "nodeIdentifier": "CompanionTests/testUnknownWidgetArtworkValuesFailSafely()",
+          "result": "Passed",
+          "durationInSeconds": 0.00030994415283203125
+        },
+        {
+          "nodeIdentifier": "HabitActivityViewModelTests/testAcknowledgmentStaysWithItsTrackingDayAndConfiguration()",
+          "result": "Passed",
+          "durationInSeconds": 0.053939104080200195
+        },
+        {
+          "nodeIdentifier": "HabitActivityViewModelTests/testBackdateConfirmationCannotBeRedirectedAfterReloadingAnotherDay()",
+          "result": "Passed",
+          "durationInSeconds": 0.020722031593322754
+        },
+        {
+          "nodeIdentifier": "HabitActivityViewModelTests/testCalendarMidnightOnFirstTrackingDayStaysSelectableAndCorrectionKeepsItsReviewedDay()",
+          "result": "Passed",
+          "durationInSeconds": 0.020622968673706055
+        },
+        {
+          "nodeIdentifier": "HabitActivityViewModelTests/testConfigurationCancellationWritesNoTargetOrSmallerAction()",
+          "result": "Passed",
+          "durationInSeconds": 0.023579001426696777
+        },
+        {
+          "nodeIdentifier": "HabitActivityViewModelTests/testFailedQuantityAttemptClearsEarlierSuccessAndRetryRetainsTheDraft()",
+          "result": "Passed",
+          "durationInSeconds": 0.0375748872756958
+        },
+        {
+          "nodeIdentifier": "HabitActivityViewModelTests/testHistoricalSelectionCannotStartTodayTimerOrBypassCurrentDay()",
+          "result": "Passed",
+          "durationInSeconds": 0.019612908363342285
+        },
+        {
+          "nodeIdentifier": "HabitActivityViewModelTests/testPausedTimerLogsWholeMinutesOnceAndResetsAfterSuccess()",
+          "result": "Passed",
+          "durationInSeconds": 0.042283058166503906
+        },
+        {
+          "nodeIdentifier": "HabitActivityViewModelTests/testQuantityConfigurationCannotBeSavedOverConnectedHealthTarget()",
+          "result": "Passed",
+          "durationInSeconds": 0.021306991577148438
+        },
+        {
+          "nodeIdentifier": "HabitActivityViewModelTests/testRunningOrSubMinuteTimerCannotLogAnything()",
+          "result": "Passed",
+          "durationInSeconds": 0.03613400459289551
+        },
+        {
+          "nodeIdentifier": "HabitActivityViewModelTests/testSelectedDayChangeCannotReuseOldCorrectionPreview()",
+          "result": "Passed",
+          "durationInSeconds": 0.019396066665649414
+        },
+        {
+          "nodeIdentifier": "HabitActivityViewModelTests/testSelectedDayChangeRequiresReloadBeforeLogging()",
+          "result": "Passed",
+          "durationInSeconds": 0.02788996696472168
+        },
+        {
+          "nodeIdentifier": "HabitActivityViewModelTests/testTimerFailureCannotRetainAnEarlierQuantityAcknowledgment()",
+          "result": "Passed",
+          "durationInSeconds": 0.044422030448913574
+        },
+        {
+          "nodeIdentifier": "HabitActivityViewModelTests/testTimerFailurePreservesPausedTimeAndDraftUntilRetry()",
+          "result": "Passed",
+          "durationInSeconds": 0.03619706630706787
+        },
+        {
+          "nodeIdentifier": "HabitAdjustmentTests/testAvoidanceArchivedAndOnceWeeklyHaveNoOffer()",
+          "result": "Passed",
+          "durationInSeconds": 0.0421140193939209
+        },
+        {
+          "nodeIdentifier": "HabitAdjustmentTests/testConfirmationAppendsSnapshotPreservesFactsAndEarlierPeriods()",
+          "result": "Passed",
+          "durationInSeconds": 0.0411449670791626
+        },
+        {
+          "nodeIdentifier": "HabitAdjustmentTests/testInvalidFrequencyCannotWrite()",
+          "result": "Passed",
+          "durationInSeconds": 0.011455059051513672
+        },
+        {
+          "nodeIdentifier": "HabitAdjustmentTests/testLoadingAndDiscardingDraftNeverChangesAnything()",
+          "result": "Passed",
+          "durationInSeconds": 0.014183998107910156
+        },
+        {
+          "nodeIdentifier": "HabitAdjustmentTests/testNewSuccessesOrArchivingBeforeConfirmationRejectOffer()",
+          "result": "Passed",
+          "durationInSeconds": 0.05002796649932861
+        },
+        {
+          "nodeIdentifier": "HabitAdjustmentTests/testPauseDoesNotManufactureMissesAndOldMissesExpire()",
+          "result": "Passed",
+          "durationInSeconds": 0.02617502212524414
+        },
+        {
+          "nodeIdentifier": "HabitAdjustmentTests/testRecoveryCompletionSuppressesOfferEvenWithRecentMisses()",
+          "result": "Passed",
+          "durationInSeconds": 0.03422093391418457
+        },
+        {
+          "nodeIdentifier": "HabitAdjustmentTests/testRepeatedDailyMissesOfferAdjustableThreeTimesWeekly()",
+          "result": "Passed",
+          "durationInSeconds": 0.012567996978759766
+        },
+        {
+          "nodeIdentifier": "HabitAdjustmentTests/testScheduleChangeAndMidnightRejectStaleConfirmation()",
+          "result": "Passed",
+          "durationInSeconds": 0.020628929138183594
+        },
+        {
+          "nodeIdentifier": "HabitAdjustmentTests/testSkipsAndPendingDaysDoNotQualify()",
+          "result": "Passed",
+          "durationInSeconds": 0.019650936126708984
+        },
+        {
+          "nodeIdentifier": "HabitAdjustmentTests/testWeekdayOfferIsStrictlyLowerAndDifferentScheduleMissesDoNotQualify()",
+          "result": "Passed",
+          "durationInSeconds": 0.020071029663085938
+        },
+        {
+          "nodeIdentifier": "HabitAdjustmentTests/testWeeklyOfferRequiresTwoClosedMissedWeeks()",
+          "result": "Passed",
+          "durationInSeconds": 0.012544989585876465
+        },
+        {
+          "nodeIdentifier": "HabitCalendarCalculatorTests/testCalendarUsesCivilDatesEvenWithBuddhistUserCalendar()",
+          "result": "Passed",
+          "durationInSeconds": 0.000970005989074707
+        },
+        {
+          "nodeIdentifier": "HabitCalendarCalculatorTests/testClosedArchiveGapIsNeutralAndBoundaryRemainsPending()",
+          "result": "Passed",
+          "durationInSeconds": 0.0009740591049194336
+        },
+        {
+          "nodeIdentifier": "HabitCalendarCalculatorTests/testDailyFactsExcusedSkipPendingAndFutureMatchStreakRules()",
+          "result": "Passed",
+          "durationInSeconds": 0.0007780790328979492
+        },
+        {
+          "nodeIdentifier": "HabitCalendarCalculatorTests/testDSTMonthHasEveryCivilDayAndPeriodEndUsesCalendarArithmetic()",
+          "result": "Passed",
+          "durationInSeconds": 0.0006270408630371094
+        },
+        {
+          "nodeIdentifier": "HabitCalendarCalculatorTests/testFlexibleWeeklyShowsPeriodOutcomeAndNoDailyMisses()",
+          "result": "Passed",
+          "durationInSeconds": 0.0006899833679199219
+        },
+        {
+          "nodeIdentifier": "HabitCalendarCalculatorTests/testHistoricalScheduleChangesKeepOldDailyCommitmentsAndNewWeeklyUnits()",
+          "result": "Passed",
+          "durationInSeconds": 0.0007040500640869141
+        },
+        {
+          "nodeIdentifier": "HabitCalendarCalculatorTests/testLastDayOfWeekStaysPendingUntilFollowingMidnight()",
+          "result": "Passed",
+          "durationInSeconds": 0.0007950067520141602
+        },
+        {
+          "nodeIdentifier": "HabitCalendarCalculatorTests/testMissAndUndoUseSameFactsAsNumericStreak()",
+          "result": "Passed",
+          "durationInSeconds": 0.0006378889083862305
+        },
+        {
+          "nodeIdentifier": "HabitCalendarCalculatorTests/testNextDayReactivationKeepsArchiveDayPendingWithoutAFullDormantDay()",
+          "result": "Passed",
+          "durationInSeconds": 0.0005400180816650391
+        },
+        {
+          "nodeIdentifier": "HabitCalendarCalculatorTests/testOpenArchiveStopsDailyMisses()",
+          "result": "Passed",
+          "durationInSeconds": 0.0004990100860595703
+        },
+        {
+          "nodeIdentifier": "HabitCalendarCalculatorTests/testStoredKeyWinsOverTimestampAfterTravelAndOtherHabitsAreExcluded()",
+          "result": "Passed",
+          "durationInSeconds": 0.0006569623947143555
+        },
+        {
+          "nodeIdentifier": "HabitCalendarCalculatorTests/testWeekdayOffDaysAreNeutralAndGridHonorsMondayStart()",
+          "result": "Passed",
+          "durationInSeconds": 0.0005680322647094727
+        },
+        {
+          "nodeIdentifier": "HabitCalendarCalculatorTests/testWeeklyNextDayReactivationSplitsPeriodWithoutManufacturingMiss()",
+          "result": "Passed",
+          "durationInSeconds": 0.0004971027374267578
+        },
+        {
+          "nodeIdentifier": "HabitCalendarCalculatorTests/testWeeklySuccessCountsOneStreakUnitAndPauseSplitsEvaluatedRanges()",
+          "result": "Passed",
+          "durationInSeconds": 0.0005679130554199219
+        },
+        {
+          "nodeIdentifier": "HabitCalendarPlanTests/testExpiredPlanCannotKeepOldEditorOrSuccessOnFailedReview()",
+          "result": "Passed",
+          "durationInSeconds": 0.0028400421142578125
+        },
+        {
+          "nodeIdentifier": "HabitCalendarPlanTests/testInvalidPlansDoNotProduceAnEditorDraft()",
+          "result": "Passed",
+          "durationInSeconds": 0.00038301944732666016
+        },
+        {
+          "nodeIdentifier": "HabitCalendarPlanTests/testInvalidSuggestedDurationFallsBackAndLargeTargetsClamp()",
+          "result": "Passed",
+          "durationInSeconds": 0.00034499168395996094
+        },
+        {
+          "nodeIdentifier": "HabitCalendarPlanTests/testPastStartCannotBeSubmittedAndSavedFeedbackDoesNotClaimSuccess()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003470182418823242
+        },
+        {
+          "nodeIdentifier": "HabitCalendarPlanTests/testPlanUsesChosenTitleAndExactElapsedDuration()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003420114517211914
+        },
+        {
+          "nodeIdentifier": "HabitCalendarPlanTests/testReviewCancelKeepsPlanChoicesAndDoesNotClaimSave()",
+          "result": "Passed",
+          "durationInSeconds": 0.00036895275115966797
+        },
+        {
+          "nodeIdentifier": "HabitCalendarPlanTests/testSavedFeedbackClearsWhenPlanningAnotherTimeOrReviewingAgain()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003050565719604492
+        },
+        {
+          "nodeIdentifier": "HabitCalendarViewModelTests/testMissingHabitProducesRecoverableErrorRatherThanSpinner()",
+          "result": "Passed",
+          "durationInSeconds": 0.006654024124145508
+        },
+        {
+          "nodeIdentifier": "HabitCalendarViewModelTests/testMonthNavigationDoesNotMutateFactsAndStopsAtCreationAndCurrentMonth()",
+          "result": "Passed",
+          "durationInSeconds": 0.023823022842407227
+        },
+        {
+          "nodeIdentifier": "HabitCalendarViewModelTests/testTravelDoesNotHideStoredFactsInPreviousOrFollowingMonth()",
+          "result": "Passed",
+          "durationInSeconds": 0.03152298927307129
+        },
+        {
+          "nodeIdentifier": "HabitDetailViewModelTests/testArchivingUpdatesRepositoryAndSignalsDismissal()",
+          "result": "Passed",
+          "durationInSeconds": 0.021123051643371582
+        },
+        {
+          "nodeIdentifier": "HabitDetailViewModelTests/testCompletedDayCannotBeSkipped()",
+          "result": "Passed",
+          "durationInSeconds": 0.019768953323364258
+        },
+        {
+          "nodeIdentifier": "HabitDetailViewModelTests/testConsistencyShowsFractionAndPercentage()",
+          "result": "Passed",
+          "durationInSeconds": 0.03460395336151123
+        },
+        {
+          "nodeIdentifier": "HabitDetailViewModelTests/testConsistencyShowsNotEnoughDataWhenNothingIsResolvedYet()",
+          "result": "Passed",
+          "durationInSeconds": 0.011941075325012207
+        },
+        {
+          "nodeIdentifier": "HabitDetailViewModelTests/testCurrentStreakLabelUsesDaysForDailySchedule()",
+          "result": "Passed",
+          "durationInSeconds": 0.018882036209106445
+        },
+        {
+          "nodeIdentifier": "HabitDetailViewModelTests/testCurrentStreakLabelUsesWeeksForFlexibleWeeklySchedule()",
+          "result": "Passed",
+          "durationInSeconds": 0.02630603313446045
+        },
+        {
+          "nodeIdentifier": "HabitDetailViewModelTests/testDetailDisplaysNameIconCategoryPolarityAndSchedule()",
+          "result": "Passed",
+          "durationInSeconds": 0.011786937713623047
+        },
+        {
+          "nodeIdentifier": "HabitDetailViewModelTests/testEditingPreservesHistoricalConfigurationAndCompletions()",
+          "result": "Passed",
+          "durationInSeconds": 0.02697300910949707
+        },
+        {
+          "nodeIdentifier": "HabitDetailViewModelTests/testMemoryOnlySurfacesDuringRecoveryAndHidingKeepsItsText()",
+          "result": "Passed",
+          "durationInSeconds": 0.020601987838745117
+        },
+        {
+          "nodeIdentifier": "HabitDetailViewModelTests/testNoStreakYetWhenNothingCompleted()",
+          "result": "Passed",
+          "durationInSeconds": 0.011620044708251953
+        },
+        {
+          "nodeIdentifier": "HabitDetailViewModelTests/testRecoveryMessageShownWhileRecoveringAndHiddenAfterThreshold()",
+          "result": "Passed",
+          "durationInSeconds": 0.03887796401977539
+        },
+        {
+          "nodeIdentifier": "HabitDetailViewModelTests/testSkipAndUndoAreExcusedAndDoNotDuplicate()",
+          "result": "Passed",
+          "durationInSeconds": 0.026717066764831543
+        },
+        {
+          "nodeIdentifier": "HabitLifetimeTests/testAboveFinalMilestoneRemainsAnUncappedCount()",
+          "result": "Passed",
+          "durationInSeconds": 0.003484010696411133
+        },
+        {
+          "nodeIdentifier": "HabitLifetimeTests/testCorrectedQuantityTotalUsesSurvivingEntriesOnly()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003279447555541992
+        },
+        {
+          "nodeIdentifier": "HabitLifetimeTests/testDistinctStoredDaysSurviveGapsAndDuplicateCompletions()",
+          "result": "Passed",
+          "durationInSeconds": 0.00029098987579345703
+        },
+        {
+          "nodeIdentifier": "HabitLifetimeTests/testForeignAndFutureRecordsNeverInflateTotals()",
+          "result": "Passed",
+          "durationInSeconds": 0.00032889842987060547
+        },
+        {
+          "nodeIdentifier": "HabitLifetimeTests/testHistoricalCapturedUnitsNeverPoolAndDuplicateIDsDoNotDoubleCount()",
+          "result": "Passed",
+          "durationInSeconds": 0.00030100345611572266
+        },
+        {
+          "nodeIdentifier": "HabitLifetimeTests/testHistoricalEntryRangeIncludesIntersectingCivilDaysForPartialBoundaries()",
+          "result": "Passed",
+          "durationInSeconds": 0.0329970121383667
+        },
+        {
+          "nodeIdentifier": "HabitLifetimeTests/testHistoricalEntryRangeUsesStoredDaysForBackdatedLogsAndExcludesExactEndDay()",
+          "result": "Passed",
+          "durationInSeconds": 0.04001796245574951
+        },
+        {
+          "nodeIdentifier": "HabitLifetimeTests/testLifetimeIncludesInitialStoredDayAfterTravelAndUnitChanges()",
+          "result": "Passed",
+          "durationInSeconds": 0.03954195976257324
+        },
+        {
+          "nodeIdentifier": "HabitLifetimeTests/testMilestoneBoundaryAndUndoAreRecomputed()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003819465637207031
+        },
+        {
+          "nodeIdentifier": "HabitLifetimeTests/testMissingHabitShowsErrorRatherThanFabricatedZero()",
+          "result": "Passed",
+          "durationInSeconds": 0.0037900209426879883
+        },
+        {
+          "nodeIdentifier": "HabitLifetimeTests/testSmallerActionsRemainSeparateAndCountDistinctDays()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003820657730102539
+        },
+        {
+          "nodeIdentifier": "HabitLifetimeTests/testStoredDayKeysAreNotRederivedFromMatchingInstantsAfterTravel()",
+          "result": "Passed",
+          "durationInSeconds": 0.00034797191619873047
+        },
+        {
+          "nodeIdentifier": "HabitLifetimeTests/testViewModelIsReadOnlyAndArchivedWeeklyHabitCountsLoggedDaysNotWeeks()",
+          "result": "Passed",
+          "durationInSeconds": 0.03881704807281494
+        },
+        {
+          "nodeIdentifier": "HabitMomentumTests/testMissingHabitClearsPreviouslyLoadedFacts()",
+          "result": "Passed",
+          "durationInSeconds": 0.0034890174865722656
+        },
+        {
+          "nodeIdentifier": "HabitMomentumTests/testOldSuccessRemainsLifetimeEffortOutsideRecentWindow()",
+          "result": "Passed",
+          "durationInSeconds": 0.018435001373291016
+        },
+        {
+          "nodeIdentifier": "HabitMomentumTests/testOpenPeriodIsUnknownRatherThanMeasuredZero()",
+          "result": "Passed",
+          "durationInSeconds": 0.011271953582763672
+        },
+        {
+          "nodeIdentifier": "HabitMomentumTests/testRecoveryEndsAtThirdSuccessAndUndoRecomputesIt()",
+          "result": "Passed",
+          "durationInSeconds": 0.040821075439453125
+        },
+        {
+          "nodeIdentifier": "HabitMomentumTests/testSkipsAndPausedWindowsDoNotBecomeMisses()",
+          "result": "Passed",
+          "durationInSeconds": 0.03215205669403076
+        },
+        {
+          "nodeIdentifier": "HabitMomentumTests/testSmallerEffortNeverBecomesFullSuccess()",
+          "result": "Passed",
+          "durationInSeconds": 0.02606511116027832
+        },
+        {
+          "nodeIdentifier": "HabitMomentumTests/testWeeklyTargetIsOneResolvedCommitmentNotSevenDays()",
+          "result": "Passed",
+          "durationInSeconds": 0.0248030424118042
+        },
+        {
+          "nodeIdentifier": "HabitOrderViewModelTests/testArchivingDuringDraftRequiresReloadWithoutChangingOrder()",
+          "result": "Passed",
+          "durationInSeconds": 0.027263998985290527
+        },
+        {
+          "nodeIdentifier": "HabitOrderViewModelTests/testDraftMultiMoveAndCancelNeverWrite()",
+          "result": "Passed",
+          "durationInSeconds": 0.031553030014038086
+        },
+        {
+          "nodeIdentifier": "HabitOrderViewModelTests/testNewHabitDuringDraftRequiresReloadBeforeSave()",
+          "result": "Passed",
+          "durationInSeconds": 0.031950950622558594
+        },
+        {
+          "nodeIdentifier": "HabitOrderViewModelTests/testSavedOrderIncludesNotDueHabitsAndPreservesCompletion()",
+          "result": "Passed",
+          "durationInSeconds": 0.0394669771194458
+        },
+        {
+          "nodeIdentifier": "HabitPolarityFormatterTests/testCompletionActionLabelForAvoidancePolarityDoesNotAssumeTotalAbstinence()",
+          "result": "Passed",
+          "durationInSeconds": 0.0004220008850097656
+        },
+        {
+          "nodeIdentifier": "HabitPolarityFormatterTests/testCompletionActionLabelForPositivePolarity()",
+          "result": "Passed",
+          "durationInSeconds": 0.00036406517028808594
+        },
+        {
+          "nodeIdentifier": "HabitPolarityFormatterTests/testStatusLabelForAvoidancePolarity()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003629922866821289
+        },
+        {
+          "nodeIdentifier": "HabitPolarityFormatterTests/testStatusLabelForPositivePolarity()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003490447998046875
+        },
+        {
+          "nodeIdentifier": "HabitPolarityFormatterTests/testToastMessageForAvoidancePolarity()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003349781036376953
+        },
+        {
+          "nodeIdentifier": "HabitPolarityFormatterTests/testToastMessageForPositivePolarity()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003210306167602539
+        },
+        {
+          "nodeIdentifier": "HabitPolarityFormatterTests/testUndoActionLabelForAvoidancePolarity()",
+          "result": "Passed",
+          "durationInSeconds": 0.00033092498779296875
+        },
+        {
+          "nodeIdentifier": "HabitPolarityFormatterTests/testUndoActionLabelForPositivePolarity()",
+          "result": "Passed",
+          "durationInSeconds": 0.0002859830856323242
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testArchiveAndReactivateWithinTheSameWeekSplitsTheFlexibleWeeklyPeriod()",
+          "result": "Passed",
+          "durationInSeconds": 0.0008560419082641602
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testArchiveDayItselfResolvesAsPendingNotAMissOnceReactivated()",
+          "result": "Passed",
+          "durationInSeconds": 0.00032210350036621094
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testArchivedHabitFreezesMetricsAtTheArchiveDate()",
+          "result": "Passed",
+          "durationInSeconds": 0.0014290809631347656
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testConsistencyForACompletedWeekIsUnaffectedByLaterCompletionsOrConfigurationChanges()",
+          "result": "Passed",
+          "durationInSeconds": 0.0006660223007202148
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testConsistencyIsZeroNotNaNWhenNothingIsScheduledInRange()",
+          "result": "Passed",
+          "durationInSeconds": 0.00030803680419921875
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testConsistencyOverExplicitRangeOnlyCountsThatWindow()",
+          "result": "Passed",
+          "durationInSeconds": 0.0005040168762207031
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testConsistencyRangeIsHalfOpenAtItsEndBoundary()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003210306167602539
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testDailyStreakAcrossDaylightSavingSpringForwardCountsCalendarDaysNotElapsedHours()",
+          "result": "Passed",
+          "durationInSeconds": 0.00032699108123779297
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testDailyStreakBuildsAndBreaksOnMiss()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003859996795654297
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testDuplicateSameDayCompletionsDoNotInflateDailyStreak()",
+          "result": "Passed",
+          "durationInSeconds": 0.00031197071075439453
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testDuplicateSameDayCompletionsDoNotInflateWeeklyTarget()",
+          "result": "Passed",
+          "durationInSeconds": 0.00038993358612060547
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testFlexibleWeeklyUsesSuccessfulWeeksNotDailyStreaks()",
+          "result": "Passed",
+          "durationInSeconds": 0.0007680654525756836
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testHistoricalScheduleEditMidWeekSplitsPartialPeriodsCorrectly()",
+          "result": "Passed",
+          "durationInSeconds": 0.00036704540252685547
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testIncompleteCurrentDayCarriesYesterdaysStreakForward()",
+          "result": "Passed",
+          "durationInSeconds": 0.00030100345611572266
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testIncompleteCurrentDayDoesNotResurrectAStreakBrokenYesterday()",
+          "result": "Passed",
+          "durationInSeconds": 0.0004830360412597656
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testInjectedCalendarDeterminesWhichDayIsCurrentAndPending()",
+          "result": "Passed",
+          "durationInSeconds": 0.00034296512603759766
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testRecoveryCountsAcrossAScheduleKindChangeAndEndsAtThreshold()",
+          "result": "Passed",
+          "durationInSeconds": 0.00045299530029296875
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testRecoveryEndsAfterThreeConsecutiveSuccesses()",
+          "result": "Passed",
+          "durationInSeconds": 0.00031006336212158203
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testRecoveryProgressHasNoMissWhenHistoryIsPerfect()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003139972686767578
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testRepeatedPauseCyclesAreEachInvisibleToTheStreak()",
+          "result": "Passed",
+          "durationInSeconds": 0.00036203861236572266
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testSinglePauseIsInvisibleToTheStreakAndArchiveDayIsPending()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003249645233154297
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testSkipExcusesADayWithoutBreakingStreakOrCountingAsSuccess()",
+          "result": "Passed",
+          "durationInSeconds": 0.00032901763916015625
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testStreakTreatsNearMidnightCompletionsAsSeparateDays()",
+          "result": "Passed",
+          "durationInSeconds": 0.0002919435501098633
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testThreeYearDailyHistoryPerformanceAndCorrectness()",
+          "result": "Passed",
+          "durationInSeconds": 0.5774650573730469
+        },
+        {
+          "nodeIdentifier": "HabitProgressCalculatorTests/testWeekdayScheduleStreakIgnoresNonScheduledDays()",
+          "result": "Passed",
+          "durationInSeconds": 0.0004620552062988281
+        },
+        {
+          "nodeIdentifier": "HabitQuickLogPresetTests/testCustomAmountsPersistPerHabitAndCapturedUnitWithoutWritingDefaults()",
+          "result": "Passed",
+          "durationInSeconds": 0.0024210214614868164
+        },
+        {
+          "nodeIdentifier": "HabitQuickLogPresetTests/testEditingCancelAndInvalidSaveNeverChangeHistoryOrPreferences()",
+          "result": "Passed",
+          "durationInSeconds": 0.04223597049713135
+        },
+        {
+          "nodeIdentifier": "HabitQuickLogPresetTests/testInvalidAmountsNeverReplaceSavedPreferences()",
+          "result": "Passed",
+          "durationInSeconds": 0.00309908390045166
+        },
+        {
+          "nodeIdentifier": "HabitQuickLogPresetTests/testQuickLogAndUndoOnlyRemoveTheExactInsertedEntry()",
+          "result": "Passed",
+          "durationInSeconds": 0.04760396480560303
+        },
+        {
+          "nodeIdentifier": "HabitQuickLogPresetTests/testQuickLogRefusesHistoricalUnloadedOrMidnightChangedDay()",
+          "result": "Passed",
+          "durationInSeconds": 0.020038962364196777
+        },
+        {
+          "nodeIdentifier": "HabitQuickLogPresetTests/testSavedPresetsSurviveTargetRevisionButNeverCrossUnits()",
+          "result": "Passed",
+          "durationInSeconds": 0.04088997840881348
+        },
+        {
+          "nodeIdentifier": "HabitQuickLogPresetTests/testStaleTargetCannotBeLoggedOrSavedSilently()",
+          "result": "Passed",
+          "durationInSeconds": 0.026057004928588867
+        },
+        {
+          "nodeIdentifier": "HabitQuickLogPresetTests/testUndoCannotRemoveEntryAfterConfigurationChangesOrMidnight()",
+          "result": "Passed",
+          "durationInSeconds": 0.03288900852203369
+        },
+        {
+          "nodeIdentifier": "HabitRecoverySuggestionTests/testAvoidanceAndArchiveAreExcludedAndPauseCreatesNoMisses()",
+          "result": "Passed",
+          "durationInSeconds": 0.031260013580322266
+        },
+        {
+          "nodeIdentifier": "HabitRecoverySuggestionTests/testCurrentSuccessAndThreeRecoverySuccessesSuppressSuggestion()",
+          "result": "Passed",
+          "durationInSeconds": 0.03422403335571289
+        },
+        {
+          "nodeIdentifier": "HabitRecoverySuggestionTests/testMidnightOrChangedActionRejectsStaleReview()",
+          "result": "Passed",
+          "durationInSeconds": 0.023586034774780273
+        },
+        {
+          "nodeIdentifier": "HabitRecoverySuggestionTests/testPauseIsExplicitPreservesHistoryAndDoesNotResumeAutomatically()",
+          "result": "Passed",
+          "durationInSeconds": 0.029783010482788086
+        },
+        {
+          "nodeIdentifier": "HabitRecoverySuggestionTests/testSkipAndOpenPeriodDoNotBecomeMisses()",
+          "result": "Passed",
+          "durationInSeconds": 0.023235082626342773
+        },
+        {
+          "nodeIdentifier": "HabitRecoverySuggestionTests/testSmallerEffortAlreadyLoggedSuppressesRepetitionWithoutGrantingSuccess()",
+          "result": "Passed",
+          "durationInSeconds": 0.022956013679504395
+        },
+        {
+          "nodeIdentifier": "HabitRecoverySuggestionTests/testTwoResolvedMissesOfferConfiguredSmallerActionWithoutWriting()",
+          "result": "Passed",
+          "durationInSeconds": 0.01715099811553955
+        },
+        {
+          "nodeIdentifier": "HabitRecoverySuggestionTests/testUnscheduledWeekdayDoesNotSuggestAndMissesUseCurrentConfigurationOnly()",
+          "result": "Passed",
+          "durationInSeconds": 0.017709970474243164
+        },
+        {
+          "nodeIdentifier": "HabitRecoverySuggestionTests/testWeeklyOncePerWeekQualifiesAfterTwoClosedWeeks()",
+          "result": "Passed",
+          "durationInSeconds": 0.010655045509338379
+        },
+        {
+          "nodeIdentifier": "HabitReminderTests/testArchiveCancelsAndReactivationRestoresSavedPreference()",
+          "result": "Passed",
+          "durationInSeconds": 0.03657495975494385
+        },
+        {
+          "nodeIdentifier": "HabitReminderTests/testArchivedDisabledAndInvalidRemindersProduceNoRequests()",
+          "result": "Passed",
+          "durationInSeconds": 0.00045800209045410156
+        },
+        {
+          "nodeIdentifier": "HabitReminderTests/testArchiveDuringInFlightReplacementDoesNotRestoreCancelledReminder()",
+          "result": "Passed",
+          "durationInSeconds": 0.025043964385986328
+        },
+        {
+          "nodeIdentifier": "HabitReminderTests/testFlexibleWeeklyReminderDoesNotAssignWeekdays()",
+          "result": "Passed",
+          "durationInSeconds": 0.00032198429107666016
+        },
+        {
+          "nodeIdentifier": "HabitReminderTests/testInvalidTimeDoesNotPersistOrAskPermission()",
+          "result": "Passed",
+          "durationInSeconds": 0.014464020729064941
+        },
+        {
+          "nodeIdentifier": "HabitReminderTests/testPermissionRequestedOnlyOnExplicitEnablementAndNeverAgainAfterDenial()",
+          "result": "Passed",
+          "durationInSeconds": 0.014011979103088379
+        },
+        {
+          "nodeIdentifier": "HabitReminderTests/testReminderPersistsAcrossDiskStoreReopeningAndUpdateDoesNotDuplicate()",
+          "result": "Passed",
+          "durationInSeconds": 0.007928013801574707
+        },
+        {
+          "nodeIdentifier": "HabitReminderTests/testScheduleEditReplacesRequestsAndDisableRemovesThem()",
+          "result": "Passed",
+          "durationInSeconds": 0.01932704448699951
+        },
+        {
+          "nodeIdentifier": "HabitReminderTests/testSettingsDeniedPermissionStillAcknowledgesSavedPreferenceWithoutClaimingDelivery()",
+          "result": "Passed",
+          "durationInSeconds": 0.01219797134399414
+        },
+        {
+          "nodeIdentifier": "HabitReminderTests/testSettingsFailureClearsPreviousSuccessAndRetryAcknowledgesOnlyAfterDeliveryReturns()",
+          "result": "Passed",
+          "durationInSeconds": 0.01804196834564209
+        },
+        {
+          "nodeIdentifier": "HabitReminderTests/testSettingsSaveConfirmationClearsForEveryDraftEditAndReload()",
+          "result": "Passed",
+          "durationInSeconds": 0.01231396198272705
+        },
+        {
+          "nodeIdentifier": "HabitReminderTests/testWeekdayRequestsHaveStableIDsAndLocalClockComponents()",
+          "result": "Passed",
+          "durationInSeconds": 0.00043904781341552734
+        },
+        {
+          "nodeIdentifier": "HabitScheduleEvaluatorTests/testActiveConfigurationFallsBackToEarliestSnapshotWhenDatePrecedesAll()",
+          "result": "Passed",
+          "durationInSeconds": 0.00037300586700439453
+        },
+        {
+          "nodeIdentifier": "HabitScheduleEvaluatorTests/testActiveConfigurationResolvesMostRecentSnapshotNotAfterDate()",
+          "result": "Passed",
+          "durationInSeconds": 0.0004630088806152344
+        },
+        {
+          "nodeIdentifier": "HabitScheduleEvaluatorTests/testActiveConfigurationWithIdenticalCreatedAtUsesRevisionToBreakTies()",
+          "result": "Passed",
+          "durationInSeconds": 0.00037300586700439453
+        },
+        {
+          "nodeIdentifier": "HabitScheduleEvaluatorTests/testActiveConfigurationWithMultipleEditsOnSameLocalDayPicksTheHighestRevision()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003750324249267578
+        },
+        {
+          "nodeIdentifier": "HabitScheduleEvaluatorTests/testDailyScheduleIsDueEveryDay()",
+          "result": "Passed",
+          "durationInSeconds": 0.00032198429107666016
+        },
+        {
+          "nodeIdentifier": "HabitScheduleEvaluatorTests/testHistoricalConfigurationSurvivesUserCalendarIdentifierSwitches()",
+          "result": "Passed",
+          "durationInSeconds": 0.0030050277709960938
+        },
+        {
+          "nodeIdentifier": "HabitScheduleEvaluatorTests/testTimesPerWeekScheduleIsDueEveryDay()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003440380096435547
+        },
+        {
+          "nodeIdentifier": "HabitScheduleEvaluatorTests/testWeekdaysScheduleIsDueOnlyOnSelectedDays()",
+          "result": "Passed",
+          "durationInSeconds": 0.000308990478515625
+        },
+        {
+          "nodeIdentifier": "HabitScheduleEvaluatorTests/testWeeklyProgressCountsOnlyCompletionsInTheContainingWeek()",
+          "result": "Passed",
+          "durationInSeconds": 0.00034999847412109375
+        },
+        {
+          "nodeIdentifier": "HabitScheduleEvaluatorTests/testWeeklyProgressRemainsVisibleBeyondTarget()",
+          "result": "Passed",
+          "durationInSeconds": 0.00034499168395996094
+        },
+        {
+          "nodeIdentifier": "HabitStarterCreationTests/testAllAmountUnitsUseCanonicalPartialProgressAndThresholdCompletion()",
+          "result": "Passed",
+          "durationInSeconds": 0.115509033203125
+        },
+        {
+          "nodeIdentifier": "HabitStarterCreationTests/testAmountAndSmallerActionAreSavedWithTheHabitAndItsLocalCreationDay()",
+          "result": "Passed",
+          "durationInSeconds": 0.017804980278015137
+        },
+        {
+          "nodeIdentifier": "HabitStarterCreationTests/testEveryEditableStarterCreatesItsActualTrackingConfigurationWithoutProgress()",
+          "result": "Passed",
+          "durationInSeconds": 0.3252429962158203
+        },
+        {
+          "nodeIdentifier": "HabitStarterCreationTests/testInvalidActivityDraftsLeaveNoHabitScheduleOrActivityRows()",
+          "result": "Passed",
+          "durationInSeconds": 0.005921006202697754
+        },
+        {
+          "nodeIdentifier": "HabitStarterCreationTests/testInvalidScheduleAndMemoryDoNotCommitAValidActivityConfiguration()",
+          "result": "Passed",
+          "durationInSeconds": 0.0033559799194335938
+        },
+        {
+          "nodeIdentifier": "HabitStarterCreationTests/testLegacyDraftRemainsASimpleCheckInAndOptionalSmallStepCreatesNoTarget()",
+          "result": "Passed",
+          "durationInSeconds": 0.03174591064453125
+        },
+        {
+          "nodeIdentifier": "HabitStarterCreationTests/testOrdinaryHabitEditCannotReplaceAnActivityTargetOrRewriteItsEntries()",
+          "result": "Passed",
+          "durationInSeconds": 0.02507603168487549
+        },
+        {
+          "nodeIdentifier": "HabitStarterCreationTests/testRoutineStarterCollectionsResolveUniqueEditableIdeasWithoutBulkCreation()",
+          "result": "Passed",
+          "durationInSeconds": 0.003533005714416504
+        },
+        {
+          "nodeIdentifier": "HabitStarterCreationTests/testTimedCreationCanLogPausedMinutesThroughExistingTimerFlow()",
+          "result": "Passed",
+          "durationInSeconds": 0.024940013885498047
+        },
+        {
+          "nodeIdentifier": "HealthHabitServiceTests/testArchivedNonDueAndAvoidanceHabitsAreNotImported()",
+          "result": "Passed",
+          "durationInSeconds": 0.049633026123046875
+        },
+        {
+          "nodeIdentifier": "HealthHabitServiceTests/testConnectionLoadFailureShowsSafeErrorWithoutQueryingHealth()",
+          "result": "Passed",
+          "durationInSeconds": 0.004786014556884766
+        },
+        {
+          "nodeIdentifier": "HealthHabitServiceTests/testDisconnectDuringReadPreventsStaleImport()",
+          "result": "Passed",
+          "durationInSeconds": 0.012375950813293457
+        },
+        {
+          "nodeIdentifier": "HealthHabitServiceTests/testDisconnectRetainsImportedHistoryAndStopsFutureReads()",
+          "result": "Passed",
+          "durationInSeconds": 0.021790027618408203
+        },
+        {
+          "nodeIdentifier": "HealthHabitServiceTests/testExerciseMinutesUseIndependentTargetAndConnectionReloads()",
+          "result": "Passed",
+          "durationInSeconds": 0.02154707908630371
+        },
+        {
+          "nodeIdentifier": "HealthHabitServiceTests/testImportPreservesManualCompletionAndExcusedSkip()",
+          "result": "Passed",
+          "durationInSeconds": 0.03294098377227783
+        },
+        {
+          "nodeIdentifier": "HealthHabitServiceTests/testInvalidTargetsAreRejectedBeforePermission()",
+          "result": "Passed",
+          "durationInSeconds": 0.012248039245605469
+        },
+        {
+          "nodeIdentifier": "HealthHabitServiceTests/testLegacyStoreReopensWithNewOptionalConnectionModelWithoutDataReset()",
+          "result": "Passed",
+          "durationInSeconds": 0.0356600284576416
+        },
+        {
+          "nodeIdentifier": "HealthHabitServiceTests/testMissingDataAndBelowTargetNeverBecomeCompletions()",
+          "result": "Passed",
+          "durationInSeconds": 0.014496922492980957
+        },
+        {
+          "nodeIdentifier": "HealthHabitServiceTests/testPermissionRequestFailureDoesNotPersistConnection()",
+          "result": "Passed",
+          "durationInSeconds": 0.011649012565612793
+        },
+        {
+          "nodeIdentifier": "HealthHabitServiceTests/testQueryFinishingAfterLocalMidnightCannotCompleteYesterday()",
+          "result": "Passed",
+          "durationInSeconds": 0.012169957160949707
+        },
+        {
+          "nodeIdentifier": "HealthHabitServiceTests/testRequestsReadOnlyOnExplicitConnectAndImportsAtTargetOnce()",
+          "result": "Passed",
+          "durationInSeconds": 0.02063000202178955
+        },
+        {
+          "nodeIdentifier": "HealthHabitServiceTests/testSettingsDisconnectKeepsVisibleConfirmationAndRecordedProgress()",
+          "result": "Passed",
+          "durationInSeconds": 0.021281957626342773
+        },
+        {
+          "nodeIdentifier": "HealthHabitServiceTests/testSettingsDraftChangedDuringSaveCannotDisplayAFalseSavedState()",
+          "result": "Passed",
+          "durationInSeconds": 0.012068986892700195
+        },
+        {
+          "nodeIdentifier": "HealthHabitServiceTests/testSettingsFailedUpdateRetainsSavedConnectionAndDraftThenConfirmsOnlySuccessfulRetry()",
+          "result": "Passed",
+          "durationInSeconds": 0.012135982513427734
+        },
+        {
+          "nodeIdentifier": "HealthHabitServiceTests/testSettingsPendingActionsExposeProgressAndPreventDuplicateRequests()",
+          "result": "Passed",
+          "durationInSeconds": 0.011575937271118164
+        },
+        {
+          "nodeIdentifier": "HealthHabitServiceTests/testSettingsSaveAcknowledgesConfigurationWithoutClaimingHealthReadAccessAndResetsOnEdits()",
+          "result": "Passed",
+          "durationInSeconds": 0.012400984764099121
+        },
+        {
+          "nodeIdentifier": "HealthHabitServiceTests/testTargetChangeDuringReadPreventsOldTargetImport()",
+          "result": "Passed",
+          "durationInSeconds": 0.011771917343139648
+        },
+        {
+          "nodeIdentifier": "HistoryViewModelTests/testArchivedHabitInclusionAndFiltering()",
+          "result": "Passed",
+          "durationInSeconds": 0.03751397132873535
+        },
+        {
+          "nodeIdentifier": "HistoryViewModelTests/testAttentionHistoryPreservesManualAmountsAndHistoricalBudget()",
+          "result": "Passed",
+          "durationInSeconds": 0.026535987854003906
+        },
+        {
+          "nodeIdentifier": "HistoryViewModelTests/testCompletionAndSkipOrderingAndGrouping()",
+          "result": "Passed",
+          "durationInSeconds": 0.04547703266143799
+        },
+        {
+          "nodeIdentifier": "HistoryViewModelTests/testCompletionAndSkipRangeBoundariesAgree()",
+          "result": "Passed",
+          "durationInSeconds": 0.040715932846069336
+        },
+        {
+          "nodeIdentifier": "HistoryViewModelTests/testEmptyStateWhenNoRecordsInRange()",
+          "result": "Passed",
+          "durationInSeconds": 0.010941028594970703
+        },
+        {
+          "nodeIdentifier": "HistoryViewModelTests/testHalfOpenDateRangeBoundaries()",
+          "result": "Passed",
+          "durationInSeconds": 0.0244520902633667
+        },
+        {
+          "nodeIdentifier": "HistoryViewModelTests/testHistoricalScheduleContextReflectsConfigurationAtTheTime()",
+          "result": "Passed",
+          "durationInSeconds": 0.030532002449035645
+        },
+        {
+          "nodeIdentifier": "HistoryViewModelTests/testMultipleCompletionsOnSameDayAreAllPreservedNotDeduplicated()",
+          "result": "Passed",
+          "durationInSeconds": 0.023934006690979004
+        },
+        {
+          "nodeIdentifier": "HistoryViewModelTests/testSelectingAHabitExcludesAttentionHistoryWithoutLosingUnfilteredEntries()",
+          "result": "Passed",
+          "durationInSeconds": 0.031456947326660156
+        },
+        {
+          "nodeIdentifier": "HistoryViewModelTests/testStoredLocalDayGroupingSurvivesACurrentTimeZoneChange()",
+          "result": "Passed",
+          "durationInSeconds": 0.017045021057128906
+        },
+        {
+          "nodeIdentifier": "HistoryViewModelTests/testUndoneCompletionsDoNotAppear()",
+          "result": "Passed",
+          "durationInSeconds": 0.025964975357055664
+        },
+        {
+          "nodeIdentifier": "HomeCalendarModelTests/testActivityCountUsesDistinctHabitsWithoutCallingOffScheduleRecordsAdherence()",
+          "result": "Passed",
+          "durationInSeconds": 0.031481027603149414
+        },
+        {
+          "nodeIdentifier": "HomeCalendarModelTests/testArchivedHabitsRetainTheirRecordedDaysAndAreExplicitlyArchived()",
+          "result": "Passed",
+          "durationInSeconds": 0.024824976921081543
+        },
+        {
+          "nodeIdentifier": "HomeCalendarModelTests/testDailySkipsAndPausesStayNeutralAndFlexibleWeeksDoNotBecomeDailyMisses()",
+          "result": "Passed",
+          "durationInSeconds": 0.05029797554016113
+        },
+        {
+          "nodeIdentifier": "HomeCalendarModelTests/testEmptyLibraryStillHasARealCurrentWeekAndCannotBrowseInventedHistory()",
+          "result": "Passed",
+          "durationInSeconds": 0.0038160085678100586
+        },
+        {
+          "nodeIdentifier": "HomeCalendarModelTests/testHistoricalMonthSelectionNeverChangesTheCurrentWeekOrTrackingFacts()",
+          "result": "Passed",
+          "durationInSeconds": 0.027051925659179688
+        },
+        {
+          "nodeIdentifier": "HomeCalendarModelTests/testPartialQuantityAndSmallerActionCountOnceWithoutCreatingHabitSuccess()",
+          "result": "Passed",
+          "durationInSeconds": 0.03182101249694824
+        },
+        {
+          "nodeIdentifier": "HomeCalendarModelTests/testSelectingAnOrdinaryDateUsesItsMonthStartForAlignmentAndNavigation()",
+          "result": "Passed",
+          "durationInSeconds": 0.013859987258911133
+        },
+        {
+          "nodeIdentifier": "HomeCalendarModelTests/testTravelKeepsStoredFactsAccessibleAcrossBothMonthBoundaries()",
+          "result": "Passed",
+          "durationInSeconds": 0.027616024017333984
+        },
+        {
+          "nodeIdentifier": "HomeCalendarModelTests/testWeekUsesCivilDaysAcrossDaylightSavingAndHonorsWeekStart()",
+          "result": "Passed",
+          "durationInSeconds": 0.011235952377319336
+        },
+        {
+          "nodeIdentifier": "InsightsReportCalculatorTests/testAChangedHistoricalScheduleMatchesLegacyBarAndFlagsTheChange()",
+          "result": "Passed",
+          "durationInSeconds": 0.002704024314880371
+        },
+        {
+          "nodeIdentifier": "InsightsReportCalculatorTests/testActivityMapSeparatesRecordedExcusedPausedPreTrackingAndAfterReview()",
+          "result": "Passed",
+          "durationInSeconds": 0.0028159618377685547
+        },
+        {
+          "nodeIdentifier": "InsightsReportCalculatorTests/testCohortChangesAreFlaggedAndMissingWeeksStayMissing()",
+          "result": "Passed",
+          "durationInSeconds": 0.002801060676574707
+        },
+        {
+          "nodeIdentifier": "InsightsReportCalculatorTests/testFutureWrittenHistoricalSkipCannotChangeAnEarlierAsOfReport()",
+          "result": "Passed",
+          "durationInSeconds": 0.0053670406341552734
+        },
+        {
+          "nodeIdentifier": "InsightsReportCalculatorTests/testSessionCountsSeparateOutcomesAndExcludeActiveTimerMinutes()",
+          "result": "Passed",
+          "durationInSeconds": 0.0028820037841796875
+        },
+        {
+          "nodeIdentifier": "InsightsReportCalculatorTests/testStoredCivilDayIsPreservedEvenWhenTimestampFallsInAnotherLocalDay()",
+          "result": "Passed",
+          "durationInSeconds": 0.0023229122161865234
+        },
+        {
+          "nodeIdentifier": "InsightsReportCalculatorTests/testTwelveCivilWeeksIncludeDSTAndEndExactlyAtSelectedCompletedWeek()",
+          "result": "Passed",
+          "durationInSeconds": 0.003177046775817871
+        },
+        {
+          "nodeIdentifier": "InsightsReportCalculatorTests/testUnitChangesAndBackdatedAmountsStaySeparateAndDuplicateFactsCountOnce()",
+          "result": "Passed",
+          "durationInSeconds": 0.002956986427307129
+        },
+        {
+          "nodeIdentifier": "InsightsReportCalculatorTests/testWeekdayCountsExcludeWeeklyCommitmentsAndExcusedSkips()",
+          "result": "Passed",
+          "durationInSeconds": 0.002989053726196289
+        },
+        {
+          "nodeIdentifier": "InsightsReportCalculatorTests/testWeeklyBarsAgreeWithExistingEqualWeightCalculatorAndDoNotPoolUnits()",
+          "result": "Passed",
+          "durationInSeconds": 0.004779934883117676
+        },
+        {
+          "nodeIdentifier": "InsightsViewModelTests/testArchivedHabitBreakdownKeepsIdentityAndDetailNavigationDoesNotWrite()",
+          "result": "Passed",
+          "durationInSeconds": 0.03532004356384277
+        },
+        {
+          "nodeIdentifier": "InsightsViewModelTests/testAttentionOnlyUserCanReviewCompletedWeekWithExplicitCoverage()",
+          "result": "Passed",
+          "durationInSeconds": 0.026268959045410156
+        },
+        {
+          "nodeIdentifier": "InsightsViewModelTests/testDefaultsToLastCompletedWeekExcludingTheCurrentInProgressWeek()",
+          "result": "Passed",
+          "durationInSeconds": 0.027482986450195312
+        },
+        {
+          "nodeIdentifier": "InsightsViewModelTests/testGoToPreviousWeekAndBackClampsAtTheLastCompletedWeek()",
+          "result": "Passed",
+          "durationInSeconds": 0.025297999382019043
+        },
+        {
+          "nodeIdentifier": "InsightsViewModelTests/testHasAnyHabitsIsFalseWhenNoHabitsExist()",
+          "result": "Passed",
+          "durationInSeconds": 0.004492044448852539
+        },
+        {
+          "nodeIdentifier": "InsightsViewModelTests/testInsufficientDataStateWhenHabitsExistButNoneEligibleThisWeek()",
+          "result": "Passed",
+          "durationInSeconds": 0.011260986328125
+        },
+        {
+          "nodeIdentifier": "InsightsViewModelTests/testQuantityReportUsesCapturedUnitAndCurrentWeekCannotEnterReview()",
+          "result": "Passed",
+          "durationInSeconds": 0.031262993812561035
+        },
+        {
+          "nodeIdentifier": "InsightsViewModelTests/testReloadingAfterANewCompletionIsRecordedReflectsIt()",
+          "result": "Passed",
+          "durationInSeconds": 0.020199060440063477
+        },
+        {
+          "nodeIdentifier": "InsightsViewModelTests/testReportAndWeeklyReviewUseTheSameCompletedWeekAndNavigateTogether()",
+          "result": "Passed",
+          "durationInSeconds": 0.03372800350189209
+        },
+        {
+          "nodeIdentifier": "InsightsViewModelTests/testSessionOnlyReviewDoesNotInventAnAttentionBudget()",
+          "result": "Passed",
+          "durationInSeconds": 0.013846993446350098
+        },
+        {
+          "nodeIdentifier": "InsightsViewModelTests/testWeekContainingADaylightSavingTransitionStillCountsSevenLocalDays()",
+          "result": "Passed",
+          "durationInSeconds": 0.0672769546508789
+        },
+        {
+          "nodeIdentifier": "IntentionSessionViewModelTests/testArchivedHabitCannotStartFromStaleReview()",
+          "result": "Passed",
+          "durationInSeconds": 0.025756001472473145
+        },
+        {
+          "nodeIdentifier": "IntentionSessionViewModelTests/testCreateFocusGoalDoesNotStartUntilExplicitActionOrCompleteHabit()",
+          "result": "Passed",
+          "durationInSeconds": 0.041989922523498535
+        },
+        {
+          "nodeIdentifier": "IntentionSessionViewModelTests/testExplicitStartLinksSessionWithoutCompletingHabitOrInferringOutcome()",
+          "result": "Passed",
+          "durationInSeconds": 0.025941967964172363
+        },
+        {
+          "nodeIdentifier": "IntentionSessionViewModelTests/testFailedNewIntentionDoesNotReplaceItsReviewPathWithOlderActiveSession()",
+          "result": "Passed",
+          "durationInSeconds": 0.04117298126220703
+        },
+        {
+          "nodeIdentifier": "IntentionSessionViewModelTests/testFocusGoalAndSessionKeepTheirMeaningAfterReload()",
+          "result": "Passed",
+          "durationInSeconds": 0.03484499454498291
+        },
+        {
+          "nodeIdentifier": "IntentionSessionViewModelTests/testInlineCreationRechecksPlanAndRejectsNonSessionGoal()",
+          "result": "Passed",
+          "durationInSeconds": 0.018414020538330078
+        },
+        {
+          "nodeIdentifier": "IntentionSessionViewModelTests/testLinkFailureDisclosesStartedSessionAndKeepsReviewDestination()",
+          "result": "Passed",
+          "durationInSeconds": 0.025183916091918945
+        },
+        {
+          "nodeIdentifier": "IntentionSessionViewModelTests/testLoadingCapturesNoSessionOrHabitSuccess()",
+          "result": "Passed",
+          "durationInSeconds": 0.01743006706237793
+        },
+        {
+          "nodeIdentifier": "IntentionSessionViewModelTests/testManualSessionResultRemainsDistinctFromHabitCompletion()",
+          "result": "Passed",
+          "durationInSeconds": 0.03193390369415283
+        },
+        {
+          "nodeIdentifier": "IntentionSessionViewModelTests/testOnlyPhoneFreeGoalsCanBeSelectedAndStarted()",
+          "result": "Passed",
+          "durationInSeconds": 0.02481997013092041
+        },
+        {
+          "nodeIdentifier": "IntentionSessionViewModelTests/testPersistedAssociationIsImmutableAndRetrySafe()",
+          "result": "Passed",
+          "durationInSeconds": 0.002442002296447754
+        },
+        {
+          "nodeIdentifier": "IntentionSessionViewModelTests/testPrivateReasonAppearsBeforeSessionAndHidePreservesItWithoutStartingAnything()",
+          "result": "Passed",
+          "durationInSeconds": 0.03138303756713867
+        },
+        {
+          "nodeIdentifier": "IntentionSessionViewModelTests/testWeeklyConnectionCountsRecordedStartsNotOutcomesOrHabitSuccess()",
+          "result": "Passed",
+          "durationInSeconds": 0.043974995613098145
+        },
+        {
+          "nodeIdentifier": "LocalDayTests/testCivilDayKeysRemainStableAcrossUserCalendarIdentifiers()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003559589385986328
+        },
+        {
+          "nodeIdentifier": "LocalDayTests/testCivilNormalizationPreservesTimeZoneAndUserWeekBoundaries()",
+          "result": "Passed",
+          "durationInSeconds": 0.00043404102325439453
+        },
+        {
+          "nodeIdentifier": "LocalDayTests/testDaylightSavingFallBackKeepsConsistentLocalDayKeys()",
+          "result": "Passed",
+          "durationInSeconds": 0.0004029273986816406
+        },
+        {
+          "nodeIdentifier": "LocalDayTests/testDaylightSavingSpringForwardKeepsConsistentLocalDayKeys()",
+          "result": "Passed",
+          "durationInSeconds": 0.00031304359436035156
+        },
+        {
+          "nodeIdentifier": "LocalDayTests/testLocalMidnightBoundarySeparatesCalendarDays()",
+          "result": "Passed",
+          "durationInSeconds": 0.00030601024627685547
+        },
+        {
+          "nodeIdentifier": "LocalDayTests/testMonthAndYearBoundaryProducesCorrectKeys()",
+          "result": "Passed",
+          "durationInSeconds": 0.00029397010803222656
+        },
+        {
+          "nodeIdentifier": "LocalDayTests/testTimeZoneChangeCanShiftTheLocalDayForTheSameInstant()",
+          "result": "Passed",
+          "durationInSeconds": 0.00034296512603759766
+        },
+        {
+          "nodeIdentifier": "LocalDayTests/testWeekBoundarySeparatesConsecutiveWeeks()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003020763397216797
+        },
+        {
+          "nodeIdentifier": "MadeRoomReviewCalculatorTests/testActiveAndEndedUnreportedSessionsStayNeutralAndActiveTimerIsExcluded()",
+          "result": "Passed",
+          "durationInSeconds": 0.0006020069122314453
+        },
+        {
+          "nodeIdentifier": "MadeRoomReviewCalculatorTests/testArchivedHabitAndStoredCivilKeysArePreservedWithIndependentDeduplicatedCheckIns()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003600120544433594
+        },
+        {
+          "nodeIdentifier": "MadeRoomReviewCalculatorTests/testContradictoryOwnersAndMissingSessionsAreOmittedWithoutArbitraryAttribution()",
+          "result": "Passed",
+          "durationInSeconds": 0.00032198429107666016
+        },
+        {
+          "nodeIdentifier": "MadeRoomReviewCalculatorTests/testDuplicateLinksAndSessionCopiesNeverInflateTotals()",
+          "result": "Passed",
+          "durationInSeconds": 0.00034296512603759766
+        },
+        {
+          "nodeIdentifier": "MadeRoomReviewCalculatorTests/testHalfOpenWeekUsesSessionStartEvenWhenSessionEndsInNextWeek()",
+          "result": "Passed",
+          "durationInSeconds": 0.00030100345611572266
+        },
+        {
+          "nodeIdentifier": "MadeRoomReviewCalculatorTests/testInvalidTimerDurationCannotProduceNegativeOrImplausibleMinutes()",
+          "result": "Passed",
+          "durationInSeconds": 0.00030791759490966797
+        },
+        {
+          "nodeIdentifier": "MadeRoomReviewCalculatorTests/testUnlinkedSessionsAndUnrelatedHabitCheckInsAreNotAttributed()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003209114074707031
+        },
+        {
+          "nodeIdentifier": "MadeRoomReviewViewModelTests/testFailedReloadClearsStaleFactsAndMissingLinkedSessionsRemainPartial()",
+          "result": "Passed",
+          "durationInSeconds": 0.017794013023376465
+        },
+        {
+          "nodeIdentifier": "MadeRoomReviewViewModelTests/testInsightsPassesSelectedCompletedWeekAndKeepsOpenedReviewStable()",
+          "result": "Passed",
+          "durationInSeconds": 0.022122979164123535
+        },
+        {
+          "nodeIdentifier": "MadeRoomReviewViewModelTests/testPopulatedArchivedReviewIsReadOnlyAndSessionNeverGeneratesHabitSuccess()",
+          "result": "Passed",
+          "durationInSeconds": 0.036900997161865234
+        },
+        {
+          "nodeIdentifier": "OnboardingTests/testAnswersAndStarterBrowsingWriteNothingAndAreNotRestoredInANewSetupModel()",
+          "result": "Passed",
+          "durationInSeconds": 0.008665084838867188
+        },
+        {
+          "nodeIdentifier": "OnboardingTests/testBackAndSkipPreserveChoicesWithoutSavingOrCompletingSetup()",
+          "result": "Passed",
+          "durationInSeconds": 0.003866910934448242
+        },
+        {
+          "nodeIdentifier": "OnboardingTests/testBlankCustomFormCanOpenAndCancelledDraftDoesNotCreateAnything()",
+          "result": "Passed",
+          "durationInSeconds": 0.003448963165283203
+        },
+        {
+          "nodeIdentifier": "OnboardingTests/testChangingAnswersPreservesAnExplicitChoiceAndUnknownStarterClearsForCustomEntry()",
+          "result": "Passed",
+          "durationInSeconds": 0.0031969547271728516
+        },
+        {
+          "nodeIdentifier": "OnboardingTests/testCompanionContinueSavesPreferencesWhileSkipRestoresLoadedPreference()",
+          "result": "Passed",
+          "durationInSeconds": 0.0076950788497924805
+        },
+        {
+          "nodeIdentifier": "OnboardingTests/testCompletedLoadAndRepeatedCompletionDoNotResaveOrCreateAnything()",
+          "result": "Passed",
+          "durationInSeconds": 0.0031529664993286133
+        },
+        {
+          "nodeIdentifier": "OnboardingTests/testCreationLimitIsCheckedAtFormRequestAndAgainAtExplicitSave()",
+          "result": "Passed",
+          "durationInSeconds": 0.003352046012878418
+        },
+        {
+          "nodeIdentifier": "OnboardingTests/testExplicitHabitSaveAtomicallyPersistsReviewedTargetAndSmallActionThenAdvances()",
+          "result": "Passed",
+          "durationInSeconds": 0.010820984840393066
+        },
+        {
+          "nodeIdentifier": "OnboardingTests/testExploreFirstWorksAtWelcomeAndDiscardsUnacceptedCompanionChanges()",
+          "result": "Passed",
+          "durationInSeconds": 0.00767207145690918
+        },
+        {
+          "nodeIdentifier": "OnboardingTests/testFailedCompanionSaveKeepsDraftAndSkipDoesNotCommitItLater()",
+          "result": "Passed",
+          "durationInSeconds": 0.005200982093811035
+        },
+        {
+          "nodeIdentifier": "OnboardingTests/testFailedProfileReadCannotOverwritePreferencesAndCanBeRetried()",
+          "result": "Passed",
+          "durationInSeconds": 0.003435969352722168
+        },
+        {
+          "nodeIdentifier": "OnboardingTests/testInvalidHabitSaveKeepsReviewOpenAndCommitsNoPartialConfiguration()",
+          "result": "Passed",
+          "durationInSeconds": 0.013837933540344238
+        },
+        {
+          "nodeIdentifier": "OnboardingTests/testLoadedOrConcurrentlyCreatedHabitIsKeptWithExistingProgress()",
+          "result": "Passed",
+          "durationInSeconds": 0.017315030097961426
+        },
+        {
+          "nodeIdentifier": "OnboardingTests/testOptionalStepsCanBeSkippedWithoutCreatingTrackingData()",
+          "result": "Passed",
+          "durationInSeconds": 0.003939986228942871
+        },
+        {
+          "nodeIdentifier": "OnboardingTests/testRecommendationsRespondToAnswersAndKeepEveryCatalogUnitAndSmallAction()",
+          "result": "Passed",
+          "durationInSeconds": 0.0034699440002441406
+        },
+        {
+          "nodeIdentifier": "OnboardingTests/testRepeatedCreateAndBackNavigationCannotCreateAnotherOnboardingHabit()",
+          "result": "Passed",
+          "durationInSeconds": 0.010538101196289062
+        },
+        {
+          "nodeIdentifier": "OnboardingTests/testSuccessfulLoadDoesNotOverwriteUnacceptedCompanionDraftOnReturn()",
+          "result": "Passed",
+          "durationInSeconds": 0.0033550262451171875
+        },
+        {
+          "nodeIdentifier": "PremiumAccessPolicyTests/testFreeCreationLimitsAndPremiumAccess()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003529787063598633
+        },
+        {
+          "nodeIdentifier": "PremiumAccessPolicyTests/testUnverifiedRevokedExpiredUnknownAndMissingExpiryCannotUnlock()",
+          "result": "Passed",
+          "durationInSeconds": 0.0002989768981933594
+        },
+        {
+          "nodeIdentifier": "PremiumAccessPolicyTests/testVerifiedRecognizedUnexpiredSubscriptionUnlocksPremium()",
+          "result": "Passed",
+          "durationInSeconds": 0.00026798248291015625
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testArchivedNonDueAndUnknownHabitsNeverWrite()",
+          "result": "Passed",
+          "durationInSeconds": 0.02350795269012451
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testCapabilitiesOnlyEnableSimpleUnskippedUncompletedRows()",
+          "result": "Passed",
+          "durationInSeconds": 0.0036890506744384766
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testChangedConfigurationRequiresAppReview()",
+          "result": "Passed",
+          "durationInSeconds": 0.024044036865234375
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testClockRollbackCannotUndoAFutureDatedFact()",
+          "result": "Passed",
+          "durationInSeconds": 0.01650404930114746
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testCompletedRowStaysInPlaceBrieflyThenPendingHabitsReturnFirst()",
+          "result": "Passed",
+          "durationInSeconds": 0.0030280351638793945
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testExporterOffersUndoOnlyForActualSimpleCompletionAndClearsItAfterUndo()",
+          "result": "Passed",
+          "durationInSeconds": 0.04714000225067139
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testExporterRefreshesRoutineEditsDeletionAndQuantityCapabilities()",
+          "result": "Passed",
+          "durationInSeconds": 0.04953896999359131
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testExporterUsesActualQuantitySkipRevisionAndSelectedTheme()",
+          "result": "Passed",
+          "durationInSeconds": 0.01715397834777832
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testFlexibleWeeklyAllowsOneCheckInTodayWithoutCompletingWholeWeek()",
+          "result": "Passed",
+          "durationInSeconds": 0.01672196388244629
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testFlexibleWeeklyUndoRemovesOnlyTodayAndPreservesEarlierWeekProgress()",
+          "result": "Passed",
+          "durationInSeconds": 0.030392050743103027
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testMidnightRejectsYesterdayEvenWhenWidgetHasNotRefreshed()",
+          "result": "Passed",
+          "durationInSeconds": 0.010630965232849121
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testNameAndQuantityDeepLinksNeverCompleteAnything()",
+          "result": "Passed",
+          "durationInSeconds": 0.012681961059570312
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testNextDayRefreshPreservesSavedProgressAndOnlyResetsTheDisplayDay()",
+          "result": "Passed",
+          "durationInSeconds": 0.017473936080932617
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testOldSnapshotCannotEnableInteractiveWriteAndStillDecodes()",
+          "result": "Passed",
+          "durationInSeconds": 0.003182053565979004
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testOrderingPendingFirstPreservesUserOrderAndRespectsCapacity()",
+          "result": "Passed",
+          "durationInSeconds": 0.003035902976989746
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testQuantityTargetRequiresLoggerEvenWithStaleSimpleSnapshot()",
+          "result": "Passed",
+          "durationInSeconds": 0.01611793041229248
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testRepeatedCheckInIsIdempotentAndUsesWidgetSource()",
+          "result": "Passed",
+          "durationInSeconds": 0.017138957977294922
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testRepeatedUndoAcknowledgmentRequiresCurrentPublishedPendingFact()",
+          "result": "Passed",
+          "durationInSeconds": 0.0031919479370117188
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testRichTideTextAndActionsHaveContrastAcrossEveryTheme()",
+          "result": "Passed",
+          "durationInSeconds": 0.00338900089263916
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testRoutineNextStepFollowsActualSavedSuccessAndNeverFabricatesBulkCompletion()",
+          "result": "Passed",
+          "durationInSeconds": 0.003103971481323242
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testRoutinePreservesStepOrderAndOmitsNonDueOrUnavailableMembers()",
+          "result": "Passed",
+          "durationInSeconds": 0.002933025360107422
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testRoutineRetainsTappedVisibleRowsDuringAcknowledgmentThenAdvances()",
+          "result": "Passed",
+          "durationInSeconds": 0.002859950065612793
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testSatisfiedWeeklyTargetDoesNotAppearAsAnotherRequiredCheckIn()",
+          "result": "Passed",
+          "durationInSeconds": 0.002890944480895996
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testSkipIsPreservedWithoutManufacturingSuccess()",
+          "result": "Passed",
+          "durationInSeconds": 0.017492055892944336
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testSnapshotRejectsTimeZoneChangeWithoutReDerivingItsFacts()",
+          "result": "Passed",
+          "durationInSeconds": 0.003126978874206543
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testStaleDayAndTimeZoneNeverWrite()",
+          "result": "Passed",
+          "durationInSeconds": 0.009994029998779297
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testStaleUndoRejectsMidnightTimeZoneAndConfigurationChanges()",
+          "result": "Passed",
+          "durationInSeconds": 0.026224970817565918
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testSummaryDoesNotClaimAllDoneForHiddenOrSkippedRows()",
+          "result": "Passed",
+          "durationInSeconds": 0.0031239986419677734
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testUndoCapabilitiesRequireExactRecordAndSimpleCurrentState()",
+          "result": "Passed",
+          "durationInSeconds": 0.002995014190673828
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testUndoDoesNotRemoveAppleHealthOrQuantityDerivedFacts()",
+          "result": "Passed",
+          "durationInSeconds": 0.022697091102600098
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testUndoLeavesOtherHabitsEarlierDaysAndAdditionalSameDayFactsIntact()",
+          "result": "Passed",
+          "durationInSeconds": 0.04843103885650635
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testUndoRejectsArchivedOrNewQuantityHabitWithoutDeletingProgress()",
+          "result": "Passed",
+          "durationInSeconds": 0.03280603885650635
+        },
+        {
+          "nodeIdentifier": "QuickLogTests/testUndoRemovesExactFactAndStaleRepeatCannotRemoveReloggedCheckIn()",
+          "result": "Passed",
+          "durationInSeconds": 0.0321650505065918
+        },
+        {
+          "nodeIdentifier": "ReflectionDictationTests/testCancelDuringPermissionWaitCannotStartMicrophoneLater()",
+          "result": "Passed",
+          "durationInSeconds": 0.026519060134887695
+        },
+        {
+          "nodeIdentifier": "ReflectionDictationTests/testCaptureFailureStopsAndPreservesAnyPreview()",
+          "result": "Passed",
+          "durationInSeconds": 0.0005130767822265625
+        },
+        {
+          "nodeIdentifier": "ReflectionDictationTests/testDeniedPermissionLeavesTypingAvailableAndDoesNotCapture()",
+          "result": "Passed",
+          "durationInSeconds": 0.0005639791488647461
+        },
+        {
+          "nodeIdentifier": "ReflectionDictationTests/testStartupFailureReleasesCaptureAndKeepsDraftSeparate()",
+          "result": "Passed",
+          "durationInSeconds": 0.0004869699478149414
+        },
+        {
+          "nodeIdentifier": "ReflectionDictationTests/testStopKeepsPreviewAndRejectsLateRecognitionCallbacks()",
+          "result": "Passed",
+          "durationInSeconds": 0.0005090236663818359
+        },
+        {
+          "nodeIdentifier": "ReflectionDictationTests/testTranscriptAppendsWithoutReplacingTypedWordsOrTruncating()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003440380096435547
+        },
+        {
+          "nodeIdentifier": "ReflectionDictationTests/testUnavailableOnDeviceRecognitionNeverRequestsPermissionOrCaptures()",
+          "result": "Passed",
+          "durationInSeconds": 0.0005049705505371094
+        },
+        {
+          "nodeIdentifier": "ReminderActionTests/testArchivedUnknownNonDueAndNotYetCreatedHabitsDoNotWrite()",
+          "result": "Passed",
+          "durationInSeconds": 0.03186392784118652
+        },
+        {
+          "nodeIdentifier": "ReminderActionTests/testConfirmationAfterMidnightCannotApplyYesterdaysReminderToToday()",
+          "result": "Passed",
+          "durationInSeconds": 0.010502934455871582
+        },
+        {
+          "nodeIdentifier": "ReminderActionTests/testExistingManualCompletionIsPreserved()",
+          "result": "Passed",
+          "durationInSeconds": 0.017435073852539062
+        },
+        {
+          "nodeIdentifier": "ReminderActionTests/testExplicitAvoidanceSuccessReplacesSkipWithoutClaimingAbstinence()",
+          "result": "Passed",
+          "durationInSeconds": 0.030902981758117676
+        },
+        {
+          "nodeIdentifier": "ReminderActionTests/testExplicitSuccessLogsNotificationSourceAndRepeatedTapsDoNotToggle()",
+          "result": "Passed",
+          "durationInSeconds": 0.017906904220581055
+        },
+        {
+          "nodeIdentifier": "ReminderActionTests/testFlexibleWeeklyHabitCanLogOncePerLocalDay()",
+          "result": "Passed",
+          "durationInSeconds": 0.02500593662261963
+        },
+        {
+          "nodeIdentifier": "ReminderActionTests/testNativeCategoryRequiresUnlockAndForegroundReviewWithoutDestructiveAction()",
+          "result": "Passed",
+          "durationInSeconds": 0.003323078155517578
+        },
+        {
+          "nodeIdentifier": "ReminderActionTests/testOldAndFutureRemindersDoNotWrite()",
+          "result": "Passed",
+          "durationInSeconds": 0.010326981544494629
+        },
+        {
+          "nodeIdentifier": "ReminderActionTests/testPayloadRequiresOwnedCategoryExplicitActionMatchingIdentityAndKnownSuffix()",
+          "result": "Passed",
+          "durationInSeconds": 0.0050280094146728516
+        },
+        {
+          "nodeIdentifier": "ReminderActionTests/testReviewDoesNotWriteAndConfirmRechecksArchiveState()",
+          "result": "Passed",
+          "durationInSeconds": 0.01747000217437744
+        },
+        {
+          "nodeIdentifier": "ReminderActionTests/testSameLocalDayAcrossDSTFallbackUsesCalendarNot24Hours()",
+          "result": "Passed",
+          "durationInSeconds": 0.017048954963684082
+        },
+        {
+          "nodeIdentifier": "RoutineTests/testCancellingRoutineStarterAndRejectingStaleSelectionDoNotAlterHabits()",
+          "result": "Passed",
+          "durationInSeconds": 0.017060041427612305
+        },
+        {
+          "nodeIdentifier": "RoutineTests/testDeletingGroupingRetainsHabitAndCompletion()",
+          "result": "Passed",
+          "durationInSeconds": 0.02946007251739502
+        },
+        {
+          "nodeIdentifier": "RoutineTests/testInvalidAndStaleSelectionsWriteNothing()",
+          "result": "Passed",
+          "durationInSeconds": 0.01562201976776123
+        },
+        {
+          "nodeIdentifier": "RoutineTests/testManageableRestartGroupsFocusAndSmallerActionsDoNotInflateProgress()",
+          "result": "Passed",
+          "durationInSeconds": 0.044371962547302246
+        },
+        {
+          "nodeIdentifier": "RoutineTests/testManageableWeekPausesOnlyExplicitHabitAndCanReactivateWithoutLostHistory()",
+          "result": "Passed",
+          "durationInSeconds": 0.04405403137207031
+        },
+        {
+          "nodeIdentifier": "RoutineTests/testManageableWeekReviewAndSelectionNeverWrite()",
+          "result": "Passed",
+          "durationInSeconds": 0.010601997375488281
+        },
+        {
+          "nodeIdentifier": "RoutineTests/testRestartStoresExplicitDurationWithoutChangingCommitments()",
+          "result": "Passed",
+          "durationInSeconds": 0.015936970710754395
+        },
+        {
+          "nodeIdentifier": "RoutineTests/testRoutineAndRestartSurviveDiskReopen()",
+          "result": "Passed",
+          "durationInSeconds": 0.021026968955993652
+        },
+        {
+          "nodeIdentifier": "RoutineTests/testRoutinePreservesChosenOrderAndEditingDoesNotChangeCheckIns()",
+          "result": "Passed",
+          "durationInSeconds": 0.03544604778289795
+        },
+        {
+          "nodeIdentifier": "RoutineTests/testRoutineStarterUsesOnlyCategoriesActiveHabitsAndSavedOrder()",
+          "result": "Passed",
+          "durationInSeconds": 0.04597806930541992
+        },
+        {
+          "nodeIdentifier": "RoutineTests/testRunnerReadsFactsInOrderOmitsArchivesAndNeverLogs()",
+          "result": "Passed",
+          "durationInSeconds": 0.03877699375152588
+        },
+        {
+          "nodeIdentifier": "RoutineTests/testUnmatchedRoutineStarterHasNoFallbackSelectionAndRequiresExplicitChoice()",
+          "result": "Passed",
+          "durationInSeconds": 0.01717400550842285
+        },
+        {
+          "nodeIdentifier": "RoutineTests/testViewModelRejectsStaleDraftInsteadOfSavingPartialRoutine()",
+          "result": "Passed",
+          "durationInSeconds": 0.01684403419494629
+        },
+        {
+          "nodeIdentifier": "SessionLiveActivityServiceTests/testCompanionSelectionAndDisablingRefreshExistingActivity()",
+          "result": "Passed",
+          "durationInSeconds": 0.030343055725097656
+        },
+        {
+          "nodeIdentifier": "SessionLiveActivityServiceTests/testDisabledPresentationDoesNotEndSession()",
+          "result": "Passed",
+          "durationInSeconds": 0.017477989196777344
+        },
+        {
+          "nodeIdentifier": "SessionLiveActivityServiceTests/testEightHourBoundaryAcceptedAndLongerDurationRejected()",
+          "result": "Passed",
+          "durationInSeconds": 0.030133962631225586
+        },
+        {
+          "nodeIdentifier": "SessionLiveActivityServiceTests/testExpiredActivityEndsWithoutInventingKeptOutcome()",
+          "result": "Passed",
+          "durationInSeconds": 0.020875096321105957
+        },
+        {
+          "nodeIdentifier": "SessionLiveActivityServiceTests/testExplicitlyInterruptedSessionEndsPresentationWithoutChangingOutcome()",
+          "result": "Passed",
+          "durationInSeconds": 0.024780988693237305
+        },
+        {
+          "nodeIdentifier": "SessionLiveActivityServiceTests/testExplicitRequestUsesPersistedSessionAndDuplicateDoesNotRequestAgain()",
+          "result": "Passed",
+          "durationInSeconds": 0.01626002788543701
+        },
+        {
+          "nodeIdentifier": "SessionLiveActivityServiceTests/testFocusPresentationUsesFocusLabelAndOldStateStillDecodes()",
+          "result": "Passed",
+          "durationInSeconds": 0.01821601390838623
+        },
+        {
+          "nodeIdentifier": "SessionLiveActivityServiceTests/testForegroundDeadlineFollowsPresentationAndClearsAtExpiry()",
+          "result": "Passed",
+          "durationInSeconds": 0.01960897445678711
+        },
+        {
+          "nodeIdentifier": "SessionLiveActivityServiceTests/testForegroundReconciliationNeverStartsAnActivity()",
+          "result": "Passed",
+          "durationInSeconds": 0.01784801483154297
+        },
+        {
+          "nodeIdentifier": "SessionLiveActivityServiceTests/testGoalEditDoesNotChangeCapturedSessionDeadline()",
+          "result": "Passed",
+          "durationInSeconds": 0.024685978889465332
+        },
+        {
+          "nodeIdentifier": "SessionLiveActivityServiceTests/testHideRemovesPresentationButKeepsSessionActive()",
+          "result": "Passed",
+          "durationInSeconds": 0.018073081970214844
+        },
+        {
+          "nodeIdentifier": "SessionLiveActivityServiceTests/testHidingAnotherSessionDoesNotDismissSelectedPresentation()",
+          "result": "Passed",
+          "durationInSeconds": 0.01790797710418701
+        },
+        {
+          "nodeIdentifier": "SessionLiveActivityServiceTests/testMissingFutureAndExpiredSessionsCannotBePresented()",
+          "result": "Passed",
+          "durationInSeconds": 0.0158998966217041
+        },
+        {
+          "nodeIdentifier": "SessionLiveActivityServiceTests/testNewExplicitSelectionEndsOldPresentationAfterSuccessfulRequestOnly()",
+          "result": "Passed",
+          "durationInSeconds": 0.03291499614715576
+        },
+        {
+          "nodeIdentifier": "SessionLiveActivityServiceTests/testNewServiceReconcilesExistingActivityAfterRelaunchWithoutRequest()",
+          "result": "Passed",
+          "durationInSeconds": 0.01848900318145752
+        },
+        {
+          "nodeIdentifier": "SessionLiveActivityServiceTests/testRequestFailurePreservesSessionAndExistingPresentation()",
+          "result": "Passed",
+          "durationInSeconds": 0.031642913818359375
+        },
+        {
+          "nodeIdentifier": "SessionLiveActivityServiceTests/testShowDuringSuspendedHideCannotReportFalseSuccess()",
+          "result": "Passed",
+          "durationInSeconds": 0.019328951835632324
+        },
+        {
+          "nodeIdentifier": "SessionLiveActivityServiceTests/testSystemDismissalIsNotRecreatedBySynchronization()",
+          "result": "Passed",
+          "durationInSeconds": 0.016614913940429688
+        },
+        {
+          "nodeIdentifier": "ShortcutLoggingServiceTests/testAlreadyAppCompletedHabitIsNotUndoneOrReplaced()",
+          "result": "Passed",
+          "durationInSeconds": 0.017073988914489746
+        },
+        {
+          "nodeIdentifier": "ShortcutLoggingServiceTests/testArchivedUnknownAndNonDueHabitsCannotBeLogged()",
+          "result": "Passed",
+          "durationInSeconds": 0.024060964584350586
+        },
+        {
+          "nodeIdentifier": "ShortcutLoggingServiceTests/testCompletionReplacesExcusedSkip()",
+          "result": "Passed",
+          "durationInSeconds": 0.03001093864440918
+        },
+        {
+          "nodeIdentifier": "ShortcutLoggingServiceTests/testHabitCompletionIsIdempotentAndRecordsShortcutSource()",
+          "result": "Passed",
+          "durationInSeconds": 0.017081022262573242
+        },
+        {
+          "nodeIdentifier": "ShortcutLoggingServiceTests/testInvalidMinutesAndNonBudgetGoalsDoNotWrite()",
+          "result": "Passed",
+          "durationInSeconds": 0.016253948211669922
+        },
+        {
+          "nodeIdentifier": "ShortcutLoggingServiceTests/testMinutesAreAdditiveManualRecordsAndEditableThroughExistingRepository()",
+          "result": "Passed",
+          "durationInSeconds": 0.030267953872680664
+        },
+        {
+          "nodeIdentifier": "ShortcutLoggingServiceTests/testSameNamesRemainSeparateSelectedIdentities()",
+          "result": "Passed",
+          "durationInSeconds": 0.023002982139587402
+        },
+        {
+          "nodeIdentifier": "ShortcutLoggingServiceTests/testWeeklyHabitLogsAtMostOnceEachDayButCanLogNextDay()",
+          "result": "Passed",
+          "durationInSeconds": 0.0243070125579834
+        },
+        {
+          "nodeIdentifier": "StoreKitSubscriptionServiceTests/testLocalExpiredSubscriptionRemovesPremiumAccess()",
+          "result": "Passed",
+          "durationInSeconds": 2.1024670600891113
+        },
+        {
+          "nodeIdentifier": "StoreKitSubscriptionServiceTests/testLocalProductsSupplyPricesAndVerifiedPurchaseUnlocks()",
+          "result": "Passed",
+          "durationInSeconds": 0.043786048889160156
+        },
+        {
+          "nodeIdentifier": "StoreKitSubscriptionServiceTests/testLocalRefundRemovesPremiumAccess()",
+          "result": "Passed",
+          "durationInSeconds": 0.0703810453414917
+        },
+        {
+          "nodeIdentifier": "SubscriptionManagerTests/testExpiredSubscriptionRestoresFreeCreationLimits()",
+          "result": "Passed",
+          "durationInSeconds": 0.0007619857788085938
+        },
+        {
+          "nodeIdentifier": "SubscriptionManagerTests/testMissingProductsHaveHonestUnavailableStateAndCannotPurchase()",
+          "result": "Passed",
+          "durationInSeconds": 0.0006330013275146484
+        },
+        {
+          "nodeIdentifier": "SubscriptionManagerTests/testPendingApprovalRefreshUpdatesBothAccessAndMessage()",
+          "result": "Passed",
+          "durationInSeconds": 0.0005279779434204102
+        },
+        {
+          "nodeIdentifier": "SubscriptionManagerTests/testPendingCancelledAndUnverifiedAreDistinctAndDoNotUnlock()",
+          "result": "Passed",
+          "durationInSeconds": 0.0005019903182983398
+        },
+        {
+          "nodeIdentifier": "SubscriptionManagerTests/testPurchaseOnlyUnlocksAfterAuthoritativeEntitlementRefresh()",
+          "result": "Passed",
+          "durationInSeconds": 0.0005460977554321289
+        },
+        {
+          "nodeIdentifier": "SubscriptionManagerTests/testRestoreFailureLeavesFreeTrackingUsable()",
+          "result": "Passed",
+          "durationInSeconds": 0.0029349327087402344
+        },
+        {
+          "nodeIdentifier": "SubscriptionManagerTests/testRestoreRefreshesAppleAuthorityAndReportsNothingWhenEmpty()",
+          "result": "Passed",
+          "durationInSeconds": 0.0005040168762207031
+        },
+        {
+          "nodeIdentifier": "SubscriptionManagerTests/testSuccessfulPurchaseWithoutVerifiedEntitlementDoesNotUnlock()",
+          "result": "Passed",
+          "durationInSeconds": 0.0005379915237426758
+        },
+        {
+          "nodeIdentifier": "SubscriptionManagerTests/testUnavailableStoreDoesNotRemoveExistingAccess()",
+          "result": "Passed",
+          "durationInSeconds": 0.0005739927291870117
+        },
+        {
+          "nodeIdentifier": "SwiftDataAttentionRepositoryTests/testCorrectingAnEntryUpdatesItsAmountInPlace()",
+          "result": "Passed",
+          "durationInSeconds": 0.025458931922912598
+        },
+        {
+          "nodeIdentifier": "SwiftDataAttentionRepositoryTests/testCreateGoalPersistsFieldsAndInitialConfigurationSnapshot()",
+          "result": "Passed",
+          "durationInSeconds": 0.010620951652526855
+        },
+        {
+          "nodeIdentifier": "SwiftDataAttentionRepositoryTests/testDeletingAnEntryRemovesIt()",
+          "result": "Passed",
+          "durationInSeconds": 0.024364948272705078
+        },
+        {
+          "nodeIdentifier": "SwiftDataAttentionRepositoryTests/testDeletingAnUnknownEntryThrows()",
+          "result": "Passed",
+          "durationInSeconds": 0.003435969352722168
+        },
+        {
+          "nodeIdentifier": "SwiftDataAttentionRepositoryTests/testEditingBudgetAppendsSnapshotAndPreservesPriorHistory()",
+          "result": "Passed",
+          "durationInSeconds": 0.017930030822753906
+        },
+        {
+          "nodeIdentifier": "SwiftDataAttentionRepositoryTests/testEditingGoalDoesNotCorruptExistingUsageEntries()",
+          "result": "Passed",
+          "durationInSeconds": 0.023733019828796387
+        },
+        {
+          "nodeIdentifier": "SwiftDataAttentionRepositoryTests/testFetchGoalsReturnsEveryCreatedGoal()",
+          "result": "Passed",
+          "durationInSeconds": 0.016398072242736816
+        },
+        {
+          "nodeIdentifier": "SwiftDataAttentionRepositoryTests/testInterruptedSessionCanEndEarlyAndNextSessionCanStart()",
+          "result": "Passed",
+          "durationInSeconds": 0.029946088790893555
+        },
+        {
+          "nodeIdentifier": "SwiftDataAttentionRepositoryTests/testMultipleUsageEntriesOnTheSameDaySumRatherThanOverwrite()",
+          "result": "Passed",
+          "durationInSeconds": 0.023779988288879395
+        },
+        {
+          "nodeIdentifier": "SwiftDataAttentionRepositoryTests/testPhoneFreeSessionRetainsOriginalTargetAcrossEditsAndNeverAutoCompletes()",
+          "result": "Passed",
+          "durationInSeconds": 0.030341029167175293
+        },
+        {
+          "nodeIdentifier": "SwiftDataAttentionRepositoryTests/testRecordingUsageAgainstUnknownGoalThrows()",
+          "result": "Passed",
+          "durationInSeconds": 0.0032939910888671875
+        },
+        {
+          "nodeIdentifier": "SwiftDataAttentionRepositoryTests/testRecordUsagePersistsAmountAndLocalDayKey()",
+          "result": "Passed",
+          "durationInSeconds": 0.016402006149291992
+        },
+        {
+          "nodeIdentifier": "SwiftDataAttentionRepositoryTests/testRepositoryRejectsNonFiniteNegativeAndOversizedQuantitiesWithoutWrites()",
+          "result": "Passed",
+          "durationInSeconds": 0.01716899871826172
+        },
+        {
+          "nodeIdentifier": "SwiftDataAttentionRepositoryTests/testUpdatingAnUnknownGoalThrows()",
+          "result": "Passed",
+          "durationInSeconds": 0.00327908992767334
+        },
+        {
+          "nodeIdentifier": "SwiftDataAttentionRepositoryTests/testUpdatingNameOnlyDoesNotAppendConfigurationSnapshot()",
+          "result": "Passed",
+          "durationInSeconds": 0.01653599739074707
+        },
+        {
+          "nodeIdentifier": "SwiftDataAttentionRepositoryTests/testUsageEntriesAcrossGoalsReturnsRecordsFromEveryGoal()",
+          "result": "Passed",
+          "durationInSeconds": 0.03011500835418701
+        },
+        {
+          "nodeIdentifier": "SwiftDataAttentionRepositoryTests/testWindowCheckInsRequireElapsedWindowAndKeepExplicitReports()",
+          "result": "Passed",
+          "durationInSeconds": 0.02438497543334961
+        },
+        {
+          "nodeIdentifier": "SwiftDataAttentionRepositoryTests/testWindowEditsAppendSnapshotsAndCannotChangeGoalFamily()",
+          "result": "Passed",
+          "durationInSeconds": 0.01768207550048828
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitActivityTests/testCorrectionReviewRejectsSameDayScheduleChange()",
+          "result": "Passed",
+          "durationInSeconds": 0.018957018852233887
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitActivityTests/testCorrectionsCannotClaimQuantitySuccessWithoutTargetBeingMet()",
+          "result": "Passed",
+          "durationInSeconds": 0.025398969650268555
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitActivityTests/testDeletingQuantityBelowThresholdWithdrawsOnlyGeneratedSuccess()",
+          "result": "Passed",
+          "durationInSeconds": 0.06589388847351074
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitActivityTests/testFuturePrecreationAndArchivedPeriodsCannotBeLoggedOrCorrected()",
+          "result": "Passed",
+          "durationInSeconds": 0.03225100040435791
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitActivityTests/testHistoricalCorrectionRejectsChangedFactsAndPreservesIndependentDays()",
+          "result": "Passed",
+          "durationInSeconds": 0.03186297416687012
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitActivityTests/testInvalidConfigurationAndAmountsDoNotCreateEntries()",
+          "result": "Passed",
+          "durationInSeconds": 0.01849198341369629
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitActivityTests/testLaterTargetChangeDoesNotRewriteHistoricalConfigurationOrSuccess()",
+          "result": "Passed",
+          "durationInSeconds": 0.03205692768096924
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitActivityTests/testPartialQuantityIsNotSuccessAndThresholdProducesExactlyOneCompletion()",
+          "result": "Passed",
+          "durationInSeconds": 0.03862202167510986
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitActivityTests/testPausedTimerLoggingIsAtomicAndCannotRepeat()",
+          "result": "Passed",
+          "durationInSeconds": 0.03292489051818848
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitActivityTests/testPolarityEditCannotLeaveManualQuantityOnAnAvoidanceHabit()",
+          "result": "Passed",
+          "durationInSeconds": 0.03264796733856201
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitActivityTests/testQuantityDeletionUsesGregorianStoredKeysWithBuddhistCalendar()",
+          "result": "Passed",
+          "durationInSeconds": 0.032029032707214355
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitActivityTests/testSameDayReconfigurationRejectsStaleLoggingAndKeepsCapturedEntryUnits()",
+          "result": "Passed",
+          "durationInSeconds": 0.03983902931213379
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitActivityTests/testSmallerActionIsDistinctIdempotentAndDoesNotExtendFullStreak()",
+          "result": "Passed",
+          "durationInSeconds": 0.025558948516845703
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitActivityTests/testSystemLoggingCannotEraseSkipOrBypassQuantityTarget()",
+          "result": "Passed",
+          "durationInSeconds": 0.02771294116973877
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitActivityTests/testTimerRejectsNonMinuteTargetAndInvalidStoredElapsedAmount()",
+          "result": "Passed",
+          "durationInSeconds": 0.024610042572021484
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitActivityTests/testTimerSurvivesRepositoryRecreationAndElapsedTimeDoesNotAutoLog()",
+          "result": "Passed",
+          "durationInSeconds": 0.03129410743713379
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testArchivingAnAlreadyArchivedHabitDoesNotOpenASecondPeriod()",
+          "result": "Passed",
+          "durationInSeconds": 0.02394890785217285
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testArchivingOpensAnArchivePeriod()",
+          "result": "Passed",
+          "durationInSeconds": 0.017359018325805664
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testArchivingUnknownHabitThrows()",
+          "result": "Passed",
+          "durationInSeconds": 0.003231048583984375
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testCompletionsAcrossHabitsIncludesArchivedHabitRecords()",
+          "result": "Passed",
+          "durationInSeconds": 0.024796009063720703
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testCompletionsAcrossHabitsRespectsHalfOpenRange()",
+          "result": "Passed",
+          "durationInSeconds": 0.024753928184509277
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testCompletionsAcrossHabitsReturnsRecordsFromEveryHabit()",
+          "result": "Passed",
+          "durationInSeconds": 0.031228065490722656
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testCreateHabitPersistsFieldsAndInitialConfigurationSnapshot()",
+          "result": "Passed",
+          "durationInSeconds": 0.010900020599365234
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testCreatingHabitWithEmptyWeekdaysThrowsInvalidSchedule()",
+          "result": "Passed",
+          "durationInSeconds": 0.0031850337982177734
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testCreatingHabitWithOutOfRangeTimesPerWeekThrows()",
+          "result": "Passed",
+          "durationInSeconds": 0.0032989978790283203
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testCreatingHabitWithZeroTimesPerWeekThrows()",
+          "result": "Passed",
+          "durationInSeconds": 0.0029729604721069336
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testEditingHabitDoesNotCorruptExistingCompletions()",
+          "result": "Passed",
+          "durationInSeconds": 0.03183901309967041
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testEditingHabitDoesNotCorruptExistingSkips()",
+          "result": "Passed",
+          "durationInSeconds": 0.030826926231384277
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testEditingPolarityAlsoAppendsSnapshot()",
+          "result": "Passed",
+          "durationInSeconds": 0.017445087432861328
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testEditingScheduleAppendsSnapshotAndPreservesPriorHistory()",
+          "result": "Passed",
+          "durationInSeconds": 0.017649054527282715
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testEmptyActiveOrderAcceptsEmptyInputWithoutChangingArchivedHabit()",
+          "result": "Passed",
+          "durationInSeconds": 0.017370939254760742
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testFetchHabitsExcludesArchivedUnlessRequested()",
+          "result": "Passed",
+          "durationInSeconds": 0.017324090003967285
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testInvalidHabitOrdersAreRejectedBeforeAnyMutation()",
+          "result": "Passed",
+          "durationInSeconds": 0.032067060470581055
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testInvalidMemoryEditLeavesPersistedHabitUntouched()",
+          "result": "Passed",
+          "durationInSeconds": 0.010617971420288086
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testLegacyDuplicateOrdersFetchDeterministicallyAndCanBeRepaired()",
+          "result": "Passed",
+          "durationInSeconds": 0.04549896717071533
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testMemoryAndVisibilitySurviveDiskRelaunch()",
+          "result": "Passed",
+          "durationInSeconds": 0.01721811294555664
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testPrivateMotivationPersistsWithoutChangingHistoricalFactsAndCanBeRemoved()",
+          "result": "Passed",
+          "durationInSeconds": 0.0307619571685791
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testReactivateHabitClearsArchivedAt()",
+          "result": "Passed",
+          "durationInSeconds": 0.024758100509643555
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testReactivatingClosesTheOpenArchivePeriod()",
+          "result": "Passed",
+          "durationInSeconds": 0.02414107322692871
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testReactivatingUnknownHabitThrows()",
+          "result": "Passed",
+          "durationInSeconds": 0.00339508056640625
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testRecordingAgainstUnknownHabitThrows()",
+          "result": "Passed",
+          "durationInSeconds": 0.003139972686767578
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testRecordSkipIsDistinctFromCompletion()",
+          "result": "Passed",
+          "durationInSeconds": 0.016997933387756348
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testRecordWithoutOptionalMemoryDecodesToLegacyDefaults()",
+          "result": "Passed",
+          "durationInSeconds": 0.001659989356994629
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testReorderedHabitsSurviveDiskRelaunchWithoutChangingHistoryOrTimestamps()",
+          "result": "Passed",
+          "durationInSeconds": 0.08189797401428223
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testReorderingKeepsArchivedSlotAndNewHabitsAppendAfterReactivation()",
+          "result": "Passed",
+          "durationInSeconds": 0.059625983238220215
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testRepeatedArchiveReactivateCyclesCreateSeparatePeriods()",
+          "result": "Passed",
+          "durationInSeconds": 0.03886592388153076
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testSkipsAcrossHabitsRespectsHalfOpenRange()",
+          "result": "Passed",
+          "durationInSeconds": 0.024197936058044434
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testSkipsAcrossHabitsReturnsRecordsFromEveryHabit()",
+          "result": "Passed",
+          "durationInSeconds": 0.03059208393096924
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testStaleOrderAfterCreationOrArchiveCannotOverwriteCurrentOrder()",
+          "result": "Passed",
+          "durationInSeconds": 0.031024932861328125
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testTwoEditsOnTheSameLocalDayResolveToTheLatestOne()",
+          "result": "Passed",
+          "durationInSeconds": 0.024494051933288574
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testTwoEditsWithIdenticalTimestampResolveToTheLatestOneByRevision()",
+          "result": "Passed",
+          "durationInSeconds": 0.024448037147521973
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testUndoCompletionRemovesIt()",
+          "result": "Passed",
+          "durationInSeconds": 0.02379298210144043
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testUndoCompletionWithUnknownIDThrows()",
+          "result": "Passed",
+          "durationInSeconds": 0.0033229589462280273
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testUpdatingNameOnlyDoesNotAppendConfigurationSnapshot()",
+          "result": "Passed",
+          "durationInSeconds": 0.01668095588684082
+        },
+        {
+          "nodeIdentifier": "SwiftDataHabitRepositoryTests/testUpdatingUnknownHabitThrows()",
+          "result": "Passed",
+          "durationInSeconds": 0.0035020112991333008
+        },
+        {
+          "nodeIdentifier": "TodayQuickAmountTests/testArchivedHabitCannotLogOrUndoAndExistingQuantityStaysIntact()",
+          "result": "Passed",
+          "durationInSeconds": 0.02856588363647461
+        },
+        {
+          "nodeIdentifier": "TodayQuickAmountTests/testCapturedRowCannotLogAnotherDayEvenAfterTodayReloads()",
+          "result": "Passed",
+          "durationInSeconds": 0.014198064804077148
+        },
+        {
+          "nodeIdentifier": "TodayQuickAmountTests/testChangedConfigurationRejectsCapturedAmountWithoutWriting()",
+          "result": "Passed",
+          "durationInSeconds": 0.022608041763305664
+        },
+        {
+          "nodeIdentifier": "TodayQuickAmountTests/testChangedScheduleAndNewExcusedSkipRequireReviewBeforeQuickLogging()",
+          "result": "Passed",
+          "durationInSeconds": 0.03498995304107666
+        },
+        {
+          "nodeIdentifier": "TodayQuickAmountTests/testFirstSavedPresetLogsRealPartialProgressWithoutCompletingHabit()",
+          "result": "Passed",
+          "durationInSeconds": 0.020306110382080078
+        },
+        {
+          "nodeIdentifier": "TodayQuickAmountTests/testMinuteTargetsExposeTheExistingMinutePresetWithoutStartingATimer()",
+          "result": "Passed",
+          "durationInSeconds": 0.020228028297424316
+        },
+        {
+          "nodeIdentifier": "TodayQuickAmountTests/testReachingTargetThenExactUndoPreservesEarlierQuantityAndWithdrawsGeneratedSuccess()",
+          "result": "Passed",
+          "durationInSeconds": 0.03734707832336426
+        },
+        {
+          "nodeIdentifier": "TodayQuickAmountTests/testStaleSimpleToggleCannotEraseSuccessWhileRecordedAmountsStillMeetTarget()",
+          "result": "Passed",
+          "durationInSeconds": 0.03793191909790039
+        },
+        {
+          "nodeIdentifier": "TodayQuickAmountTests/testUndoCannotRemoveAnotherHabitEarlierDayOrSmallerAction()",
+          "result": "Passed",
+          "durationInSeconds": 0.05543088912963867
+        },
+        {
+          "nodeIdentifier": "TodayViewModelTests/testAvoidanceRecoveryOffersNoPositiveHabitTools()",
+          "result": "Passed",
+          "durationInSeconds": 0.020552992820739746
+        },
+        {
+          "nodeIdentifier": "TodayViewModelTests/testCompletingSkippedDayRemovesExcusal()",
+          "result": "Passed",
+          "durationInSeconds": 0.03344297409057617
+        },
+        {
+          "nodeIdentifier": "TodayViewModelTests/testConfirmationUndoIsIdempotentAndDoesNotLogAgain()",
+          "result": "Passed",
+          "durationInSeconds": 0.026312947273254395
+        },
+        {
+          "nodeIdentifier": "TodayViewModelTests/testCreationLimitBlocksNewHabitButPreservesTracking()",
+          "result": "Passed",
+          "durationInSeconds": 0.018858909606933594
+        },
+        {
+          "nodeIdentifier": "TodayViewModelTests/testFreshHabitHasNoRecoveryContext()",
+          "result": "Passed",
+          "durationInSeconds": 0.011126995086669922
+        },
+        {
+          "nodeIdentifier": "TodayViewModelTests/testMixedScheduleRecoveryIsLabeledAsCommitments()",
+          "result": "Passed",
+          "durationInSeconds": 0.024903059005737305
+        },
+        {
+          "nodeIdentifier": "TodayViewModelTests/testRecoveryCardCompositionAndExactUndoRestoreTwoCommitments()",
+          "result": "Passed",
+          "durationInSeconds": 0.04600405693054199
+        },
+        {
+          "nodeIdentifier": "TodayViewModelTests/testRecoveryContextShowsWhileRecoveringAndClearsAfterThreshold()",
+          "result": "Passed",
+          "durationInSeconds": 0.03126800060272217
+        },
+        {
+          "nodeIdentifier": "TodayViewModelTests/testRecoveryContextUsesWeeksForATimesPerWeekSchedule()",
+          "result": "Passed",
+          "durationInSeconds": 0.024315953254699707
+        },
+        {
+          "nodeIdentifier": "TodayViewModelTests/testRepeatedCapturedLogDoesNotDuplicateAnAlreadySavedCheckIn()",
+          "result": "Passed",
+          "durationInSeconds": 0.018410086631774902
+        },
+        {
+          "nodeIdentifier": "TodayViewModelTests/testStaleConfirmationCannotChangeNextDaysCompletion()",
+          "result": "Passed",
+          "durationInSeconds": 0.031895995140075684
+        },
+        {
+          "nodeIdentifier": "TodayViewModelTests/testStaleMainControlCannotBypassAnArchiveScheduleChangeOrNewSkip()",
+          "result": "Passed",
+          "durationInSeconds": 0.047482967376708984
+        },
+        {
+          "nodeIdentifier": "TodayViewModelTests/testStaleMainControlCannotLogOrUndoAnotherDay()",
+          "result": "Passed",
+          "durationInSeconds": 0.03315603733062744
+        },
+        {
+          "nodeIdentifier": "TodayViewModelTests/testStaleMainUndoCannotDeleteAReplacementCheckInButFreshUndoStillWorks()",
+          "result": "Passed",
+          "durationInSeconds": 0.03711998462677002
+        },
+        {
+          "nodeIdentifier": "WatchHabitLoggingServiceTests/testArchivedHabitCannotBeLoggedFromOldSnapshot()",
+          "result": "Passed",
+          "durationInSeconds": 0.017024993896484375
+        },
+        {
+          "nodeIdentifier": "WatchHabitLoggingServiceTests/testExplicitLogIsIdempotentAndHasWatchProvenance()",
+          "result": "Passed",
+          "durationInSeconds": 0.017690062522888184
+        },
+        {
+          "nodeIdentifier": "WatchHabitLoggingServiceTests/testNonDueAndUnknownHabitCannotLog()",
+          "result": "Passed",
+          "durationInSeconds": 0.010809898376464844
+        },
+        {
+          "nodeIdentifier": "WatchHabitLoggingServiceTests/testPayloadRoundTripsAndExpiresExactlyAtLocalMidnight()",
+          "result": "Passed",
+          "durationInSeconds": 0.011224985122680664
+        },
+        {
+          "nodeIdentifier": "WatchHabitLoggingServiceTests/testProtocolMismatchCannotWrite()",
+          "result": "Passed",
+          "durationInSeconds": 0.010074973106384277
+        },
+        {
+          "nodeIdentifier": "WatchHabitLoggingServiceTests/testQuantityHabitRequiresPhoneProgressInsteadOfFakeCompletion()",
+          "result": "Passed",
+          "durationInSeconds": 0.010630011558532715
+        },
+        {
+          "nodeIdentifier": "WatchHabitLoggingServiceTests/testSnapshotExpiryUsesCalendarMidnightAcrossDST()",
+          "result": "Passed",
+          "durationInSeconds": 0.003193974494934082
+        },
+        {
+          "nodeIdentifier": "WatchHabitLoggingServiceTests/testStaleDayCannotLogTodaysHabit()",
+          "result": "Passed",
+          "durationInSeconds": 0.010419964790344238
+        },
+        {
+          "nodeIdentifier": "WatchHabitLoggingServiceTests/testUnavailableProtectedPhoneDataCannotLog()",
+          "result": "Passed",
+          "durationInSeconds": 0.009778022766113281
+        },
+        {
+          "nodeIdentifier": "WatchHabitLoggingServiceTests/testWatchDoesNotReplaceExcusedSkip()",
+          "result": "Passed",
+          "durationInSeconds": 0.01688206195831299
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testAttentionWeekSumsEntriesBeforeClassifyingAndTreatsExactLimitAsExceeded()",
+          "result": "Passed",
+          "durationInSeconds": 0.0004329681396484375
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testAttentionWeekUnknownDaysNeverBecomeSuccessAndCreationLimitsCoverage()",
+          "result": "Passed",
+          "durationInSeconds": 0.00037491321563720703
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testAttentionWeekUsesHistoricalBudgetsAndCountsOnlyLoggedDays()",
+          "result": "Passed",
+          "durationInSeconds": 0.00037491321563720703
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testDuplicateCompletionsOnTheSameDayDoNotInflateTheWeeklyFigure()",
+          "result": "Passed",
+          "durationInSeconds": 0.0004858970642089844
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testHabitArchivedBeforeTheWeekBeganIsExcluded()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003908872604370117
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testHabitCreatedAfterTheWeekBeganIsExcludedNotCountedAsZero()",
+          "result": "Passed",
+          "durationInSeconds": 0.0004019737243652344
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testHabitsNeedingAttentionIsBasedOnPercentageNotRawMissCount()",
+          "result": "Passed",
+          "durationInSeconds": 0.0006560087203979492
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testHabitsNeedingAttentionIsEmptyWhenNoEligibleHabitHasAMiss()",
+          "result": "Passed",
+          "durationInSeconds": 0.00047707557678222656
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testHabitsNeedingAttentionListsEveryHabitTiedAtTheLowestPercentageAmongThoseWithAMiss()",
+          "result": "Passed",
+          "durationInSeconds": 0.0007059574127197266
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testHistoricalScheduleChangeMidWeekIsReflectedInThatWeeksFigure()",
+          "result": "Passed",
+          "durationInSeconds": 0.0005049705505371094
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testIsBalancedWeekForASingleEligibleHabitPreservingItsActualCounts()",
+          "result": "Passed",
+          "durationInSeconds": 0.0004729032516479492
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testIsBalancedWeekWhenMultipleHabitsShareTheSameImperfectPercentage()",
+          "result": "Passed",
+          "durationInSeconds": 0.0006079673767089844
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testOverallConsistencyIsAverageOfHabitPercentagesNotPooledAcrossHabits()",
+          "result": "Passed",
+          "durationInSeconds": 0.0006510019302368164
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testOverallConsistencyIsNilNotZeroWhenNoHabitIsEligible()",
+          "result": "Passed",
+          "durationInSeconds": 0.0002980232238769531
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testSkipsAreExcusedFromBothNumeratorAndDenominator()",
+          "result": "Passed",
+          "durationInSeconds": 0.0008159875869750977
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testStrongestHabitNamesListsEveryHabitTiedAtTheMaximum()",
+          "result": "Passed",
+          "durationInSeconds": 0.0007148981094360352
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testStrongestIsEmptyWhenTheMaximumPercentageIsZero()",
+          "result": "Passed",
+          "durationInSeconds": 0.00041091442108154297
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testTrendAveragesOnlyTheComparableCohortWhileOverallConsistencyIncludesEveryEligibleHabit()",
+          "result": "Passed",
+          "durationInSeconds": 0.0008350610733032227
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testTrendExcludesAHabitCreatedPartwayThroughThePreviousWeek()",
+          "result": "Passed",
+          "durationInSeconds": 0.0004850625991821289
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testTrendExcludesAHabitThatWasPausedDuringPartOfTheComparisonSpan()",
+          "result": "Passed",
+          "durationInSeconds": 0.0009659528732299805
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testTrendExcludesAHabitWhoseScheduleChangedDuringTheComparisonSpan()",
+          "result": "Passed",
+          "durationInSeconds": 0.0008569955825805664
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testTrendIsExpressedInPercentagePoints()",
+          "result": "Passed",
+          "durationInSeconds": 0.0005240440368652344
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testTrendIsNilWhenThePreviousWeekHasNoEligibleHabit()",
+          "result": "Passed",
+          "durationInSeconds": 0.0004819631576538086
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testTrendIsUnaffectedByAPolarityOnlyChangeDuringTheSpan()",
+          "result": "Passed",
+          "durationInSeconds": 0.0007460117340087891
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testWeekdayPatternListsTiesAndExcludesFlexibleWeeklyHabits()",
+          "result": "Passed",
+          "durationInSeconds": 0.002066969871520996
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testWeekdayPatternOmitsRankingForBalancedResults()",
+          "result": "Passed",
+          "durationInSeconds": 0.0019339323043823242
+        },
+        {
+          "nodeIdentifier": "WeeklyInsightsCalculatorTests/testWeekdayPatternRequiresEnoughResolvedDailyData()",
+          "result": "Passed",
+          "durationInSeconds": 0.0011359453201293945
+        },
+        {
+          "nodeIdentifier": "WeeklyReflectionTests/testAddingReflectionModelPreservesExistingTrackingAndPreferences()",
+          "result": "Passed",
+          "durationInSeconds": 0.03336608409881592
+        },
+        {
+          "nodeIdentifier": "WeeklyReflectionTests/testCancelAndWeekNavigationNeverWriteDraftOrFutureWeek()",
+          "result": "Passed",
+          "durationInSeconds": 0.0019789934158325195
+        },
+        {
+          "nodeIdentifier": "WeeklyReflectionTests/testCivilWeekKeyIsGregorianWithDifferentCalendarIdentifier()",
+          "result": "Passed",
+          "durationInSeconds": 0.00033092498779296875
+        },
+        {
+          "nodeIdentifier": "WeeklyReflectionTests/testEditingDraftAndDeleteAffectOnlySelectedWeek()",
+          "result": "Passed",
+          "durationInSeconds": 0.002655029296875
+        },
+        {
+          "nodeIdentifier": "WeeklyReflectionTests/testFailureKeepsDraftAndDoesNotClaimSavedNote()",
+          "result": "Passed",
+          "durationInSeconds": 0.0022020339965820312
+        },
+        {
+          "nodeIdentifier": "WeeklyReflectionTests/testInsightsOpensReflectionForTheReviewedWeekRatherThanToday()",
+          "result": "Passed",
+          "durationInSeconds": 0.006167054176330566
+        },
+        {
+          "nodeIdentifier": "WeeklyReflectionTests/testInvalidAndOversizedDraftsCannotReplaceSavedNote()",
+          "result": "Passed",
+          "durationInSeconds": 0.00197601318359375
+        },
+        {
+          "nodeIdentifier": "WeeklyReflectionTests/testProgressUsesSelectedWeekAndExcludesSkippedAndOpenCommitments()",
+          "result": "Passed",
+          "durationInSeconds": 0.023828983306884766
+        },
+        {
+          "nodeIdentifier": "WeeklyReflectionTests/testReflectionSurvivesDiskReopen()",
+          "result": "Passed",
+          "durationInSeconds": 0.006734013557434082
+        },
+        {
+          "nodeIdentifier": "WeeklyReflectionTests/testSaveUpsertsOneNoteWithoutChangingCapturedWeekOrCreationDate()",
+          "result": "Passed",
+          "durationInSeconds": 0.0020530223846435547
+        },
+        {
+          "nodeIdentifier": "WeeklyReflectionTests/testWeekIdentityHonorsFirstWeekdayAndDST()",
+          "result": "Passed",
+          "durationInSeconds": 0.00029098987579345703
+        },
+        {
+          "nodeIdentifier": "WidgetActionHandlerTests/testCompletionIsAppOwnedIdempotentAndRetainsWidgetSource()",
+          "result": "Passed",
+          "durationInSeconds": 0.016548991203308105
+        },
+        {
+          "nodeIdentifier": "WidgetActionHandlerTests/testExplicitWidgetCompletionReplacesSkip()",
+          "result": "Passed",
+          "durationInSeconds": 0.028996944427490234
+        },
+        {
+          "nodeIdentifier": "WidgetActionHandlerTests/testStaleUnknownArchivedAndNonDueLinksDoNotWrite()",
+          "result": "Passed",
+          "durationInSeconds": 0.022912025451660156
+        },
+        {
+          "nodeIdentifier": "WidgetDeepLinkTests/testAcceptsRealLeapDay()",
+          "result": "Passed",
+          "durationInSeconds": 0.00043594837188720703
+        },
+        {
+          "nodeIdentifier": "WidgetDeepLinkTests/testRejectsWrongSchemeMalformedIDsDatesDuplicateAndUnexpectedParameters()",
+          "result": "Passed",
+          "durationInSeconds": 0.00038301944732666016
+        },
+        {
+          "nodeIdentifier": "WidgetDeepLinkTests/testTodayAndCompletionRoundTrip()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003349781036376953
+        },
+        {
+          "nodeIdentifier": "WidgetSnapshotTests/testAtomicSnapshotRoundTripRetainsActualManualData()",
+          "result": "Passed",
+          "durationInSeconds": 0.0017020702362060547
+        },
+        {
+          "nodeIdentifier": "WidgetSnapshotTests/testClockRollbackAndTimeZoneDateChangeCannotShowCurrentProgress()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003019571304321289
+        },
+        {
+          "nodeIdentifier": "WidgetSnapshotTests/testCompanionExportUsesSelectedAnimalActualLoggedStateAndDisablePreference()",
+          "result": "Passed",
+          "durationInSeconds": 0.02241504192352295
+        },
+        {
+          "nodeIdentifier": "WidgetSnapshotTests/testMissingSharedContainerFailsExplicitly()",
+          "result": "Passed",
+          "durationInSeconds": 0.0008989572525024414
+        },
+        {
+          "nodeIdentifier": "WidgetSnapshotTests/testPreArtworkSnapshotDecodesWithoutInventingCompanionPreferences()",
+          "result": "Passed",
+          "durationInSeconds": 0.00045096874237060547
+        },
+        {
+          "nodeIdentifier": "WidgetSnapshotTests/testPreviousLocalDaySnapshotIsUnknownAfterMidnightIncludingDST()",
+          "result": "Passed",
+          "durationInSeconds": 0.0003229379653930664
+        }
+      ]
+    },
+    {
+      "id": "light-initial",
+      "bundle": "/tmp/RilovaGuidedLight.xcresult",
+      "log": "/tmp/rilova-guided-light.log",
+      "result": "Failed",
+      "passed": 12,
+      "failed": 2,
+      "skipped": 0,
+      "start": 1792696530.394,
+      "finish": 1792696868.429,
+      "cases": [
+        {
+          "nodeIdentifier": "AvelaUITests/testCompletingAndUndoingAHabit()",
+          "result": "Passed",
+          "durationInSeconds": 17.167079091072083
+        },
+        {
+          "nodeIdentifier": "AvelaUITests/testCreatingADailyHabitShowsItInTheTodayList()",
+          "result": "Passed",
+          "durationInSeconds": 11.90380609035492
+        },
+        {
+          "nodeIdentifier": "MVPFlowTests/testBrandedWelcomeAtAccessibilityTextSizeKeepsContinueUsable()",
+          "result": "Passed",
+          "durationInSeconds": 11.082316994667053
+        },
+        {
+          "nodeIdentifier": "MVPFlowTests/testHabitIdeaCanBeCustomizedSavedAndEditedAfterRelaunch()",
+          "result": "Passed",
+          "durationInSeconds": 40.457866072654724
+        },
+        {
+          "nodeIdentifier": "MVPFlowTests/testOnboardingOptionalStepsCanBeSkippedAndCompletionSurvivesRelaunch()",
+          "result": "Passed",
+          "durationInSeconds": 35.45145797729492
+        },
+        {
+          "nodeIdentifier": "MVPFlowTests/testOnboardingWelcomePassesNativeAccessibilityAudit()",
+          "result": "Passed",
+          "durationInSeconds": 12.32584810256958
+        },
+        {
+          "nodeIdentifier": "PremiumRefreshUITests/testAmountTemplateReviewSavesAndLogsExplicitly()",
+          "result": "Passed",
+          "durationInSeconds": 38.120872020721436
+        },
+        {
+          "nodeIdentifier": "PremiumRefreshUITests/testGuidedOnboardingBackRetainsChoicesAndExploreCreatesNoRecords()",
+          "result": "Passed",
+          "durationInSeconds": 30.429865956306458
+        },
+        {
+          "nodeIdentifier": "PremiumRefreshUITests/testGuidedOnboardingExplicitSavePreservesAmountAndOffersContextualReminder()",
+          "result": "Failed",
+          "durationInSeconds": 19.36319398880005
+        },
+        {
+          "nodeIdentifier": "PremiumRefreshUITests/testGuidedOnboardingFocusRouteExplainsMakeRoomWithoutStartingSession()",
+          "result": "Passed",
+          "durationInSeconds": 29.140066981315613
+        },
+        {
+          "nodeIdentifier": "PremiumRefreshUITests/testGuidedOnboardingStarterReviewCancelLeavesTodayEmpty()",
+          "result": "Failed",
+          "durationInSeconds": 16.889346957206726
+        },
+        {
+          "nodeIdentifier": "PremiumRefreshUITests/testIllustratedSetupKeepsContinueAndSkipSeparate()",
+          "result": "Passed",
+          "durationInSeconds": 21.610373973846436
+        },
+        {
+          "nodeIdentifier": "PremiumRefreshUITests/testIllustratedSetupKeepsContinueAndSkipSeparateAtLargestText()",
+          "result": "Passed",
+          "durationInSeconds": 21.719605088233948
+        },
+        {
+          "nodeIdentifier": "PremiumRefreshUITests/testPremiumOnboardingAtLargestTextCanSkipWithoutPermissionPrompts()",
+          "result": "Passed",
+          "durationInSeconds": 27.50114595890045
+        }
+      ]
+    },
+    {
+      "id": "light-layout",
+      "bundle": "/tmp/RilovaGuidedLightFinal.xcresult",
+      "log": "/tmp/rilova-guided-light-final.log",
+      "result": "Failed",
+      "passed": 6,
+      "failed": 4,
+      "skipped": 0,
+      "start": 1792697158.254,
+      "finish": 1792697399.593,
+      "cases": [
+        {
+          "nodeIdentifier": "MVPFlowTests/testBrandedWelcomeAtAccessibilityTextSizeKeepsContinueUsable()",
+          "result": "Failed",
+          "durationInSeconds": 8.313539981842041
+        },
+        {
+          "nodeIdentifier": "MVPFlowTests/testOnboardingOptionalStepsCanBeSkippedAndCompletionSurvivesRelaunch()",
+          "result": "Failed",
+          "durationInSeconds": 2.37903094291687
+        },
+        {
+          "nodeIdentifier": "MVPFlowTests/testOnboardingWelcomePassesNativeAccessibilityAudit()",
+          "result": "Passed",
+          "durationInSeconds": 21.32170295715332
+        },
+        {
+          "nodeIdentifier": "PremiumRefreshUITests/testGuidedOnboardingBackRetainsChoicesAndExploreCreatesNoRecords()",
+          "result": "Failed",
+          "durationInSeconds": 13.96839690208435
+        },
+        {
+          "nodeIdentifier": "PremiumRefreshUITests/testGuidedOnboardingExplicitSavePreservesAmountAndOffersContextualReminder()",
+          "result": "Failed",
+          "durationInSeconds": 45.430359959602356
+        },
+        {
+          "nodeIdentifier": "PremiumRefreshUITests/testGuidedOnboardingFocusRouteExplainsMakeRoomWithoutStartingSession()",
+          "result": "Passed",
+          "durationInSeconds": 29.31555700302124
+        },
+        {
+          "nodeIdentifier": "PremiumRefreshUITests/testGuidedOnboardingStarterReviewCancelLeavesTodayEmpty()",
+          "result": "Passed",
+          "durationInSeconds": 39.41411209106445
+        },
+        {
+          "nodeIdentifier": "PremiumRefreshUITests/testIllustratedSetupKeepsContinueAndSkipSeparate()",
+          "result": "Passed",
+          "durationInSeconds": 21.756065011024475
+        },
+        {
+          "nodeIdentifier": "PremiumRefreshUITests/testIllustratedSetupKeepsContinueAndSkipSeparateAtLargestText()",
+          "result": "Passed",
+          "durationInSeconds": 21.765784978866577
+        },
+        {
+          "nodeIdentifier": "PremiumRefreshUITests/testPremiumOnboardingAtLargestTextCanSkipWithoutPermissionPrompts()",
+          "result": "Passed",
+          "durationInSeconds": 27.38492202758789
+        }
+      ]
+    },
+    {
+      "id": "light-resolved",
+      "bundle": "/tmp/RilovaGuidedLightResolved.xcresult",
+      "log": "/tmp/rilova-guided-light-resolved.log",
+      "result": "Passed",
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0,
+      "start": 1792697567.378,
+      "finish": 1792697742.125,
+      "cases": [
+        {
+          "nodeIdentifier": "MVPFlowTests/testBrandedWelcomeAtAccessibilityTextSizeKeepsContinueUsable()",
+          "result": "Passed",
+          "durationInSeconds": 13.444718956947327
+        },
+        {
+          "nodeIdentifier": "MVPFlowTests/testOnboardingOptionalStepsCanBeSkippedAndCompletionSurvivesRelaunch()",
+          "result": "Passed",
+          "durationInSeconds": 36.2069890499115
+        },
+        {
+          "nodeIdentifier": "PremiumRefreshUITests/testGuidedOnboardingBackRetainsChoicesAndExploreCreatesNoRecords()",
+          "result": "Passed",
+          "durationInSeconds": 47.2489960193634
+        },
+        {
+          "nodeIdentifier": "PremiumRefreshUITests/testGuidedOnboardingExplicitSavePreservesAmountAndOffersContextualReminder()",
+          "result": "Passed",
+          "durationInSeconds": 64.74357104301453
+        }
+      ]
+    },
+    {
+      "id": "dark",
+      "bundle": "/tmp/RilovaGuidedDark.xcresult",
+      "log": "/tmp/rilova-guided-dark.log",
+      "result": "Passed",
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "start": 1792697789.037,
+      "finish": 1792697925.214,
+      "cases": [
+        {
+          "nodeIdentifier": "MVPFlowTests/testOnboardingOptionalStepsCanBeSkippedAndCompletionSurvivesRelaunch()",
+          "result": "Passed",
+          "durationInSeconds": 36.73229897022247
+        },
+        {
+          "nodeIdentifier": "PremiumRefreshUITests/testGuidedOnboardingExplicitSavePreservesAmountAndOffersContextualReminder()",
+          "result": "Passed",
+          "durationInSeconds": 60.68781304359436
+        },
+        {
+          "nodeIdentifier": "PremiumRefreshUITests/testPremiumOnboardingAtLargestTextCanSkipWithoutPermissionPrompts()",
+          "result": "Passed",
+          "durationInSeconds": 33.533137917518616
+        }
+      ]
+    }
+  ],
+  "repair_notes": [
+    "Initial two reading checks incorrectly read the outer menu picker value. Native video showed Amount, target 10, Unit Pages. Tests now assert the already-selected Pages menu item before any choice, then persisted 0 of 10 pages after relaunch.",
+    "Native visual review found progress overlapping the floating toolbar. The header is now fixed below navigation, choice artwork is compact, and normal/AX3 geometry tests guard header/footer separation.",
+    "The next run had a launch session showing SpringBoard and NoSuchProcess; no app crash report was present. A QA-only shutdown/boot, without erasure, passed the unchanged welcome/launch checks.",
+    "Partly exposed choice rows reported hittable to XCTest but their synthesized centers hit the fixed footer. Onboarding-only test gestures now reveal full choice bounds before interacting. The four affected cases then passed."
+  ],
+  "owner_data": "No tests, seed, reset, uninstall or erasure on an owner device."
+}

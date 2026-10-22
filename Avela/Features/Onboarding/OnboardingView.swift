@@ -18,32 +18,52 @@ struct OnboardingView: View {
     var body: some View {
         @Bindable var model = viewModel
         NavigationStack {
-            ScrollViewReader { proxy in
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 28) {
-                        progress
-                        introduction.id("onboarding.stepStart")
-                        stepContent
+            VStack(spacing: 0) {
+                progress
+                    .padding(.horizontal, 24).padding(.top, 12).padding(.bottom, 18)
+                    .frame(maxWidth: 640)
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 28) {
+                            introduction.id("onboarding.stepStart")
+                            stepContent
+                        }
+                        .padding(.horizontal, 24).padding(.bottom, 28)
+                        .frame(maxWidth: 640, alignment: .leading)
+                        .frame(maxWidth: .infinity)
                     }
-                    .padding(.horizontal, 24).padding(.top, 12).padding(.bottom, 28)
-                    .frame(maxWidth: 640, alignment: .leading)
-                    .frame(maxWidth: .infinity)
-                }
-                .appThemeCanvas()
-                .onChange(of: model.step) { _, _ in
-                    // Return to the heading after longer accessibility layouts.
-                    proxy.scrollTo("onboarding.stepStart", anchor: .top)
-                    isStepTitleFocused = true
+                    .onChange(of: model.step) { _, _ in
+                        // The fixed progress header stays below the toolbar;
+                        // only the stage's reading content returns to the top.
+                        proxy.scrollTo("onboarding.stepStart", anchor: .top)
+                        isStepTitleFocused = true
+                    }
                 }
             }
+            .appThemeCanvas()
             .safeAreaInset(edge: .bottom) { continuation }
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                if model.step != .welcome {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button { model.goBack() } label: {
+                            Label("Back", systemImage: "chevron.left").frame(minHeight: 44)
+                        }
+                        .accessibilityIdentifier("onboarding.back")
+                    }
+                }
+                if model.step != .finish {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Explore first") { model.exploreFirst() }
+                            .frame(minHeight: 44)
+                            .accessibilityHint("Finish setup and open Today. Nothing is logged.")
+                            .accessibilityIdentifier("onboarding.explore")
+                    }
+                }
+            }
         }
         .sheet(isPresented: $model.isShowingHabitForm) {
-            HabitFormView { model.createHabit($0) }
-        }
-        .sheet(isPresented: $model.isShowingAttentionForm) {
-            AttentionGoalFormView { model.createAttentionGoal($0) }
+            HabitFormView(creationDraft: model.selectedHabitDraft) { model.createHabit($0) }
         }
         .task { model.load() }
         .onChange(of: model.didFinish) { _, finished in if finished { onFinished() } }
@@ -72,6 +92,7 @@ struct OnboardingView: View {
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Setup step \(viewModel.step.rawValue + 1) of \(OnboardingStep.allCases.count)")
+        .accessibilityIdentifier("onboarding.progress")
     }
 
     private var introduction: some View {
@@ -112,16 +133,23 @@ struct OnboardingView: View {
 
     private var sceneHeight: CGFloat {
         if dynamicTypeSize.isAccessibilitySize { return viewModel.step == .welcome ? 96 : 76 }
-        return viewModel.step == .welcome || viewModel.step == .finish ? 254 : 188
+        if viewModel.step == .welcome || viewModel.step == .finish { return 254 }
+        return viewModel.step == .companion ? 188 : 120
     }
 
     private var continuation: some View {
         VStack(spacing: 12) {
             Button {
-                if viewModel.step == .finish { viewModel.finish() } else { viewModel.advance() }
+                if viewModel.step == .finish {
+                    viewModel.finish()
+                } else if viewModel.step == .habit && viewModel.firstHabit == nil {
+                    viewModel.requestHabitCreation()
+                } else {
+                    viewModel.advance()
+                }
             } label: {
                 HStack(spacing: 12) {
-                    Text(viewModel.step == .finish ? "Start My Day" : "Continue")
+                    Text(continueTitle)
                     Image(systemName: viewModel.step == .finish ? "arrow.up.right" : "arrow.right").accessibilityHidden(true)
                 }
                 .font(.headline).foregroundStyle(palette.prominentInk)
@@ -129,9 +157,11 @@ struct OnboardingView: View {
                 .background(palette.prominentFill, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
             }
             .buttonStyle(RilovaPressStyle()).accessibilityIdentifier("onboarding.continue")
-            if [.habit, .attention, .companion, .reminder].contains(viewModel.step) {
-                Button { viewModel.advance() } label: {
-                    Text("Skip for now")
+            .disabled(!canContinue)
+            .opacity(canContinue ? 1 : 0.5)
+            if [.goal, .obstacle, .habit, .companion].contains(viewModel.step) {
+                Button { viewModel.skipCurrentStep() } label: {
+                    Text(viewModel.step == .companion ? "Keep current preference" : "Skip for now")
                         .font(.subheadline.weight(.medium)).foregroundStyle(Color.appInkSecondary)
                         .frame(maxWidth: .infinity, minHeight: 44)
                         .contentShape(Rectangle())
@@ -161,45 +191,74 @@ struct OnboardingView: View {
                 Label("Private, local-first, no account needed", systemImage: "lock.shield")
                     .font(.caption).foregroundStyle(Color.appInkSecondary).fixedSize(horizontal: false, vertical: true)
             }
+        case .goal:
+            VStack(spacing: 12) {
+                ForEach(OnboardingGoal.allCases, id: \.rawValue) { goal in
+                    choice(goal.title, detail: goal.detail, symbol: goal.symbol,
+                           selected: model.selectedGoal == goal) { model.selectGoal(goal) }
+                        .accessibilityIdentifier("onboarding.goal.\(goal.rawValue)")
+                }
+                Text("Used only in this setup to suggest a starting habit.")
+                    .font(.footnote).foregroundStyle(Color.appInkSecondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        case .obstacle:
+            VStack(spacing: 12) {
+                ForEach(OnboardingObstacle.allCases, id: \.rawValue) { obstacle in
+                    choice(obstacle.title, detail: obstacle.detail, symbol: obstacle.symbol,
+                           selected: model.selectedObstacle == obstacle) {
+                        model.selectObstacle(model.selectedObstacle == obstacle ? nil : obstacle)
+                    }
+                    .accessibilityIdentifier("onboarding.obstacle.\(obstacle.rawValue)")
+                }
+                Text("One choice is enough. You can also skip this.")
+                    .font(.footnote).foregroundStyle(Color.appInkSecondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
         case .habit:
             if let habit = model.firstHabit {
-                readiness(habit.name, detail: "Your first habit is ready.", symbol: habit.iconName)
+                readiness(habit.name, detail: "Your habit is saved.", symbol: habit.iconName)
+                Text("Continue with this habit. You can add more from Today.")
+                    .font(.subheadline).foregroundStyle(Color.appInkSecondary)
+            } else {
+                VStack(spacing: 12) {
+                    ForEach(visibleStarters) { starter in
+                        choice(starter.draft.name,
+                               detail: "\(scheduleLabel(starter.draft.schedule)) · \(starter.trackingLabel)",
+                               symbol: starter.draft.iconName,
+                               selected: model.selectedStarterID == starter.id) { model.selectStarter(starter.id) }
+                            .accessibilityIdentifier("onboarding.starter.\(starter.id)")
+                    }
+                    if let draft = model.selectedHabitDraft, let smaller = draft.smallerAction, !smaller.isEmpty {
+                        benefit("A little less on busy days", detail: smaller, symbol: "leaf")
+                            .padding(.top, 4)
+                    }
+                    setupAction("Make it my own", detail: "Create a different habit or browse all ideas.", symbol: "plus") {
+                        model.selectStarter("")
+                        model.requestHabitCreation()
+                    }
+                    .accessibilityIdentifier("onboarding.createHabit")
+                    Text("Just a starting point. Review the name, rhythm and target to make it yours.")
+                        .font(.footnote).foregroundStyle(Color.appInkSecondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
             }
-            setupAction(model.firstHabit == nil ? "Create First Habit" : "Create Another Habit",
-                        detail: "Explore ideas or make it your own.", symbol: "plus") { model.requestHabitCreation() }
-                .accessibilityIdentifier("onboarding.createHabit")
-        case .attention:
-            if model.hasAttentionGoal {
-                readiness("Your attention goal is ready.", detail: "You choose what to log.", symbol: "hourglass")
-            }
-            setupAction(model.hasAttentionGoal ? "Create Another Goal" : "Create Attention Goal",
-                        detail: "A daily budget for something you'd like less of.", symbol: "plus") { model.requestAttentionCreation() }
-                .accessibilityIdentifier("onboarding.createAttention")
         case .companion:
             CompanionSelectionView(selectedAnimal: $model.profile.selectedAnimal)
             Toggle("Show companion", isOn: $model.profile.companionEnabled)
                 .padding(16).background(palette.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-        case .reminder:
-            if let habit = model.firstHabit, let service = model.reminderService {
-                NavigationLink {
-                    HabitReminderView(habitID: habit.id, schedule: habit.schedule, service: service)
-                } label: {
-                    actionLabel("Set Up a Reminder", detail: habit.name, symbol: "bell.badge")
-                }
-                .buttonStyle(RilovaPressStyle()).accessibilityIdentifier("onboarding.setupReminder")
-            } else {
-                benefit("Whenever it helps", detail: "Add a reminder from any habit's details later.", symbol: "bell")
-            }
         case .finish:
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 18) {
                 if let habit = model.firstHabit {
-                    readiness(habit.name, detail: "Ready for your first check-in.", symbol: habit.iconName)
+                    readiness(habit.name, detail: "Saved. Available on its scheduled days.", symbol: habit.iconName)
+                    contextualSupport(for: habit)
                 } else {
-                    benefit("Start with something small", detail: "Your first habit can be one tap away.", symbol: "plus.circle")
+                    benefit("Your beginning is still yours", detail: "Add a habit whenever you're ready. Nothing has been logged.", symbol: "plus.circle")
                 }
-                Text("Change your goals, companion and reminders anytime.")
+                Text("Add more habits from Today. Change your companion and reminders whenever you like.")
                     .font(.subheadline).foregroundStyle(Color.appInkSecondary).fixedSize(horizontal: false, vertical: true)
             }
+
         }
     }
 
@@ -252,13 +311,95 @@ struct OnboardingView: View {
         .contentShape(RoundedRectangle(cornerRadius: 22))
     }
 
+    // Earlier answers can be revised without silently replacing an idea the
+    // person explicitly chose. Keep that choice visible alongside new ideas.
+    private var visibleStarters: [HabitStarter] {
+        var starters = viewModel.suggestedStarters
+        if let id = viewModel.selectedStarterID,
+           !starters.contains(where: { $0.id == id }),
+           let selected = HabitStarter.library.first(where: { $0.id == id }) {
+            starters.insert(selected, at: 0)
+        }
+        return starters
+    }
+
+    private var continueTitle: String {
+        if viewModel.step == .finish { return "Start My Day" }
+        if viewModel.step == .habit && viewModel.firstHabit == nil { return "Review Habit" }
+        return "Continue"
+    }
+
+    private var canContinue: Bool {
+        if viewModel.step == .goal { return viewModel.selectedGoal != nil }
+        if viewModel.step == .habit && viewModel.firstHabit == nil { return viewModel.selectedHabitDraft != nil }
+        return true
+    }
+
+    private func choice(_ title: String, detail: String, symbol: String, selected: Bool,
+                        action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(alignment: .top, spacing: 14) {
+                Image(systemName: symbol).font(.title3.weight(.medium)).foregroundStyle(palette.accent)
+                    .frame(width: 42, height: 42)
+                    .background(palette.accentSoft, in: RoundedRectangle(cornerRadius: 14))
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(title).font(.headline).foregroundStyle(Color.appInk)
+                    Text(detail).font(.subheadline).foregroundStyle(Color.appInkSecondary)
+                }.fixedSize(horizontal: false, vertical: true)
+                Spacer(minLength: 0)
+                Image(systemName: selected ? "checkmark.circle.fill" : "circle")
+                    .font(.title3).foregroundStyle(selected ? palette.accent : Color.appInkSecondary)
+                    .accessibilityHidden(true)
+            }
+            .padding(18).frame(maxWidth: .infinity, minHeight: 76, alignment: .leading)
+            .background(selected ? palette.accentSoft : palette.surface,
+                        in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 22).strokeBorder(
+                selected ? palette.accent : Color.appInkSecondary.opacity(0.25), lineWidth: selected ? 2 : 1))
+            .contentShape(RoundedRectangle(cornerRadius: 22))
+        }
+        .buttonStyle(RilovaPressStyle())
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(selected ? .isSelected : [])
+        .accessibilityValue(selected ? "Selected" : "Not selected")
+    }
+
+    @ViewBuilder private func contextualSupport(for habit: Habit) -> some View {
+        if viewModel.selectedObstacle == .forgetting, let service = viewModel.reminderService {
+            NavigationLink {
+                HabitReminderView(habitID: habit.id, schedule: habit.schedule, service: service)
+            } label: {
+                actionLabel("A nudge, if it helps", detail: "Choose an optional reminder for \(habit.name).", symbol: "bell.badge")
+            }
+            .buttonStyle(RilovaPressStyle()).accessibilityIdentifier("onboarding.setupReminder")
+            Text("Permission is requested only if you save an enabled reminder. You can continue without one.")
+                .font(.footnote).foregroundStyle(Color.appInkSecondary).fixedSize(horizontal: false, vertical: true)
+        } else if viewModel.selectedGoal == .focus || viewModel.selectedObstacle == .distractions {
+            benefit("Make a little room", detail: "Open \(habit.name) → Make Room to choose a focus session. You decide when to start.", symbol: "hourglass")
+                .accessibilityIdentifier("onboarding.makeRoomTip")
+        } else if viewModel.selectedObstacle == .time || viewModel.selectedObstacle == .tooBig {
+            benefit("A smaller step still counts as effort", detail: "Open \(habit.name) → Log Progress to review smaller actions. Small steps stay separate from a full check-in.", symbol: "leaf")
+        } else {
+            benefit("One place to begin", detail: "Your habit appears on Today on its scheduled days. Log what you do, when you do it.", symbol: "sun.max")
+        }
+    }
+
+    private func scheduleLabel(_ schedule: HabitSchedule) -> String {
+        switch schedule {
+        case .daily: return "Every day"
+        case .timesPerWeek(let count): return "\(count) times a week"
+        case .weekdays(let days): return "\(days.count) days a week"
+        }
+    }
+
     private var title: String {
         switch viewModel.step {
         case .welcome: return "Habits that fit real life."
-        case .habit: return "Start with one small habit"
-        case .attention: return "Make room for what matters"
+        case .goal: return "Where would you like to begin?"
+        case .obstacle: return "What tends to get in the way?"
+        case .habit: return viewModel.firstHabit == nil ? "One small place to start" : "A beginning, already saved"
         case .companion: return "A little company, your way"
-        case .reminder: return "A nudge, when it helps"
         case .finish: return "Your day, at your pace"
         }
     }
@@ -266,13 +407,14 @@ struct OnboardingView: View {
     private var description: String {
         switch viewModel.step {
         case .welcome: return "Find your rhythm. Protect your attention. Keep going, even when life interrupts."
-        case .habit: return "Build up or cut down. Set a rhythm that works for you, with a simple check-in or an amount to track."
-        case .attention: return "Choose a daily budget and log time manually. Rilova doesn't automatically measure phone use."
+        case .goal: return "Choose what feels useful today."
+        case .obstacle: return "We can shape your starting ideas around it. This is optional, and stays in this setup."
+        case .habit: return "Choose an idea to review. Change anything before you save, or make something of your own."
         case .companion: return "A quiet reflection of your progress. No care tasks, points or obligations. You can hide it anytime."
-        case .reminder: return "Reminders are optional. Notification permission is requested only when you save an enabled reminder."
-        case .finish: return "Your tracking starts on this device. Optional connections stay in your control."
+        case .finish: return "Begin when you're ready. You can shape the rest as you go."
         }
     }
+
 }
 
 /// Each stage is an illustrated setting, never a projection of user progress.
@@ -294,7 +436,7 @@ private struct OnboardingScene: View {
                 if contrast == .increased || reduceTransparency {
                     palette.heroEnd
                 } else {
-                    RilovaWorldArtwork(scene: step == .attention || step == .companion ? .sanctuary : .coast)
+                    RilovaWorldArtwork(scene: step == .obstacle || step == .companion ? .sanctuary : .coast)
                         .frame(width: geometry.size.width, height: geometry.size.height)
                         .clipped()
                 }
@@ -335,7 +477,7 @@ private struct OnboardingScene: View {
             .scaleEffect(appeared || reduceMotion ? 1 : 0.90, anchor: .bottom)
             .offset(y: appeared || reduceMotion ? 0 : 14)
             .position(x: size.width * (compact ? 0.5 : position), y: size.height * (compact ? 0.5 : 0.60))
-        case .habit:
+        case .goal, .habit:
             HStack(alignment: .center, spacing: compact ? 10 : 14) {
                 sceneTile("book.closed.fill", tint: Color(red: 0.97, green: 0.78, blue: 0.53), angle: -12, size: dimension * 0.67)
                     .offset(y: appeared || reduceMotion ? 9 : 26)
@@ -345,7 +487,7 @@ private struct OnboardingScene: View {
             }
             .rotationEffect(.degrees(appeared || reduceMotion ? 0 : -4))
             .position(x: size.width * 0.51, y: size.height * 0.51)
-        case .attention:
+        case .obstacle:
             ZStack {
                 Circle().stroke(.white.opacity(0.25), lineWidth: 1).padding(-14)
                 Circle().fill(Color(red: 0.08, green: 0.19, blue: 0.28))
@@ -356,10 +498,7 @@ private struct OnboardingScene: View {
             .frame(width: dimension, height: dimension)
             .scaleEffect(appeared || reduceMotion ? 1 : 0.84)
             .position(x: size.width * (compact ? 0.5 : 0.64), y: size.height * 0.50)
-        case .reminder:
-            sceneTile("bell.fill", tint: Color(red: 0.98, green: 0.80, blue: 0.53), angle: appeared || reduceMotion ? -8 : 8, size: dimension * 0.88)
-                .offset(y: appeared || reduceMotion ? 0 : 12)
-                .position(x: size.width * (compact ? 0.5 : 0.37), y: size.height * 0.49)
+
         }
     }
 

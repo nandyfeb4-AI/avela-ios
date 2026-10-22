@@ -11,7 +11,13 @@ The current repository contains the implemented MVP and simulator verification
 material. Signed-device validation, production configuration, and distribution
 review remain required before TestFlight or App Store release.
 
-The latest visual follow-up is **Expressive World**: original bundled coastal
+First use now offers **guided setup**: choose an optional direction and obstacle,
+review one editable starting habit, choose a companion, then begin. Back, Skip
+and Explore first preserve an easy account-free path. Answers stay in memory on
+device; only an explicit Save creates a habit. Existing completed setup and
+progress are preserved. See the [native guided-setup preview](docs/verification/guided-setup/index.html).
+
+The broader visual direction is **Expressive World**: original bundled coastal
 artwork, a grounded saved companion, coloured habit identities, flowing calendar
 ribbons and interactive factual report panels. See the
 [native preview gallery](docs/verification/expressive-world/index.html) for light,
@@ -60,8 +66,8 @@ preceding full regression and its repairs.
   why-this-matters reminders and deliberate smaller-action/lighter-schedule
   choices. Four editable routine starters group existing habits; 3/7-day restart
   plans never silently pause, reschedule or complete them.
-- **Onboarding and Settings:** six illustrated, account-free setup stages with
-  optional skips and contextual permissions. Settings includes appearance,
+- **Onboarding and Settings:** six illustrated, account-free stages with goal/obstacle
+  choices, editable first-habit review, Back/Skip/Explore first and contextual support. Settings includes appearance,
   companion/feedback preferences, archived habits, privacy and Premium.
 - **Siri and Shortcuts:** explicit habit success, quantity progress, manual
   attention minutes and linked Make Room starts. Actions open Rilova and require
