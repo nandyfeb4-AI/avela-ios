@@ -208,6 +208,8 @@ Examples:
 - Companion state derives deterministically from user data.
 - Companion never uses manipulative guilt.
 - Animations respect Reduce Motion.
+- Successful companion/feedback preference saves show an inline confirmation; unsaved edits and failures must not claim success.
+- Same-screen save, session-presentation and integration actions acknowledge work at the initiating control. Async operations show an in-progress state and prevent duplicate submissions. Only completed operations may show success; editing a draft or changing its context clears older acknowledgments. Navigation, dismissed editors and updated lists remain valid feedback for actions that already use those patterns.
 
 ---
 
@@ -514,3 +516,41 @@ Quick Log's stale-day state offers a user-initiated 'Refresh habits' App Intent 
 ## Two focused widgets — 2026-10-07
 
 Owner-approved simplification supersedes the earlier three-widget Home Screen gallery: Quick Log and Routine, each small/medium. Retire Habit Progress and Attention Budget registrations; their app features remain. Active-session Live Activities stay separate. Quick Log uses an explicit Log button; Routine is an explicitly selected saved sequence with individual check-ins, never bulk completion. Quantity logging opens the canonical logger.
+
+
+## Owner-approved calendar and native capture integrations — 2026-10-07
+
+Make Room offers optional Plan Time in Calendar: choose a future start and 1–180 elapsed minutes, then review/save in Apple's event editor. No calendar read permission, automatic scheduling, habit success or session start is implied. The selected calendar may sync/share the event through its existing settings; the user sees the title before saving. Avela does not retain calendar IDs or promise two-way synchronization.
+
+Siri/Shortcuts adds Make Room for a Habit, selecting an existing active habit and timed-session goal. It starts and links the session through the existing canonical flow, never completing habits or blocking apps. Repeated start while the goal already runs is rejected rather than duplicated. Watch successful check-ins now show inline confirmation rather than a dismissible success alert; errors remain explicit. Unsupported quantity actions are visibly disabled.
+
+Optional app shielding is approved as a direction but **not implemented/enabled** in this pass. Its entitlement, monitor extension and reliable unblocking lifecycle are separate gates described in SCREEN_TIME_INTEGRATION_PLAN.md. Current focus/phone-free copy continues to say no apps are blocked.
+
+
+## Owner-approved optional app protection — 2026-10-07
+
+The owner pulled forward optional, user-selected app/category/website shielding for explicitly started Make Room sessions. This supersedes the earlier blanket blocking deferral for this opt-in development feature only; automatic usage metering remains deferred. Individual Screen Time permission, explicit picker Save and per-session protection toggle are required. One protected interval, 15 minutes–8 hours, with native monitor expiry and visible Stop. Neither restrictions nor time elapsed complete habits or verify focus. Unprotected sessions remain usable. Release availability is disabled until signed-device lifecycle testing and distribution entitlement approval; see SCREEN_TIME_INTEGRATION_PLAN.md.
+
+## Rilova brand identity — 2026-10-07
+
+The approved public name is **Rilova**, with the tagline **Habits that fit real life.** This changes presentation only; tracking rules, feature scope and stored progress remain unchanged.
+
+## Original artwork refinement
+
+Owner-approved icon refinement changes artwork only: gradient flowing R primary, dark counterpart for iOS dark appearance. Product scope, records, integration identity and tagline remain unchanged.
+
+## Scoped Rilova presentation polish — 2026-10-07
+
+The owner approved a scoped branding polish for onboarding and Today. Welcome introduces the approved icon/name/tagline on a quiet gradient card; Today uses a deeper branded habit-summary gradient. No scope, subscription, permission, progress or data-model change. All existing saved themes remain supported.
+
+## Calendar and Insights brand continuity — 2026-10-07
+
+Owner-approved continuation of scoped presentation polish: Calendar uses the coordinated dark summary treatment while preserving the landscape and factual daily ribbons. Insights gets a soft review header and stable rounded numerals; chart reading surfaces remain neutral. Existing metrics, completed-week rules, theme selection, history and integrations are unchanged.
+
+## Remaining Rilova presentation continuity — 2026-10-08
+
+Owner-approved refinement covers habit detail/logging/Momentum/lifetime, Make Room/attention, History/reflection, Settings/forms, Premium and compact system surfaces. Shared introductory cards, readable neutral controls and stable numeric typography unify the existing product. No new feature, tracking rule, identifier, data model, permission, purchase policy or dependency is introduced. Device accessibility and signed integration release gates remain separate.
+
+## Widget Undo — approved 2026-10-08
+
+Quick Log and Routine offer an explicit **Undo** button for a displayed current-day simple check-in, replacing the completed-row refresh action. Undo removes only its captured completion ID through the app-owned repository without foregrounding Rilova; it is never a silent toggle or bulk reset. Log becomes available again after the saved removal. The same action area is retained, and actual visible rows stay pinned briefly so Undo remains discoverable. Current amount targets, quantity-derived sources and Apple Health imports are reviewed in the app. Names and quantity links retain deliberate navigation. Older snapshots without an exact undo ID cannot enable deletion. WidgetKit controls acknowledgment/reordering latency.

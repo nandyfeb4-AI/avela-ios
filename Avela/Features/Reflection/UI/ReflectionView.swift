@@ -17,11 +17,18 @@ struct ReflectionView: View {
     var body: some View {
         List {
             Section {
-                Text(viewModel.weekLabel).font(.subheadline.weight(.medium)).foregroundStyle(.secondary)
-                    .accessibilityIdentifier("reflection.week")
-                Text("A little space to reflect").font(.title2.weight(.semibold))
-                Text("Private notes for your week. Progress stays based on your recorded check-ins.")
-                    .foregroundStyle(.secondary)
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(viewModel.weekLabel).font(.subheadline.weight(.medium)).foregroundStyle(Color.appInkSecondary)
+                        .accessibilityIdentifier("reflection.week")
+                    Text("A little space to reflect").font(.title2.weight(.semibold)).fontDesign(.rounded)
+                        .foregroundStyle(Color.appInk).accessibilityAddTraits(.isHeader)
+                    Text("Private notes for your week. Progress stays based on your recorded check-ins.")
+                        .foregroundStyle(Color.appInkSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .rilovaHeaderSurface()
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Color.clear)
             }
             if viewModel.hasLoaded {
                 Section {
@@ -126,7 +133,7 @@ struct ReflectionView: View {
     }
 
     private var privacyNote: some View {
-        Text("Optional, private notes stored on this device. Apple device backups may include them. Avela doesn't send them to a server.")
+        Text("Optional, private notes stored on this device. Apple device backups may include them. Rilova doesn't send them to a server.")
     }
     private func edit() { viewModel.beginEditing(); showingEditor = true }
 }
@@ -140,9 +147,11 @@ private struct ReflectionEditorView: View {
         NavigationStack {
             Form {
                 Section {
-                    Text(viewModel.weekLabel).font(.headline)
-                    Text("Write what feels useful. One answer is enough, and you can leave either prompt blank.")
-                        .foregroundStyle(.secondary)
+                    RilovaSectionHeader(title: viewModel.weekLabel,
+                        subtitle: "Write what feels useful. One answer is enough, and you can leave either prompt blank.",
+                        symbol: "square.and.pencil")
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
                 }
                 Section("What Helped?") {
                     TextEditor(text: $viewModel.draft.whatHelped)

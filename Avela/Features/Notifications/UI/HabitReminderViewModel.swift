@@ -6,8 +6,12 @@ import OSLog
 @Observable
 final class HabitReminderViewModel {
     let habitID: UUID
-    var isEnabled = false
-    var time: Date
+    var isEnabled = false {
+        didSet { if isEnabled != oldValue { didSave = false } }
+    }
+    var time: Date {
+        didSet { if time != oldValue { didSave = false } }
+    }
     private(set) var permission: ReminderPermission = .notDetermined
     private(set) var isSaving = false
     private(set) var didSave = false
@@ -22,6 +26,8 @@ final class HabitReminderViewModel {
     }
 
     func load() async {
+        didSave = false
+        errorMessage = nil
         do {
             if let reminder = try service.reminder(for: habitID) {
                 isEnabled = reminder.isEnabled
@@ -35,6 +41,7 @@ final class HabitReminderViewModel {
         guard !isSaving else { return }
         isSaving = true
         didSave = false
+        errorMessage = nil
         defer { isSaving = false }
         let components = Calendar.current.dateComponents([.hour, .minute], from: time)
         do {

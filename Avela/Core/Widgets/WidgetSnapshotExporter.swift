@@ -30,7 +30,7 @@ struct WidgetSnapshotExporter {
         habits habitRepository: HabitRepository, attention attentionRepository: AttentionRepository,
         profiles: CompanionProfileRepository? = nil,
         activity: HabitActivityRepository? = nil, routines: RoutineRepository? = nil, theme: AppTheme = .tidewater,
-        pinnedIDs: [UUID]? = nil, pinUntil: Date? = nil, message: String? = nil,
+        pinnedIDs: [UUID]? = nil, pinUntil: Date? = nil, message: String? = nil, reloadTimelines: Bool = true,
         asOf date: Date = Date(), calendar: Calendar = .current
     ) throws {
         let today = TodayViewModel(repository: habitRepository, calendar: calendar)
@@ -54,15 +54,23 @@ struct WidgetSnapshotExporter {
             completedHabits: today.rows.filter(\.isCompletedToday).count,
             dueHabits: today.rows.count
         )
+        let dayStart = calendar.startOfDay(for: date)
+        let dayEnd = calendar.date(byAdding: .day, value: 1, to: dayStart) ?? dayStart.addingTimeInterval(86_400)
+        let dayKey = LocalDay.key(for: date, calendar: calendar)
         let rows = try today.rows.map { row in
-            WidgetHabitSnapshot(id: row.id, name: row.name, iconName: row.iconName,
+            let completion = row.requiresQuantityLogging ? nil : try habitRepository
+                .completions(for: row.id, in: DateInterval(start: dayStart, end: dayEnd))
+                .first { $0.id == row.todaysCompletionID && $0.localDateKey == dayKey && $0.occurredAt <= date
+                    && $0.source != .healthKit && $0.source != .quantity }
+            return WidgetHabitSnapshot(id: row.id, name: row.name, iconName: row.iconName,
                 isCompletedToday: row.isCompletedToday,
                 progressLabel: row.quantityProgress ?? row.weeklyProgress.map { "\($0.completed)/\($0.target) this week" } ?? row.scheduleDescription,
                 configurationRevision: try habitRepository.activeConfiguration(for: row.id, on: date)?.revision,
                 requiresQuantityLogging: row.requiresQuantityLogging,
                 isSkippedToday: row.isSkippedToday,
                 checkInLabel: row.polarity == .avoidance ? "Log success" : "Log check-in",
-                weeklyTargetMet: row.weeklyProgress.map { $0.completed >= $0.target } ?? false)
+                weeklyTargetMet: row.weeklyProgress.map { $0.completed >= $0.target } ?? false,
+                undoCompletionID: completion?.id)
         }
         var snapshot = WidgetSnapshot(
             localDateKey: LocalDay.key(for: date, calendar: calendar), generatedAt: date,
@@ -83,6 +91,6 @@ struct WidgetSnapshotExporter {
         snapshot.quickLogPinUntil = pinUntil
         snapshot.quickLogMessage = message
         try store.save(snapshot)
-        WidgetCenter.shared.reloadAllTimelines()
+        if reloadTimelines { WidgetCenter.shared.reloadAllTimelines() }
     }
 }

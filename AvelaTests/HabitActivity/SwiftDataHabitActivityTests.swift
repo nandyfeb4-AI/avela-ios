@@ -435,6 +435,83 @@ final class HabitActivityViewModelTests: XCTestCase {
         XCTAssertNil(model.timer)
         XCTAssertEqual(model.entries.map(\.amount), [2])
     }
+
+    func testAcknowledgmentStaysWithItsTrackingDayAndConfiguration() throws {
+        let fixture = try fixture()
+        fixture.model.log(.quantity, now: fixture.now)
+        XCTAssertEqual(fixture.model.confirmation, "Progress saved.")
+        fixture.model.load()
+        XCTAssertEqual(fixture.model.confirmation, "Progress saved.", "Reading the same saved context keeps feedback visible")
+
+        let previous = calendar.date(byAdding: .day, value: -1, to: fixture.now)!
+        fixture.model.selectedDate = previous
+        XCTAssertTrue(fixture.model.confirmation.isEmpty, "Do not carry today's success message onto another day")
+        fixture.model.load()
+        fixture.model.amount = 2
+        fixture.model.log(.quantity, now: fixture.now, reviewedDate: previous)
+        XCTAssertEqual(fixture.model.confirmation, "Progress saved.")
+
+        fixture.model.selectedDate = fixture.now
+        XCTAssertTrue(fixture.model.confirmation.isEmpty)
+        fixture.model.load()
+        fixture.model.amount = 3
+        fixture.model.log(.quantity, now: fixture.now)
+        XCTAssertEqual(fixture.model.confirmation, "Progress saved.")
+        try fixture.activities.configure(habitID: fixture.habit.id, target: .init(amount: 20, unit: .pages),
+            smallerAction: "One paragraph", at: fixture.now)
+        fixture.model.load()
+        XCTAssertTrue(fixture.model.confirmation.isEmpty, "A changed target is a different review context")
+        XCTAssertEqual(fixture.model.total, 4)
+        XCTAssertEqual(try fixture.activities.entries(for: fixture.habit.id, on: previous).map(\.amount), [2])
+    }
+
+    func testFailedQuantityAttemptClearsEarlierSuccessAndRetryRetainsTheDraft() throws {
+        let fixture = try fixture()
+        fixture.model.amount = 3
+        fixture.model.log(.quantity, now: fixture.now)
+        XCTAssertEqual(fixture.model.confirmation, "Progress saved.")
+
+        fixture.model.amount = 0
+        fixture.model.log(.quantity, now: fixture.now)
+        XCTAssertTrue(fixture.model.confirmation.isEmpty)
+        XCTAssertNotNil(fixture.model.errorMessage)
+        XCTAssertEqual(fixture.model.amount, 0)
+        XCTAssertEqual(try fixture.activities.entries(for: fixture.habit.id, on: fixture.now).map(\.amount), [3])
+
+        fixture.model.amount = 2
+        fixture.model.log(.quantity, now: fixture.now)
+        XCTAssertNil(fixture.model.errorMessage)
+        XCTAssertEqual(fixture.model.confirmation, "Progress saved.")
+        XCTAssertEqual(fixture.model.amount, 2)
+        XCTAssertEqual(fixture.model.total, 5)
+        XCTAssertEqual(try fixture.activities.entries(for: fixture.habit.id, on: fixture.now).count, 2)
+    }
+
+    func testTimerFailureCannotRetainAnEarlierQuantityAcknowledgment() throws {
+        let fixture = try fixture(unit: .minutes)
+        let repository = RetryTimerRepository(wrapping: fixture.activities)
+        let model = HabitActivityViewModel(habitID: fixture.habit.id, repository: repository,
+            habits: fixture.habits, calendar: calendar)
+        model.selectedDate = fixture.now
+        let timer = HabitTimerState(habitID: fixture.habit.id, dayKey: LocalDay.key(for: fixture.now, calendar: calendar),
+            startedAt: nil, elapsedSeconds: 125)
+        try fixture.activities.saveTimer(timer, now: fixture.now)
+        model.load()
+        model.log(.quantity, now: fixture.now)
+        XCTAssertEqual(model.confirmation, "Progress saved.")
+
+        model.logTimer(now: fixture.now)
+        XCTAssertTrue(model.confirmation.isEmpty)
+        XCTAssertNotNil(model.errorMessage)
+        XCTAssertEqual(model.timer, timer)
+        XCTAssertEqual(model.total, 1)
+
+        model.logTimer(now: fixture.now)
+        XCTAssertEqual(model.confirmation, "Timer minutes saved.")
+        XCTAssertNil(model.errorMessage)
+        XCTAssertNil(model.timer)
+        XCTAssertEqual(model.total, 3, "A retry adds the timer once while preserving the earlier quantity entry")
+    }
 }
 
 @MainActor

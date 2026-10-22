@@ -58,3 +58,8 @@ Do not publish an Accessibility Nutrition Label until its specific criteria have
 ## Verification evidence
 
 Final run results and preview links are recorded in SETUP.md and verification/design-quality/README.md. Passing selected native audit types is not a certification of every screen or assistive workflow. The performance benchmark measures one calculator with 1,095 recorded days in the simulator, not startup or physical-device UI latency.
+
+
+## Account-independent readiness — October 7, 2026
+
+Settings' App Protection row and the largest-text habit-form clipping findings are resolved. The optional private reason now opens in a separate, wrapping editor after core setup; hiding/saving/relaunch remains covered. Both largest-text native audits pass without suppression. Final affected run: three UI tests, zero failures; earlier full unit baseline: 545 passing. Debug test build and unsigned Release build succeed, and checked DEBUG hooks remain absent from Release. This is not a full UI-suite or physical-device verification claim. [Evidence and remaining release gates](verification/release-readiness/README.md).

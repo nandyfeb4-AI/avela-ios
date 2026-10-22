@@ -5,6 +5,81 @@ import UIKit
 
 @MainActor
 final class CompanionTests: XCTestCase {
+    func testSettingsConfirmationFollowsSaveAndClearsForEveryEditablePreference() throws {
+        let repository = SettingsProfileRepository()
+        repository.stored.onboardingCompleted = true
+        let model = CompanionSettingsViewModel(repository: repository)
+        model.load()
+        XCTAssertFalse(model.didSave)
+
+        model.profile.selectedAnimal = .fox
+        XCTAssertEqual(try repository.profile().selectedAnimal, .owl, "Selection remains a draft until Save")
+        model.save()
+        XCTAssertTrue(model.didSave)
+        XCTAssertEqual(try repository.profile(), model.profile)
+        XCTAssertTrue(try repository.profile().onboardingCompleted)
+
+        model.profile.companionEnabled = false
+        XCTAssertFalse(model.didSave)
+        XCTAssertTrue(try repository.profile().companionEnabled)
+        model.save()
+        XCTAssertTrue(model.didSave)
+
+        model.profile.hapticsEnabled = false
+        XCTAssertFalse(model.didSave)
+        model.save()
+        XCTAssertTrue(model.didSave)
+
+        model.profile.selectedAnimal = .otter
+        XCTAssertFalse(model.didSave)
+        model.save()
+        XCTAssertTrue(model.didSave)
+        XCTAssertEqual(try repository.profile(), model.profile)
+        XCTAssertTrue(try repository.profile().onboardingCompleted)
+    }
+
+    func testSettingsFailedSaveClearsOldConfirmationAndAllowsRetryWithDraftIntact() {
+        let repository = SettingsProfileRepository()
+        let model = CompanionSettingsViewModel(repository: repository)
+        model.load()
+        model.save()
+        XCTAssertTrue(model.didSave)
+
+        repository.failWrites = true
+        model.save()
+        XCTAssertFalse(model.didSave, "An earlier successful save must not mask a failed one")
+        XCTAssertEqual(model.errorMessage, "Couldn't update your preferences. Please try again.")
+
+        model.profile.selectedAnimal = .otter
+        model.profile.hapticsEnabled = false
+        let draft = model.profile
+        model.save()
+        XCTAssertFalse(model.didSave)
+        XCTAssertEqual(model.profile, draft)
+        XCTAssertEqual(repository.stored.selectedAnimal, .owl)
+
+        repository.failWrites = false
+        model.save()
+        XCTAssertTrue(model.didSave)
+        XCTAssertNil(model.errorMessage)
+        XCTAssertEqual(repository.stored, draft)
+    }
+
+    func testSettingsReloadFailureClearsConfirmationAndPreservesCurrentDraft() {
+        let repository = SettingsProfileRepository()
+        let model = CompanionSettingsViewModel(repository: repository)
+        model.load()
+        model.save()
+        XCTAssertTrue(model.didSave)
+        let draft = model.profile
+
+        repository.failReads = true
+        model.load()
+        XCTAssertFalse(model.didSave)
+        XCTAssertNotNil(model.errorMessage)
+        XCTAssertEqual(model.profile, draft)
+    }
+
     func testFourPresentationStatesUseDistinctExistingPosesForEveryAnimal() throws {
         XCTAssertEqual(CompanionPresentationState.allCases.count, 4)
         for animal in CompanionAnimal.allCases {
@@ -140,5 +215,23 @@ final class CompanionTests: XCTestCase {
         }
         let reopened = try ModelContainer(for: schema, configurations: [configuration])
         XCTAssertEqual(try SwiftDataCompanionProfileRepository(modelContext: reopened.mainContext).profile(), expected)
+    }
+}
+
+@MainActor
+private final class SettingsProfileRepository: CompanionProfileRepository {
+    var stored = CompanionProfile()
+    var failReads = false
+    var failWrites = false
+    private enum Failure: Error { case unavailable }
+
+    func profile() throws -> CompanionProfile {
+        if failReads { throw Failure.unavailable }
+        return stored
+    }
+
+    func save(_ profile: CompanionProfile) throws {
+        if failWrites { throw Failure.unavailable }
+        stored = profile
     }
 }

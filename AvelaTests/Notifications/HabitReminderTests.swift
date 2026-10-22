@@ -133,6 +133,95 @@ final class HabitReminderTests: XCTestCase {
         XCTAssertEqual(try repository.reminder(for: id), HabitReminder(habitID: id, isEnabled: true, hour: 9, minute: 30))
     }
 
+    func testSettingsSaveConfirmationClearsForEveryDraftEditAndReload() async throws {
+        let fixture = try Fixture()
+        fixture.adapter.status = .authorized
+        let model = HabitReminderViewModel(habitID: fixture.habit.id, service: fixture.service)
+        await model.load()
+        XCTAssertFalse(model.didSave)
+
+        model.isEnabled = true
+        await model.save()
+        XCTAssertTrue(model.didSave)
+        XCTAssertEqual(try fixture.reminders.reminder(for: fixture.habit.id)?.isEnabled, true)
+
+        model.isEnabled = false
+        XCTAssertFalse(model.didSave, "An unsaved disabled draft must not claim to be saved")
+        XCTAssertEqual(try fixture.reminders.reminder(for: fixture.habit.id)?.isEnabled, true)
+        await model.save()
+        XCTAssertTrue(model.didSave)
+
+        let savedTime = model.time
+        model.time = savedTime.addingTimeInterval(60)
+        XCTAssertFalse(model.didSave, "An unsaved time must clear the earlier confirmation")
+        await model.save()
+        XCTAssertTrue(model.didSave)
+        let components = Calendar.current.dateComponents([.hour, .minute], from: model.time)
+        let reminder = try XCTUnwrap(fixture.reminders.reminder(for: fixture.habit.id))
+        XCTAssertEqual(reminder.hour, components.hour)
+        XCTAssertEqual(reminder.minute, components.minute)
+
+        await model.load()
+        XCTAssertFalse(model.didSave, "Reopening/reloading is not a new save")
+        XCTAssertFalse(model.isEnabled)
+        XCTAssertNil(model.errorMessage)
+    }
+
+    func testSettingsFailureClearsPreviousSuccessAndRetryAcknowledgesOnlyAfterDeliveryReturns() async throws {
+        let fixture = try Fixture()
+        fixture.adapter.status = .authorized
+        let model = HabitReminderViewModel(habitID: fixture.habit.id, service: fixture.service)
+        model.isEnabled = true
+        await model.save()
+        XCTAssertTrue(model.didSave)
+
+        fixture.adapter.failReplacement = true
+        await model.save()
+        XCTAssertFalse(model.didSave)
+        XCTAssertFalse(model.isSaving)
+        XCTAssertNotNil(model.errorMessage)
+        XCTAssertTrue(model.isEnabled, "Keep the user's draft available after failure")
+        let draftTime = model.time
+
+        let suspended = expectation(description: "Retry waiting for platform replacement")
+        fixture.adapter.failReplacement = false
+        fixture.adapter.holdNextReplacement = true
+        fixture.adapter.onReplacementSuspended = { suspended.fulfill() }
+        let retry = Task { await model.save() }
+        await fulfillment(of: [suspended], timeout: 2)
+
+        XCTAssertTrue(model.isSaving)
+        XCTAssertFalse(model.didSave, "Do not report success while the platform call is pending")
+        XCTAssertNil(model.errorMessage, "A retry must clear the previous error immediately")
+        let replacementCalls = fixture.adapter.replacementCalls
+        await model.save()
+        XCTAssertEqual(fixture.adapter.replacementCalls, replacementCalls, "Ignore a second save while busy")
+
+        fixture.adapter.resumeReplacement()
+        await retry.value
+        XCTAssertFalse(model.isSaving)
+        XCTAssertTrue(model.didSave)
+        XCTAssertNil(model.errorMessage)
+        XCTAssertEqual(model.time, draftTime)
+        XCTAssertEqual(fixture.adapter.requests.count, 1)
+    }
+
+    func testSettingsDeniedPermissionStillAcknowledgesSavedPreferenceWithoutClaimingDelivery() async throws {
+        let fixture = try Fixture()
+        fixture.adapter.status = .denied
+        let model = HabitReminderViewModel(habitID: fixture.habit.id, service: fixture.service)
+        model.isEnabled = true
+
+        await model.save()
+
+        XCTAssertTrue(model.didSave)
+        XCTAssertEqual(model.permission, .denied)
+        XCTAssertNil(model.errorMessage)
+        XCTAssertEqual(try fixture.reminders.reminder(for: fixture.habit.id)?.isEnabled, true)
+        XCTAssertTrue(fixture.adapter.requests.isEmpty)
+        XCTAssertEqual(fixture.adapter.permissionRequests, 0)
+    }
+
     private func makeHabit(schedule: HabitSchedule) -> Habit {
         Habit(id: UUID(), name: "Read", iconName: "book.fill", category: .learning, polarity: .positive,
               schedule: schedule, createdAt: Date(), updatedAt: Date(), archivedAt: nil, sortOrder: 0)
@@ -168,6 +257,8 @@ final class HabitReminderTests: XCTestCase {
         var holdNextReplacement = false
         var onReplacementSuspended: (() -> Void)?
         var replacementCalls = 0
+        var failReplacement = false
+        private enum TestError: Error { case replacementFailed }
         private var replacementContinuation: CheckedContinuation<Void, Never>?
         func permission() async -> ReminderPermission { status }
         func requestPermission() async throws -> ReminderPermission {
@@ -177,6 +268,7 @@ final class HabitReminderTests: XCTestCase {
         }
         func replaceHabitReminders(with requests: [HabitReminderRequest]) async throws {
             replacementCalls += 1
+            if failReplacement { throw TestError.replacementFailed }
             if holdNextReplacement {
                 holdNextReplacement = false
                 await withCheckedContinuation { continuation in

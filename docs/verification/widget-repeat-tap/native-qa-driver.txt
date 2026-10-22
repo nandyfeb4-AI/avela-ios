@@ -1,0 +1,59 @@
+    // Native widget verification driver; only the dedicated QA simulator.
+    func testWidgetLogAndRepeatTapStayOnHome() throws {
+        guard ProcessInfo.processInfo.environment["SIMULATOR_UDID"] == "2ACFE418-44EC-4A44-9B2A-1B45BDF1EF38" else { throw XCTSkip("QA only") }
+        let app = XCUIApplication(); app.launch(); app.activate()
+        for _ in 0..<6 {
+            let next = app.buttons["onboarding.continue"]
+            if next.waitForExistence(timeout: 2) { next.tap() } else { break }
+        }
+        let today = app.tabBars.buttons["Today"]
+        XCTAssertTrue(today.waitForExistence(timeout: 15), app.debugDescription); today.tap()
+        XCTAssertTrue(app.buttons["today.addHabitButton"].waitForExistence(timeout: 15))
+        if app.staticTexts["today.emptyState.title"].exists {
+            for name in ["Reading", "Walk"] {
+                app.buttons["today.addHabitButton"].tap()
+                let field = app.textFields["habitForm.nameField"]
+                XCTAssertTrue(field.waitForExistence(timeout: 10)); field.tap(); field.typeText(name)
+                app.buttons["habitForm.saveButton"].tap()
+                XCTAssertTrue(app.buttons["Mark \(name) complete"].waitForExistence(timeout: 10))
+            }
+        }
+        let done = app.buttons["today.doneToggle"]
+        if done.exists && done.label.contains("collapsed") { done.tap() }
+        for name in ["Reading", "Walk"] {
+            if app.buttons["Mark \(name) complete"].exists { continue }
+            let undo = app.buttons["Undo completion for \(name)"]
+            for _ in 0..<5 { if undo.isHittable { break }; app.swipeUp() }
+            XCTAssertTrue(undo.waitForExistence(timeout: 10), app.debugDescription); undo.tap()
+        }
+        XCUIDevice.shared.press(.home)
+        let home = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        for _ in 0..<5 { if home.staticTexts["Quick Log"].firstMatch.isHittable { break }; home.swipeLeft() }
+        let refresh = home.buttons["Refresh today's habits without opening Rilova"]
+        if refresh.exists { refresh.tap() }
+        for name in ["Reading", "Walk"] {
+            app.terminate()
+            let query = home.buttons.matching(NSPredicate(format: "label == %@", "Log check-in for " + name))
+            XCTAssertTrue(query.firstMatch.waitForExistence(timeout: 20), home.debugDescription)
+            let logs = query.allElementsBoundByIndex.sorted { $0.frame.minY < $1.frame.minY }
+            let log = try XCTUnwrap(logs.first)
+            let oldFrame = log.frame
+            log.tap()
+            XCTAssertNotEqual(app.state, .runningForeground)
+            let doneQuery = home.buttons.matching(NSPredicate(format: "label == %@", name + ", logged today"))
+            let sameRow = NSPredicate { _, _ in
+                doneQuery.allElementsBoundByIndex.contains { abs($0.frame.minY - oldFrame.minY) < 1 }
+            }
+            XCTAssertEqual(XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: sameRow, object: doneQuery)], timeout: 25), .completed, home.debugDescription)
+            let button = try XCTUnwrap(doneQuery.allElementsBoundByIndex.min { abs($0.frame.minY - oldFrame.minY) < abs($1.frame.minY - oldFrame.minY) })
+            XCTAssertEqual(button.frame.width.rounded(), oldFrame.width.rounded())
+            if name == "Reading" { XCTAssertEqual(button.frame.minY.rounded(), oldFrame.minY.rounded(), "Acknowledgment must retain row position") }
+            button.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: 0.5)).tap()
+            XCTAssertNotEqual(app.state, .runningForeground)
+            XCTAssertTrue(doneQuery.firstMatch.waitForExistence(timeout: 20))
+            if name == "Reading" { XCTAssertEqual(button.frame.minY.rounded(), oldFrame.minY.rounded(), "Refresh must preserve unexpired pin") }
+            button.tap()
+            XCTAssertNotEqual(app.state, .runningForeground)
+            let capture = XCTAttachment(screenshot: home.screenshot()); capture.name = "Fixed widget first and repeated taps \(name)"; capture.lifetime = .keepAlways; add(capture)
+        }
+    }

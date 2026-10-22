@@ -11,20 +11,23 @@ struct PremiumPaywallView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(manager.hasPremium ? "You're using Avela Premium" : "Room for more of what matters")
-                            .font(.largeTitle.bold())
-                        Text("Free includes 3 active habits and 1 attention goal. Premium adds unlimited habits and attention goals.")
-                            .foregroundStyle(.secondary)
-                    }
+                    RilovaSectionHeader(
+                        title: manager.hasPremium ? "You're using Rilova Premium" : "Room for more of what matters",
+                        subtitle: "Free includes 3 active habits and 1 attention goal. Premium adds unlimited habits and attention goals.",
+                        symbol: "sparkles")
 
-                    Label("Unlimited habit tracking", systemImage: "checkmark.circle")
-                    Label("Unlimited attention goals", systemImage: "hourglass")
-                    Label("Your history always stays accessible", systemImage: "clock.arrow.circlepath")
+                    VStack(alignment: .leading, spacing: 16) {
+                        premiumBenefit("Unlimited habit tracking", symbol: "checkmark.circle")
+                        premiumBenefit("Unlimited attention goals", symbol: "hourglass")
+                        premiumBenefit("Your history always stays accessible", symbol: "clock.arrow.circlepath")
+                    }
+                    .padding(18)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(palette.surface, in: RoundedRectangle(cornerRadius: 22))
 
                     if !manager.hasPremium {
                         if manager.plans.isEmpty {
-                            Text("Subscription options aren't available right now. You can keep using Avela for free.")
+                            Text("Subscription options aren't available right now. You can keep using Rilova for free.")
                                 .foregroundStyle(.secondary)
                                 .accessibilityIdentifier("premium.productsUnavailable")
                             Button { Task { await manager.loadPlans() } } label: { Text("Try Again").frame(minHeight: 44) }
@@ -36,10 +39,12 @@ struct PremiumPaywallView: View {
                                 } label: {
                                     HStack(alignment: .top, spacing: 12) {
                                         Image(systemName: selectedProductID == plan.id ? "checkmark.circle.fill" : "circle")
+                                            .foregroundStyle(palette.accent)
                                             .accessibilityHidden(true)
                                         VStack(alignment: .leading, spacing: 4) {
                                             Text(plan.displayName).font(.headline)
                                             Text("\(plan.displayPrice) / \(plan.billingPeriod)")
+                                                .foregroundStyle(Color.appInkSecondary)
                                         }
                                         Spacer(minLength: 0)
                                     }
@@ -47,8 +52,13 @@ struct PremiumPaywallView: View {
                                     .padding(16)
                                     .background(palette.surface)
                                     .clipShape(RoundedRectangle(cornerRadius: 16))
+                                    .overlay {
+                                        RoundedRectangle(cornerRadius: 16)
+                                            .strokeBorder(selectedProductID == plan.id ? palette.accent : Color.clear, lineWidth: 2)
+                                    }
                                 }
                                 .buttonStyle(.plain)
+                                .foregroundStyle(Color.appInk)
                                 .accessibilityIdentifier("premium.plan.\(plan.id)")
                                 .accessibilityAddTraits(selectedProductID == plan.id ? .isSelected : [])
                             }
@@ -89,7 +99,7 @@ struct PremiumPaywallView: View {
                 .padding(20)
             }
             .appThemeCanvas()
-            .navigationTitle("Avela Premium")
+            .navigationTitle("Rilova Premium")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -119,6 +129,19 @@ struct PremiumPaywallView: View {
 
     private var selectedPlan: SubscriptionPlan? {
         manager.plans.first { $0.id == selectedProductID }
+    }
+
+    private func premiumBenefit(_ text: String, symbol: String) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: symbol)
+                .font(.body.weight(.medium))
+                .foregroundStyle(palette.accent)
+                .frame(width: 24)
+                .accessibilityHidden(true)
+            Text(text).font(.subheadline.weight(.medium))
+                .foregroundStyle(Color.appInk)
+                .fixedSize(horizontal: false, vertical: true)
+        }
     }
 
     private func selectInitialPlan() {

@@ -18,6 +18,25 @@ final class QuickLogTests: XCTestCase {
         habits = SwiftDataHabitRepository(modelContext: container.mainContext, calendar: calendar)
         activities = SwiftDataHabitActivityRepository(context: container.mainContext, habits: habits, calendar: calendar)
     }
+    func testRepeatedUndoAcknowledgmentRequiresCurrentPublishedPendingFact() {
+        let id = UUID()
+        var row = WidgetHabitSnapshot(id: id, name: "Read", iconName: "book", isCompletedToday: false, progressLabel: "Daily")
+        row.requiresQuantityLogging = false
+        row.isSkippedToday = false
+        var snapshot = WidgetSnapshot(localDateKey: LocalDay.key(for: date, calendar: calendar), generatedAt: date, habits: [row], attentionGoals: [])
+        snapshot.timeZoneIdentifier = calendar.timeZone.identifier
+        XCTAssertTrue(snapshot.alreadyShowsUndone(habitID: id, asOf: date, calendar: calendar))
+        XCTAssertFalse(snapshot.alreadyShowsUndone(habitID: UUID(), asOf: date, calendar: calendar))
+        XCTAssertFalse(snapshot.alreadyShowsUndone(habitID: id, asOf: date.addingTimeInterval(-1), calendar: calendar))
+        XCTAssertFalse(snapshot.alreadyShowsUndone(habitID: id, asOf: date.addingTimeInterval(86400), calendar: calendar))
+        snapshot.timeZoneIdentifier = "America/Denver"
+        XCTAssertFalse(snapshot.alreadyShowsUndone(habitID: id, asOf: date, calendar: calendar))
+        row.undoCompletionID = UUID()
+        snapshot = WidgetSnapshot(localDateKey: LocalDay.key(for: date, calendar: calendar), generatedAt: date, habits: [row], attentionGoals: [])
+        snapshot.timeZoneIdentifier = calendar.timeZone.identifier
+        XCTAssertFalse(snapshot.alreadyShowsUndone(habitID: id, asOf: date, calendar: calendar))
+    }
+
     func testRichTideTextAndActionsHaveContrastAcrossEveryTheme() {
         func luminance(_ rgb: UInt32) -> Double {
             let channels = [16, 8, 0].map { Double((rgb >> $0) & 255) / 255 }
@@ -41,9 +60,9 @@ final class QuickLogTests: XCTestCase {
         }
     }
 
-    private func create(_ schedule: HabitSchedule = .daily) throws -> Habit {
+    private func create(_ schedule: HabitSchedule = .daily, at created: Date? = nil) throws -> Habit {
         try habits.createHabit(HabitDraft(name: "Read", iconName: "book", category: .learning,
-                                         polarity: .positive, schedule: schedule), at: date.addingTimeInterval(-3600))
+                                         polarity: .positive, schedule: schedule), at: created ?? date.addingTimeInterval(-3600))
     }
     private func log(_ habit: Habit, day: String? = nil, zone: String? = nil, revision: Int = 0) throws -> QuickLogService.Result {
         try QuickLogService(habits: habits, activities: activities, calendar: calendar).log(
@@ -115,6 +134,134 @@ final class QuickLogTests: XCTestCase {
         XCTAssertEqual(try log(habit), .alreadyLogged)
         XCTAssertEqual(try rows().count, 1)
     }
+    private func undo(_ habit: Habit, _ completion: Completion, day: String? = nil,
+                      zone: String? = nil, revision: Int = 0) throws -> QuickLogService.UndoResult {
+        try QuickLogService(habits: habits, activities: activities, calendar: calendar).undo(
+            habitID: habit.id, completionID: completion.id,
+            dayKey: day ?? LocalDay.key(for: date, calendar: calendar),
+            timeZone: zone ?? calendar.timeZone.identifier, revision: revision, asOf: date)
+    }
+
+    func testUndoRemovesExactFactAndStaleRepeatCannotRemoveReloggedCheckIn() throws {
+        let habit = try create()
+        XCTAssertEqual(try log(habit), .logged)
+        let first = try XCTUnwrap(rows().first)
+        XCTAssertEqual(try undo(habit, first), .undone)
+        XCTAssertTrue(try rows().isEmpty)
+        XCTAssertEqual(try undo(habit, first), .alreadyUndone)
+        XCTAssertEqual(try log(habit), .logged)
+        let second = try XCTUnwrap(rows().first)
+        XCTAssertNotEqual(first.id, second.id)
+        XCTAssertEqual(try undo(habit, first), .alreadyUndone)
+        XCTAssertEqual(try rows().map(\.id), [second.id])
+        let reader = SwiftDataHabitRepository(modelContext: ModelContext(container), calendar: calendar)
+        XCTAssertEqual(try reader.completions(in: DateInterval(start: date.addingTimeInterval(-1), end: date.addingTimeInterval(1))).map(\.id), [second.id])
+    }
+
+    func testUndoLeavesOtherHabitsEarlierDaysAndAdditionalSameDayFactsIntact() throws {
+        let habit = try create(at: date.addingTimeInterval(-2 * 86_400)), other = try create()
+        let yesterday = try habits.recordCompletion(habitID: habit.id, at: date.addingTimeInterval(-86_400), source: .app, note: nil)
+        let first = try habits.recordCompletion(habitID: habit.id, at: date, source: .widget, note: nil)
+        let second = try habits.recordCompletion(habitID: habit.id, at: date, source: .app, note: nil)
+        let otherFact = try habits.recordCompletion(habitID: other.id, at: date, source: .app, note: nil)
+        XCTAssertEqual(try undo(habit, otherFact), .alreadyUndone)
+        XCTAssertEqual(try undo(habit, first), .undone)
+        XCTAssertEqual(Set(try rows().map(\.id)), [second.id, otherFact.id])
+        XCTAssertEqual(try habits.completions(for: habit.id, in: DateInterval(start: yesterday.occurredAt, end: yesterday.occurredAt.addingTimeInterval(1))), [yesterday])
+    }
+
+    func testStaleUndoRejectsMidnightTimeZoneAndConfigurationChanges() throws {
+        let habit = try create()
+        XCTAssertEqual(try log(habit), .logged)
+        let fact = try XCTUnwrap(rows().first), oldDay = LocalDay.key(for: date, calendar: calendar)
+        XCTAssertEqual(try undo(habit, fact, day: "2026-10-05"), .needsApp)
+        XCTAssertEqual(try undo(habit, fact, zone: "America/Denver"), .needsApp)
+        try habits.updateHabit(id: habit.id, with: HabitDraft(name: "Read", iconName: "book", category: .learning,
+            polarity: .avoidance, schedule: .daily), at: date)
+        XCTAssertEqual(try undo(habit, fact), .needsApp)
+        date = calendar.date(byAdding: .day, value: 1, to: date)!
+        XCTAssertEqual(try undo(habit, fact, day: oldDay, revision: 1), .needsApp)
+        XCTAssertEqual(try habits.completions(for: habit.id, in: DateInterval(start: fact.occurredAt, end: fact.occurredAt.addingTimeInterval(1))), [fact])
+    }
+
+    func testClockRollbackCannotUndoAFutureDatedFact() throws {
+        let habit = try create()
+        let future = try habits.recordCompletion(habitID: habit.id, at: date.addingTimeInterval(60), source: .app, note: nil)
+        XCTAssertEqual(try undo(habit, future), .needsApp)
+        XCTAssertEqual(try habits.completions(for: habit.id, in: DateInterval(start: date, end: date.addingTimeInterval(61))), [future])
+    }
+
+    func testUndoRejectsArchivedOrNewQuantityHabitWithoutDeletingProgress() throws {
+        let habit = try create()
+        XCTAssertEqual(try log(habit), .logged)
+        let fact = try XCTUnwrap(rows().first)
+        try activities.configure(habitID: habit.id, target: HabitQuantityTarget(amount: 10, unit: .pages), smallerAction: "", at: date)
+        XCTAssertEqual(try undo(habit, fact), .needsApp)
+        try habits.archiveHabit(id: habit.id, at: date)
+        XCTAssertEqual(try undo(habit, fact), .needsApp)
+        XCTAssertEqual(try rows(), [fact])
+    }
+
+    func testUndoDoesNotRemoveAppleHealthOrQuantityDerivedFacts() throws {
+        let habit = try create()
+        let health = try habits.recordCompletion(habitID: habit.id, at: date, source: .healthKit, note: nil)
+        XCTAssertEqual(try undo(habit, health), .needsApp)
+        XCTAssertEqual(try rows(), [health])
+        let quantity = try habits.recordCompletion(habitID: habit.id, at: date, source: .quantity, note: nil)
+        XCTAssertEqual(try undo(habit, quantity), .needsApp)
+        XCTAssertEqual(Set(try rows().map(\.id)), [health.id, quantity.id])
+    }
+
+    func testFlexibleWeeklyUndoRemovesOnlyTodayAndPreservesEarlierWeekProgress() throws {
+        let habit = try create(.timesPerWeek(3), at: date.addingTimeInterval(-2 * 86_400))
+        let earlier = try habits.recordCompletion(habitID: habit.id, at: date.addingTimeInterval(-86_400), source: .app, note: nil)
+        XCTAssertEqual(try log(habit), .logged)
+        let today = try XCTUnwrap(rows().first)
+        XCTAssertEqual(try undo(habit, today), .undone)
+        XCTAssertEqual(try habits.completions(for: habit.id, in: LocalDay.weekInterval(containing: date, calendar: calendar)), [earlier])
+    }
+
+    func testUndoCapabilitiesRequireExactRecordAndSimpleCurrentState() throws {
+        var done = row("Read", completed: true)
+        let old = snapshot([done])
+        let decoded = try JSONDecoder().decode(WidgetSnapshot.self, from: JSONEncoder().encode(old))
+        XCTAssertNil(decoded.habits.first?.undoCompletionID)
+        XCTAssertFalse(QuickLogProjection(snapshot: decoded, date: date).canUndo(done))
+        done.undoCompletionID = UUID()
+        let projection = QuickLogProjection(snapshot: snapshot([done]), date: date)
+        XCTAssertTrue(projection.canUndo(done))
+        done.requiresQuantityLogging = true
+        XCTAssertFalse(projection.canUndo(done))
+        done.requiresQuantityLogging = false; done.isSkippedToday = true
+        XCTAssertFalse(projection.canUndo(done))
+        done.isSkippedToday = false
+        var pending = row("Pending"); pending.undoCompletionID = done.undoCompletionID
+        XCTAssertFalse(projection.canUndo(pending))
+    }
+
+    func testExporterOffersUndoOnlyForActualSimpleCompletionAndClearsItAfterUndo() throws {
+        let habit = try create(), healthHabit = try create(), pending = try create()
+        XCTAssertEqual(try log(habit), .logged)
+        let fact = try XCTUnwrap(rows().first)
+        _ = try habits.recordCompletion(habitID: healthHabit.id, at: date, source: .healthKit, note: nil)
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = WidgetSnapshotStore(directoryURL: directory)
+        let exporter = WidgetSnapshotExporter(store: store)
+        let attention = SwiftDataAttentionRepository(modelContext: container.mainContext, calendar: calendar)
+        try exporter.export(habits: habits, attention: attention, activity: activities, asOf: date, calendar: calendar)
+        let before = try XCTUnwrap(store.load())
+        XCTAssertEqual(before.habits.first { $0.id == habit.id }?.undoCompletionID, fact.id)
+        XCTAssertNil(before.habits.first { $0.id == healthHabit.id }?.undoCompletionID)
+        XCTAssertNil(before.habits.first { $0.id == pending.id }?.undoCompletionID)
+        XCTAssertEqual(try undo(habit, fact), .undone)
+        try exporter.export(habits: habits, attention: attention, activity: activities, asOf: date, calendar: calendar)
+        let after = try XCTUnwrap(store.load())
+        XCTAssertNil(after.habits.first { $0.id == habit.id }?.undoCompletionID)
+        XCTAssertEqual(after.habits.first { $0.id == habit.id }?.isCompletedToday, false)
+        XCTAssertEqual(after.habits.first { $0.id == healthHabit.id }?.isCompletedToday, true)
+    }
+
     private func snapshot(_ rows: [WidgetHabitSnapshot]) -> WidgetSnapshot {
         var value = WidgetSnapshot(localDateKey: LocalDay.key(for: date, calendar: calendar), generatedAt: date, habits: rows, attentionGoals: [])
         value.timeZoneIdentifier = calendar.timeZone.identifier
@@ -224,6 +371,19 @@ final class QuickLogTests: XCTestCase {
         XCTAssertEqual(selected.timeZoneIdentifier, value.timeZoneIdentifier)
         XCTAssertNil(selected.quickLogPinnedIDs)
         XCTAssertNil(RoutineLogProjection(snapshot: value, routineID: UUID()).selectedSnapshot)
+    }
+
+    func testRoutineRetainsTappedVisibleRowsDuringAcknowledgmentThenAdvances() throws {
+        let first = row("Already done", completed: true), second = row("Just logged", completed: true), third = row("Next")
+        var value = snapshot([first, second, third])
+        let routineID = UUID()
+        value.routines = [WidgetRoutineSnapshot(id: routineID, name: "Morning", habitIDs: [first.id, second.id, third.id])]
+        value.quickLogPinnedIDs = [second.id, third.id, UUID()]
+        value.quickLogPinUntil = date.addingTimeInterval(30)
+        let selected = try XCTUnwrap(RoutineLogProjection(snapshot: value, routineID: routineID).selectedSnapshot)
+        XCTAssertEqual(selected.quickLogPinnedIDs, [second.id, third.id])
+        XCTAssertEqual(QuickLogProjection(snapshot: selected, date: date).rows(capacity: 1).first?.id, second.id)
+        XCTAssertEqual(QuickLogProjection(snapshot: selected, date: date.addingTimeInterval(30)).rows(capacity: 1).first?.id, third.id)
     }
 
     func testRoutineNextStepFollowsActualSavedSuccessAndNeverFabricatesBulkCompletion() throws {

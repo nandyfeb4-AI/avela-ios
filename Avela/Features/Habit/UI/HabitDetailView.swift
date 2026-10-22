@@ -29,13 +29,16 @@ struct HabitDetailView: View {
                             VStack(alignment: .leading, spacing: 6) {
                                 Text(display.name)
                                     .font(.title2.weight(.semibold))
+                                    .fontDesign(.rounded).foregroundStyle(Color.appInk)
                                     .accessibilityIdentifier("habitDetail.name")
                                 Text("\(display.categoryLabel) · \(display.polarityLabel)")
                                     .font(.caption)
-                                    .foregroundStyle(.secondary)
+                                    .foregroundStyle(Color.appInkSecondary)
                             }
                         }
-                        .padding(.vertical, 12)
+                        .rilovaHeaderSurface()
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
                     }
 
                     if let memory = viewModel.whyMemory {

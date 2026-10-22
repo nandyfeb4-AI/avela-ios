@@ -3,6 +3,8 @@ import Observation
 
 @MainActor @Observable
 final class CloudBackupModel {
+    enum FeedbackAction { case backup, checkBackups }
+
     private let store: BackupStore
     private let provider: any CloudBackupProvider
     private let defaults: UserDefaults
@@ -10,6 +12,8 @@ final class CloudBackupModel {
     private var generation = 0
     private var lastDigest: String?
     private(set) var isBusy = false
+    private(set) var feedbackAction: FeedbackAction?
+    private(set) var actionSucceeded = false
     private(set) var backups: [CloudBackupSummary] = []
     private(set) var preview: BackupArchive?
     private(set) var previewHabitCount = 0
@@ -37,6 +41,11 @@ final class CloudBackupModel {
         refreshRestoreEligibility()
     }
     func refreshRestoreEligibility() { canRestore = (try? store.canRestore()) == true }
+    private func beginFeedback(for action: FeedbackAction? = nil) {
+        feedbackAction = action
+        actionSucceeded = false
+        message = nil
+    }
     private var deviceID: String {
         if let existing = defaults.string(forKey: "avela.cloudBackup.deviceID") { return existing }
         let id = UUID().uuidString
@@ -46,6 +55,7 @@ final class CloudBackupModel {
     func setEnabled(_ enabled: Bool) async {
         if !enabled { disable(); return }
         guard !isBusy else { return }
+        beginFeedback()
         isBusy = true
         defer { isBusy = false }
         let currentGeneration = generation
@@ -59,6 +69,7 @@ final class CloudBackupModel {
         if isEnabled { scheduleBackup() }
     }
     func disable() {
+        beginFeedback()
         generation += 1
         queuedBackup?.cancel(); queuedBackup = nil
         isEnabled = false
@@ -96,6 +107,7 @@ final class CloudBackupModel {
     func backupNow(automatic: Bool = false, at date: Date = Date()) async {
         guard isEnabled, !isBusy else { return }
         if automatic, let lastSuccessfulBackup, date.timeIntervalSince(lastSuccessfulBackup) < 600 { return }
+        beginFeedback(for: .backup)
         isBusy = true
         defer { isBusy = false }
         let currentGeneration = generation
@@ -110,6 +122,7 @@ final class CloudBackupModel {
             lastSuccessfulBackup = date
             lastDigest = archive.checksum
             defaults.set(date, forKey: successKey)
+            actionSucceeded = true
             message = "Eligible tracking was backed up to your private iCloud storage."
             // Immutable snapshots are kept until the user explicitly deletes one.
             // An upload never overwrites an earlier recovery point.
@@ -118,6 +131,7 @@ final class CloudBackupModel {
     }
     func loadBackups() async {
         guard !isBusy else { return }
+        beginFeedback(for: .checkBackups)
         refreshRestoreEligibility()
         isBusy = true; defer { isBusy = false }
         let currentGeneration = generation
@@ -125,11 +139,16 @@ final class CloudBackupModel {
             _ = try await provider.accountIdentity()
             let result = try await provider.list()
             guard generation == currentGeneration else { return }
-            backups = result; message = nil
+            backups = result
+            actionSucceeded = true
+            message = result.isEmpty
+                ? "No iCloud recovery points were found. Your local progress is unchanged."
+                : "Found \(result.count) iCloud recovery \(result.count == 1 ? "point" : "points")."
         } catch { backups = []; message = "Couldn't load iCloud backups. Your local progress is unchanged." }
     }
     func prepareRestore(_ summary: CloudBackupSummary) async {
         guard !isBusy else { return }
+        beginFeedback()
         preview = nil
         isBusy = true; defer { isBusy = false }
         let currentGeneration = generation
@@ -147,6 +166,7 @@ final class CloudBackupModel {
     @discardableResult
     func confirmRestore() -> Bool {
         guard let archive = preview, !isBusy else { return false }
+        beginFeedback()
         do {
             try store.restore(archive)
             refreshRestoreEligibility()
@@ -159,6 +179,7 @@ final class CloudBackupModel {
     func cancelRestore() { preview = nil }
     func deleteBackup(_ summary: CloudBackupSummary) async {
         guard !isBusy else { return }
+        beginFeedback()
         isBusy = true; defer { isBusy = false }
         let currentGeneration = generation
         do {

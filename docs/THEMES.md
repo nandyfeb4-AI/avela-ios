@@ -122,3 +122,7 @@ Today places compact habit/attention summaries and actionable habits before rout
 This supersedes the earlier uniformly accent-tinted reading-card guidance. Reading surfaces are white/charcoal; themes vary atmosphere, controls, progress, heroes and scenery together. Existing completion, recovery, Undo, permission, subscription and persistence rules are unchanged. Companion art, widgets, Watch and Dynamic Island retain their existing system-surface treatment.
 
 Current shared reading surfaces: `#FFFFFF` / `#202329`; secondary surfaces: `#F0EFEC` / `#2A2D34`. Page endpoints: `#F1F3F5` to `#F7F5F0` in light, `#131720` to `#101216` in dark; the middle sky wash varies by theme in AppPalette. Text/hero/accent contrast checks include the new surfaces and sky stops. Scenery has no informational text. Identity-symbol contrast checks cover its composited 10% tile tint on custom and native surfaces.
+
+## Scoped Rilova presentation polish — 2026-10-07
+
+`AppPalette.welcomeColors` and `todaySummaryColors` are scoped overrides for welcome and Today only. Other saved themes retain their atmosphere/accent. Tidewater welcome light endpoints: E4F2E8, DDEFEF, EDF2F4; dark: 183D3C, 15343E, 172C35. Today summary endpoints: 14636A, 0C4953, 072E32. New contrast regression samples both gradient segments at eleven positions for every theme and appearance: primary/secondary ink on welcome and white on the summary must meet 4.5:1. Increase Contrast uses existing contrast-tested solid surfaces.

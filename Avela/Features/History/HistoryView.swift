@@ -6,17 +6,26 @@ import SwiftUI
 /// renders what `HistoryViewModel` hands it.
 struct HistoryView: View {
     @Bindable var viewModel: HistoryViewModel
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
         VStack(spacing: 0) {
-            Text(viewModel.rangeLabel)
+            HStack(spacing: 10) {
+                if !dynamicTypeSize.isAccessibilitySize {
+                    AppIconBadge(symbol: "clock.arrow.circlepath")
+                        .accessibilityHidden(true)
+                }
+                Text(viewModel.rangeLabel)
                 .font(.subheadline.weight(.medium))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color.appInk)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal)
-                .padding(.top, 12)
-                .padding(.bottom, 10)
                 .accessibilityIdentifier("history.rangeLabel")
+            }
+            .padding(14)
+            .background(Color.appSurface, in: RoundedRectangle(cornerRadius: 18))
+            .padding(.horizontal, 20)
+            .padding(.top, 12)
+            .padding(.bottom, 4)
 
             if viewModel.sections.isEmpty {
                 emptyState

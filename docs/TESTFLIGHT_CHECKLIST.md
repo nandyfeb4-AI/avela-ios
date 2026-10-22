@@ -301,3 +301,13 @@ Enrichment candidate device checks: pair a physical Apple Watch, opt in to sendi
 - [ ] System-device-backup handling for local Health-derived records reviewed.
 - [ ] No unavailable backup control shipped as a supposedly working feature; either
       complete these gates or omit the cloud entry from the submission build.
+
+
+## Optional app protection gate — 2026-10-07
+
+- [ ] Paid development team, app/group/monitor IDs and profiles configured.
+- [ ] Real selected-app restrictions, minimum duration, Stop, denied/revoked access verified.
+- [ ] Background/terminated-app/reboot/locked-device expiry and stale callbacks verified; no expired shielding.
+- [ ] Family Controls distribution approval granted for both app and AvelaProtectionMonitor.
+- [ ] Enable Release availability only after these pass. Runtime hiding does not remove the embedded entitlement's approval requirement; omit capability/extension if shipping without approval.
+- [ ] Adjust earlier reviewer no-blocking copy to the submitted build; ordinary sessions and Shortcuts do not enable protection. No Screen Time usage-measurement claim.

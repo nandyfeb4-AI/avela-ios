@@ -10,12 +10,12 @@ enum ShortcutLoggingError: LocalizedError, Equatable {
 
     var errorDescription: String? {
         switch self {
-        case .habitUnavailable: return "This habit is no longer active. Choose an active habit in Avela."
+        case .habitUnavailable: return "This habit is no longer active. Choose an active habit in Rilova."
         case .habitNotDue: return "This habit isn't scheduled for today. Nothing was logged."
-        case .budgetUnavailable: return "Choose a daily attention budget. Windows and sessions use check-ins in Avela."
+        case .budgetUnavailable: return "Choose a daily attention budget. Windows and sessions use check-ins in Rilova."
         case .invalidMinutes: return "Enter more than 0 and no more than 1,440 minutes. Nothing was logged."
         case .quantityRequired: return "Use Log Habit Progress to add an amount in the configured unit before recording full success."
-        case .storeUnavailable: return "Your data couldn't be opened or saved. Open Avela and try again."
+        case .storeUnavailable: return "Your data couldn't be opened or saved. Open Rilova and try again."
         }
     }
 }

@@ -5,15 +5,31 @@ import XCTest
 final class MVPFlowTests: XCTestCase {
 
 
+    func testSimulatorProtectionSetupExplainsAvailabilityWithoutPermissions() {
+        let app = launch()
+        waitAndTap(app.tabBars.buttons["Settings"])
+        waitAndTap(app.buttons["settings.appProtection"])
+        let unavailable = app.staticTexts["protection.unavailable"]
+        XCTAssertTrue(unavailable.waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["protection.authorize"].exists)
+        XCTAssertFalse(app.buttons["protection.choose"].exists)
+        let capture = XCTAttachment(screenshot: app.screenshot())
+        capture.name = "App protection simulator availability"; capture.lifetime = .keepAlways; add(capture)
+        waitAndTap(app.buttons["Done"])
+        waitAndTap(app.tabBars.buttons["Today"])
+        XCTAssertTrue(app.buttons["today.addHabitButton"].waitForExistence(timeout: 10))
+    }
+
     func testWidgetGuideIsOptionalAndExplainsSeparateControls() {
         let app = launch()
         waitAndTap(app.tabBars.buttons["Settings"])
         waitAndTap(app.buttons["settings.widgetsLink"])
         XCTAssertTrue(app.navigationBars["Home Screen Widgets"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.staticTexts["Tap Log to save a simple check-in here."].exists)
+        XCTAssertTrue(app.staticTexts["Tap Undo to remove that simple check-in here."].exists)
         XCTAssertTrue(app.staticTexts["Tap a habit name to open its details."].exists)
-        XCTAssertTrue(app.staticTexts["Tap + to log an amount or duration in Avela."].exists)
-        let routineHelp = app.staticTexts["Create a routine in Avela first. Add the Routine widget, then touch and hold it → Edit Widget → choose your routine."]
+        XCTAssertTrue(app.staticTexts["Tap + to log an amount or duration in Rilova."].exists)
+        let routineHelp = app.staticTexts["Create a routine in Rilova first. Add the Routine widget, then touch and hold it → Edit Widget → choose your routine."]
         for _ in 0..<4 { if routineHelp.isHittable { break }; app.swipeUp() }
         XCTAssertTrue(routineHelp.exists)
     }
@@ -45,9 +61,11 @@ final class MVPFlowTests: XCTestCase {
         let app = launch(fixture: "recoveryProgress")
         waitAndTap(app.buttons["View recovery progress for Read"])
         waitAndTap(app.buttons["habitDetail.editButton"])
+        waitAndTap(app.buttons["habitForm.reasonLink"])
         let memory = app.textFields["habitForm.whyMemory"]
         waitAndTap(memory)
         memory.typeText("To make space for ideas")
+        waitAndTap(app.navigationBars.buttons.element(boundBy: 0))
         waitAndTap(app.buttons["habitForm.saveButton"])
         let reason = app.staticTexts["habitDetail.whyMemory"]
         XCTAssertTrue(reason.waitForExistence(timeout: 10))
@@ -287,6 +305,8 @@ final class MVPFlowTests: XCTestCase {
         waitAndTap(app.tabBars.buttons["Settings"])
         waitAndTap(app.buttons["settings.backupLink"])
         waitAndTap(app.buttons["backup.refresh"])
+        assertLabel("Checked iCloud", on: app.buttons["backup.refresh"])
+        XCTAssertTrue(app.staticTexts["backup.message"].label.contains("Found 1"))
         waitAndTap(app.buttons["Delete Cloud Copy"])
         XCTAssertTrue(app.alerts["Delete This Recovery Point?"].waitForExistence(timeout: 10))
         waitAndTap(app.alerts.buttons["Cancel"])
@@ -353,6 +373,61 @@ final class MVPFlowTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["A Gentle Restart"].waitForExistence(timeout: 10))
     }
 
+    func testCalendarSaveReportsPlannedTimeWithoutCompletingHabit() {
+        let app = launch()
+        waitAndTap(app.buttons["today.addHabitButton"])
+        let name = app.textFields["habitForm.nameField"]
+        waitAndTap(name); name.typeText("Calendar test reading")
+        waitAndTap(app.buttons["habitForm.saveButton"])
+        waitAndTap(app.buttons["Open Calendar test reading details"])
+        waitAndTap(app.buttons["habitDetail.intention"])
+        waitAndTap(app.buttons["intentionSession.planCalendar"])
+        waitAndTap(app.buttons["calendar.review"])
+        XCTAssertTrue(app.navigationBars["New Event"].waitForExistence(timeout: 10))
+        let save = app.navigationBars["New Event"].buttons.matching(
+            NSPredicate(format: "label IN %@", ["Add", "Save", "Done"])).firstMatch
+        XCTAssertTrue(save.waitForExistence(timeout: 10), app.debugDescription)
+        print("Native Calendar save action: \(save.label)")
+        waitAndTap(save)
+        XCTAssertTrue(app.staticTexts["calendar.saved"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["calendar.saved"].label.contains("no session was started or habit logged"))
+        let capture = XCTAttachment(screenshot: app.screenshot()); capture.name = "Calendar saved as planned time"; capture.lifetime = .keepAlways; add(capture)
+        waitAndTap(app.buttons["Done"].firstMatch)
+        XCTAssertFalse(app.buttons["intentionSession.openStarted"].exists)
+        waitAndTap(app.navigationBars.buttons["Calendar test reading"].firstMatch)
+        let progress = app.staticTexts["habitDetail.progress"]
+        for _ in 0..<6 { if progress.exists { break }; app.swipeDown() }
+        XCTAssertTrue(progress.waitForExistence(timeout: 10))
+        XCTAssertEqual(progress.label, "Not completed yet")
+    }
+
+    func testCalendarReviewAndCancelNeverStartSessionOrCompleteHabit() {
+        let app = launch()
+        waitAndTap(app.buttons["today.addHabitButton"])
+        let name = app.textFields["habitForm.nameField"]
+        waitAndTap(name); name.typeText("Read")
+        waitAndTap(app.buttons["habitForm.saveButton"])
+        waitAndTap(app.buttons["Open Read details"])
+        waitAndTap(app.buttons["habitDetail.intention"])
+        let plan = app.buttons["intentionSession.planCalendar"]
+        for _ in 0..<5 { if plan.isHittable { break }; app.swipeUp() }
+        waitAndTap(plan)
+        XCTAssertTrue(app.navigationBars["Plan Time"].waitForExistence(timeout: 10))
+        let capture = XCTAttachment(screenshot: app.screenshot()); capture.name = "Plan time in Calendar"; capture.lifetime = .keepAlways; add(capture)
+        waitAndTap(app.buttons["calendar.review"])
+        XCTAssertTrue(app.navigationBars["New Event"].waitForExistence(timeout: 10), app.debugDescription)
+        let editor = XCTAttachment(screenshot: app.screenshot()); editor.name = "Native Calendar review"; editor.lifetime = .keepAlways; add(editor)
+        waitAndTap(app.buttons["Cancel"].firstMatch)
+        waitAndTap(app.buttons["Done"].firstMatch)
+        XCTAssertFalse(app.buttons["intentionSession.openStarted"].exists)
+        waitAndTap(app.navigationBars.buttons["Read"].firstMatch)
+        let progress = app.staticTexts["habitDetail.progress"]
+        for _ in 0..<6 { if progress.exists { break }; app.swipeDown() }
+        XCTAssertTrue(progress.waitForExistence(timeout: 10))
+        XCTAssertEqual(progress.label, "Not completed yet")
+        XCTAssertFalse(app.buttons["Undo completion for Read"].exists)
+    }
+
     func testMakeRoomCreatesFocusSessionAndRequiresSeparateHabitLogging() {
         let app = launch(liveActivity: true)
         waitAndTap(app.buttons["today.addHabitButton"])
@@ -361,19 +436,28 @@ final class MVPFlowTests: XCTestCase {
         waitAndTap(app.buttons["habitForm.saveButton"])
         waitAndTap(app.buttons["Open Read details"])
         waitAndTap(app.buttons["habitDetail.intention"])
+        let introduction = XCTAttachment(screenshot: app.screenshot())
+        introduction.name = "Rilova Make Room introduction"; introduction.lifetime = .keepAlways; add(introduction)
         waitAndTap(app.buttons["intentionSession.createGoal"])
         waitAndTap(app.buttons["attentionGoalForm.saveButton"])
-        XCTAssertTrue(app.staticTexts["Using your phone is allowed. Elapsed time never verifies concentration or completes this habit."].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["intentionSession.explanation"].waitForExistence(timeout: 10))
         let toggle = app.switches["intentionSession.islandToggle"]
         XCTAssertTrue(toggle.waitForExistence(timeout: 10))
         for _ in 0..<5 where !toggle.isHittable { app.swipeUp() }
         XCTAssertTrue(toggle.isHittable)
-        toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap()
+        if toggle.value as? String != "1" {
+            toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap()
+        }
+        XCTAssertEqual(toggle.value as? String, "1")
         let ready = XCTAttachment(screenshot: app.screenshot()); ready.name = "Make Room focus setup"; ready.lifetime = .keepAlways; add(ready)
         waitAndTap(app.buttons["intentionSession.start"])
+        XCTAssertTrue(app.buttons["intentionSession.start"].label.contains("Session Started"))
+        XCTAssertFalse(app.buttons["intentionSession.start"].isEnabled)
         let message = app.staticTexts["intentionSession.activityMessage"]
         for _ in 0..<5 where !message.isHittable { app.swipeUp() }
         XCTAssertTrue(message.waitForExistence(timeout: 10))
+        XCTAssertTrue(message.label.contains("requested"),
+                      "An explicitly enabled native Live Activity must start on the supported QA runtime: \(message.label)")
         if message.label.contains("requested") {
             XCUIDevice.shared.press(.home)
             let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
@@ -621,11 +705,49 @@ final class MVPFlowTests: XCTestCase {
         capture.name = "Quality audit calendar"; capture.lifetime = .keepAlways; add(capture)
     }
 
+    func testPrivateReasonEditorAtLargestTextCanHideAndSave() throws {
+        let app = launch(largestText: true)
+        waitAndTap(app.buttons["today.addHabitButton"])
+        waitAndTap(app.textFields["habitForm.nameField"])
+        app.textFields["habitForm.nameField"].typeText("Reading with purpose")
+        let link = app.buttons["habitForm.reasonLink"]
+        for _ in 0..<6 {
+            if link.exists && link.isHittable { break }
+            app.swipeUp()
+        }
+        waitAndTap(link)
+        let memory = app.textFields["habitForm.whyMemory"]
+        waitAndTap(memory)
+        memory.typeText("To make space for ideas")
+        waitAndTap(app.buttons["habitForm.reasonKeyboardDone"])
+        XCTAssertFalse(app.keyboards.firstMatch.exists)
+        let visibility = app.switches["habitForm.showWhyMemory"]
+        for _ in 0..<6 {
+            if visibility.exists && visibility.isHittable { break }
+            app.swipeUp()
+        }
+        XCTAssertTrue(visibility.isHittable)
+        visibility.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: 0.5)).tap()
+        XCTAssertTrue(NSPredicate(format: "value == %@", "0").evaluate(with: visibility))
+        try app.performAccessibilityAudit(for: [.hitRegion, .sufficientElementDescription, .textClipped, .trait])
+        let capture = XCTAttachment(screenshot: app.screenshot())
+        capture.name = "Largest text private reason editor"; capture.lifetime = .keepAlways; add(capture)
+        waitAndTap(app.navigationBars.buttons.element(boundBy: 0))
+        waitAndTap(app.buttons["habitForm.saveButton"])
+        app.terminate(); app.launch()
+        waitAndTap(app.buttons["Open Reading with purpose details"])
+        waitAndTap(app.buttons["habitDetail.editButton"])
+        for _ in 0..<6 {
+            if link.exists && link.isHittable { break }
+            app.swipeUp()
+        }
+        waitAndTap(link)
+        XCTAssertEqual(memory.value as? String, "To make space for ideas")
+        XCTAssertEqual(visibility.value as? String, "0")
+    }
+
     func testWeekdayFormAtLargestTextHasComfortableTargetsAndPersists() throws {
-        let app = launch()
-        app.terminate()
-        app.launchArguments = ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
-        app.launch()
+        let app = launch(largestText: true)
         waitAndTap(app.buttons["today.addHabitButton"])
         waitAndTap(app.textFields["habitForm.nameField"])
         app.textFields["habitForm.nameField"].typeText("Weekly reading")
@@ -646,6 +768,7 @@ final class MVPFlowTests: XCTestCase {
         XCTAssertGreaterThanOrEqual(sunday.frame.width.rounded(), 44)
         XCTAssertEqual(sunday.value as? String, "Selected")
         XCTAssertTrue(app.buttons["habitForm.saveButton"].isEnabled)
+        XCTAssertFalse(app.keyboards.firstMatch.exists, "Browsing the schedule dismisses the entry keyboard")
         try app.performAccessibilityAudit(for: [.hitRegion, .sufficientElementDescription, .textClipped, .trait]) { issue in
             print("Accessibility finding: \(issue.compactDescription); \(issue.element?.debugDescription ?? issue.detailedDescription)")
             return false
@@ -677,6 +800,33 @@ final class MVPFlowTests: XCTestCase {
         waitAndTap(done)
         waitAndTap(app.buttons["Undo completion for Read"])
         XCTAssertTrue(app.buttons["Mark Read complete"].waitForExistence(timeout: 10))
+    }
+
+    func testBrandedWelcomeAtAccessibilityTextSizeKeepsContinueUsable() {
+        let app = launch(onboarding: true, largestText: true)
+        XCTAssertTrue(app.staticTexts["onboarding.brandName"].waitForExistence(timeout: 10))
+        let next = app.buttons["onboarding.continue"]
+        XCTAssertTrue(next.isHittable)
+        XCTAssertGreaterThanOrEqual(next.frame.height, 44)
+        let capture = XCTAttachment(screenshot: app.screenshot())
+        capture.name = "Rilova welcome large text"; capture.lifetime = .keepAlways; add(capture)
+        waitAndTap(next)
+        XCTAssertTrue(app.buttons["onboarding.createHabit"].waitForExistence(timeout: 10))
+    }
+
+    func testBrandedTodayAtAccessibilityTextSizePreservesLoggingAndUndo() {
+        let app = launch(fixture: "populated", largestText: true)
+        let log = app.buttons["Mark Read complete"]
+        XCTAssertTrue(log.waitForExistence(timeout: 10))
+        let capture = XCTAttachment(screenshot: app.screenshot())
+        capture.name = "Rilova Today large text"; capture.lifetime = .keepAlways; add(capture)
+        for _ in 0..<8 { if log.isHittable { break }; app.swipeUp() }
+        XCTAssertTrue(log.isHittable)
+        waitAndTap(log)
+        let undo = app.buttons["today.undoToast.undoButton"]
+        XCTAssertTrue(undo.waitForExistence(timeout: 10))
+        waitAndTap(undo)
+        XCTAssertTrue(log.waitForExistence(timeout: 10))
     }
 
     func testOnboardingWelcomePassesNativeAccessibilityAudit() throws {
@@ -738,6 +888,12 @@ final class MVPFlowTests: XCTestCase {
         waitAndTap(app.buttons["habitDetail.makeEasier"])
         XCTAssertTrue(app.staticTexts["habitAdjustment.current"].waitForExistence(timeout: 10))
         waitAndTap(app.buttons["habitAdjustment.keep"])
+        // Returning preserves the detail List's lower scroll position.
+        // Reveal the schedule before asserting that Cancel kept it unchanged.
+        for _ in 0..<6 {
+            if app.staticTexts["Daily"].exists && app.staticTexts["Daily"].isHittable { break }
+            app.swipeDown()
+        }
         XCTAssertTrue(app.staticTexts["Daily"].waitForExistence(timeout: 10))
         waitAndTap(app.buttons["habitDetail.makeEasier"])
         let capture = XCTAttachment(screenshot: app.screenshot())
@@ -748,6 +904,10 @@ final class MVPFlowTests: XCTestCase {
         XCTAssertTrue(app.buttons["habitAdjustment.review"].exists)
         waitAndTap(app.buttons["habitAdjustment.review"])
         waitAndTap(app.alerts.buttons["Use This Schedule"])
+        for _ in 0..<6 {
+            if app.staticTexts["3x / week"].exists && app.staticTexts["3x / week"].isHittable { break }
+            app.swipeDown()
+        }
         XCTAssertTrue(app.staticTexts["3x / week"].waitForExistence(timeout: 10))
         app.terminate()
         app.launchEnvironment.removeValue(forKey: "AVELA_UI_TEST_SEED_FIXTURE")
@@ -893,6 +1053,8 @@ final class MVPFlowTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["habitCalendar.currentStreak"].waitForExistence(timeout: 10))
         let title = app.staticTexts["habitCalendar.monthTitle"]
         let original = title.label
+        let current = XCTAttachment(screenshot: app.screenshot())
+        current.name = "Branded current calendar"; current.lifetime = .keepAlways; add(current)
         XCTAssertFalse(app.buttons["habitCalendar.nextMonth"].isEnabled)
         waitAndTap(app.buttons["habitCalendar.previousMonth"])
         XCTAssertNotEqual(title.label, original)
@@ -988,10 +1150,13 @@ final class MVPFlowTests: XCTestCase {
         let app = launch()
         waitAndTap(app.tabBars.buttons["Settings"])
         waitAndTap(app.buttons["settings.shortcutsLink"])
-        XCTAssertTrue(app.staticTexts["Log a habit in Avela"].waitForExistence(timeout: 10))
-        XCTAssertTrue(app.staticTexts["Log attention in Avela"].exists)
+        XCTAssertTrue(app.staticTexts["Log a habit in Rilova"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Log attention in Rilova"].exists)
         let explanation = app.staticTexts["shortcuts.additiveExplanation"]
         XCTAssertTrue(explanation.exists)
+        let makeRoom = app.staticTexts["shortcuts.makeRoomExplanation"]
+        for _ in 0..<5 { if makeRoom.isHittable { break }; app.swipeUp() }
+        XCTAssertTrue(makeRoom.exists)
         let capture = XCTAttachment(screenshot: app.screenshot())
         capture.name = "Siri and Shortcuts guide"
         capture.lifetime = .keepAlways
@@ -1017,6 +1182,12 @@ final class MVPFlowTests: XCTestCase {
         add(capture)
         waitAndTap(app.navigationBars.buttons.element(boundBy: 0))
         let skip = app.buttons["habitDetail.skipButton"]
+        // Health is reached from the lower tools section. Native Lists retain
+        // that offset and omit earlier rows from the accessibility tree.
+        for _ in 0..<6 {
+            if skip.exists && skip.isHittable { break }
+            app.swipeDown()
+        }
         XCTAssertTrue(skip.waitForExistence(timeout: 10))
         XCTAssertEqual(skip.label, "Skip Today", "Viewing setup must not complete or skip a habit")
     }
@@ -1109,7 +1280,8 @@ final class MVPFlowTests: XCTestCase {
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         let allow = springboard.alerts.buttons["Allow"]
         if allow.waitForExistence(timeout: 3) { allow.tap() }
-        XCTAssertTrue(app.staticTexts["habitReminder.saved"].waitForExistence(timeout: 10))
+        let reminderSave = app.buttons["habitReminder.save"]
+        assertLabel("Reminder saved", on: reminderSave)
         XCUIDevice.shared.press(.home)
         let notification = springboard.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", "A moment for your habit")).firstMatch
         XCTAssertTrue(notification.waitForExistence(timeout: 20), springboard.debugDescription)
@@ -1160,8 +1332,11 @@ final class MVPFlowTests: XCTestCase {
         try? FileManager.default.removeItem(at: storeDirectory)
     }
 
-    private func launch(onboarding: Bool = false, liveActivity: Bool = false, reminderDelivery: Bool = false, fixture: String? = nil) -> XCUIApplication {
+    private func launch(onboarding: Bool = false, liveActivity: Bool = false, reminderDelivery: Bool = false, fixture: String? = nil, largestText: Bool = false) -> XCUIApplication {
         let app = XCUIApplication()
+        if largestText {
+            app.launchArguments = ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+        }
         app.launchEnvironment["AVELA_UI_TEST_STORE_PATH"] = storeDirectory.appendingPathComponent("MVPFlow.store").path
         if let fixture { app.launchEnvironment["AVELA_UI_TEST_SEED_FIXTURE"] = fixture }
         if reminderDelivery { app.launchEnvironment["AVELA_UI_TEST_REMINDER_DELIVERY"] = "1" }
@@ -1170,6 +1345,11 @@ final class MVPFlowTests: XCTestCase {
         application = app
         app.launch()
         return app
+    }
+
+    private func assertLabel(_ expected: String, on element: XCUIElement, file: StaticString = #filePath, line: UInt = #line) {
+        let changed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", expected), object: element)
+        XCTAssertEqual(XCTWaiter.wait(for: [changed], timeout: 10), .completed, file: file, line: line)
     }
 
     private func waitAndTap(_ element: XCUIElement, file: StaticString = #filePath, line: UInt = #line) {
@@ -1210,6 +1390,13 @@ final class MVPFlowTests: XCTestCase {
         preview.lifetime = .keepAlways
         add(preview)
         waitAndTap(app.buttons["companion.savePreferences"])
+        let saveButton = app.buttons["companion.savePreferences"]
+        XCTAssertEqual(saveButton.label, "Preferences saved")
+        waitAndTap(app.buttons["companion.select.fox"])
+        XCTAssertEqual(saveButton.label, "Save Preferences", "Editing must clear the previous save acknowledgment")
+        waitAndTap(app.buttons["companion.select.otter"])
+        waitAndTap(app.buttons["companion.savePreferences"])
+        XCTAssertEqual(saveButton.label, "Preferences saved")
         waitAndTap(app.tabBars.buttons["Today"])
         let summary = app.staticTexts["companion.summary"]
         XCTAssertTrue(summary.waitForExistence(timeout: 10))
@@ -1227,13 +1414,36 @@ final class MVPFlowTests: XCTestCase {
         // label; tap the trailing native switch and verify the actual value.
         visibility.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).tap()
         XCTAssertEqual(visibility.value as? String, "0")
+        XCTAssertEqual(saveButton.label, "Save Preferences")
         waitAndTap(app.buttons["companion.savePreferences"])
+        XCTAssertEqual(saveButton.label, "Preferences saved")
         waitAndTap(app.tabBars.buttons["Today"])
         XCTAssertFalse(summary.exists)
         app.terminate()
         app.launch()
         XCTAssertFalse(summary.exists)
         XCTAssertTrue(app.buttons["today.addHabitButton"].exists)
+    }
+
+    func testCompanionSaveConfirmationIsReadableAtLargestTextSize() {
+        let app = launch(largestText: true)
+        waitAndTap(app.tabBars.buttons["Settings"])
+        waitAndTap(app.buttons["settings.companionLink"])
+        let saveButton = app.buttons["companion.savePreferences"]
+        waitAndTap(saveButton)
+        XCTAssertGreaterThanOrEqual(saveButton.frame.height.rounded(), 44)
+        XCTAssertEqual(saveButton.label, "Preferences saved")
+        for _ in 0..<4 {
+            if saveButton.frame.maxY <= app.tabBars.firstMatch.frame.minY { break }
+            app.swipeUp()
+        }
+        XCTAssertTrue(saveButton.isHittable)
+        XCTAssertLessThanOrEqual(saveButton.frame.maxY, app.tabBars.firstMatch.frame.minY,
+                                 "The confirmation must be above the tab bar")
+        let capture = XCTAttachment(screenshot: app.screenshot())
+        capture.name = "Companion preferences saved at largest text"
+        capture.lifetime = .keepAlways
+        add(capture)
     }
 
     func testPrivacyIsAccessibleWithoutPremium() {
@@ -1243,11 +1453,36 @@ final class MVPFlowTests: XCTestCase {
         XCTAssertTrue(app.navigationBars["Privacy"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS[c] %@", "Tracking is saved on your device")).firstMatch.exists)
         XCTAssertFalse(app.buttons["premium.subscribeButton"].exists)
+        let calendarDisclosure = app.staticTexts["privacy.calendarDisclosure"]
+        for _ in 0..<16 {
+            if calendarDisclosure.isHittable { break }
+            app.swipeUp()
+        }
+        XCTAssertTrue(calendarDisclosure.isHittable, "Calendar sharing is explained without a subscription")
+        let calendarCapture = XCTAttachment(screenshot: app.screenshot())
+        calendarCapture.name = "Privacy calendar disclosure"
+        calendarCapture.lifetime = .keepAlways
+        add(calendarCapture)
+        let deletionDisclosure = app.staticTexts["privacy.cloudDeletionDisclosure"]
+        for _ in 0..<16 {
+            if deletionDisclosure.isHittable { break }
+            app.swipeUp()
+        }
+        XCTAssertTrue(deletionDisclosure.isHittable, "Uninstalling must not imply deletion of iCloud recovery copies")
+        let deletionCapture = XCTAttachment(screenshot: app.screenshot())
+        deletionCapture.name = "Privacy recovery deletion disclosure"
+        deletionCapture.lifetime = .keepAlways
+        add(deletionCapture)
     }
 
     func testOnboardingOptionalStepsCanBeSkippedAndCompletionSurvivesRelaunch() {
         let app = launch(onboarding: true)
         XCTAssertTrue(app.staticTexts["onboarding.title"].waitForExistence(timeout: 10))
+        XCTAssertEqual(app.staticTexts["onboarding.title"].label, "Habits that fit real life.")
+        XCTAssertTrue(app.staticTexts["onboarding.brandName"].exists)
+        XCTAssertEqual(app.staticTexts["onboarding.brandName"].label, "Rilova")
+        let brandCapture = XCTAttachment(screenshot: app.screenshot())
+        brandCapture.name = "Rilova welcome"; brandCapture.lifetime = .keepAlways; add(brandCapture)
         waitAndTap(app.buttons["onboarding.continue"])
         for _ in 0..<4 { waitAndTap(app.buttons["onboarding.skip"]) }
         let finish = app.buttons["onboarding.continue"]
@@ -1290,17 +1525,15 @@ final class MVPFlowTests: XCTestCase {
         XCTAssertFalse(app.buttons["attentionWindow.showLiveActivity"].exists)
         waitAndTap(app.buttons["attentionWindow.startSession"])
         XCTAssertFalse(app.buttons["attentionWindow.kept"].isEnabled)
-        waitAndTap(app.buttons["attentionWindow.showLiveActivity"])
+        let showActivity = app.buttons["attentionWindow.showLiveActivity"]
+        waitAndTap(showActivity)
+        XCTAssertEqual(showActivity.label, "Session activity requested")
         let message = app.staticTexts["attentionWindow.liveActivityMessage"]
         // The optional section sits below primary check-in controls; its
         // feedback row may need scrolling into the List's instantiated area.
         app.swipeUp()
         XCTAssertTrue(message.waitForExistence(timeout: 10))
-        if !message.label.contains("Session shown") {
-            app.swipeDown()
-            waitAndTap(app.buttons["attentionWindow.interrupted"])
-            throw XCTSkip("Native ActivityKit is unavailable on this simulator: \(message.label)")
-        }
+        XCTAssertTrue(message.label.contains("Session activity requested"), message.label)
         XCUIDevice.shared.press(.home)
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         XCTAssertTrue(springboard.wait(for: .runningForeground, timeout: 10))
@@ -1319,12 +1552,62 @@ final class MVPFlowTests: XCTestCase {
         app.swipeDown()
         XCTAssertFalse(app.buttons["attentionWindow.kept"].isEnabled)
         waitAndTap(app.buttons["attentionWindow.hideLiveActivity"])
+        assertLabel("Session activity hidden", on: app.buttons["attentionWindow.hideLiveActivity"])
         XCTAssertTrue(message.label.contains("hidden"))
         waitAndTap(app.buttons["attentionWindow.showLiveActivity"])
         app.swipeDown()
         waitAndTap(app.buttons["attentionWindow.interrupted"])
         XCTAssertTrue(app.buttons["attentionWindow.startSession"].waitForExistence(timeout: 10))
         XCTAssertFalse(app.buttons["attentionWindow.showLiveActivity"].exists)
+    }
+
+    func testSessionActivityFeedbackStaysAtTheControlAtLargestTextSize() {
+        let app = launch(liveActivity: true, largestText: true)
+        createGoal(named: "Focus feedback", type: "Focus session", in: app)
+        openGoal(named: "Focus feedback", in: app)
+        waitAndTap(app.buttons["attentionWindow.startSession"])
+        let show = app.buttons["attentionWindow.showLiveActivity"]
+        for _ in 0..<8 {
+            if show.exists && show.isHittable && show.frame.maxY <= app.tabBars.firstMatch.frame.minY { break }
+            app.swipeUp()
+        }
+        waitAndTap(show)
+        XCTAssertEqual(show.label, "Session activity requested")
+        XCTAssertTrue(show.isHittable)
+        XCTAssertLessThanOrEqual(show.frame.maxY, app.tabBars.firstMatch.frame.minY)
+        let capture = XCTAttachment(screenshot: app.screenshot())
+        capture.name = "Session activity acknowledged at largest text"
+        capture.lifetime = .keepAlways
+        add(capture)
+        let hide = app.buttons["attentionWindow.hideLiveActivity"]
+        waitAndTap(hide)
+        assertLabel("Session activity hidden", on: hide)
+        let interrupted = app.buttons["attentionWindow.interrupted"]
+        for _ in 0..<10 {
+            if interrupted.exists && interrupted.isHittable { break }
+            app.swipeDown()
+        }
+        waitAndTap(interrupted)
+        XCTAssertTrue(app.buttons["attentionWindow.startSession"].waitForExistence(timeout: 10))
+    }
+
+    func testReminderAcknowledgmentClearsWhenEditingTheDraft() {
+        let app = launch()
+        waitAndTap(app.buttons["today.addHabitButton"])
+        waitAndTap(app.textFields["habitForm.nameField"])
+        app.textFields["habitForm.nameField"].typeText("Reminder feedback")
+        waitAndTap(app.buttons["habitForm.saveButton"])
+        waitAndTap(app.buttons["Open Reminder feedback details"])
+        waitAndTap(app.buttons["habitDetail.reminderLink"])
+        let save = app.buttons["habitReminder.save"]
+        waitAndTap(save)
+        assertLabel("Reminder saved", on: save)
+        let enabled = app.switches["habitReminder.enabled"]
+        enabled.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).tap()
+        XCTAssertEqual(save.label, "Save Reminder")
+        enabled.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).tap()
+        waitAndTap(save)
+        assertLabel("Reminder saved", on: save)
     }
 
     func testActivePhoneFreeSessionSurvivesRelaunchAndCanBeReportedInterrupted() {
@@ -1368,7 +1651,9 @@ final class MVPFlowTests: XCTestCase {
         waitAndTap(app.tabBars.buttons["Settings"])
         waitAndTap(app.buttons["settings.premiumButton"])
         XCTAssertTrue(app.buttons["premium.restoreButton"].waitForExistence(timeout: 10))
-        XCTAssertTrue(app.navigationBars["Avela Premium"].exists)
+        XCTAssertTrue(app.navigationBars["Rilova Premium"].exists)
+        let capture = XCTAttachment(screenshot: app.screenshot())
+        capture.name = "Rilova Premium presentation"; capture.lifetime = .keepAlways; add(capture)
         waitAndTap(app.buttons["premium.closeButton"])
         waitAndTap(app.tabBars.buttons["Today"])
         XCTAssertTrue(app.buttons["today.addHabitButton"].waitForExistence(timeout: 10))

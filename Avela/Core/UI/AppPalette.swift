@@ -27,6 +27,23 @@ struct AppPalette {
         LinearGradient(colors: [prominentFill, heroEnd], startPoint: .topLeading, endPoint: .bottomTrailing)
     }
 
+    // Brand treatment is scoped to introductory and summary cards, not chart/reading surfaces.
+    // Other saved themes retain their own accent and hero treatment.
+    var welcomeColors: [Color] {
+        if theme == .tidewater {
+            return [dynamic(light: 0xE4F2E8, dark: 0x183D3C),
+                    dynamic(light: 0xDDEFEF, dark: 0x15343E),
+                    dynamic(light: 0xEDF2F4, dark: 0x172C35)]
+        }
+        return [surface, atmosphere, surface]
+    }
+
+    var todaySummaryColors: [Color] {
+        theme == .tidewater
+            ? [Color(uiColor: Self.uiColor(0x14636A)), Color(uiColor: Self.uiColor(0x0C4953)), Color(uiColor: Self.uiColor(0x072E32))]
+            : [prominentFill, heroEnd]
+    }
+
     /// A complementary sky wash, distinct from accent-colored actions.
     var atmosphere: Color {
         switch theme {
@@ -112,6 +129,43 @@ private struct AppThemeCanvasModifier: ViewModifier {
 
 extension View {
     func appThemeCanvas() -> some View { modifier(AppThemeCanvasModifier()) }
+    /// Introductory cards share one restrained wash; data surfaces remain opaque.
+    func rilovaHeaderSurface() -> some View { modifier(RilovaHeaderSurface()) }
+}
+
+private struct RilovaHeaderSurface: ViewModifier {
+    @Environment(\.appPalette) private var palette
+    @Environment(\.colorSchemeContrast) private var contrast
+    func body(content: Content) -> some View {
+        content
+            .padding(20)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background {
+                if contrast == .increased { palette.surface }
+                else { LinearGradient(colors: palette.welcomeColors, startPoint: .topLeading, endPoint: .bottomTrailing) }
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+    }
+}
+
+struct RilovaSectionHeader: View {
+    let title: String
+    let subtitle: String
+    let symbol: String
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Label {
+                Text(title).font(.title2.weight(.semibold)).fontDesign(.rounded)
+                    .foregroundStyle(Color.appInk).accessibilityAddTraits(.isHeader)
+            } icon: {
+                Image(systemName: symbol).font(.title3).foregroundStyle(Color.appInk)
+                    .accessibilityHidden(true)
+            }
+            Text(subtitle).font(.subheadline).foregroundStyle(Color.appInkSecondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .rilovaHeaderSurface()
+    }
 }
 
 /// Original, resolution-independent scenery. Decorative, static and independent

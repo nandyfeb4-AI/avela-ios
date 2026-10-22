@@ -14,11 +14,11 @@
       "localizations": [
         {
           "description": "Unlimited habits and attention goals",
-          "displayName": "Avela Premium",
+          "displayName": "Rilova Premium",
           "locale": "en_US"
         }
       ],
-      "name": "Avela Premium",
+      "name": "Rilova Premium",
       "subscriptions": [
         {
           "adHocOffers": [],
@@ -31,13 +31,13 @@
           "localizations": [
             {
               "description": "Unlimited habits and attention goals. Local testing product; not a published price.",
-              "displayName": "Avela Premium Monthly",
+              "displayName": "Rilova Premium Monthly",
               "locale": "en_US"
             }
           ],
           "productID": "com.avela.premium.monthly",
           "recurringSubscriptionPeriod": "P1M",
-          "referenceName": "Avela Premium Monthly",
+          "referenceName": "Rilova Premium Monthly",
           "subscriptionGroupID": "8642DCD5-8A1E-42D9-A3FC-992E4D042088",
           "type": "RecurringSubscription"
         },
@@ -52,13 +52,13 @@
           "localizations": [
             {
               "description": "Unlimited habits and attention goals. Local testing product; not a published price.",
-              "displayName": "Avela Premium Annual",
+              "displayName": "Rilova Premium Annual",
               "locale": "en_US"
             }
           ],
           "productID": "com.avela.premium.annual",
           "recurringSubscriptionPeriod": "P1Y",
-          "referenceName": "Avela Premium Annual",
+          "referenceName": "Rilova Premium Annual",
           "subscriptionGroupID": "8642DCD5-8A1E-42D9-A3FC-992E4D042088",
           "type": "RecurringSubscription"
         }

@@ -21,23 +21,55 @@ struct CloudBackupView: View {
                     Text("No confirmed cloud backup date is available.").foregroundStyle(.secondary)
                 }
                 if model.isEnabled {
-                    Button("Back Up Now") { Task { await model.backupNow() } }
-                        .disabled(model.isBusy).accessibilityIdentifier("backup.now")
+                    Button { Task { await model.backupNow() } } label: {
+                        if model.isBusy && model.feedbackAction == .backup {
+                            HStack {
+                                ProgressView().accessibilityHidden(true)
+                                Text("Backing Up…")
+                            }
+                        } else if model.feedbackAction == .backup && model.actionSucceeded {
+                            Label("Backed Up", systemImage: "checkmark.circle.fill")
+                        } else {
+                            Text("Back Up Now")
+                        }
+                    }
+                        .disabled(model.isBusy)
+                        .accessibilityLabel(model.isBusy && model.feedbackAction == .backup ? "Backing up" : model.feedbackAction == .backup && model.actionSucceeded ? "Backed up" : "Back Up Now")
+                        .accessibilityIdentifier("backup.now")
+                    if model.feedbackAction == .backup, let message = model.message {
+                        Text(message).foregroundStyle(.secondary).accessibilityIdentifier("backup.message")
+                    }
                 }
             } header: {
                 Text("Protect Your Progress")
             } footer: {
-                Text("Runs after saved changes while Avela is active, up to once every 10 minutes. Offline, account and storage problems can delay backups. Turning it off keeps existing cloud copies; an upload already sent may finish.")
+                Text("Runs after saved changes while Rilova is active, up to once every 10 minutes. Offline, account and storage problems can delay backups. Turning it off keeps existing cloud copies; an upload already sent may finish.")
             }
             Section("What Is Included") {
                 Text("Eligible habits and their history, manual attention tracking, routines and appearance preferences.")
-                Text("Health-connected habits, health/fitness habits, Health-imported history and private notes (including habit reasons) stay on this device. They are excluded from Avela cloud backups.")
+                Text("Health-connected habits, health/fitness habits, Health-imported history and private notes (including habit reasons) stay on this device. They are excluded from Rilova cloud backups.")
                 Text("Keep sensitive health tracking in Health/Fitness categories; don’t use other categories to include it in cloud recovery.").foregroundStyle(.secondary)
-                Text("Recovery copies are kept until you delete them and use iCloud storage. No separate Avela account or paid tier is required.")
+                Text("Recovery copies are kept until you delete them and use iCloud storage. No separate Rilova account or paid tier is required.")
             }
             Section("Recovery Points") {
-                Button("Check iCloud Backups") { Task { await model.loadBackups() } }
-                    .disabled(model.isBusy || !model.isConfigured).accessibilityIdentifier("backup.refresh")
+                Button { Task { await model.loadBackups() } } label: {
+                    if model.isBusy && model.feedbackAction == .checkBackups {
+                        HStack {
+                            ProgressView().accessibilityHidden(true)
+                            Text("Checking iCloud…")
+                        }
+                    } else if model.feedbackAction == .checkBackups && model.actionSucceeded {
+                        Label("Checked iCloud", systemImage: "checkmark.circle.fill")
+                    } else {
+                        Text("Check iCloud Backups")
+                    }
+                }
+                    .disabled(model.isBusy || !model.isConfigured)
+                    .accessibilityLabel(model.isBusy && model.feedbackAction == .checkBackups ? "Checking iCloud" : model.feedbackAction == .checkBackups && model.actionSucceeded ? "Checked iCloud" : "Check iCloud Backups")
+                    .accessibilityIdentifier("backup.refresh")
+                if model.feedbackAction == .checkBackups, let message = model.message {
+                    Text(message).foregroundStyle(.secondary).accessibilityIdentifier("backup.message")
+                }
                 ForEach(model.backups) { backup in
                     VStack(alignment: .leading, spacing: 8) {
                         Text(backup.createdAt.formatted(date: .abbreviated, time: .shortened)).font(.headline)
@@ -56,8 +88,8 @@ struct CloudBackupView: View {
                     Text("This installation already has tracking data. Restore won't overwrite it. Recovery is available on a new installation before you start tracking.").foregroundStyle(.secondary)
                 }
             }
-            if model.isBusy { ProgressView("Checking iCloud…") }
-            if let message = model.message {
+            if model.isBusy && model.feedbackAction == nil { ProgressView("Checking iCloud…") }
+            if model.feedbackAction == nil, let message = model.message {
                 Section { Text(message).accessibilityIdentifier("backup.message") }
             }
         }

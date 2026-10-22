@@ -22,31 +22,44 @@ struct PrivacyView: View {
     var body: some View {
         List {
             Section("Local Tracking, Optional Protection") {
-                Text("Tracking is saved on your device. Avela doesn't require its own account. If you enable optional iCloud backup, eligible tracking and preferences are copied to your private Apple iCloud storage.")
-                Text("Avela doesn't track how you use the app or show advertisements. It doesn't automatically monitor Screen Time or block other apps. Microphone access is used only when you explicitly start reflection dictation.")
+                Text("Tracking is saved on your device. Rilova doesn't require its own account. If you enable optional iCloud backup, eligible tracking and preferences are copied to your private Apple iCloud storage.")
+                Text("Rilova doesn't track how you use the app or show advertisements. It doesn't automatically measure Screen Time. Ordinary logging and unprotected sessions never restrict apps. Microphone access is used only when you explicitly start reflection dictation.")
             }
 
             Section("Device backups") {
-                Text("Avela doesn't provide app-managed cloud sync. iOS may include local app data in a device backup according to your Apple backup settings. Manage those backups separately in iOS settings.")
-                Text("Optional Avela iCloud backup keeps dated recovery copies while the app is active. It isn't live sync or a guarantee against every loss. Health-connected habits, health/fitness habits, imported Health history, reflection notes, completion notes and private habit reasons are excluded. Local logging remains available offline.")
+                Text("Rilova doesn't provide app-managed cloud sync. iOS may include local app data in a device backup according to your Apple backup settings. Manage those backups separately in iOS settings.")
+                Text("Optional Rilova iCloud backup keeps dated recovery copies while the app is active. It isn't live sync or a guarantee against every loss. Health-connected habits, health/fitness habits, imported Health history, reflection notes, completion notes and private habit reasons are excluded. Local logging remains available offline.")
                 Text("Turn backup off in Progress Protection to stop future upload requests; an upload already sent may finish. Existing cloud copies remain until you explicitly delete them there. Restore is available only before tracking begins on an installation; existing progress is never overwritten. Apple iCloud account availability and storage affect backup delivery.")
             }
 
             Section("Optional Siri and Shortcuts") {
-                Text("Apple handles Siri voice processing. Avela doesn't record audio. Habit and budget names may appear in Apple's suggestions and your saved shortcuts. Logging opens Avela and may require device authentication; attention minutes remain self-reported.")
+                Text("Apple handles Siri voice processing. Rilova doesn't record audio. Habit and budget names may appear in Apple's suggestions and your saved shortcuts. Logging opens Rilova and may require device authentication; attention minutes remain self-reported.")
             }
 
             Section("Optional reflection dictation") {
-                Text("When you tap Start Dictation, Avela requests microphone and speech recognition permission. Recognition must be available on-device; there is no server fallback. Audio is used temporarily and isn't saved. You review or edit the transcript before adding it to a reflection, then explicitly save the note.")
-                Text("Capture stops when you stop, leave the recording screen, put Avela in the background, or reach 55 seconds. Typing stays available when access is denied or recognition is unavailable. Saved reflection text stays local and is excluded from Avela's iCloud recovery copies; Apple device backups may include it.")
+                Text("When you tap Start Dictation, Rilova requests microphone and speech recognition permission. Recognition must be available on-device; there is no server fallback. Audio is used temporarily and isn't saved. You review or edit the transcript before adding it to a reflection, then explicitly save the note.")
+                Text("Capture stops when you stop, leave the recording screen, put Rilova in the background, or reach 55 seconds. Typing stays available when access is denied or recognition is unavailable. Saved reflection text stays local and is excluded from Rilova's iCloud recovery copies; Apple device backups may include it.")
+            }
+
+            if AppleAppProtectionDriver.featureVisible {
+                Section("Optional app protection") {
+                    Text("On a supported iPhone build, you can allow Screen Time access for your own device and choose distractions to restrict during a session. Rilova doesn't read usage reports or send these choices anywhere. Selections and operational deadlines stay on-device and are excluded from recovery copies and backups of those files.")
+                    Text("Stop Protection removes Rilova's restrictions without logging a habit or ending your timer. Other Screen Time limits may still apply. You can revoke Rilova's access in Settings → Screen Time; keep Rilova accessible if you want to stop inside the app.")
+                }
             }
 
             Section("Optional Apple Health") {
-                Text("If you connect a Build Up habit, Avela reads today's chosen steps or exercise minutes when you open it or refresh. It saves connection settings and resulting habit successes locally, not raw Health samples. Nothing is written to Apple Health or uploaded. Disconnect to stop future imports; existing history remains. Manage read permissions separately in Apple Health. Missing data isn't treated as failure.")
+                Text("If you connect a Build Up habit, Rilova reads today's chosen steps or exercise minutes when you open it or refresh. It saves connection settings and resulting habit successes locally, not raw Health samples. Nothing is written to Apple Health or uploaded. Disconnect to stop future imports; existing history remains. Manage read permissions separately in Apple Health. Missing data isn't treated as failure.")
+            }
+
+            Section("Optional Calendar planning") {
+                Text("Plan Time in Calendar prepares an event with your habit name and chosen times. You review it in Apple's editor and choose where to save it. That calendar may sync or share the event according to its settings. Rilova doesn't read your calendar or add your private habit reason or history.")
+                    .accessibilityIdentifier("privacy.calendarDisclosure")
+                Text("Saving an event doesn't start a session or log a habit. Cancelling leaves your Rilova progress unchanged.")
             }
 
             Section("Optional reminders") {
-                Text("Notification permission is requested only when you enable a reminder. You can disable individual reminders in Avela or change notification permission in iOS Settings. Tracking remains available when permission is denied.")
+                Text("Notification permission is requested only when you enable a reminder. You can disable individual reminders in Rilova or change notification permission in iOS Settings. Tracking remains available when permission is denied.")
             }
 
             Section("Widgets") {
@@ -58,16 +71,18 @@ struct PrivacyView: View {
             }
 
             Section("Apple purchases") {
-                Text("Apple handles payment and Apple Account information. Avela uses verified purchase information from Apple to check Premium access; it doesn't receive your payment-card details. Manage or cancel subscriptions through your Apple Account.")
+                Text("Apple handles payment and Apple Account information. Rilova uses verified purchase information from Apple to check Premium access; it doesn't receive your payment-card details. Manage or cancel subscriptions through your Apple Account.")
                 Link("Manage Subscriptions", destination: URL(string: "https://apps.apple.com/account/subscriptions")!)
             }
 
             Section("Removing data") {
-                Text("Archiving a habit keeps its history. To remove the local installation and app data, delete Avela through iOS Settings. Existing device backups may still contain earlier data; manage or delete those separately. Deleting the app doesn't cancel an Apple subscription.")
+                Text("Archiving a habit keeps its history. To remove the local installation and app data, delete Rilova through iOS Settings. Existing device backups may still contain earlier data; manage or delete those separately. Deleting the app doesn't cancel an Apple subscription.")
+                Text("Deleting Rilova also leaves any optional iCloud recovery copies intact. Delete those copies in Progress Protection before removing the app if you want to remove them too.")
+                    .accessibilityIdentifier("privacy.cloudDeletionDisclosure")
             }
 
             Section("TestFlight feedback") {
-                Text("During beta testing, Apple may share TestFlight usage, crash reports and feedback with the developer. Screenshots you submit may include your tracking details. This is separate from Avela's local tracking.")
+                Text("During beta testing, Apple may share TestFlight usage, crash reports and feedback with the developer. Screenshots you submit may include your tracking details. This is separate from Rilova's local tracking.")
                 Link("Apple's TestFlight Privacy Information", destination: URL(string: "https://www.apple.com/legal/privacy/data/en/test-flight/")!)
             }
 

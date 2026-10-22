@@ -2,6 +2,9 @@ import SwiftUI
 
 /// Preferences and discoverable entry points to optional native features.
 struct SettingsView: View {
+    @Environment(\.appProtectionModel) private var protection
+    @Environment(\.appProtectionDriver) private var protectionDriver
+    @State private var showingProtection = false
     @Environment(\.appPalette) private var palette
     let repository: HabitRepository
     var reflectionRepository: ReflectionRepository? = nil
@@ -16,6 +19,26 @@ struct SettingsView: View {
 
     var body: some View {
         List {
+            Section {
+                HStack(spacing: 14) {
+                    Image("BrandIcon").resizable().scaledToFit()
+                        .frame(width: 48, height: 48)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .accessibilityHidden(true)
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("Rilova").font(.title2.weight(.semibold)).fontDesign(.rounded)
+                            .foregroundStyle(Color.appInk)
+                        Text("Habits that fit real life.").font(.subheadline)
+                            .foregroundStyle(Color.appInkSecondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+                .rilovaHeaderSurface()
+                .accessibilityElement(children: .combine)
+                .accessibilityIdentifier("settings.brand")
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Color.clear)
+            }
             Section {
                 Toggle(isOn: $watchEnabled) { settingsLabel("Apple Watch quick logging", systemImage: "applewatch") }
                     .accessibilityIdentifier("settings.watchEnabled")
@@ -36,12 +59,21 @@ struct SettingsView: View {
             } header: { Text("Quick Logging") } footer: {
                 Text("Watch shares today's habit names and status. Logging needs a reachable, unlocked iPhone; quantities open on iPhone. Offline actions aren't queued.")
             }
+            if let protection {
+                Section("Optional App Protection") {
+                    Button { showingProtection = true } label: {
+                        settingsLabel("App Protection", systemImage: "hand.raised")
+                    }
+                        .accessibilityIdentifier("settings.appProtection")
+                }
+                AppProtectionStatusView(model: protection)
+            }
             if let subscriptionManager {
-                Section("Avela") {
+                Section("Rilova") {
                     Button {
                         isShowingPremium = true
                     } label: {
-                        settingsLabel(subscriptionManager.hasPremium ? "Avela Premium" : "Explore Avela Premium", systemImage: "sparkles")
+                        settingsLabel(subscriptionManager.hasPremium ? "Rilova Premium" : "Explore Rilova Premium", systemImage: "sparkles")
                     }
                     .accessibilityIdentifier("settings.premiumButton")
                 }
@@ -89,6 +121,9 @@ struct SettingsView: View {
                     .accessibilityIdentifier("settings.backupLink")
                 }
             }
+        }
+        .sheet(isPresented: $showingProtection) {
+            if let protection { AppProtectionSetupView(model: protection, driver: protectionDriver) }
         }
         .appThemeCanvas()
         .sheet(isPresented: $isShowingPremium) {

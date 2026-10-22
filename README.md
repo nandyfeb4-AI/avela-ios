@@ -1,4 +1,6 @@
-# Avela
+# Rilova
+
+**Habits that fit real life.**
 
 A native, local-first iOS habit and attention-management app built around flexible
 commitments, supportive recovery, weekly insights, and a calm animal companion.
@@ -58,8 +60,10 @@ review remain required before TestFlight or App Store release.
   surfaces. Hiding presentation leaves the local session active. Activities
   support sessions up to eight hours; longer sessions remain usable in-app.
 
-Automatic Screen Time metering, app blocking, cloud sync, accounts, and AI coaching
-are not part of the current implementation. See [MVP scope](docs/MVP.md).
+Automatic Screen Time metering, live cloud sync, accounts, and AI coaching
+are not implemented. Optional selected-app protection is implemented for signed-device
+development testing and remains disabled in Release pending verification and distribution
+entitlement approval. See [MVP scope](docs/MVP.md).
 
 ## Getting started
 
@@ -254,3 +258,17 @@ Optional private habit reasons, explainable Momentum, evidence-based recovery ch
 ## Rich Tide widgets — October 7, 2026
 
 The Home Screen gallery now offers **Quick Log** and **Routine**, each in small/medium. Approved Rich Tide uses deep theme gradients and contrasting labelled Log buttons. Remove retired Attention/Progress placements and add the replacement. Routine requires a saved routine selected in Edit Widget. Log saves a simple check-in without opening Avela; names and quantity + open the relevant app screen. Native light/dark/largest-text screenshots, 523 passing unit tests, guide UI regression, background logging checks and Release verification are recorded in [widget verification](docs/verification/two-widgets/README.md).
+
+
+## Calendar and native capture integrations — October 7, 2026
+
+Make Room now offers optional, user-reviewed Calendar planning and an App Shortcut for explicit linked session starts. Watch successful replies use inline confirmation. No completion is inferred from planning, timers or app use. [Implementation and verification](docs/verification/calendar-integrations/README.md). Optional selected-app protection has since been implemented for development; signed-device lifecycle verification and distribution approval remain required. Unprotected sessions leave apps available.
+
+
+Optional development app protection: [implementation and remaining iPhone gates](docs/verification/app-protection/README.md).
+
+Largest-text habit setup and optional private-reason editor audits now pass without suppression. The reason editor preserves Save/Cancel and hidden-state persistence. [Updated release-readiness evidence](docs/verification/release-readiness/README.md).
+
+## Brand identity
+
+The visible product name is **Rilova**. See [the logo kit](design/brand/rilova/README.md) and [rebrand verification](docs/verification/rebrand/README.md). The `Avela.xcodeproj` project, scheme, bundle identifiers, deep links, purchase identifiers and storage keys intentionally retain their existing names to preserve integrations and progress.

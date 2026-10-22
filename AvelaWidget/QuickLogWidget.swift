@@ -17,12 +17,20 @@ struct QuickLogProvider: TimelineProvider {
         let calendar = Calendar.current
         let midnight = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: now)) ?? now.addingTimeInterval(3600)
         let current = entry(at: now)
-        var entries = [current]
-        if let until = current.snapshot?.quickLogPinUntil, until > now, until < midnight {
-            entries.append(QuickLogEntry(date: until, snapshot: current.snapshot))
+        var refreshAt = min(now.addingTimeInterval(900), midnight)
+        if let snapshot = current.snapshot,
+           snapshot.generatedAt <= now,
+           LocalDay.key(for: snapshot.generatedAt, calendar: calendar) == snapshot.localDateKey,
+           snapshot.quickLogPinnedIDs != nil,
+           let until = snapshot.quickLogPinUntil,
+           until > now, until <= snapshot.generatedAt.addingTimeInterval(30) {
+            refreshAt = min(refreshAt, until)
         }
-        entries.append(QuickLogEntry(date: midnight, snapshot: nil))
-        completion(Timeline(entries: entries, policy: .after(min(now.addingTimeInterval(900), midnight))))
+        // Reread saved facts after acknowledgment rather than replaying a
+        // captured snapshot. WidgetKit may defer this refresh, so reordering
+        // is not guaranteed at the exact expiry second.
+        let entries = [current, QuickLogEntry(date: midnight, snapshot: nil)]
+        completion(Timeline(entries: entries, policy: .after(refreshAt)))
     }
     private func entry(at date: Date) -> QuickLogEntry {
         let snapshot = try? WidgetSnapshotStore().load()
@@ -49,14 +57,17 @@ struct QuickLogWidgetView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(routineTitle ?? "Quick Log").font(.headline).lineLimit(2).accessibilityAddTraits(.isHeader)
+            Text(routineTitle ?? "Quick Log")
+                .font(.headline).fontDesign(.rounded).lineLimit(2)
+                .accessibilityAddTraits(.isHeader)
             if let snapshot = entry.snapshot {
                 let projection = QuickLogProjection(snapshot: snapshot, date: entry.date)
                 Text(snapshot.quickLogMessage ?? (routineTitle != nil ? (snapshot.habits.isEmpty ? "No steps due today" : "Routine · " + projection.summary) : projection.summary))
-                    .font(.caption).foregroundStyle(richColor(palette.secondary)).lineLimit(2)
+                    .font(.caption).monospacedDigit()
+                    .foregroundStyle(richColor(palette.secondary)).lineLimit(2)
                 if snapshot.habits.isEmpty {
                     Spacer(minLength: 0)
-                    Link(routineTitle != nil ? "Open Avela" : "Add a habit in Avela", destination: WidgetDeepLink.today.url).font(.subheadline)
+                    Link(routineTitle != nil ? "Open Rilova" : "Add a habit in Rilova", destination: WidgetDeepLink.today.url).font(.subheadline)
                         .frame(minHeight: 44)
                     Spacer(minLength: 0)
                 } else {
@@ -87,8 +98,8 @@ struct QuickLogWidgetView: View {
                         .background(accent, in: RoundedRectangle(cornerRadius: 12))
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel("Refresh today's habits without opening Avela")
-                Link("Open Avela", destination: WidgetDeepLink.today.url)
+                .accessibilityLabel("Refresh today's habits without opening Rilova")
+                Link("Open Rilova", destination: WidgetDeepLink.today.url)
                     .font(.caption).frame(minHeight: 44)
                 Spacer(minLength: 0)
             }
@@ -105,36 +116,47 @@ struct QuickLogWidgetView: View {
                     Link(destination: WidgetDeepLink.habit(habitID: habit.id).url) {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(habit.name).font(.subheadline.weight(.semibold)).foregroundStyle(richColor(palette.ink)).lineLimit(textSize.isAccessibilitySize ? 2 : 1)
-                            Text(habit.isCompletedToday ? "Logged today" : habit.isSkippedToday == true ? "Skipped today" : habit.weeklyTargetMet == true ? "Weekly goal met" : habit.requiresQuantityLogging == true ? "Add in Avela" : habit.progressLabel)
-                                .font(.caption2).foregroundStyle(richColor(palette.secondary)).lineLimit(1)
-                                // Only status waits for saved data. Keep the action
-                                // label and background stable during system reloads.
-                                .invalidatableContent()
+                            Text(habit.isCompletedToday ? "Logged today" : habit.isSkippedToday == true ? "Skipped today" : habit.weeklyTargetMet == true ? "Weekly goal met" : habit.requiresQuantityLogging == true ? "Add in Rilova" : habit.progressLabel)
+                                .font(.caption2).monospacedDigit()
+                                .foregroundStyle(richColor(palette.secondary)).lineLimit(1)
                         }
                         .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
                     }
                     .accessibilityLabel("\(habit.name), \(habit.isCompletedToday ? "logged today" : habit.progressLabel). Open details")
-                    if habit.isCompletedToday {
-                        Image(systemName: "checkmark.circle.fill").font(.title3)
-                            .foregroundStyle(accent).frame(width: 44, height: 44)
-                            .accessibilityLabel("Logged today")
-                    } else if projection.canLog(habit), let revision = habit.configurationRevision, let timeZone = snapshot.timeZoneIdentifier {
-                        Button(intent: QuickLogHabitIntent(habitID: habit.id, dayKey: snapshot.localDateKey, timeZone: timeZone, revision: revision)) {
-                            Text("Log").font(.subheadline.weight(.semibold))
-                                .foregroundStyle(richColor(palette.actionInk))
-                                .frame(width: 54, height: 44)
-                                .background(accent, in: RoundedRectangle(cornerRadius: 12))
+                    if projection.canUndo(habit), let completionID = habit.undoCompletionID,
+                       let revision = habit.configurationRevision, let timeZone = snapshot.timeZoneIdentifier {
+                        Toggle(isOn: true, intent: UndoQuickLogHabitIntent(habitID: habit.id, completionID: completionID,
+                            dayKey: snapshot.localDateKey, timeZone: timeZone, revision: revision,
+                            displayedHabitIDs: projection.rows(capacity: capacity).map(\.id))) {
+                            Text(habit.name)
                         }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel("\(habit.checkInLabel ?? "Log check-in") for \(habit.name)")
+                        .toggleStyle(WidgetCheckInToggleStyle(savedIsOn: true, habitName: habit.name,
+                            logLabel: habit.checkInLabel ?? "Log check-in", palette: palette,
+                            width: textSize.isAccessibilitySize ? 104 : 54))
+                        .id(completionID)
+                    } else if habit.isCompletedToday {
+                        Link(destination: WidgetDeepLink.habit(habitID: habit.id).url) {
+                            Image(systemName: "checkmark.circle.fill").font(.title3)
+                                .foregroundStyle(accent).frame(width: textSize.isAccessibilitySize ? 104 : 54, height: 44)
+                                .contentShape(Rectangle())
+                        }
+                        .accessibilityLabel("Review logged progress for \(habit.name) in Rilova")
+                    } else if projection.canLog(habit), let revision = habit.configurationRevision, let timeZone = snapshot.timeZoneIdentifier {
+                        Toggle(isOn: false, intent: QuickLogHabitIntent(habitID: habit.id, dayKey: snapshot.localDateKey, timeZone: timeZone, revision: revision,
+                            displayedHabitIDs: projection.rows(capacity: capacity).map(\.id))) {
+                            Text(habit.name)
+                        }
+                        .toggleStyle(WidgetCheckInToggleStyle(savedIsOn: false, habitName: habit.name,
+                            logLabel: habit.checkInLabel ?? "Log check-in", palette: palette,
+                            width: textSize.isAccessibilitySize ? 104 : 54))
                     } else {
                         Link(destination: (habit.requiresQuantityLogging == true
                             ? WidgetDeepLink.logProgress(habitID: habit.id) : .habit(habitID: habit.id)).url) {
                             Image(systemName: habit.requiresQuantityLogging == true ? "plus.circle" : "arrow.up.right.circle")
-                                .font(.title3).foregroundStyle(accent).frame(width: 54, height: 44)
+                                .font(.title3).foregroundStyle(accent).frame(width: textSize.isAccessibilitySize ? 104 : 54, height: 44)
                                 .background(accent.opacity(0.10), in: RoundedRectangle(cornerRadius: 12))
                         }
-                        .accessibilityLabel(habit.requiresQuantityLogging == true ? "Log progress for \(habit.name) in Avela" : "Review \(habit.name) in Avela")
+                        .accessibilityLabel(habit.requiresQuantityLogging == true ? "Log progress for \(habit.name) in Rilova" : "Review \(habit.name) in Rilova")
                     }
                 }
                 .privacySensitive()
@@ -144,13 +166,47 @@ struct QuickLogWidgetView: View {
     }
 }
 
+/// Native Toggle supplies immediate optimistic presentation. Pending feedback
+/// describes an action in flight, never a saved fact or an available reversal.
+private struct WidgetCheckInToggleStyle: ToggleStyle {
+    let savedIsOn: Bool
+    let habitName: String
+    let logLabel: String
+    let palette: WidgetRichPalette
+    let width: CGFloat
+
+    func makeBody(configuration: Configuration) -> some View {
+        let pending = configuration.isOn != savedIsOn
+        let accent = richColor(palette.action)
+        let text = pending ? (savedIsOn ? "Undoing…" : "Saving…") : (savedIsOn ? "Undo" : "Log")
+        Button {
+            configuration.isOn.toggle()
+        } label: {
+            Text(text)
+                .font(pending ? .caption2.weight(.semibold) : .subheadline.weight(savedIsOn ? .medium : .semibold))
+                .lineLimit(1).minimumScaleFactor(0.8)
+                .foregroundStyle(savedIsOn ? accent : richColor(palette.actionInk))
+                .frame(width: width, height: 44)
+                .background(savedIsOn ? accent.opacity(0.10) : accent, in: RoundedRectangle(cornerRadius: 12))
+                .overlay { if savedIsOn { RoundedRectangle(cornerRadius: 12).strokeBorder(accent, lineWidth: 1) } }
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(pending
+            ? "\(savedIsOn ? "Undoing" : "Saving") check-in for \(habitName)"
+            : "\(savedIsOn ? "Undo check-in" : logLabel) for \(habitName)")
+        .accessibilityValue(pending ? "Updating" : savedIsOn ? "Logged" : "Not logged")
+        .accessibilityHint(pending ? "Wait for the saved result." : "Updates today's simple check-in without opening Rilova.")
+    }
+}
+
 struct QuickLogWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: "com.example.Avela.widget.quick-log", provider: QuickLogProvider()) { entry in
             QuickLogWidgetView(entry: entry)
         }
         .configurationDisplayName("Quick Log")
-        .description("Log a simple check-in without opening Avela. Tap Log to save here. Habit names and quantity + open Avela.")
+        .description("Log a simple check-in without opening Rilova. Tap Log to save and Undo to correct a simple check-in here. Habit names and quantity + open Rilova.")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
@@ -171,9 +227,19 @@ struct RoutineLogProvider: AppIntentTimelineProvider {
     func timeline(for configuration: RoutineWidgetConfiguration, in context: Context) async -> Timeline<RoutineLogEntry> {
         let now = Date()
         let midnight = Calendar.current.date(byAdding: .day, value: 1, to: Calendar.current.startOfDay(for: now)) ?? now.addingTimeInterval(3600)
-        return Timeline(entries: [entry(configuration, at: now),
+        let current = entry(configuration, at: now)
+        var refreshAt = min(now.addingTimeInterval(900), midnight)
+        if let snapshot = current.snapshot,
+           snapshot.generatedAt <= now,
+           LocalDay.key(for: snapshot.generatedAt, calendar: .current) == snapshot.localDateKey,
+           snapshot.quickLogPinnedIDs != nil,
+           let until = snapshot.quickLogPinUntil,
+           until > now, until <= snapshot.generatedAt.addingTimeInterval(30) {
+            refreshAt = min(refreshAt, until)
+        }
+        return Timeline(entries: [current,
             RoutineLogEntry(date: midnight, snapshot: nil, routineID: configuration.routine?.id)],
-            policy: .after(min(now.addingTimeInterval(900), midnight)))
+            policy: .after(refreshAt))
     }
     private func entry(_ configuration: RoutineWidgetConfiguration, at date: Date) -> RoutineLogEntry {
         let snapshot = try? WidgetSnapshotStore().load()
@@ -205,10 +271,11 @@ struct RoutineLogWidgetView: View {
     }
     private func setup(title: String, message: String) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Label(title, systemImage: "list.bullet").font(.headline)
+            Label(title, systemImage: "list.bullet")
+                .font(.headline).fontDesign(.rounded)
             Text(message).font(.subheadline).foregroundStyle(richColor(palette.secondary))
             Spacer(minLength: 0)
-            Link("Open Avela", destination: WidgetDeepLink.today.url).font(.subheadline)
+            Link("Open Rilova", destination: WidgetDeepLink.today.url).font(.subheadline)
                 .frame(minHeight: 44)
         }
         .foregroundStyle(richColor(palette.ink))
@@ -224,7 +291,7 @@ struct RoutineLogWidget: Widget {
             RoutineLogWidgetView(entry: entry)
         }
         .configurationDisplayName("Routine")
-        .description("Choose a saved routine. Log its due steps individually without opening Avela.")
+        .description("Choose a saved routine. Log its due steps individually without opening Rilova.")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }

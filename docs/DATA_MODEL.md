@@ -1787,3 +1787,47 @@ WidgetSnapshot v1 gains an optional routines array (ID, display name, ordered ha
 ### Widget pending presentation follow-up — 2026-10-07
 
 Only each row's status caption uses `invalidatableContent`; Log and Refresh buttons keep stable labels/fills during pending system work. Saved completion remains the sole source of completed state. The shell publishes on persistence notifications only while active, leaving background widget intents to publish the final pinned snapshot after canonical save rather than racing it with an unpinned projection. Foreground edits and foreground refresh retain their existing exports. No schema or permission changes. Cold-process logging and limitations are recorded in [verification](verification/two-widgets/README.md).
+
+
+## Calendar planning, Make Room shortcut and Watch confirmation — 2026-10-07
+
+Calendar plans are ephemeral title/start/end values, validated for a nonempty habit name, a future start and 1–180 elapsed minutes. Nonfinite suggested targets fall back; large session targets clamp for planning only, without changing their saved configuration. EKEventEditViewController owns calendar selection and Save/Cancel. Draft cancellation preserves choices and records no habit/session facts. No event identifier, calendar contents, private reason or progress history is persisted/exported. Saved feedback describes planned time, not successful habit tracking.
+
+MakeRoomIntent resolves an explicit active habit and existing timed-session goal, then invokes the existing IntentionSessionViewModel start/link flow. Saved starts are distinct from habit success. If link persistence fails after start, the spoken result discloses that state and does not invite an automatic retry. An already-active goal cannot start a duplicate. The action intentionally opens Avela and requires local authentication, like existing logging shortcuts.
+
+Watch replies show inline success only after a canonical iPhone reply; failure/unknown outcomes keep an explicit alert. Quantity rows are disabled rather than offering a check-in that cannot satisfy their target. No offline queue or success prediction is added.
+
+
+## Optional protection operational state — 2026-10-07
+
+No SwiftData schema or logical recovery format changes. ProtectionLease holds random lease ID, canonical session/goal IDs and immutable absolute start/end dates. A coordinated, backup-excluded App Group file serializes app/monitor mutations; picker tokens stay in a separate backup-excluded app support file. They never enter widget/Watch/Live Activity snapshots. UTC nonrepeating schedules precede shield application. Exact expiry, ended/missing sessions, revoked authorization and lost monitor registrations release protection, never reapply it or write outcomes. Late callbacks match the lease generation; unreadable metadata fails open. User Stop changes no habit or session facts. Hardware callback/reboot verification remains pending.
+
+## Exact widget Undo — 2026-10-08
+
+`WidgetHabitSnapshot.undoCompletionID` is optional, backward-compatible display metadata in schema version 1, not a new SwiftData field. Export it only for the actual Today simple completion with the same stored local day, a nonfuture occurrence, and neither `healthKit` nor `quantity` source. Missing metadata in existing snapshots disables direct Undo.
+
+`QuickLogService.undo` revalidates current day/time zone, active due habit/configuration revision, absent quantity target/skip, exact completion identity and stored day/source/time before calling the existing `undoCompletion(id:)`. A missing captured fact returns `alreadyUndone`, never chooses another fact. A stale Undo after re-logging cannot delete the new ID. Earlier dates, other habits, additional same-day facts, skips and quantity entries are untouched. Historical metrics recompute from the intentionally corrected fact, as with app Undo.
+
+`UndoQuickLogHabitIntent` executes in the app process, shares the Log writer/export path, and exports only committed canonical facts. UI actions pass their actual displayed habit IDs as presentation-only acknowledgment pins (de-duplicated, intersected with known exported habits, maximum four). Routine intersects those pins with its own members, preserving the visible row for Undo even when other routine steps are already completed. Both providers request fresh facts at valid pin expiry rather than scheduling captured data for replay. No exact redraw deadline is promised.
+
+### Widget Undo repeated-tap refresh correction (October 8, 2026)
+
+Owner-simulator diagnostics confirmed that explicit Undo deleted the exact saved facts, while the Home Screen continued showing the old completed snapshot. Repeated taps were idempotent in the database but republished the pending snapshot and restarted its 30-second presentation window on every invocation. A separately frozen Device Hub window also initially prevented taps from reaching the app; replacing that window process restored input without resetting data.
+
+Widget action exports now save committed facts without issuing a redundant `reloadAllTimelines`: WidgetKit automatically requests the interactive widget timeline after `perform()` returns. Ordinary app exports still reload timelines. An already-undone request reuses a current, same-zone, nonfuture pending snapshot when it already acknowledges the deletion; it does not rewrite that snapshot or extend the presentation window. Undo button identity follows its exact completion UUID. These changes preserve the exact-record replay protection and never delete a newer check-in. Other widgets refresh through their own timeline policies or normal app exports.
+
+Debug-only `WidgetCheckIn` diagnostics contain action/outcome flags only, with no habit names, UUIDs, notes, or quantities. They are excluded from Release. Platform reference: [Apple: adding interactivity to widgets](https://developer.apple.com/documentation/widgetkit/adding-interactivity-to-widgets-and-live-activities).
+
+### Widget optimistic presentation
+
+Widget Toggle on/off presentation is transient system UI, not a persisted completion state. Fixed intents still express either Log or Undo of a captured UUID; repeated pending taps cannot silently reverse the last command or delete a newly re-logged fact. The pending label is “Saving…” / “Undoing…”, and only a fresh canonical snapshot offers the next saved action. Snapshot schema and database semantics are unchanged. Owner diagnostics observed 6–22ms from intent entry to save/export for the sampled actions; these are observations, not a cold-start or real-device latency guarantee. The subsequent simulator redraw remains controlled by WidgetKit.
+
+### Companion preference confirmation — October 21, 2026
+
+`CompanionSettingsViewModel.didSave` is transient presentation state, set only after `CompanionProfileRepository.save` returns successfully and cleared on draft edits, load, and each save attempt. Failed writes cannot retain an earlier success confirmation; the editable draft remains available for retry. The entire existing profile, including onboarding completion, is preserved. No schema, repository write semantics, entitlement, permission, or data handling changes. Settings' existing disappearance refresh for Today/widgets/Live Activities remains intact.
+
+### Action feedback state — October 21, 2026
+
+Action acknowledgments remain ephemeral UI/view-model state. Reminder saves clear their acknowledgment when Enable/time changes or a new load/write begins. Health settings capture the submitted metric/target and cannot acknowledge a changed draft; `completedRefreshHabitIDs` records only completed per-habit queries within the current refresh in memory. It stores no health sample or permission inference, is cleared when refresh begins, and cannot mark a failed/canceled/stale query as checked. Existing Health import rules and saved connection/history semantics remain authoritative.
+
+Cloud backup's feedback action and acknowledged-success flag do not replace last-success dates or account/generation checks; only the existing provider acknowledgment sets upload success. List checks can report an empty successful result without inventing a recovery point. Habit activity confirmations are scoped to the selected civil day and loaded activity configuration, and clear before writes/on failure; exact-entry Undo and captured-unit history are unchanged. Calendar draft changes/review attempts clear old success and invalid review cannot retain an older editor draft. Session-presentation acknowledgments, Make Room start acknowledgment and Watch pending wording do not alter sessions, outcomes, records, backup formats or widget contracts. There is no schema migration.

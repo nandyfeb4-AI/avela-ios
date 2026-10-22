@@ -272,6 +272,10 @@ Primary references: [on-device capability](https://developer.apple.com/documenta
 
 The owner-approved Focus Session permits other app use and uses the existing locally recorded, manually reported session lifecycle. It requests no Screen Time/Family Controls capability and makes no concentration verification claim. Live Activity presentation is explicitly selected and identifies focus versus phone-free without exposing the habit name. Duration/system availability limits remain unchanged. Timers never grant habit completion or mark other apps blocked. New session-goal creation uses the same subscription creation policy, without deleting or restricting existing history on expiry. No new permissions, remote service, tracking or audio capability is introduced by this flow.
 
+### Action acknowledgment follow-up — October 21, 2026
+
+Same-screen action feedback now identifies pending work and acknowledges only completed operations. Activity Requested means ActivityKit accepted the request, not a guarantee of visible OS presentation; Hide does not stop local tracking. Saved Health settings do not imply read authorization or target achievement, and Health Checked can include no accessible samples. Backup success still requires the existing acknowledged private-cloud upload; an empty list is stated explicitly. Notification denial, draft changes and failed retries cannot retain false success wording. No new permission, entitlement, external processing, analytics, automatic logging rule or purchase gate is introduced. Hardware permission, privacy and accessibility checks remain separate from simulator/fake-provider evidence.
+
 ## Differentiation privacy and truthful presentation
 
 Private habit reasons are local optional text, excluded from Avela logical cloud recovery and shared watch/widget/Live Activity data. This enrichment requests no new permission and adds no third-party service. Momentum and recovery suggestions are deterministic projections of persisted tracking, not health advice or AI inference. Timer starts are identified as starts, never verified focus or habit success. No automatic resumption date is promised. Photo memory remains unimplemented.
@@ -284,3 +288,34 @@ Uses native WidgetKit Button(intent:), App Intents and existing App Group JSON o
 ## Two focused widgets — 2026-10-07
 
 Routine names/IDs/order join the existing app-exported shared widget projection for explicit Home Screen selection. AppEntity queries read only JSON, never SwiftData in the extension. No reason/photo/Health sample/reflection export, new permission, entitlement, SDK or remote processing. Native configurable widgets and app-process logging retain local-device authentication and canonical capability guards. Individual logging is explicit; no routine bulk success or false attention measurement. Existing Live Activity behavior remains time-bound and unchanged.
+
+
+## Calendar planning and Make Room shortcut — 2026-10-07
+
+Apple's iOS 17+ event editor supports explicit event creation without granting Avela calendar access. Avela neither requests full Calendar access nor fetches events. The habit title is disclosed as potentially visible/synced/shared through the selected calendar before the editor opens. Private reasons, health samples and history are excluded; no canonical completion or timer starts from event save. See [Apple EventKit guidance](https://developer.apple.com/documentation/eventkit/accessing-the-event-store).
+
+Make Room is an explicitly invoked App Intent, with authenticated foreground execution and generic spoken feedback. No microphone access or generative model is introduced. Current app capabilities remain unchanged. Screen Time shielding is not enabled: separate Family Controls distribution approval and reliable unblocking verification remain required before introducing it as a working feature.
+
+
+## Optional individual app protection — 2026-10-07
+
+Explicit user-initiated Family Controls authorization and picker selection restrict only selected distractions during a chosen session. No parental control, usage metering, hidden blocking, app-name extraction, remote processing or inferred success. Avela clears its own named ManagedSettings store, not other Screen Time rules. Tokens/private operational state are excluded from cloud/device recovery. Developer membership/profiles are required for signed testing; distribution approval is required for app and monitor extension, even if the shipping runtime switch is off. Release defaults off pending actual-device expiry/reboot/revocation validation. Reviewer instructions and current limits: SCREEN_TIME_INTEGRATION_PLAN.md. Older no-blocking descriptions apply only to ordinary/unprotected sessions and prior builds.
+
+
+## Account-independent readiness — October 7, 2026
+
+In-app Privacy now explains Calendar event sharing/sync and that deleting Avela does not remove optional private iCloud recovery copies. The existing owner-review policy draft is aligned. These disclosures do not publish a policy or complete App Store Connect responses. No new collection, permission or entitlement is introduced in this readiness pass.
+
+## Rilova brand identity — 2026-10-07
+
+The Rilova icon uses an original vector mark, without SF Symbols. This branding pass adds no permissions, collected data, dependencies or entitlement changes. Existing release and device-verification requirements remain open. Production App Store and subscription display metadata must be updated separately while preserving product identifiers.
+
+## Scoped Rilova presentation polish — 2026-10-07
+
+The scoped Rilova onboarding/Today polish changes presentation only. No data handling, entitlement, permission prompt, dependency, commercial policy or health/adherence claim is added. Existing manual provenance, free path, optional onboarding steps and physical-accessibility/release gates remain.
+
+## Explicit interactive widget Undo — 2026-10-08
+
+Owner-approved correction uses native `Button(intent:)` and a non-discoverable, locally authenticated `LiveActivityIntent` with `openAppWhenRun = false`. This marker routes the write to the app; it never starts a Live Activity. No extension database writer, permission, SDK, server or new data transmission. Exported completion IDs are local action metadata; widget rows retain privacy-sensitive presentation. Health imports and current quantity targets are corrected in app detail, not via this action. Old/day-shifted/configuration-changed requests fail closed; repeating an old Undo cannot remove a replacement check-in.
+
+Reviewer: add Quick Log or choose a saved Routine, tap Log for a simple habit, wait for Logged today/Undo, tap Undo, verify Log returns and History no longer contains that exact check-in. Log again and verify one new fact. Names/quantity links still open the app. Signed-device authentication/background routing remains a release gate; no instant-update claim.

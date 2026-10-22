@@ -8,8 +8,8 @@ struct HabitMomentumView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                Text(viewModel.habitName).font(.title2.weight(.semibold))
-                Text("Progress that stays with you").font(.subheadline).foregroundStyle(Color.appInkSecondary)
+                RilovaSectionHeader(title: viewModel.habitName,
+                    subtitle: "Progress that stays with you", symbol: "chart.bar.xaxis")
                 if let summary = viewModel.summary {
                     card("Recent Rhythm", symbol: "chart.bar.xaxis") {
                         if let percent = summary.recentPercentage {

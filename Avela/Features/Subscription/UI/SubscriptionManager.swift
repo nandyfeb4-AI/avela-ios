@@ -8,9 +8,9 @@ enum SubscriptionActionStatus: Equatable {
     var message: String? {
         switch self {
         case .idle: return nil
-        case .purchased: return "Premium is ready. Thank you for supporting Avela."
+        case .purchased: return "Premium is ready. Thank you for supporting Rilova."
         case .pending: return "Your purchase is awaiting approval. Premium will unlock when Apple confirms it."
-        case .cancelled: return "Purchase cancelled. You can continue using Avela for free."
+        case .cancelled: return "Purchase cancelled. You can continue using Rilova for free."
         case .restored: return "Your Premium subscription has been restored."
         case .nothingToRestore: return "No active Premium subscription was found for this Apple Account."
         case .unavailable: return "The App Store is unavailable right now. Please try again later. Your existing tracking remains available."

@@ -438,3 +438,18 @@ Owner-approved optional small/medium Quick Log widget is implemented alongside e
 ## Rich Tide widgets — October 7, 2026
 
 The Home Screen gallery now offers **Quick Log** and **Routine**, each in small/medium. Approved Rich Tide uses deep theme gradients and contrasting labelled Log buttons. Remove retired Attention/Progress placements and add the replacement. Routine requires a saved routine selected in Edit Widget. Log saves a simple check-in without opening Avela; names and quantity + open the relevant app screen. Native light/dark/largest-text screenshots, 523 passing unit tests, guide UI regression, background logging checks and Release verification are recorded in [widget verification](verification/two-widgets/README.md).
+
+
+## Calendar and native capture integrations — October 7, 2026
+
+Make Room now offers optional, user-reviewed Calendar planning and an App Shortcut for explicit linked session starts. Watch successful replies use inline confirmation. No completion is inferred from planning, timers or app use. [Implementation and verification](verification/calendar-integrations/README.md). Screen Time shielding remains unimplemented pending the separate entitlement and lifecycle gates; current sessions never block apps.
+
+
+## Optional app protection — October 7, 2026
+
+Owner-approved native development implementation: selected distractions, explicit individual authorization, protected Make Room start, monitor extension, Stop and reconciliation. Canonical progress unchanged; native distribution availability stays off until hardware testing. Automatic usage metering remains deferred. Entitlement approval and real-iPhone expiry/reboot tests are still release gates. Evidence: verification/app-protection/README.md.
+
+
+## Account-independent readiness — October 7, 2026
+
+Settings' App Protection row and the largest-text habit-form clipping findings are resolved. The optional private reason now opens in a separate, wrapping editor after core setup; hiding/saving/relaunch remains covered. Both largest-text native audits pass without suppression. Final affected run: three UI tests, zero failures; earlier full unit baseline: 545 passing. Debug test build and unsigned Release build succeed, and checked DEBUG hooks remain absent from Release. This is not a full UI-suite or physical-device verification claim. [Evidence and remaining release gates](verification/release-readiness/README.md).

@@ -33,6 +33,8 @@ final class IntentionSessionViewModel {
     private(set) var startedSessionID: UUID?
     var selectedGoalID: UUID? { didSet { updateSelectedTarget() } }
     var errorMessage: String?
+    var protection: AppProtectionModel?
+    var protectsSession = false
 
     init(habitID: UUID, habits: any HabitRepository, attention: any AttentionRepository,
          links: any IntentionSessionLinkRepository) {
@@ -100,7 +102,15 @@ final class IntentionSessionViewModel {
                 load(asOf: date)
                 return false
             }
+            if protectsSession {
+                guard let protection,
+                      let config = try attention.activeConfiguration(for: goalID, on: date) else {
+                    throw AppProtectionError.unavailable
+                }
+                try protection.validateStart(minutes: config.targetValue, asOf: date)
+            }
             let session = try attention.startSession(goalID: goalID, at: date)
+            if protectsSession { _ = protection?.start(session: session, asOf: date) }
             startedSessionGoalID = goalID
             startedSessionID = session.id
             do {
@@ -110,6 +120,8 @@ final class IntentionSessionViewModel {
             }
             load(asOf: date)
             return true
+        } catch let error as AppProtectionError {
+            errorMessage = error.message
         } catch AttentionRepositoryError.sessionAlreadyActive {
             startedSessionGoalID = selectedGoalID
             errorMessage = "A session is already running for this goal. Open it below to review it before starting another."

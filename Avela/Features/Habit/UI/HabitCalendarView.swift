@@ -8,11 +8,13 @@ struct HabitCalendarView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.appPalette) private var palette
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.colorSchemeContrast) private var contrast
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                Text(viewModel.habitName).font(.title3.weight(.semibold)).accessibilityAddTraits(.isHeader)
+                Text(viewModel.habitName).font(.title2.weight(.semibold)).fontDesign(.rounded)
+                    .foregroundStyle(Color.appInk).accessibilityAddTraits(.isHeader)
                 if let month = viewModel.month {
                     streakSummary(month.streak, mixedUnits: month.hasMixedStreakUnits)
                     monthNavigation
@@ -117,14 +119,17 @@ struct HabitCalendarView: View {
         }
         .foregroundStyle(.white)
         .padding(22).frame(maxWidth: .infinity, alignment: .leading)
-        .background(palette.heroGradient)
+        .background {
+            if contrast == .increased { palette.prominentFill }
+            else { LinearGradient(colors: palette.todaySummaryColors, startPoint: .topLeading, endPoint: .bottomTrailing) }
+        }
         .padding(.bottom, dynamicTypeSize.isAccessibilitySize ? 0 : 96)
         .overlay(alignment: .bottom) {
             if !dynamicTypeSize.isAccessibilitySize {
                 ThemeLandscape(theme: palette.theme).frame(height: 96)
             }
         }
-        .background(palette.heroGradient)
+        .background(palette.prominentFill)
         .clipShape(RoundedRectangle(cornerRadius: AppMetrics.cardCornerRadius, style: .continuous))
     }
 

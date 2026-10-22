@@ -179,3 +179,25 @@ Quick Log shows two small/four medium rows; Routine shows one small/two medium s
 The palette regression verifies primary/secondary text and Log ink at 4.5:1, and action boundaries at 3:1, for both gradient endpoints in every theme and appearance. Native evidence and remaining device checks are in [two-widget verification](verification/two-widgets/README.md). System tinted rendering is controlled by iOS and remains a physical-device check.
 
 Widget pending feedback is confined to the status caption, following [Apple's guidance to use invalidatable content judiciously](https://developer.apple.com/documentation/widgetkit/adding-interactivity-to-widgets-and-live-activities). Do not invalidate the complete Log button or show completed state before its save. Cold background startup may still take time; stable action styling does not promise instant execution.
+
+## Rilova brand identity — 2026-10-07
+
+Use the Rilova lowercase-r mark in Rich Tide teal and warm ivory. Assets and native vector regeneration are documented in `design/brand/rilova/README.md`. The app icon is supplied square and opaque; the system applies its mask. Existing themes and companions are retained.
+
+## Original artwork refinement
+
+The owner-approved flowing capital R with pearl/mint highlights supersedes the earlier lowercase-r mark. Primary app/Watch artwork is the original-board gradient icon; iOS also bundles its dark counterpart. Actual symbol pixels are preserved, with only square background corners reconstructed. Existing app themes, companions and approved tagline are unchanged.
+
+## Scoped Rilova presentation polish — 2026-10-07
+
+Brand gradients are concentrated in the onboarding welcome card and Today habit summary. Tidewater welcome uses pale mint/teal endpoints in light mode and deep opaque endpoints in dark mode; Today uses deep teal with white text. Other saved themes keep their existing palette. Habit rows, status colors, scenery, companion placement and charts are unchanged. Summary cards share 110pt minimum height and 20pt continuous corners; content may grow for Dynamic Type. Welcome uses the approved icon, rounded system wordmark and a full-width native Continue action. Increased Contrast uses solid surfaces; no decorative animation or new haptics.
+
+## Calendar and Insights continuity — 2026-10-07
+
+Calendar’s streak hero reuses the contrast-tested Today summary endpoints; its landscape, state symbols, date ribbons and accessibility date-list fallback remain. Insights’s week header reuses the welcome wash with primary/secondary ink, and numeric chart labels use monospaced digits. Neutral chart cards protect readability rather than extending the logo gradient into data surfaces. Increase Contrast uses solid surfaces/fills for these headers. Other saved themes retain their own palette. See verification/brand-polish for native evidence.
+
+## Shared Rilova introductory cards — 2026-10-08
+
+`rilovaHeaderSurface()` and `RilovaSectionHeader` reuse contrast-tested welcome endpoints, stable ink, 20-point padding and continuous 22-point corners. Increase Contrast uses an opaque solid surface; selected themes remain respected. Habit identity cards, Momentum, reflection/session introductions and Premium use this limited treatment; forms keep immediate name entry and add only decorative identity previews. History retains a compact pinned range with its decorative icon removed at accessibility sizes. Reading/record/entry cards remain neutral. Lifetime reuses the deep summary endpoints. Widget/Watch/Live Activity numerals and headings align with the rounded system style; small Island regions retain their existing compact design.
+
+No animation, fake success or extra permission step is added. Presentation verification is recorded in verification/brand-completion. Physical assistive-input/system-surface checks remain open.

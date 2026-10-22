@@ -4,11 +4,12 @@ struct HabitLifetimeView: View {
     @State var viewModel: HabitLifetimeViewModel
     @Environment(\.appPalette) private var palette
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.colorSchemeContrast) private var contrast
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                Text(viewModel.habitName).font(.title2.weight(.semibold)).foregroundStyle(Color.appInk)
+                Text(viewModel.habitName).font(.title2.weight(.semibold)).fontDesign(.rounded).foregroundStyle(Color.appInk)
                 if let summary = viewModel.summary {
                     VStack(alignment: .leading, spacing: 12) {
                         Label("Lifetime Check-ins", systemImage: "checkmark.circle")
@@ -22,7 +23,11 @@ struct HabitLifetimeView: View {
                     }
                     .foregroundStyle(.white).padding(22)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(palette.heroGradient, in: RoundedRectangle(cornerRadius: 24))
+                    .background {
+                        if contrast == .increased { palette.prominentFill }
+                        else { LinearGradient(colors: palette.todaySummaryColors, startPoint: .topLeading, endPoint: .bottomTrailing) }
+                    }
+                    .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
                     Text("Misses don’t reset your progress. Undo and corrections update these totals.")
                         .font(.footnote).foregroundStyle(Color.appInkSecondary)
                     milestones(summary)

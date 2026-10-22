@@ -50,8 +50,8 @@ final class UserNotificationAdapter: HabitNotificationAdapter {
         do {
             for request in requests {
                 let content = UNMutableNotificationContent()
-                content.title = "Avela"
-                content.body = "A moment for your habit. Open Avela when you're ready."
+                content.title = "Rilova"
+                content.body = "A moment for your habit. Open Rilova when you're ready."
                 content.sound = .default
                 content.categoryIdentifier = Self.habitCategory.identifier
                 content.userInfo = ["habitID": request.habitID.uuidString]

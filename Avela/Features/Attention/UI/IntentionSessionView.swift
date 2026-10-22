@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct IntentionSessionView: View {
     @State private var viewModel: IntentionSessionViewModel
@@ -6,18 +7,27 @@ struct IntentionSessionView: View {
     @Environment(\.sessionLiveActivityService) private var liveActivityService
     @Environment(\.habitActivityRepository) private var activityRepository
     @Environment(\.attentionGoalCreationAllowed) private var creationAllowed
+    @Environment(\.appProtectionModel) private var protection
+    @Environment(\.appProtectionDriver) private var protectionDriver
+    @State private var showingProtection = false
     @State private var showingCreateGoal = false
+    @State private var showingCalendar = false
     @State private var showingHabitLog = false
     @State private var showsInIsland = false
     @State private var activityMessage: String?
+    @State private var acknowledgedStartID: UUID?
 
     init(viewModel: IntentionSessionViewModel) { _viewModel = State(initialValue: viewModel) }
 
     var body: some View {
         List {
             Section("Make room for") {
-                Text(viewModel.habitName).font(.headline)
-                Text("Choose time to focus on this habit. A focus session allows phone use; a phone-free session is an intention to step away. Neither blocks apps or completes the habit.")
+                RilovaSectionHeader(title: viewModel.habitName,
+                    subtitle: "Choose a little time for what matters.", symbol: "leaf")
+                    .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
+            }
+            Section {
+                Text("Choose time to focus on this habit. A focus session allows phone use; a phone-free session is an intention to step away. Neither completes the habit. Apps are restricted only when you explicitly enable optional protection.")
                     .foregroundStyle(.secondary)
             }
             if let memory = viewModel.whyMemory, viewModel.habitAvailable {
@@ -46,16 +56,31 @@ struct IntentionSessionView: View {
                     if let minutes = viewModel.selectedTargetMinutes {
                         Text("\(minutes.formatted()) minute target")
                     }
-                    Text(viewModel.selectedSessionType == .focusSession ? "Using your phone is allowed. Elapsed time never verifies concentration or completes this habit." : "Intend to stay off your phone. Avela does not block or monitor other apps; elapsed time never proves you stayed phone-free.")
+                    Text(viewModel.selectedSessionType == .focusSession ? "Without optional app protection, all your apps remain available. Elapsed time never verifies concentration or completes this habit." : "Intend to stay off your phone. Apps remain available unless you enable optional protection; elapsed time never proves you stayed phone-free.")
                         .font(.callout).foregroundStyle(.secondary)
+                        .accessibilityIdentifier("intentionSession.explanation")
                     if liveActivityService != nil {
                         Toggle("Show mascot & timer in Dynamic Island", isOn: $showsInIsland)
                             .accessibilityIdentifier("intentionSession.islandToggle")
                         Text("Also appears on the Lock Screen where supported. You can hide it without ending the session.")
                             .font(.footnote).foregroundStyle(.secondary)
                     }
-                    Button(viewModel.selectedSessionType == .focusSession ? "Start Focus Session" : "Start Phone-Free Session") {
+                    if let protection, protection.isAvailable {
+                        Toggle("Restrict selected distractions", isOn: $viewModel.protectsSession)
+                            .accessibilityIdentifier("protection.sessionToggle")
+                        Button("Choose Apps & Websites") { showingProtection = true }
+                            .accessibilityIdentifier("protection.setup")
+                        Text("Optional · 15 minutes to 8 hours. Select distractions and allow access first; other sessions stay unprotected.")
+                            .font(.footnote).foregroundStyle(.secondary)
+                    }
+                    Button {
+                        acknowledgedStartID = nil
+                        activityMessage = nil
                         let started = viewModel.start()
+                        if started {
+                            acknowledgedStartID = viewModel.startedSessionID
+                            UIAccessibility.post(notification: .announcement, argument: "Session started. Your habit still needs its own check-in.")
+                        }
                         if started, showsInIsland, let id = viewModel.startedSessionID, let liveActivityService {
                             do {
                                 try liveActivityService.show(sessionID: id)
@@ -65,14 +90,37 @@ struct IntentionSessionView: View {
                                 activityMessage = "The session is saved, but its Live Activity couldn't be shown. Open Session & Check In to retry."
                             }
                         }
+                    } label: {
+                        if hasAcknowledgedRunningSession {
+                            Label("Session Started", systemImage: "checkmark.circle.fill")
+                        } else {
+                            Text(viewModel.selectedSessionType == .focusSession ? "Start Focus Session" : "Start Phone-Free Session")
+                        }
                     }
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
-                        .disabled(viewModel.selectedGoalID == nil)
+                        .disabled(viewModel.selectedGoalID == nil || hasAcknowledgedRunningSession)
                         .accessibilityIdentifier("intentionSession.start")
                     Button("Create Another Session Goal", systemImage: "plus.circle") { showingCreateGoal = true }
                         .buttonStyle(.borderless)
                         .accessibilityIdentifier("intentionSession.createGoal")
+                }
+            }
+            if let protection {
+                AppProtectionStatusView(model: protection)
+                if !protection.isAvailable {
+                    Section {
+                        Button("App Protection Setup", systemImage: "hand.raised") { showingProtection = true }
+                            .accessibilityIdentifier("protection.setup")
+                    }
+                }
+            }
+            if viewModel.habitAvailable {
+                Section {
+                    Button("Plan Time in Calendar", systemImage: "calendar.badge.plus") { showingCalendar = true }
+                        .accessibilityIdentifier("intentionSession.planCalendar")
+                    Text("Choose a time to make room. Planning doesn't start a timer or log success.")
+                        .font(.footnote).foregroundStyle(.secondary)
                 }
             }
             if let activityMessage {
@@ -125,7 +173,13 @@ struct IntentionSessionView: View {
         .appThemeCanvas()
         .navigationTitle("Make Room")
         .navigationBarTitleDisplayMode(.inline)
-        .task { viewModel.creationAllowed = creationAllowed; viewModel.load() }
+        .task { viewModel.creationAllowed = creationAllowed; viewModel.protection = protection; viewModel.load(); protection?.refresh() }
+        .sheet(isPresented: $showingProtection) {
+            if let protection { AppProtectionSetupView(model: protection, driver: protectionDriver) }
+        }
+        .sheet(isPresented: $showingCalendar) {
+            HabitCalendarSchedulingView(habitName: viewModel.habitName, suggestedMinutes: viewModel.selectedTargetMinutes)
+        }
         .sheet(isPresented: $showingCreateGoal) {
             AttentionGoalFormView(defaultType: .focusSession, defaultName: "Focus for \(viewModel.habitName)", sessionOnly: true) { draft in
                 viewModel.createSessionGoal(draft)
@@ -138,10 +192,21 @@ struct IntentionSessionView: View {
             }
         }
         .onChange(of: scenePhase) { _, phase in if phase == .active { viewModel.load() } }
+        .onChange(of: viewModel.selectedGoalID) { _, _ in
+            acknowledgedStartID = nil
+            activityMessage = nil
+        }
         .alert("Session Update", isPresented: Binding(get: { viewModel.errorMessage != nil },
             set: { if !$0 { viewModel.errorMessage = nil } })) {
                 Button("OK") { viewModel.errorMessage = nil }
             } message: { Text(viewModel.errorMessage ?? "") }
+    }
+
+    private var hasAcknowledgedRunningSession: Bool {
+        guard let acknowledgedStartID else { return false }
+        return viewModel.history.contains {
+            $0.id == acknowledgedStartID && $0.session.attentionGoalID == viewModel.selectedGoalID && $0.session.isActive
+        }
     }
 }
 

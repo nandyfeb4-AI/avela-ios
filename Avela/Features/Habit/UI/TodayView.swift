@@ -31,6 +31,7 @@ private struct TodayToast: Identifiable {
 /// queries SwiftData nor computes scheduling/progress/threshold math itself.
 struct TodayView: View {
     @Environment(\.appPalette) private var palette
+    @Environment(\.colorSchemeContrast) private var contrast
     @Bindable var viewModel: TodayViewModel
     let repository: HabitRepository
     @Bindable var attentionViewModel: AttentionSummaryViewModel
@@ -293,7 +294,7 @@ struct TodayView: View {
                 .font(.footnote.weight(.semibold))
                 .foregroundStyle(.white)
             Text("\(done) of \(total)")
-                .font(.title2.weight(.bold)).fontDesign(.rounded)
+                .font(.title.weight(.semibold)).fontDesign(.rounded)
                 .foregroundStyle(.white)
                 .monospacedDigit()
             if total > 0 && total <= 12 {
@@ -308,9 +309,15 @@ struct TodayView: View {
                 .accessibilityHidden(true)
             }
         }
-        .padding(14)
+        .padding(16)
+        .frame(minHeight: 110, alignment: .leading)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(palette.heroGradient)
+        .background {
+            if contrast == .increased { palette.prominentFill }
+            else {
+                LinearGradient(colors: palette.todaySummaryColors, startPoint: .topLeading, endPoint: .bottomTrailing)
+            }
+        }
         .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Habits: \(done) of \(total) done")
@@ -327,7 +334,8 @@ struct TodayView: View {
                 .font(.title2.weight(.bold)).fontDesign(.rounded)
                 .foregroundStyle(pillarColor(pillarState))
         }
-        .padding(14)
+        .padding(16)
+        .frame(minHeight: 110, alignment: .leading)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(palette.surface)
         .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))

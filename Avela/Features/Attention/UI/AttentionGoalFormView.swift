@@ -39,8 +39,12 @@ struct AttentionGoalFormView: View {
         NavigationStack {
             Form {
                 Section("Name") {
-                    TextField("Goal name", text: $name)
-                        .accessibilityIdentifier("attentionGoalForm.nameField")
+                    HStack(spacing: 12) {
+                        AppIconBadge(symbol: goalType.isTimedSession ? "timer" : "hourglass")
+                            .accessibilityHidden(true)
+                        TextField("Goal name", text: $name)
+                            .accessibilityIdentifier("attentionGoalForm.nameField")
+                    }
                 }
 
                 Section("App or Category") {
@@ -67,7 +71,7 @@ struct AttentionGoalFormView: View {
                         DatePicker("Start", selection: $windowStart, displayedComponents: .hourAndMinute)
                         DatePicker("End", selection: $windowEnd, displayedComponents: .hourAndMinute)
                     } header: { Text("Protected Window") } footer: {
-                        Text("Times follow your local clock. An end before the start continues overnight. You report whether you kept the window; Avela does not monitor phone use.")
+                        Text("Times follow your local clock. An end before the start continues overnight. You report whether you kept the window; Rilova does not monitor phone use.")
                     }
                 } else {
                     Section {
@@ -83,11 +87,12 @@ struct AttentionGoalFormView: View {
                 } footer: {
                     Text("Choose a duration greater than 0 and no more than 1,440 minutes (24 hours).")
                     if goalType.isTimedSession {
-                        Text(goalType == .focusSession ? "Focus on an activity; using your phone is allowed. Avela does not block or monitor apps." : "Intend to step away from your phone. Avela does not block or monitor apps; you report the result yourself.")
+                        Text(goalType == .focusSession ? "Focus on an activity. Creating this goal does not restrict apps; optional protection is chosen separately in Make Room." : "Intend to step away from your phone. Creating this goal does not restrict apps; you report the result yourself.")
                     }
                 }
                 }
             }
+            .scrollDismissesKeyboard(.interactively)
             .appThemeCanvas()
         .navigationTitle(isEditing ? "Edit Attention Goal" : "New Attention Goal")
             .navigationBarTitleDisplayMode(.inline)

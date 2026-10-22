@@ -156,12 +156,15 @@ struct InsightsView: View {
     }
 
     private var weekRangeHeader: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text("Your weekly review").font(.title3.weight(.semibold)).accessibilityAddTraits(.isHeader)
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Your weekly review").font(.title2.weight(.semibold)).fontDesign(.rounded)
+                .foregroundStyle(Color.appInk).accessibilityAddTraits(.isHeader)
             Text(viewModel.weekRangeLabel).font(.subheadline).foregroundStyle(Color.appInkSecondary)
                 .accessibilityIdentifier("insights.weekRangeLabel")
-            Text("Completed week").font(.caption.weight(.medium)).foregroundStyle(palette.accent)
+            Label("Completed week", systemImage: "calendar")
+                .font(.caption.weight(.medium)).foregroundStyle(Color.appInkSecondary)
         }
+        .rilovaHeaderSurface()
     }
 
     private func summaryCard(for insights: WeeklyInsightsCalculator.WeeklyInsights, overallConsistency: Double) -> some View {
@@ -180,7 +183,7 @@ struct InsightsView: View {
                     }
                     Text(Self.percentageText(overallConsistency))
                         .font(.system(.largeTitle, design: .rounded, weight: .bold))
-                        .foregroundStyle(Color.appInk).minimumScaleFactor(0.75)
+                        .foregroundStyle(Color.appInk).monospacedDigit().minimumScaleFactor(0.75)
                         .accessibilityIdentifier("insights.overallConsistency")
                 }
                 .frame(width: dynamicTypeSize.isAccessibilitySize ? 210 : 132,

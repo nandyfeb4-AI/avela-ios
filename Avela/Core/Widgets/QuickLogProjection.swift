@@ -28,6 +28,12 @@ struct QuickLogProjection {
         return "\(pending) left today"
     }
 
+    func canUndo(_ row: WidgetHabitSnapshot) -> Bool {
+        row.isCompletedToday && row.undoCompletionID != nil
+            && row.requiresQuantityLogging == false && row.isSkippedToday == false
+            && row.configurationRevision != nil && snapshot.timeZoneIdentifier != nil
+    }
+
     func canLog(_ row: WidgetHabitSnapshot) -> Bool {
         !row.isCompletedToday && row.isSkippedToday == false && row.weeklyTargetMet != true
             && row.requiresQuantityLogging == false && row.configurationRevision != nil
@@ -58,6 +64,12 @@ struct RoutineLogProjection {
         selected.accentLight = snapshot.accentLight
         selected.accentDark = snapshot.accentDark
         selected.quickLogMessage = snapshot.quickLogMessage
+        // Keep the actual tapped routine rows available for an explicit Undo.
+        // Global pins contain only the invoking widget's displayed IDs.
+        selected.quickLogPinnedIDs = snapshot.quickLogPinnedIDs.map { ids in
+            ids.filter { seen.contains($0) }
+        }
+        selected.quickLogPinUntil = snapshot.quickLogPinUntil
         return selected
     }
 }

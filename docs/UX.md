@@ -276,3 +276,36 @@ Quick Log's stale-day state offers a user-initiated 'Refresh habits' App Intent 
 ## Two focused widgets — 2026-10-07
 
 One-time setup offers Quick Log or Routine. Quick Log needs no selection. Routine requires an existing routine and native Edit Widget selection; no implicit first-routine selection. Log saves a single simple due check-in in the background, while names open details and + opens the quantity logger. Routines advance through due pending steps without changing schedules or completing every member. Routine completion is scoped to today’s exported steps; no-due is distinct from all logged. Older Progress/Attention Home Screen widgets are retired; users with an old placement should remove it and add Quick Log or Routine.
+
+
+## Optional restriction flow — 2026-10-07
+
+Make Room offers Restrict selected distractions only on an available development iPhone build. Choose Apps & Websites opens contextual permission then native selection with explicit Save/Cancel. Protection is per-session and off by default. Invalid/unprepared protection prevents starting; a later platform failure discloses a saved unprotected timer. Settings, Make Room and session detail surface Stop Protection for an active interval. Stop changes neither timer/outcome nor habit success. Simulator setup explains its limits without requesting access; Release hides this feature until signed validation. Keep exact selected/optional wording; no claim that all apps are blocked or that other Screen Time rules are removed.
+
+## Private-reason form refinement — October 7, 2026
+
+Habit creation/editing keeps name, icon, category, polarity and schedule together. “Why this matters” follows those core controls and opens an optional editor with a short private-status summary rather than exposing the full saved reason in the setup list. The editor provides keyboard Done, a character count, reminder visibility and separate wrapping explanation rows for purpose, storage and removal. Parent Save/Cancel continues to commit/discard the same draft; no new tab or persistence semantics are introduced. Largest-text form and editor audits pass without suppressing findings; physical assistive-technology verification remains pending.
+
+## Widget correction — 2026-10-08
+
+Use explicit **Log / Undo** labels, with “Logged today” as saved status. Undo is a quiet outlined action in the same touch area; Log is filled. Never make the checkmark a silent toggle or perform a status-only refresh on repeat taps. The invoking widget's displayed rows stay briefly pinned to avoid moving the correction under the user's finger. Accessibility labels name the habit and correction. Amount-based/Health progress opens detail for review. Accessible text sizes enlarge the action width. Native WidgetKit waiting/refresh timing is system-controlled; status reflects saved facts rather than optimistic success.
+
+### Immediate widget action feedback
+
+Quick Log and Routine use a custom-styled native `Toggle(isOn:intent:)` for eligible simple check-ins while preserving the explicit Log and exact-record Undo intents. The Toggle's optimistic presentation shows “Saving…” or “Undoing…” immediately. This describes work in flight; the snapshot's counts and “Logged today” label remain saved facts until the system reloads. Amount/Health/skip review links remain unchanged.
+
+The next saved Log/Undo action becomes available when WidgetKit replaces the timeline; no instant reversal or guaranteed redraw deadline is promised. WidgetKit can still dispatch repeated taps during optimistic presentation, so the canonical idempotent intents remain the safety boundary. The pending control uses the same contrast tokens and a 44pt hit area; WidgetKit may apply transient system fading during reload. Status text no longer uses `invalidatableContent` pulsing, since the action label now communicates the wait. There is no added looping animation, local database writer, permission, or dependency. See [Apple's optimistic Toggle behavior](https://developer.apple.com/documentation/widgetkit/adding-interactivity-to-widgets-and-live-activities).
+
+### Companion preference save acknowledgment — October 21, 2026
+
+Settings → Companion & Feedback keeps the editor open after Save Preferences and changes that same button to a persistent, checkmarked “Saved” state (spoken as “Preferences saved”). Keeping confirmation in the action avoids inserting feedback below the visible viewport at large text sizes. Only a successful repository save displays/announces that confirmation. Changing the animal, visibility, or Haptics clears it; failed saves retain the draft and existing generic error alert. VoiceOver receives a success announcement. No timer, navigation change, extra vibration, or animation is added; disabled haptics remain respected.
+
+### Action acknowledgment consistency — October 21, 2026
+
+An action that leaves its editor open must make its result visible where it was invoked. Show Session Activity changes to a checkmarked Activity Requested only after ActivityKit accepts the request; it does not promise that the OS is displaying it. Hide shows Hiding Activity during dismissal, then Activity Hidden. Failures leave a labelled retry control and explanatory text; Show/Hide never finish the local session. Make Room's successful Start changes the tapped control to Session Started and prevents a duplicate start from that acknowledged control. The existing explicit session-review route remains.
+
+Reminder and Apple Health settings show work and successful configuration saves in the same Save control. Edits clear that acknowledgment. A denied notification permission never claims delivery, and a saved Health connection never claims readable data or a met target. Health Checked means a query completed, including an unknown/no-accessible-data result; failed or canceled reads cannot show it. Disconnect feedback remains visible after its controls disappear.
+
+Back Up Now and Check iCloud Backups show work/result at their controls. Only an acknowledged upload can say Backed Up; an empty successful check explicitly reports that no recovery points were found. Existing consent, restore and deletion confirmations remain unchanged. Progress & History keeps its saved-result text in a bottom safe-area strip, cleared by a day/configuration change, new write attempt or failure. Calendar's earlier Added confirmation clears when a revised plan has not been saved. Shared app-protection status exposes Stop errors/results; authorization shows work in progress. Watch's tapped habit says Logging while waiting for its iPhone reply.
+
+These are acknowledgments of existing explicit actions, not additional dialogs, celebratory haptics, automatic permission requests or new tracking behavior. Native navigation, dismissed editors, visible selection changes and updated records already provide feedback and do not receive redundant Saved states.

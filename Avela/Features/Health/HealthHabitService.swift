@@ -54,6 +54,7 @@ final class HealthHabitService {
     private let currentDate: () -> Date
     private(set) var isRefreshing = false
     private(set) var refreshError: String?
+    private(set) var completedRefreshHabitIDs: Set<UUID> = []
     private(set) var messages: [UUID: String] = [:]
     var isAvailable: Bool { provider.isAvailable }
 
@@ -97,12 +98,15 @@ final class HealthHabitService {
         guard !isRefreshing, provider.isAvailable else { return }
         isRefreshing = true
         refreshError = nil
+        completedRefreshHabitIDs = []
         defer { isRefreshing = false }
         do {
             let saved = try connections.connections()
             for connection in saved {
                 guard !Task.isCancelled else { return }
-                do { try await refresh(connection, at: date) }
+                do {
+                    if try await refresh(connection, at: date) { completedRefreshHabitIDs.insert(connection.habitID) }
+                }
                 catch { messages[connection.habitID] = "Couldn't refresh Apple Health. Manual logging still works." }
             }
         } catch {
@@ -110,31 +114,32 @@ final class HealthHabitService {
         }
     }
 
-    private func refresh(_ connection: HealthHabitConnection, at date: Date) async throws {
+    private func refresh(_ connection: HealthHabitConnection, at date: Date) async throws -> Bool {
         guard connection.target.isFinite, connection.target > 0,
               connection.target <= connection.metric.maximumTarget else { throw HealthHabitError.invalidTarget }
         try validateHabit(connection.habitID)
         guard connection.connectedAt <= date,
-              let day = calendar.dateInterval(of: .day, for: date) else { return }
+              let day = calendar.dateInterval(of: .day, for: date) else { return false }
         let value = try await provider.total(for: connection.metric, in: DateInterval(start: day.start, end: date))
         guard !Task.isCancelled,
               LocalDay.key(for: date, calendar: calendar) == LocalDay.key(for: currentDate(), calendar: calendar),
-              try self.connection(for: connection.habitID)?.id == connection.id else { return }
+              try self.connection(for: connection.habitID)?.id == connection.id else { return false }
         try validateHabit(connection.habitID)
         guard let value, value.isFinite, value >= 0 else {
             messages[connection.habitID] = "No accessible Health data yet. This may mean no samples or limited read access."
-            return
+            return true
         }
         messages[connection.habitID] = "\(value.formatted(.number.precision(.fractionLength(0...1)))) of \(connection.target.formatted()) \(connection.metric.label.lowercased()) from Apple Health today."
         guard value >= connection.target,
               let configuration = try habits.activeConfiguration(for: connection.habitID, on: date),
               HabitScheduleEvaluator.isDue(configuration.schedule, on: date, calendar: calendar),
               (try habits.completions(for: connection.habitID, in: day)).isEmpty,
-              (try habits.skips(for: connection.habitID, in: day)).isEmpty else { return }
+              (try habits.skips(for: connection.habitID, in: day)).isEmpty else { return true }
         // A user skip is authoritative; imports don't replace it. Each local
         // day counts once, including flexible weekly commitments.
         try habits.recordCompletion(habitID: connection.habitID, at: date, source: .healthKit, note: nil)
         NotificationCenter.default.post(name: .avelaHealthDidLog, object: nil)
         messages[connection.habitID] = "Today's target reached in Apple Health. Habit success logged."
+        return true
     }
 }

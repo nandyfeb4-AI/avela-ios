@@ -271,3 +271,24 @@ Full unit suite: 519 tests, zero failures, including 18 new Quick Log tests for 
 ## Rich Tide widgets — October 7, 2026
 
 The Home Screen gallery now offers **Quick Log** and **Routine**, each in small/medium. Approved Rich Tide uses deep theme gradients and contrasting labelled Log buttons. Remove retired Attention/Progress placements and add the replacement. Routine requires a saved routine selected in Edit Widget. Log saves a simple check-in without opening Avela; names and quantity + open the relevant app screen. Native light/dark/largest-text screenshots, 523 passing unit tests, guide UI regression, background logging checks and Release verification are recorded in [widget verification](verification/two-widgets/README.md).
+
+
+## Calendar and native capture integrations — October 7, 2026
+
+Make Room now offers optional, user-reviewed Calendar planning and an App Shortcut for explicit linked session starts. Watch successful replies use inline confirmation. No completion is inferred from planning, timers or app use. [Implementation and verification](verification/calendar-integrations/README.md). Screen Time shielding remains unimplemented pending the separate entitlement and lifecycle gates; current sessions never block apps.
+
+
+## Optional protection verification — 2026-10-07
+
+Foundation/lifecycle tests validate bounds, permission/selection guards, overlapping intervals, Stop, exact expiry, revocation, missing session, clock rollback, corruption repair, persistent lease identity, stale callbacks and separate habit/session semantics. Native simulator UI verifies the truthful unavailable flow and existing unprotected sessions. No simulator/fake-driver test proves FamilyActivityPicker authorization, real restrictions or extension delivery after termination/reboot. Signed iPhone gates remain in SCREEN_TIME_INTEGRATION_PLAN.md. Final evidence: verification/app-protection/README.md.
+
+
+## Account-independent readiness — October 7, 2026
+
+Settings' App Protection row and the largest-text habit-form clipping findings are resolved. The optional private reason now opens in a separate, wrapping editor after core setup; hiding/saving/relaunch remains covered. Both largest-text native audits pass without suppression. Final affected run: three UI tests, zero failures; earlier full unit baseline: 545 passing. Debug test build and unsigned Release build succeed, and checked DEBUG hooks remain absent from Release. This is not a full UI-suite or physical-device verification claim. [Evidence and remaining release gates](verification/release-readiness/README.md).
+
+## Full simulator regression — October 8, 2026
+
+Unfiltered Debug testing executed all **547 unit tests and 105 UI tests**. All units and 103 UI tests passed initially; two UI assertions expected top-of-detail rows after navigation returned to a retained lower List scroll position. Saved accessibility hierarchies confirmed the offsets. Bounded scrolling was added to those tests without weakening their behavior assertions or changing production code. Both corrected tests pass in the targeted follow-up; every test now has a passing result across these runs. This is not a claim that the initial unfiltered command was green.
+
+[Commands, result bundles, findings and remaining hardware gates](verification/full-regression/README.md). The owner’s simulator data was untouched.

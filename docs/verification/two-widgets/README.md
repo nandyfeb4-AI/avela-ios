@@ -38,3 +38,7 @@ A native cold-process driver terminated Avela before each Reading/Walk Log tap. 
 After the changes: all 523 unit tests pass; the native cold-process flow passes; Release builds and excludes DEBUG fixture/store markers. The driver is removed and the update installed on the owner's simulator without resetting data. [Saved Reading](cold-widget-saved-reading.png) · [Saved Walk](cold-widget-saved-walk.png).
 
 Cold checks took about 6.6 seconds including XCTest tap synchronization and hierarchy queries; this is not a precise user-visible latency benchmark or a claim of instant saving. WidgetKit app-process startup and refresh scheduling remain system-controlled. Physical-device first-use behavior still needs verification.
+
+## October 8 repeat-tap correction
+
+A newer investigation reproduced foreground navigation from the noninteractive completed checkmark and fixed its original-size background refresh control. Quick Log now requests fresh facts at acknowledgment expiry. See the [native repeat-tap verification](../widget-repeat-tap/README.md) for current results and remaining redraw limits.

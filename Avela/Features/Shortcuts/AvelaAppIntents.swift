@@ -133,8 +133,67 @@ struct LogHabitProgressIntent: AppIntent {
     }
 }
 
+struct SessionGoalShortcutEntity: AppEntity {
+    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Session Goal"
+    static var defaultQuery = SessionGoalShortcutQuery()
+    let id: UUID
+    let name: String
+    var displayRepresentation: DisplayRepresentation { DisplayRepresentation(title: "\(name)") }
+}
+
+struct SessionGoalShortcutQuery: EntityStringQuery {
+    @MainActor func entities(for identifiers: [UUID]) async throws -> [SessionGoalShortcutEntity] {
+        try entities().filter { identifiers.contains($0.id) }
+    }
+    @MainActor func entities(matching string: String) async throws -> [SessionGoalShortcutEntity] {
+        try entities().filter { $0.name.localizedStandardContains(string) }
+    }
+    @MainActor func suggestedEntities() async throws -> [SessionGoalShortcutEntity] { try entities() }
+    @MainActor private func entities() throws -> [SessionGoalShortcutEntity] {
+        try ShortcutRepositories.safely {
+            try ShortcutRepositories.service().attention.fetchGoals().filter { $0.type.isTimedSession }
+                .map { SessionGoalShortcutEntity(id: $0.id, name: $0.name) }
+        }
+    }
+}
+
+struct MakeRoomIntent: AppIntent {
+    static var title: LocalizedStringResource = "Make Room for a Habit"
+    static var description = IntentDescription("Start a chosen focus or phone-free session linked to a habit. This does not complete the habit or block apps.")
+    static var openAppWhenRun = true
+    static var authenticationPolicy: IntentAuthenticationPolicy = .requiresLocalDeviceAuthentication
+    @Parameter(title: "Habit") var habit: HabitShortcutEntity
+    @Parameter(title: "Session Goal") var goal: SessionGoalShortcutEntity
+    static var parameterSummary: some ParameterSummary { Summary("Make room for \(\.$habit) with \(\.$goal)") }
+
+    @MainActor func perform() async throws -> some IntentResult & ProvidesDialog {
+        let model = try ShortcutRepositories.safely {
+            let context = try AppPersistence.liveContainer.get().mainContext
+            return IntentionSessionViewModel(habitID: habit.id,
+                habits: SwiftDataHabitRepository(modelContext: context),
+                attention: SwiftDataAttentionRepository(modelContext: context),
+                links: SwiftDataIntentionSessionLinkRepository(modelContext: context))
+        }
+        model.load()
+        model.selectedGoalID = goal.id
+        guard model.start() else { throw MakeRoomShortcutError.startUnavailable }
+        NotificationCenter.default.post(name: .avelaShortcutDidLog, object: nil)
+        if model.errorMessage != nil {
+            return .result(dialog: "Session started, but its habit link wasn't saved. Review it in Rilova. No habit was completed.")
+        }
+        return .result(dialog: "Session started. Log what you actually do separately; no habit was completed and no apps were blocked.")
+    }
+}
+
+private enum MakeRoomShortcutError: LocalizedError {
+    case startUnavailable
+    var errorDescription: String? { "Couldn't start this session. It may already be running, or its habit or goal may be unavailable. Review Make Room in Rilova." }
+}
+
 struct AvelaShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
+        AppShortcut(intent: MakeRoomIntent(), phrases: ["Make room for a habit in \(.applicationName)"],
+            shortTitle: "Make Room", systemImageName: "timer")
         AppShortcut(intent: LogHabitProgressIntent(), phrases: ["Log habit progress in \(.applicationName)"],
             shortTitle: "Log Progress", systemImageName: "plus.circle")
         AppShortcut(intent: CompleteHabitIntent(), phrases: ["Log a habit in \(.applicationName)"],

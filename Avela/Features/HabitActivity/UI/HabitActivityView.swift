@@ -25,8 +25,12 @@ struct HabitActivityView: View {
                                 .frame(width: 44, height: 44)
                                 .background(palette.accentSoft, in: RoundedRectangle(cornerRadius: 14))
                                 .accessibilityHidden(true)
-                            Text(habit.name).font(.title3.weight(.semibold))
-                        }.padding(.vertical, 4)
+                            Text(habit.name).font(.title2.weight(.semibold)).fontDesign(.rounded)
+                                .foregroundStyle(Color.appInk)
+                        }.rilovaHeaderSurface()
+                            .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
+                    }
+                    Section {
                         DatePicker("Tracking day", selection: $model.selectedDate,
                             in: min(habit.createdAt, Date())...Date(), displayedComponents: .date)
                             .accessibilityIdentifier("activity.date")
@@ -35,7 +39,8 @@ struct HabitActivityView: View {
                 if prioritizesSmallerAction { smallerActionSection }
                 if model.isToday && model.configuration?.target == nil {
                     Section("Today's check-in") {
-                        Button("Log success today") { model.correct(to: .success) }.accessibilityIdentifier("activity.logSuccess")
+                        Button("Log success today") { model.correct(to: .success) }
+                            .frame(minHeight: 44).accessibilityIdentifier("activity.logSuccess")
                     }
                 }
                 if let target = model.configuration?.target {
@@ -65,6 +70,7 @@ struct HabitActivityView: View {
                         }
                         Stepper("Add \(model.amount) \(target.unit.name(for: model.amount))", value: $model.amount, in: 1...10_000)
                         Button("Log \(model.amount) \(target.unit.name(for: model.amount))") { requestLog(.quantity) }
+                            .frame(minHeight: 44)
                             .accessibilityIdentifier("activity.logQuantity")
                         Text("Entries add up for the day. Reaching your target logs success; removing progress below it withdraws that success.")
                             .font(.footnote).foregroundStyle(.secondary)
@@ -90,9 +96,22 @@ struct HabitActivityView: View {
                     Button("Record excused skip") { reviewedDate = model.selectedDate; pendingCorrection = .skip }
                     Button("Clear success or skip", role: .destructive) { reviewedDate = model.selectedDate; pendingCorrection = .clear }
                 }
-                if !model.confirmation.isEmpty { Section { Text(model.confirmation).accessibilityIdentifier("activity.confirmation") } }
             }
             .appThemeCanvas().navigationTitle("Progress & History").navigationBarTitleDisplayMode(.inline)
+            .safeAreaInset(edge: .bottom) {
+                if !model.confirmation.isEmpty {
+                    HStack(alignment: .top, spacing: 10) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundStyle(palette.accent).accessibilityHidden(true)
+                        Text(model.confirmation).font(.subheadline)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .accessibilityIdentifier("activity.confirmation")
+                    }
+                    .padding(16)
+                    .background(palette.surface)
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Done") { dismiss() } }
                 ToolbarItem(placement: .primaryAction) {
@@ -143,7 +162,8 @@ struct HabitActivityView: View {
             TimelineView(.periodic(from: Date(), by: 1)) { clock in
                 let seconds = model.timer?.seconds(at: clock.date) ?? 0
                 Text("\(seconds / 60):\(String(format: "%02d", seconds % 60))")
-                    .font(.largeTitle.monospacedDigit()).accessibilityLabel("\(seconds / 60) minutes, \(seconds % 60) seconds")
+                    .font(.system(.largeTitle, design: .rounded, weight: .semibold)).monospacedDigit()
+                    .accessibilityLabel("\(seconds / 60) minutes, \(seconds % 60) seconds")
             }
             Button(model.timer?.startedAt == nil ? "Start timer" : "Pause timer") { model.toggleTimer() }
                 .accessibilityIdentifier("activity.timerToggle")

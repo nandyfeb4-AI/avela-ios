@@ -18,15 +18,17 @@ struct AttentionGoalDetailView: View {
                             VStack(alignment: .leading, spacing: 6) {
                                 Text(display.name)
                                     .font(.title2.weight(.semibold))
+                                    .fontDesign(.rounded).foregroundStyle(Color.appInk)
                                     .accessibilityIdentifier("attentionGoalDetail.name")
                                 if let label = display.appOrCategoryLabel {
                                     Text(label)
                                         .font(.caption)
-                                        .foregroundStyle(.secondary)
+                                        .foregroundStyle(Color.appInkSecondary)
                                 }
                             }
                         }
-                        .padding(.vertical, 10)
+                        .rilovaHeaderSurface()
+                        .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
                     }
 
                     Section("Today") {
@@ -78,9 +80,9 @@ struct AttentionGoalDetailView: View {
                     }
 
                     Section {
-                        Button("Log Usage") {
+                        Button {
                             viewModel.activeSheet = .logUsage
-                        }
+                        } label: { Label("Log Usage", systemImage: "plus.circle").frame(minHeight: 44) }
                         .accessibilityIdentifier("attentionGoalDetail.logUsageButton")
                     }
                 }
@@ -146,12 +148,18 @@ struct AttentionGoalDetailView: View {
     }
 
     private func detailRow(_ title: String, value: String, identifier: String = "") -> some View {
-        HStack {
-            Text(title)
-            Spacer()
-            Text(value)
-                .foregroundStyle(.secondary)
-                .accessibilityIdentifier(identifier)
+        ViewThatFits(in: .horizontal) {
+            HStack {
+                Text(title)
+                Spacer()
+                Text(value)
+                    .foregroundStyle(.secondary)
+                    .accessibilityIdentifier(identifier)
+            }.fixedSize(horizontal: true, vertical: false)
+            VStack(alignment: .leading, spacing: 6) {
+                Text(title)
+                Text(value).foregroundStyle(.secondary).accessibilityIdentifier(identifier)
+            }
         }
     }
 }

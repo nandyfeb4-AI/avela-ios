@@ -100,3 +100,13 @@ CloudKit container is required; placeholder builds remain local-only.
 ## Reflection dictation frameworks — 2026-10-06
 
 Apple Speech and AVFoundation are runtime SDK frameworks for optional on-device reflection transcription and microphone capture. No third-party library or package is introduced. On-device capability is mandatory, with no cloud recognition fallback. Both remain behind the reflection platform adapter and can be removed without changing persisted reflections.
+
+
+## Calendar planning — 2026-10-07
+
+EventKit and EventKitUI are Apple-native runtime frameworks for optional event creation through the system editor. No third-party package, calendar-fetching SDK, OAuth account or backend is added. The app doesn't request calendar read access. FamilyControls, ManagedSettings and DeviceActivity remain unimplemented future runtime capabilities, subject to the documented shielding release gates.
+
+
+## Optional app protection — 2026-10-07
+
+FamilyControls, ManagedSettings and DeviceActivity are now used by the owner-approved development integration. Native frameworks only; no package/backend. The app and Device Activity Monitor extension need Family Controls and shared-group provisioning. Automatic Screen Time metering remains unimplemented. See SCREEN_TIME_INTEGRATION_PLAN.md for permission/privacy boundaries and release gates.

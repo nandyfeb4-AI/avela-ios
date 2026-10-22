@@ -220,6 +220,35 @@ final class AppThemeTests: XCTestCase {
         }
     }
 
+    func testScopedBrandGradientsKeepTextReadableAcrossThemesAndAppearances() {
+        for theme in AppTheme.allCases {
+            let palette = AppPalette(theme: theme)
+            for style: UIUserInterfaceStyle in [.light, .dark] {
+                let traits = UITraitCollection(userInterfaceStyle: style)
+                for (colors, inks) in [(palette.welcomeColors, [Color.appInk, .appInkSecondary]),
+                                       (palette.todaySummaryColors, [Color.white])] {
+                    for index in 0..<(colors.count - 1) {
+                        let a = UIColor(colors[index]).resolvedColor(with: traits)
+                        let b = UIColor(colors[index + 1]).resolvedColor(with: traits)
+                        var r: CGFloat = 0, g: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
+                        var rr: CGFloat = 0, gg: CGFloat = 0, bb: CGFloat = 0, aa: CGFloat = 0
+                        a.getRed(&r, green: &g, blue: &blue, alpha: &alpha)
+                        b.getRed(&rr, green: &gg, blue: &bb, alpha: &aa)
+                        for step in 0...10 {
+                            let t = CGFloat(step) / 10
+                            let sample = UIColor(red: r + (rr-r)*t, green: g + (gg-g)*t,
+                                                 blue: blue + (bb-blue)*t, alpha: 1)
+                            for ink in inks {
+                                XCTAssertGreaterThanOrEqual(contrast(sample, UIColor(ink).resolvedColor(with: traits)), 4.5,
+                                    "\(theme.title) scoped brand gradient in \(style)")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     func testHabitIdentitySymbolsRemainVisibleOnTheirTintedTiles() {
         for symbol in ["book.fill", "figure.walk", "leaf.fill", "heart.fill", "drop.fill"] {
             let palette = AppPalette(theme: HabitIconBadge.identityTheme(for: symbol))

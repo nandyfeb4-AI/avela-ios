@@ -14,6 +14,7 @@ struct HabitFormView: View {
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @FocusState private var isReasonFocused: Bool
     @State private var whyItMatters: String
     @State private var isWhyMemoryHidden: Bool
     @State private var name: String
@@ -124,23 +125,12 @@ struct HabitFormView: View {
                     }
                 }
                 Section("Name") {
-                    TextField("Habit name", text: $name)
-                        .accessibilityIdentifier("habitForm.nameField")
-                }
-
-                Section {
-                    TextField("A sentence for your future self", text: $whyItMatters, axis: .vertical)
-                        .lineLimit(2...5)
-                        .accessibilityIdentifier("habitForm.whyMemory")
-                    Text("\(whyItMatters.count) / 240 characters")
-                        .font(.caption).foregroundStyle(.secondary)
-                    if !whyItMatters.isEmpty {
-                        Toggle("Show when I need a reminder", isOn: Binding(
-                            get: { !isWhyMemoryHidden }, set: { isWhyMemoryHidden = !$0 }))
-                            .accessibilityIdentifier("habitForm.showWhyMemory")
+                    HStack(spacing: 12) {
+                        HabitIconBadge(symbol: iconName).accessibilityHidden(true)
+                        TextField("Habit name", text: $name)
+                            .accessibilityIdentifier("habitForm.nameField")
                     }
-                } header: { Text("Why this matters · optional") }
-                  footer: { Text("A private reason, shown during recovery or before Make Room. Stored on this device; excluded from Avela’s iCloud recovery copies. You can hide or remove it anytime.") }
+                }
 
                 Section("Icon") {
                     // `.adaptive(minimum:)` recomputes how many columns fit
@@ -207,8 +197,22 @@ struct HabitFormView: View {
                             .accessibilityIdentifier("habitForm.timesPerWeekStepper")
                     }
                 }
+                Section {
+                    NavigationLink {
+                        reasonEditor
+                    } label: {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Why this matters")
+                            Text(whyItMatters.isEmpty ? "Add an optional private reason" : "Private reason added")
+                                .font(.subheadline).foregroundStyle(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                    .accessibilityIdentifier("habitForm.reasonLink")
+                }
+
             }
-            .scrollDismissesKeyboard(.interactively)
+            .scrollDismissesKeyboard(.immediately)
             .appThemeCanvas()
             .navigationTitle(isEditing ? "Edit Habit" : "New Habit")
             // Compact, centered title — not the default large-title style —
@@ -230,6 +234,53 @@ struct HabitFormView: View {
         }
     }
 
+    // Keep the optional memory out of the core setup form. Separate note
+    // rows stay readable when Dynamic Type expands the explanatory copy.
+    private var reasonEditor: some View {
+        Form {
+            Section {
+                TextField("Your reason", text: $whyItMatters, axis: .vertical)
+                    .lineLimit(2...5)
+                    .accessibilityLabel("Why this habit matters, optional")
+                    .accessibilityIdentifier("habitForm.whyMemory")
+                    .focused($isReasonFocused)
+                Text("\(whyItMatters.count) / 240")
+                    .font(.caption).foregroundStyle(.secondary)
+                    .accessibilityLabel("\(whyItMatters.count) of 240 characters")
+                if !whyItMatters.isEmpty {
+                    Toggle(isOn: Binding(
+                        get: { !isWhyMemoryHidden }, set: { isWhyMemoryHidden = !$0 })) {
+                        Text("Show reminders")
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .accessibilityIdentifier("habitForm.showWhyMemory")
+                }
+            }
+            Section {
+                reasonNote("An optional private reason, shown during recovery and before Make Room.")
+                reasonNote("Stored only on this device. Excluded from Rilova’s iCloud recovery copies.")
+                reasonNote("Hide reminders to keep your text private, or clear the reason to remove it.")
+            }
+        }
+        .scrollDismissesKeyboard(.immediately)
+        .appThemeCanvas()
+        .navigationTitle("Your reason")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") { isReasonFocused = false }
+                    .accessibilityIdentifier("habitForm.reasonKeyboardDone")
+            }
+        }
+    }
+
+    private func reasonNote(_ text: String) -> some View {
+        Text(text)
+            .font(.footnote).foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
     private var weekdaySelector: some View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: dynamicTypeSize.isAccessibilitySize ? 140 : 44), spacing: 8)], spacing: 8) {
             ForEach(Weekday.allCases, id: \.self) { weekday in
@@ -243,6 +294,7 @@ struct HabitFormView: View {
                 } label: {
                     Text(dynamicTypeSize.isAccessibilitySize ? Self.fullLabel(for: weekday) : Self.shortLabel(for: weekday))
                         .font(.body)
+                        .fixedSize(horizontal: false, vertical: true)
                         .frame(maxWidth: .infinity, minHeight: 44)
                         .background(isSelected ? palette.accent.opacity(0.25) : Color.clear)
                         .clipShape(RoundedRectangle(cornerRadius: 6))

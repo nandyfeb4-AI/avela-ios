@@ -10,12 +10,15 @@ struct PhoneFreeLiveActivityWidget: Widget {
             HStack(spacing: 12) {
                 sessionArtwork(context, size: 48)
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(context.state.isFocusSession == true ? "Focus session" : "Phone-free session").font(.headline)
+                    Text(context.state.isFocusSession == true ? "Focus session" : "Phone-free session")
+                        .font(.headline).fontDesign(.rounded)
                     if context.isStale {
-                        Text("Time elapsed · confirm in Avela").font(.subheadline)
+                        Text("Time elapsed · confirm in Rilova").font(.subheadline)
                     } else {
-                        countdown(context).font(.title2.weight(.semibold))
-                        Text("Tap to check in with Avela").font(.caption).foregroundStyle(.secondary)
+                        countdown(context).font(.title2.weight(.semibold)).fontDesign(.rounded)
+                        Text("Tap to check in with Rilova")
+                            .font(.caption).foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
                 Spacer(minLength: 0)
@@ -31,14 +34,15 @@ struct PhoneFreeLiveActivityWidget: Widget {
                     if context.isStale {
                         Text("Time elapsed").font(.headline)
                     } else {
-                        countdown(context).font(.title2.weight(.semibold))
+                        countdown(context).font(.title2.weight(.semibold)).fontDesign(.rounded)
                     }
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(context.state.isFocusSession == true ? "Focus session" : "Phone-free session").font(.headline)
-                        Text(context.isStale ? "Time elapsed · confirm in Avela" : "Tap to check in with Avela")
-                            .font(.caption)
+                        Text(context.state.isFocusSession == true ? "Focus session" : "Phone-free session")
+                            .font(.headline).fontDesign(.rounded)
+                        Text(context.isStale ? "Time elapsed · confirm in Rilova" : "Tap to check in with Rilova")
+                            .font(.caption).fixedSize(horizontal: false, vertical: true)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }

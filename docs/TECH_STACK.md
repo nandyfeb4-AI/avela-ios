@@ -95,3 +95,13 @@ cloud synchronization; no uniqueness constraints are removed.
 ## Optional on-device reflection dictation — 2026-10-06
 
 Avela uses Apple Speech and AVFoundation when you explicitly start reflection dictation. Microphone and speech recognition permission are optional. Recognition must be supported on-device; no server fallback is used. Audio is transient and not saved. Only reviewed text added to a draft and explicitly saved becomes a reflection. Saved notes remain excluded from Avela's logical iCloud recovery copies, while Apple device backups may include them. Earlier statements that Avela never accesses the microphone are superseded for this feature. Typing remains available without permissions.
+
+
+## Calendar planning — 2026-10-07
+
+EventKit/EventKitUI provide user-reviewed event creation on the existing iOS 17+ deployment target. No direct event-store save/read, new calendar permission key or canonical schema change is introduced.
+
+
+## Optional app protection — 2026-10-07
+
+FamilyControls/ManagedSettings/DeviceActivity are implemented behind the protection adapter with an embedded AvelaProtectionMonitor target (iOS 17+). The simulator uses an unavailable adapter; Release availability is disabled pending signed lifecycle testing. The deployment/language versions remain unchanged. Device Activity usage reports and automatic usage metering are not implemented.

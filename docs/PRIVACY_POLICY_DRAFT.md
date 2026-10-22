@@ -1,4 +1,4 @@
-# Avela privacy policy — owner-review draft
+# Rilova privacy policy — owner-review draft
 
 Draft date: 2026-10-05. This document describes the current native implementation;
 it has not been published and is not a guarantee of legal or App Review outcomes.
@@ -6,26 +6,28 @@ The owner must review the scope, identify the responsible publisher and supply a
 real support/privacy contact before publication. Remove this editorial introduction
 and the publication checklist from the public policy.
 
-## Avela and your information
+## Rilova and your information
 
-Avela is an iOS habit and manual attention tracker. It does not require an Avela
+Rilova is an iOS habit and manual attention tracker. It does not require an Rilova
 account. Its core tracking works without an internet connection.
 
 The app stores habit names, icons, categories, schedules, historical
 configurations, completions, skips, archive periods, attention goals and their
 historical definitions, manually entered usage and check-ins, phone-free sessions,
 companion selection and local preferences on your device. These records support
-the progress and history shown in the app. Avela does not transmit these tracking
+the progress and history shown in the app. Rilova does not transmit these tracking
 records to a developer-operated server.
 
-Avela does not include advertising or analytics SDKs, collect advertising
-identifiers, automatically meter Screen Time, block other apps, or save audio recordings.
+Rilova does not include advertising or analytics SDKs, collect advertising
+identifiers, automatically meter Screen Time, or save audio recordings. Ordinary
+tracking never restricts apps; optional selected-app protection is described below
+and remains disabled in the current Release configuration.
 Attention results depend on your manual records; a timer alone cannot establish
 that you stayed phone-free.
 
 ## Local storage and system backups
 
-Local records are stored using Apple's on-device persistence APIs. Avela does not
+Local records are stored using Apple's on-device persistence APIs. Rilova does not
 provide its own cloud synchronization or cross-device tracking-record service.
 This does not disable Apple's device backup functionality: iOS may include app
 data in a device backup under your Apple settings. Backups and restoration are
@@ -38,41 +40,41 @@ they are not an instruction to erase historical copies in system backups.
 ## Siri and Apple Shortcuts
 
 Optional Siri and Shortcuts actions let you report a habit success or attention
-minutes. Apple handles Siri and its voice processing; Avela does not capture audio for Siri actions.
+minutes. Apple handles Siri and its voice processing; Rilova does not capture audio for Siri actions.
 Your selected habit and budget names may be shown in Apple's system suggestions
 and saved shortcuts. These reports are saved locally like your in-app entries;
 they do not verify your behavior or automatically measure phone usage. Actions
-open Avela and may require device authentication. You control saved shortcuts
+open Rilova and may require device authentication. You control saved shortcuts
 and automations through Apple's Shortcuts app.
 
 ## Optional Apple Health
 
-If you connect a Build Up habit, Avela requests read access to your chosen steps
+If you connect a Build Up habit, Rilova requests read access to your chosen steps
 or exercise-minute metric. It reads today's available total when you open the
 app or refresh, and can log habit success once the chosen target is met. It does
 not write to Apple Health, promise continuous background monitoring, or upload
 Health data. No accessible data can mean missing samples or restricted access;
 manual tracking remains available.
 
-Avela stores the connection settings and resulting habit completions locally,
+Rilova stores the connection settings and resulting habit completions locally,
 not raw Health samples. Disconnecting stops future imports and keeps existing
 completions. Undoing an imported completion can be followed by a new import while
 the connection remains active. Change Health permissions separately in Apple
-Health; disconnecting in Avela does not revoke Apple's system permission.
-Avela does not use Health information for advertising or sell/share it with an
-external service. Health-derived local records are excluded from Avela’s optional cloud recovery. Apple-controlled device-backup behavior must be checked for the final signed build.
+Health; disconnecting in Rilova does not revoke Apple's system permission.
+Rilova does not use Health information for advertising or sell/share it with an
+external service. Health-derived local records are excluded from Rilova’s optional cloud recovery. Apple-controlled device-backup behavior must be checked for the final signed build.
 
 ## Notifications
 
-Habit reminders are optional local notifications. Avela requests notification
+Habit reminders are optional local notifications. Rilova requests notification
 permission in response to enabling a reminder, not as a condition of using
-tracking. You can disable a reminder in the app or change Avela's notification
+tracking. You can disable a reminder in the app or change Rilova's notification
 permission in iOS Settings. Reminder settings remain local. Notification display
 and delivery follow your device's notification and Focus settings.
 
 ## Widgets
 
-Avela writes a local progress snapshot into an App Group container shared with
+Rilova writes a local progress snapshot into an App Group container shared with
 its own widget extension. The snapshot supports Home Screen and Lock Screen
 widgets; it is not uploaded to a developer server.
 
@@ -96,7 +98,7 @@ never verifies phone use or automatically records a successful session.
 
 ## Purchases
 
-Apple processes Premium subscription payments using your Apple Account. Avela
+Apple processes Premium subscription payments using your Apple Account. Rilova
 uses verified StoreKit transactions, including product identifiers, entitlement
 expiration and revocation information, to determine whether Premium is active.
 The app does not receive your payment-card details or maintain a developer
@@ -105,14 +107,14 @@ purchase-account server.
 Apple's purchase services may require a network connection or Apple Account
 authentication. Existing local tracking remains usable when the store is
 temporarily unavailable. You can manage or cancel subscriptions in your Apple
-Account subscription settings. Deleting Avela does not cancel a subscription.
+Account subscription settings. Deleting Rilova does not cancel a subscription.
 
 ## TestFlight beta testing
 
 When you use a TestFlight build, Apple operates the beta distribution and feedback
 service. Apple may share usage information, crash reports and submitted feedback
 with the application provider. Screenshots or comments you submit can reveal
-tracking details, so review them before sending. Avela does not separately upload
+tracking details, so review them before sending. Rilova does not separately upload
 your habit or attention records through an analytics SDK.
 
 See [Apple's TestFlight privacy information](https://www.apple.com/legal/privacy/data/en/test-flight/)
@@ -121,7 +123,7 @@ are governed by Apple's applicable terms and privacy practices.
 
 ## Retention and deletion
 
-Avela keeps local tracking records until they are removed through the available
+Rilova keeps local tracking records until they are removed through the available
 app controls or the local installation is deleted. Archiving retains history;
 it does not erase it. There is currently no account or developer-server record to
 delete.
@@ -130,10 +132,12 @@ To remove the local app installation and its app data, use iOS Settings to delet
 Avela. Copies in previously created device backups may remain. Manage or delete
 those backups separately through Apple's controls; uninstalling does not erase
 all historical backup copies. Reinstallation from a backup may restore records.
+Optional Rilova iCloud recovery copies also remain after uninstalling. Delete those
+copies in Progress Protection before removing the app if you want to remove them.
 
 ## Changes and contact
 
-The published policy should be updated when Avela's practices change. Adding
+The published policy should be updated when Rilova's practices change. Adding
 cloud synchronization, analytics, voice features or other off-device processing
 would require a fresh privacy assessment and updated disclosures. Optional private
 iCloud recovery is described below and requires a configured signed build.
@@ -162,19 +166,19 @@ Local-only data and Apple's own collection are distinguished in
 
 ## Optional routines, progress and reflections
 
-If used, Avela stores manual quantities, elapsed timer state, smaller-action records, routine names/selected habits and weekly reflection answers locally. These can be included in Apple-managed device backups under your settings. They are not sent to an Avela backend or analytics service. Removing a routine or reflection does not remove habit history.
+If used, Rilova stores manual quantities, elapsed timer state, smaller-action records, routine names/selected habits and weekly reflection answers locally. These can be included in Apple-managed device backups under your settings. They are not sent to an Rilova backend or analytics service. Removing a routine or reflection does not remove habit history.
 
-If you enable Apple Watch quick logging, Avela sends today's due habit names, icons and completion state to your paired Watch using Apple's WatchConnectivity. Reflection answers and Health samples are not transferred. Disabling sharing clears the Watch's shared snapshot when it reconnects; previously received information can remain until reconnect or expiry. Siri/Shortcuts can add amounts in a habit's configured unit, following explicit user commands and Apple's device authentication controls. Avela does not capture audio for these Siri/Shortcuts actions.
+If you enable Apple Watch quick logging, Rilova sends today's due habit names, icons and completion state to your paired Watch using Apple's WatchConnectivity. Reflection answers and Health samples are not transferred. Disabling sharing clears the Watch's shared snapshot when it reconnects; previously received information can remain until reconnect or expiry. Siri/Shortcuts can add amounts in a habit's configured unit, following explicit user commands and Apple's device authentication controls. Rilova does not capture audio for these Siri/Shortcuts actions.
 
 Habit intentions linked to phone-free sessions are stored locally as identifiers and a creation timestamp. Session results are your manual reports, and never independently confirm a habit or phone-free behaviour. Manageable Week uses existing archive history rather than collecting a new behavioural profile.
 
 ## Optional private iCloud recovery
 
-Avela is local by default. If you explicitly enable Progress Protection in a
-configured build, Avela stores dated recovery copies in your Apple Account's
+Rilova is local by default. If you explicitly enable Progress Protection in a
+configured build, Rilova stores dated recovery copies in your Apple Account's
 private CloudKit database. These include eligible habit history, manual attention
 tracking, routines and appearance/companion preferences. They do not go to an
-Avela-operated server. Each copy also has a capture time and random installation
+Rilova-operated server. Each copy also has a capture time and random installation
 marker; this is not an advertising or hardware identifier. This is backup, not live synchronization between devices.
 
 Health connections, whole health/fitness and Health-connected habits, habits with
@@ -187,13 +191,13 @@ in Progress Protection. Deleting or editing local records does not rewrite earli
 copies. Turning off backup stops new requests but retains existing copies; an
 upload already sent may finish. Uninstalling does not delete cloud copies.
 
-Automatic uploads run after saved changes while Avela can execute, up to once
+Automatic uploads run after saved changes while Rilova can execute, up to once
 every ten minutes. Offline, quota or account problems can delay them. The displayed
 success date records an acknowledged upload, not a promise of continuous backup.
 An iCloud account change revokes opt-in; re-enable it for the new account if desired.
 
 Recovery requires explicit confirmation and an otherwise empty tracking
-installation. Avela does not overwrite or merge your existing tracking. Restored
+installation. Rilova does not overwrite or merge your existing tracking. Restored
 reminders stay off, running timers pause at the snapshot, and unfinished sessions
 receive no successful outcome. This feature is separate from Apple's whole-device
 backup and does not guarantee recovery of excluded or not-yet-uploaded records.
@@ -204,12 +208,12 @@ contact before submission. The current placeholder build cannot access CloudKit.
 
 ## Local quick amounts and derived progress
 
-Personal quick-log amounts are saved on your device as app preferences, separately for each habit and unit. They are not included in Avela’s logical iCloud recovery copy; a new installation uses default amounts. Recorded history is separate. Lifetime progress and intention-review summaries are calculated from existing records without AI or analysis of private notes. Timer minutes are elapsed recorded duration, not monitored phone usage.
+Personal quick-log amounts are saved on your device as app preferences, separately for each habit and unit. They are not included in Rilova’s logical iCloud recovery copy; a new installation uses default amounts. Recorded history is separate. Lifetime progress and intention-review summaries are calculated from existing records without AI or analysis of private notes. Timer minutes are elapsed recorded duration, not monitored phone usage.
 
 
 ## Optional on-device reflection dictation — 2026-10-06
 
-Avela uses Apple Speech and AVFoundation when you explicitly start reflection dictation. Microphone and speech recognition permission are optional. Recognition must be supported on-device; no server fallback is used. Audio is transient and not saved. Only reviewed text added to a draft and explicitly saved becomes a reflection. Saved notes remain excluded from Avela's logical iCloud recovery copies, while Apple device backups may include them. Earlier statements that Avela never accesses the microphone are superseded for this feature. Typing remains available without permissions.
+Rilova uses Apple Speech and AVFoundation when you explicitly start reflection dictation. Microphone and speech recognition permission are optional. Recognition must be supported on-device; no server fallback is used. Audio is transient and not saved. Only reviewed text added to a draft and explicitly saved becomes a reflection. Saved notes remain excluded from Rilova's logical iCloud recovery copies, while Apple device backups may include them. Earlier statements that Rilova never accesses the microphone are superseded for this feature. Typing remains available without permissions.
 
 
 ## Focus session presentation
@@ -218,4 +222,14 @@ Optional session Live Activities now support focus and phone-free sessions. The 
 
 ## Optional private habit reasons
 
-You can save an optional text reason for a habit, hide its reminders, edit it or remove it. The reason stays in local app storage and is excluded from Avela’s logical iCloud recovery copies and widget, watch and Live Activity data. Apple whole-device backups are separate. No reason text is sent to an AI service or used to infer your mental state. Recommendations use recorded progress and configured actions only.
+You can save an optional text reason for a habit, hide its reminders, edit it or remove it. The reason stays in local app storage and is excluded from Rilova’s logical iCloud recovery copies and widget, watch and Live Activity data. Apple whole-device backups are separate. No reason text is sent to an AI service or used to infer your mental state. Recommendations use recorded progress and configured actions only.
+
+
+## Optional calendar planning
+
+If you choose Plan Time in Calendar, Rilova prepares an event containing your habit name and selected start/end times. You review and choose the calendar in Apple's editor before saving. The event may be shared or synced according to that calendar's settings. Rilova does not read your calendar, include your private habit reason or history, retain event identifiers or infer completion from the event. Cancelling creates no Rilova tracking record.
+
+
+## Optional app protection — development feature
+
+If enabled in the shipping build, you explicitly allow Screen Time access for your own device and choose which distractions to restrict. Rilova uses Apple's opaque app/category/website selections locally; it does not read usage reports, infer behavior or send these choices to a server. Tokens and operational deadlines are excluded from Rilova recovery copies and system backups of those files. A monitor extension shares only minimal session identifiers/deadlines to release Rilova's restrictions. Stop Protection or system Screen Time revocation releases Rilova's control; unrelated limits may remain. Release currently leaves this optional feature unavailable until hardware testing and Apple distribution approval. Final published policy must describe the actual enabled build.

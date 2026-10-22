@@ -22,7 +22,11 @@ final class HabitActivityViewModel {
     private(set) var timer: HabitTimerState?
     private(set) var errorMessage: String?
     private(set) var correction: HabitCorrectionPreview?
-    var selectedDate = Date()
+    var selectedDate = Date() {
+        didSet {
+            if !calendar.isDate(selectedDate, inSameDayAs: oldValue) { confirmation = "" }
+        }
+    }
     var isShowingConfiguration = false
     var quantityEnabled = false
     var targetAmount = 20
@@ -42,6 +46,8 @@ final class HabitActivityViewModel {
     }
     var hasSmallerAction: Bool { !(configuration?.smallerAction.isEmpty ?? true) }
     func load() {
+        let previousDayKey = loadedDayKey
+        let previousConfigurationID = configuration?.id
         loadedDayKey = nil
         do {
             habit = try habits.fetchHabit(id: habitID)
@@ -50,6 +56,9 @@ final class HabitActivityViewModel {
             correction = try repository.correctionPreview(habitID: habitID, on: selectedDate)
             timer = isToday ? try repository.timer(for: habitID, on: selectedDate) : nil
             loadedDayKey = LocalDay.key(for: selectedDate, calendar: calendar)
+            if previousDayKey != loadedDayKey || previousConfigurationID != configuration?.id {
+                confirmation = ""
+            }
             quickAmounts = configuration?.target.map { presets.amounts(for: habitID, unit: $0.unit) } ?? []
             if let lastQuickEntry, lastQuickEntry.dayKey != loadedDayKey || lastQuickEntry.configurationID != configuration?.id || !entries.contains(where: { $0.id == lastQuickEntry.id }) {
                 self.lastQuickEntry = nil
@@ -72,6 +81,8 @@ final class HabitActivityViewModel {
         presetError = nil
     }
     func savePresets(now: Date = Date()) {
+        confirmation = ""
+        errorMessage = nil
         let fields = presetDraft.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }.filter { !$0.isEmpty }
         let values = fields.compactMap(Int.init)
         guard !fields.isEmpty, values.count == fields.count else { presetError = "Use one to three different whole amounts from 1 to 10,000."; return }
@@ -87,6 +98,7 @@ final class HabitActivityViewModel {
         } catch { presetError = "Use one to three different whole amounts from 1 to 10,000." }
     }
     func logPreset(_ value: Int, now: Date = Date()) {
+        confirmation = ""
         errorMessage = nil
         guard isLoadedDay(nil), loadedDayKey == LocalDay.key(for: now, calendar: calendar),
               let configuration, let target = configuration.target,
@@ -103,6 +115,8 @@ final class HabitActivityViewModel {
         } catch { fail() }
     }
     func undoQuickLog(now: Date = Date()) {
+        confirmation = ""
+        errorMessage = nil
         guard let entry = lastQuickEntry, isLoadedDay(nil), loadedDayKey == LocalDay.key(for: now, calendar: calendar),
               entry.dayKey == loadedDayKey else { fail(); return }
         do {
@@ -124,6 +138,8 @@ final class HabitActivityViewModel {
         isShowingConfiguration = true
     }
     func saveConfiguration() {
+        confirmation = ""
+        errorMessage = nil
         do {
             try repository.configure(habitID: habitID, target: quantityEnabled ? HabitQuantityTarget(amount: targetAmount, unit: unit) : nil,
                 smallerAction: smallerAction, at: Date())
@@ -131,6 +147,7 @@ final class HabitActivityViewModel {
         } catch { errorMessage = "Couldn't save. Use a target from 1 to 10,000, keep the smaller action under 160 characters, and disconnect Apple Health before adding a manual quantity target." }
     }
     func log(_ kind: HabitActivityKind, now: Date = Date(), reviewedDate: Date? = nil) {
+        confirmation = ""
         errorMessage = nil
         guard isLoadedDay(reviewedDate), let configuration else { fail(); return }
         do {
@@ -140,15 +157,21 @@ final class HabitActivityViewModel {
         } catch { fail() }
     }
     func remove(_ entry: HabitActivityEntry) {
+        confirmation = ""
+        errorMessage = nil
         do { try repository.removeEntry(id: entry.id, now: Date()); load() }
         catch { fail() }
     }
     func correct(to outcome: HabitDayCorrection, reviewedDate: Date? = nil) {
+        confirmation = ""
+        errorMessage = nil
         guard isLoadedDay(reviewedDate), let correction else { fail(); return }
         do { try repository.correct(correction, to: outcome, on: selectedDate, now: Date()); confirmation = "Check-in updated."; load() }
         catch { fail() }
     }
     func toggleTimer(now: Date = Date()) {
+        confirmation = ""
+        errorMessage = nil
         guard isToday else { return }
         var state = timer ?? HabitTimerState(habitID: habitID, dayKey: LocalDay.key(for: now, calendar: calendar), startedAt: nil, elapsedSeconds: 0)
         if state.startedAt != nil { state.elapsedSeconds = state.seconds(at: now); state.startedAt = nil }
@@ -157,6 +180,8 @@ final class HabitActivityViewModel {
         catch { fail() }
     }
     func logTimer(now: Date = Date()) {
+        confirmation = ""
+        errorMessage = nil
         guard let timer, isToday, timer.startedAt == nil else { return }
         let minutes = timer.seconds(at: now) / 60
         guard minutes > 0 else { return }
@@ -165,6 +190,8 @@ final class HabitActivityViewModel {
     }
 
     func resetTimer() {
+        confirmation = ""
+        errorMessage = nil
         do { try repository.resetTimer(for: habitID); timer = nil }
         catch { fail() }
     }
@@ -173,5 +200,8 @@ final class HabitActivityViewModel {
         return loadedDayKey == key && (reviewedDate.map { LocalDay.key(for: $0, calendar: calendar) == key } ?? true)
     }
     func clearError() { errorMessage = nil }
-    private func fail() { errorMessage = "Couldn't save this change. Reload and try again. Dates must be scheduled, inside tracking history and outside a pause; quantity success requires its logged target." }
+    private func fail() {
+        confirmation = ""
+        errorMessage = "Couldn't save this change. Reload and try again. Dates must be scheduled, inside tracking history and outside a pause; quantity success requires its logged target."
+    }
 }

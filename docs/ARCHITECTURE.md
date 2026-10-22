@@ -151,3 +151,13 @@ schedule work. No business rules live in views. The local SwiftData configuratio
 remains cloudKitDatabase: .none; no store switch, auto-merge or model-schema change.
 Snapshots read saved records through a fresh context and restore with one save and
 rollback. Versioned logical recovery preserves identifiers and historical dates.
+
+
+## Calendar planning adapter — 2026-10-07
+
+Features/Calendar separates Foundation plan validation and observable scheduling state from the EventKit/EventKitUI adapter. The system editor owns calendar selection and explicit Save/Cancel. This feature has no habit, attention, backup or calendar-fetch repository dependency and writes no canonical progress. The existing IntentionSessionViewModel owns Make Room shortcut starts, keeping link-failure disclosure and duplicate-session checks consistent with UI starts.
+
+
+## Optional protection adapter — 2026-10-07
+
+Features/AppProtection separates Foundation operational lease/validation, observable orchestration, native restriction driver and UI. AvelaProtectionMonitor shares only the lease/file coordinator and clears a named ManagedSettings store; it never opens SwiftData. Root ownership reconciles authorization, session writes, foreground and deadlines. Picker tokens are app-private, backup-excluded operational preferences rather than habit/session facts. Default Release availability stays off pending hardware verification.

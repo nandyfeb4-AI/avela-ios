@@ -27,13 +27,13 @@ struct HabitReminderView: View {
                 Text(scheduleDescription)
             }
             Section {
-                Text("Press and hold a reminder, then choose Review & log. Avela shows the habit before you confirm success. Opening the reminder alone never logs anything.")
+                Text("Press and hold a reminder, then choose Review & log. Rilova shows the habit before you confirm success. Opening the reminder alone never logs anything.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
             if model.isEnabled && model.permission == .denied {
                 Section {
-                    Text("Notifications are turned off for Avela. Your reminder is saved; allow notifications in Settings to receive it. You can keep using Avela without them.")
+                    Text("Notifications are turned off for Rilova. Allow notifications in Settings to receive reminders. You can keep using Rilova without them.")
                     Button("Open iPhone Settings") {
                         if let url = URL(string: UIApplication.openSettingsURLString) { openURL(url) }
                     }
@@ -41,16 +41,23 @@ struct HabitReminderView: View {
                 }
             }
             Section {
-                Button(model.isSaving ? "Saving…" : "Save Reminder") {
-                    Task { await model.save() }
+                Button {
+                    Task {
+                        await model.save()
+                        if model.didSave {
+                            UIAccessibility.post(notification: .announcement, argument: "Reminder saved.")
+                        }
+                    }
+                } label: {
+                    if model.didSave {
+                        Label("Saved", systemImage: "checkmark.circle.fill")
+                    } else {
+                        Text(model.isSaving ? "Saving…" : "Save Reminder")
+                    }
                 }
                 .disabled(model.isSaving)
+                .accessibilityLabel(model.didSave ? "Reminder saved" : model.isSaving ? "Saving reminder" : "Save Reminder")
                 .accessibilityIdentifier("habitReminder.save")
-                if model.didSave {
-                    Text("Reminder saved")
-                        .foregroundStyle(.secondary)
-                        .accessibilityIdentifier("habitReminder.saved")
-                }
             }
         }
         .appThemeCanvas()

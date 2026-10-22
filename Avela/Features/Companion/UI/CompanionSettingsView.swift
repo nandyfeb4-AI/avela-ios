@@ -1,20 +1,33 @@
 import SwiftUI
 import Observation
 import OSLog
+import UIKit
 
 @MainActor
 @Observable
 final class CompanionSettingsViewModel {
-    var profile = CompanionProfile()
+    var profile = CompanionProfile() {
+        didSet {
+            if profile != oldValue { didSave = false }
+        }
+    }
+    private(set) var didSave = false
     var errorMessage: String?
     private let repository: CompanionProfileRepository
     init(repository: CompanionProfileRepository) { self.repository = repository }
     func load() {
+        didSave = false
+        errorMessage = nil
         do { profile = try repository.profile() }
         catch { handle(error) }
     }
     func save() {
-        do { try repository.save(profile) }
+        didSave = false
+        errorMessage = nil
+        do {
+            try repository.save(profile)
+            didSave = true
+        }
         catch { handle(error) }
     }
     private func handle(_ error: Error) {
@@ -38,8 +51,22 @@ struct CompanionSettingsView: View {
             Section("Feedback") {
                 Toggle("Haptics", isOn: $model.profile.hapticsEnabled)
             }
-            Button("Save Preferences") { model.save() }
+            Section {
+                Button {
+                    model.save()
+                    if model.didSave {
+                        UIAccessibility.post(notification: .announcement, argument: "Preferences saved.")
+                    }
+                } label: {
+                    if model.didSave {
+                        Label("Saved", systemImage: "checkmark.circle.fill")
+                    } else {
+                        Text("Save Preferences")
+                    }
+                }
+                .accessibilityLabel(model.didSave ? "Preferences saved" : "Save Preferences")
                 .accessibilityIdentifier("companion.savePreferences")
+            }
         }
         .appThemeCanvas()
         .navigationTitle("Companion & Feedback")

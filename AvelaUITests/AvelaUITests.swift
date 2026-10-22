@@ -870,6 +870,8 @@ final class AvelaUITests: XCTestCase {
         XCTAssertTrue(tenMinuteEntry.waitForExistence(timeout: 5))
 
         // Tapping the entry opens the correction form, prefilled with its amount.
+        let detailCapture = XCTAttachment(screenshot: app.screenshot())
+        detailCapture.name = "Rilova manual attention detail"; detailCapture.lifetime = .keepAlways; add(detailCapture)
         tenMinuteEntry.tap()
         amountField = app.textFields["attentionUsageForm.amountField"]
         XCTAssertTrue(amountField.waitForExistence(timeout: 5))

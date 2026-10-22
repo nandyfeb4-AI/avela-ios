@@ -12,6 +12,8 @@ struct WidgetHabitSnapshot: Codable, Identifiable, Equatable, Sendable {
     var isSkippedToday: Bool? = nil
     var checkInLabel: String? = nil
     var weeklyTargetMet: Bool? = nil
+    /// Exact current-day simple check-in; missing in older snapshots disables Undo.
+    var undoCompletionID: UUID? = nil
 }
 
 struct WidgetRoutineSnapshot: Codable, Identifiable, Equatable, Sendable {
@@ -53,6 +55,16 @@ struct WidgetSnapshot: Codable, Equatable, Sendable {
         self.attentionGoals = attentionGoals
         self.companionAnimal = companionAnimal
         self.companionState = companionState
+    }
+
+    /// An idempotent Undo replay can reuse already-published saved facts.
+    /// It must not restart the acknowledgment window or invalidate every widget.
+    func alreadyShowsUndone(habitID: UUID, asOf date: Date, calendar: Calendar) -> Bool {
+        isCurrent(asOf: date, calendar: calendar) && generatedAt <= date
+            && timeZoneIdentifier == calendar.timeZone.identifier
+            && habits.contains { $0.id == habitID && !$0.isCompletedToday
+                && $0.undoCompletionID == nil && $0.requiresQuantityLogging == false
+                && $0.isSkippedToday == false }
     }
 
     func isCurrent(asOf date: Date, calendar: Calendar) -> Bool {

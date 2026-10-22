@@ -1,0 +1,42 @@
+    func testNativeWidgetLogUndoRelogWithoutForeground() throws {
+        guard ProcessInfo.processInfo.environment["SIMULATOR_UDID"] == "2ACFE418-44EC-4A44-9B2A-1B45BDF1EF38" else { throw XCTSkip("Dedicated QA only") }
+        let app = XCUIApplication(); app.launch(); app.activate()
+        XCTAssertTrue(app.tabBars.buttons["Today"].waitForExistence(timeout: 15)); app.tabBars.buttons["Today"].tap()
+        XCTAssertTrue(app.buttons["today.addHabitButton"].waitForExistence(timeout: 15))
+        XCUIDevice.shared.press(.home)
+        let home = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        for _ in 0..<5 { if home.staticTexts["Quick Log"].firstMatch.isHittable { break }; home.swipeLeft() }
+        func control(_ label: String) -> XCUIElement? {
+            home.buttons.matching(NSPredicate(format: "label == %@", label)).allElementsBoundByIndex
+                .filter { $0.frame.minY < 300 }.min { $0.frame.minY < $1.frame.minY }
+        }
+        func waitControl(_ label: String) -> XCUIElement {
+            let predicate = NSPredicate { _, _ in control(label) != nil }
+            XCTAssertEqual(XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: predicate, object: home)], timeout: 25), .completed, home.debugDescription)
+            return control(label)!
+        }
+        func capture(_ name: String) {
+            let shot = XCTAttachment(screenshot: home.screenshot()); shot.name = name; shot.lifetime = .keepAlways; add(shot)
+        }
+        for name in ["Reading", "Walk"] {
+            let undoLabel = "Undo check-in for " + name, logLabel = "Log check-in for " + name
+            // Either starting state is valid. Use the public widget Undo to prepare pending.
+            if let undo = control(undoLabel) {  undo.tap(); _ = waitControl(logLabel) }
+            let log = waitControl(logLabel), originalFrame = log.frame
+             log.tap()
+            XCTAssertNotEqual(app.state, .runningForeground)
+            let undo = waitControl(undoLabel)
+            XCTAssertEqual(undo.frame.minY.rounded(), originalFrame.minY.rounded())
+            XCTAssertEqual(undo.frame.width.rounded(), originalFrame.width.rounded())
+            capture("Widget logged with explicit Undo " + name)
+             undo.tap(); undo.tap()
+            XCTAssertNotEqual(app.state, .runningForeground)
+            let relog = waitControl(logLabel)
+            XCTAssertEqual(relog.frame.minY.rounded(), originalFrame.minY.rounded())
+            capture("Widget undone without opening app " + name)
+             relog.tap()
+            XCTAssertNotEqual(app.state, .runningForeground)
+            _ = waitControl(undoLabel)
+            capture("Widget relogged " + name)
+        }
+    }

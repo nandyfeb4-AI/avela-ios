@@ -61,3 +61,28 @@ Atmospheric themes: [native light/dark gallery and verification](verification/at
 ## Connected differentiation
 
 [Native screenshots and verification](verification/differentiation/README.md) document optional reasons, explainable Momentum, confirmed recovery choices, factual Make Room connections and companion states.
+
+
+## Calendar and native capture integrations — October 7, 2026
+
+Make Room now offers optional, user-reviewed Calendar planning and an App Shortcut for explicit linked session starts. Watch successful replies use inline confirmation. No completion is inferred from planning, timers or app use. [Implementation and verification](verification/calendar-integrations/README.md). Screen Time shielding remains unimplemented pending the separate entitlement and lifecycle gates; current sessions never block apps.
+
+
+## Optional app protection — October 7, 2026
+
+Native development shielding and AvelaProtectionMonitor are implemented; Release availability remains off until signed-device lifecycle tests and Apple distribution approval. Simulator setup is informational only; current ordinary sessions/Shortcuts do not block. [Implementation and validation](verification/app-protection/README.md) · [Signing and hardware gates](SCREEN_TIME_INTEGRATION_PLAN.md).
+
+
+## Account-independent readiness — October 7, 2026
+
+Account-independent release checks, native screenshots and the resolved largest-text audits are recorded in [release-readiness verification](verification/release-readiness/README.md).
+
+## Rilova brand identity — 2026-10-07
+
+See [Rilova rebrand verification](verification/rebrand/README.md) and [brand assets](../design/brand/rilova/README.md). Historical verification reports may still use the former visible name; internal project identifiers remain Avela.
+
+[Scoped Rilova brand polish](verification/brand-polish/README.md): onboarding and Today presentation, contrast and native screenshots.
+
+Final Rilova presentation continuity and screenshots: [brand completion verification](verification/brand-completion/README.md).
+
+- [Full simulator regression — October 8, 2026](verification/full-regression/README.md)

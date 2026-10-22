@@ -1695,3 +1695,52 @@ Quick Log is a separate optional Home Screen widget. Add it once via Home Screen
 ## Rich Tide widgets — October 7, 2026
 
 The Home Screen gallery now offers **Quick Log** and **Routine**, each in small/medium. Approved Rich Tide uses deep theme gradients and contrasting labelled Log buttons. Remove retired Attention/Progress placements and add the replacement. Routine requires a saved routine selected in Edit Widget. Log saves a simple check-in without opening Avela; names and quantity + open the relevant app screen. Native light/dark/largest-text screenshots, 523 passing unit tests, guide UI regression, background logging checks and Release verification are recorded in [widget verification](verification/two-widgets/README.md).
+
+
+## Calendar / native capture follow-up — 2026-10-07
+
+Make Room → Plan Time in Calendar uses Apple's iOS 17+ event editor, requiring no Avela Calendar read authorization. Test Save/Cancel, alternate/shared calendars, time zones and event editing on a signed iPhone. Siri gains Make Room for a Habit; create the habit and timed-session goal first. Test spoken selection, automation, duplicate starts and device locking on hardware. Watch success confirmation is inline after the iPhone reply; paired-device delivery remains unverified. Screen Time blocking is not enabled; see SCREEN_TIME_INTEGRATION_PLAN.md for the separate entitlement and lifecycle gates.
+
+
+## Optional app protection setup — 2026-10-07
+
+AvelaProtectionMonitor is embedded through the app dependency. The app and monitor have Family Controls and the shared App Group; select the same active paid development team and replace all placeholder identifiers consistently. Direct Xcode iPhone development installs can be tested before distribution approval. Debug AVELA_APP_PROTECTION_ENABLED=YES exposes Make Room/Settings setup; simulator shows only its unavailable explanation and cannot validate blocking. Release defaults NO; enabling it requires hardware lifecycle validation and Apple distribution approval for both relevant IDs. The embedded entitlement still needs approval even with runtime UI disabled. Full steps, privacy and release gates: SCREEN_TIME_INTEGRATION_PLAN.md. Existing user stores must not be reset; no SwiftData migration is introduced.
+
+
+## Account-independent readiness — October 7, 2026
+
+Settings' App Protection row and the largest-text habit-form clipping findings are resolved. The optional private reason now opens in a separate, wrapping editor after core setup; hiding/saving/relaunch remains covered. Both largest-text native audits pass without suppression. Final affected run: three UI tests, zero failures; earlier full unit baseline: 545 passing. Debug test build and unsigned Release build succeed, and checked DEBUG hooks remain absent from Release. This is not a full UI-suite or physical-device verification claim. [Evidence and remaining release gates](verification/release-readiness/README.md).
+
+## Rilova brand identity — 2026-10-07
+
+The public app name is Rilova; continue opening `Avela.xcodeproj` and using scheme `Avela`. Bundle IDs, App Groups, URL schemes, CloudKit record names, subscription IDs and persistent keys remain unchanged. Rebrand checks and native build results are recorded in `docs/verification/rebrand/README.md`.
+
+## Full simulator regression — October 8, 2026
+
+Unfiltered Debug testing executed all **547 unit tests and 105 UI tests**. All units and 103 UI tests passed initially; two UI assertions expected top-of-detail rows after navigation returned to a retained lower List scroll position. Saved accessibility hierarchies confirmed the offsets. Bounded scrolling was added to those tests without weakening their behavior assertions or changing production code. Both corrected tests pass in the targeted follow-up; every test now has a passing result across these runs. This is not a claim that the initial unfiltered command was green.
+
+[Commands, result bundles, findings and remaining hardware gates](verification/full-regression/README.md). The owner’s simulator data was untouched.
+
+## Widget repeat-tap verification (2026-10-08)
+
+[Native investigation and screenshots](verification/widget-repeat-tap/README.md) cover the completed-control background refresh fix. Use the simulator ad-hoc signing command above for native widget checks; unsigned runtime builds cannot establish App Group access. Preserve the normal store and existing placements when updating the owner simulator. WidgetKit controls redraw latency; a delayed acknowledgment is not proof that a save failed.
+
+## Widget Undo (2026-10-08)
+
+[Native screenshots and verification](verification/widget-undo/README.md) show the explicit Log → Undo → Log flow. Existing placements update in place. Launch the signed app once to export exact completion IDs; older snapshots cannot enable Undo. Names and amount/Health review controls still open Rilova. Only the QA simulator is used for test mutations.
+
+## First physical iPhone install — October 21, 2026
+
+A signed Debug development build is installed on the connected iPhone 17 Pro Max (iOS 26.6). App, widget and protection-monitor profiles now include the same registered App Group. The first install uses a temporary iPhone-only project copy to avoid requiring a registered Watch; the repository's normal scheme still embeds Watch. Details, build command, evidence and manual-verification limits are in [first-device-build verification](verification/first-device-build/README.md). This is not a TestFlight distribution approval or a completed real-device regression pass.
+
+## Companion save feedback — October 21, 2026
+
+Save Preferences in Companion & Feedback now shows a checkmarked Saved state after a successful write, clearing on edits and announcing success for VoiceOver. Fifteen affected unit tests and two UI tests pass; the largest-text screenshot and signed iPhone update are recorded in [companion-save-feedback verification](verification/companion-save-feedback/README.md). The iPhone update was installed in place, without uninstalling or resetting saved data.
+
+## Physical Live Activity packaging correction — October 21, 2026
+
+The temporary iPhone project had diverged from repository configuration and omitted Live Activity support plus existing Health/microphone/speech purpose strings. It was regenerated from the complete current project, with only the app's Watch dependency/embed references removed. Twenty-one affected unit tests and the native Make Room UI flow pass using that corrected project. The signed iPhone product's actual metadata and matching App Group profiles were checked before an in-place update. An already-running session can retry **Show Session Activity** without restarting its timer. [Evidence, native QA screenshot and remaining physical-display check](verification/dynamic-island-device/README.md).
+
+## Action feedback audit — October 21, 2026
+
+Same-screen action feedback is now visible at the controls for session Show/Hide/Start, reminder and Health saves, Health checks and cloud checks/uploads. Progress feedback stays visible in a safe-area strip; old acknowledgments clear on draft/context changes and failures. App-protection results/errors and Watch pending logging are explicit. All 138 affected unit tests pass, with 10 distinct UI flows green across the focused runs, including native ActivityKit, large text, independent logging, Undo and fake-provider cloud recovery. [Findings, source scope, screenshots, exact result bundles and hardware limits](verification/action-feedback/README.md).

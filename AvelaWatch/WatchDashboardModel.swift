@@ -8,6 +8,7 @@ final class WatchDashboardModel: NSObject, WCSessionDelegate {
     private(set) var pendingHabitID: UUID?
     private(set) var isRefreshing = false
     var message: String?
+    private(set) var confirmation: String?
     var timerStartedAt: Date? {
         didSet {
             if let timerStartedAt { UserDefaults.standard.set(timerStartedAt, forKey: "watch.timerStartedAt") }
@@ -27,7 +28,7 @@ final class WatchDashboardModel: NSObject, WCSessionDelegate {
     func log(_ habit: WatchHabitItem) {
         guard pendingHabitID == nil else { return }
         guard let snapshot, snapshot.isCurrent(at: Date()) else {
-            message = "Open Avela on your iPhone to refresh today's habits."
+            message = "Open Rilova on your iPhone to refresh today's habits."
             return
         }
         guard habit.supportsQuickLog else { message = "Add progress for this habit on your iPhone."; return }
@@ -38,6 +39,7 @@ final class WatchDashboardModel: NSObject, WCSessionDelegate {
         let request = WatchHabitLogRequest(protocolVersion: WatchHabitSnapshot.version,
                                           habitID: habit.id, localDateKey: snapshot.localDateKey)
         guard let data = try? JSONEncoder().encode(request) else { return }
+        confirmation = nil
         pendingHabitID = habit.id
         WCSession.default.sendMessageData(data, replyHandler: { [weak self] data in
             Task { @MainActor in
@@ -50,8 +52,8 @@ final class WatchDashboardModel: NSObject, WCSessionDelegate {
                 if let snapshot = reply.snapshot { self.snapshot = snapshot }
                 switch reply.status {
                 case .refreshed: break
-                case .logged: self.message = "Logged on your iPhone."
-                case .alreadyLogged: self.message = "Already logged today."
+                case .logged: self.confirmation = "Logged on your iPhone."
+                case .alreadyLogged: self.confirmation = "Already logged today."
                 case .openPhone: self.message = "Unlock your iPhone and keep it nearby, then try again. Nothing was logged."
                 case .staleDay: self.message = "Today's habits changed. Please review them and try again."
                 case .unavailable: self.message = "This habit can't be logged here. Review it on your iPhone."
@@ -69,7 +71,7 @@ final class WatchDashboardModel: NSObject, WCSessionDelegate {
     func refresh() {
         guard !isRefreshing else { return }
         guard WCSession.default.activationState == .activated, WCSession.default.isReachable else {
-            message = "Unlock your iPhone and keep it nearby. Open Avela there if it hasn't connected yet."
+            message = "Unlock your iPhone and keep it nearby. Open Rilova there if it hasn't connected yet."
             return
         }
         guard let data = try? JSONEncoder().encode(WatchSnapshotRequest()) else { return }
@@ -80,7 +82,7 @@ final class WatchDashboardModel: NSObject, WCSessionDelegate {
                 self.isRefreshing = false
                 guard let reply = try? JSONDecoder().decode(WatchHabitReply.self, from: data),
                       reply.status == .refreshed, let snapshot = reply.snapshot else {
-                    self.message = "Enable Apple Watch in Avela Settings and unlock your paired iPhone."
+                    self.message = "Enable Apple Watch in Rilova Settings and unlock your paired iPhone."
                     return
                 }
                 self.snapshot = snapshot
@@ -88,7 +90,7 @@ final class WatchDashboardModel: NSObject, WCSessionDelegate {
         }, errorHandler: { [weak self] _ in
             Task { @MainActor in
                 self?.isRefreshing = false
-                self?.message = "Could not refresh. Check Avela on your paired iPhone."
+                self?.message = "Could not refresh. Check Rilova on your paired iPhone."
             }
         })
     }

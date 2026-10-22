@@ -1,0 +1,9 @@
+# Premium reference refinement
+
+The owner rejected the flat flowing-R reconstruction as insufficiently faithful to the selected branding board. The `flowing-r/` assets are exploration only and were not applied to app or Watch asset catalogs.
+
+`gradient-icon-preview.png` was generated with the built-in imagegen tool from the owner-provided `Rilova App Branding Board.png`. It retains tapered strokes, pearl/aqua highlights and a brighter mint-to-teal backdrop. This is a raster preview, not a vector master or an installed app asset. App artwork remains from the earlier rebrand while this refinement is reviewed.
+
+## Prompt
+
+Edit target: attached Rilova App Branding Board. Produce a SINGLE standalone app icon asset from the RIGHT-HAND icon labelled "Preferred: Gradient". Faithful reconstruction, not a redesign. Preserve precisely its flowing elegant R silhouette, slender tapered upright, broad curled upper bowl, sweeping leaf-like diagonal leg with finely tapered upturned tip, and the separation of the two ribbon shapes. Preserve the pearl-white to pale aqua shading inside the R and restrained soft relief/highlights: these are essential to its premium feel. Background preserves that reference's luminous pale mint at top left, turquoise through center, rich blue teal bottom right, smooth atmospheric depth. Center and scale the symbol exactly like the reference icon, occupying roughly 55% width and height. Output square icon artwork with the gradient filling the ENTIRE canvas to all four straight edges. Do not pre-round corners, no exterior shadow, no white margin, no text, no tagline, no board, no additional elements. iOS will apply the rounded mask. No flattened solid-white monogram, no thick generic geometric R. This is the approved reference look recreated into a clean high-resolution app asset, keeping its visual character.

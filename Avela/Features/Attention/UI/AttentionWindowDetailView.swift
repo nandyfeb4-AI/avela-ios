@@ -1,10 +1,18 @@
 import SwiftUI
+import UIKit
 
 struct AttentionWindowDetailView: View {
     @State private var viewModel: AttentionWindowDetailViewModel
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.sessionLiveActivityService) private var liveActivityService
+    @Environment(\.appProtectionModel) private var protection
     @State private var liveActivityMessage: String?
+    @State private var activityAcknowledgment: ActivityAcknowledgment?
+    @State private var isHidingActivity = false
+
+    private enum ActivityAcknowledgment {
+        case requested, hidden, showFailed, hideFailed
+    }
 
     init(viewModel: AttentionWindowDetailViewModel) {
         _viewModel = State(initialValue: viewModel)
@@ -12,18 +20,22 @@ struct AttentionWindowDetailView: View {
 
     var body: some View {
         List {
-            Section("Goal") {
+            Section {
                 HStack(spacing: 12) {
                     AppIconBadge(symbol: viewModel.goalType.isTimedSession ? "moon" : "clock")
                         .accessibilityHidden(true)
-                    Text(viewModel.name).font(.title2.weight(.semibold))
-                }.padding(.vertical, 8)
+                    Text(viewModel.name).font(.title2.weight(.semibold)).fontDesign(.rounded)
+                        .foregroundStyle(Color.appInk)
+                }.rilovaHeaderSurface()
+                    .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
+            }
+            Section("Goal") {
                 if let summary = viewModel.summary {
                     Text(summary.targetLabel)
                     Text(summary.statusLabel).foregroundStyle(.secondary)
                         .accessibilityIdentifier("attentionWindow.status")
                 }
-                Text(viewModel.goalType == .focusSession ? "Focus on your activity. Using your phone is allowed; Avela does not block or monitor apps." : "Avela does not monitor or block phone use. Results are your own check-ins.")
+                Text(viewModel.goalType == .focusSession ? "Focus on your activity. Only explicitly enabled app protection restricts your selected distractions; Rilova does not measure app usage." : "Rilova does not monitor phone use. Optional app protection is separate; results are your own check-ins.")
                     .font(.caption).foregroundStyle(.secondary)
             }
             Section(viewModel.goalType.isTimedSession ? "Session" : "Check In") {
@@ -46,37 +58,71 @@ struct AttentionWindowDetailView: View {
                         .accessibilityIdentifier("attentionWindow.interrupted")
                 }
             }
+            if let protection { AppProtectionStatusView(model: protection) }
             if let session = viewModel.activeSession, let liveActivityService,
                viewModel.presentationDate < session.expectedEnd {
                 Section("Live Activity") {
-                    Button("Show Session Activity") {
+                    Button {
+                        activityAcknowledgment = nil
                         do {
                             try liveActivityService.show(sessionID: session.id)
-                            liveActivityMessage = "Session shown where supported. Tap it to return to Avela."
+                            activityAcknowledgment = .requested
+                            liveActivityMessage = "Session activity requested. Go Home to see the timer where supported."
                             Task { await liveActivityService.synchronize() }
                         } catch SessionLiveActivityError.disabled {
-                            liveActivityMessage = "Live Activities are unavailable or disabled. Your session is still running in Avela."
+                            liveActivityMessage = "Live Activities are unavailable or disabled. Your session is still running in Rilova."
                         } catch SessionLiveActivityError.presentationChanging {
                             liveActivityMessage = "Please wait for the activity to finish updating."
                         } catch SessionLiveActivityError.unsupportedDuration {
-                            liveActivityMessage = "Live Activities support sessions up to 8 hours. Your longer session still works in Avela."
+                            liveActivityMessage = "Live Activities support sessions up to 8 hours. Your longer session still works in Rilova."
                         } catch {
-                            liveActivityMessage = "Couldn't show the session right now. Tracking in Avela is unchanged."
+                            liveActivityMessage = "Couldn't show the session right now. Tracking in Rilova is unchanged."
+                        }
+                        if activityAcknowledgment == nil { activityAcknowledgment = .showFailed }
+                        announceActivityFeedback()
+                    } label: {
+                        if activityAcknowledgment == .requested {
+                            Label("Activity Requested", systemImage: "checkmark.circle.fill")
+                        } else if activityAcknowledgment == .showFailed {
+                            Label("Try Showing Again", systemImage: "exclamationmark.circle")
+                        } else {
+                            Text("Show Session Activity")
                         }
                     }
-                    .disabled(liveActivityService.isChangingPresentation)
+                    .accessibilityLabel(activityAcknowledgment == .requested ? "Session activity requested" : "Show Session Activity")
+                    .disabled(liveActivityService.isChangingPresentation || isHidingActivity)
                     .accessibilityIdentifier("attentionWindow.showLiveActivity")
-                    Button("Hide Session Activity") {
+                    Button {
+                        activityAcknowledgment = nil
+                        liveActivityMessage = nil
+                        isHidingActivity = true
                         Task {
+                            defer { isHidingActivity = false }
                             do {
                                 try await liveActivityService.hide(sessionID: session.id)
+                                guard viewModel.activeSession?.id == session.id else { return }
+                                activityAcknowledgment = .hidden
                                 liveActivityMessage = "Session activity hidden. Your session is still running."
                             } catch {
+                                guard viewModel.activeSession?.id == session.id else { return }
+                                activityAcknowledgment = .hideFailed
                                 liveActivityMessage = "Please wait for the activity to finish updating."
                             }
+                            announceActivityFeedback()
+                        }
+                    } label: {
+                        if isHidingActivity {
+                            HStack { ProgressView(); Text("Hiding Activity…") }
+                        } else if activityAcknowledgment == .hidden {
+                            Label("Activity Hidden", systemImage: "checkmark.circle.fill")
+                        } else if activityAcknowledgment == .hideFailed {
+                            Label("Try Hiding Again", systemImage: "exclamationmark.circle")
+                        } else {
+                            Text("Hide Session Activity")
                         }
                     }
-                    .disabled(liveActivityService.isChangingPresentation)
+                    .accessibilityLabel(isHidingActivity ? "Hiding session activity" : activityAcknowledgment == .hidden ? "Session activity hidden" : "Hide Session Activity")
+                    .disabled(liveActivityService.isChangingPresentation || isHidingActivity)
                     .accessibilityIdentifier("attentionWindow.hideLiveActivity")
                     Text("Optional Lock Screen and Dynamic Island timer with your companion. Does not verify phone use.")
                         .font(.caption).foregroundStyle(.secondary)
@@ -100,6 +146,7 @@ struct AttentionWindowDetailView: View {
         }
         .appThemeCanvas()
         .navigationTitle("Attention Goal")
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar { Button("Edit") { viewModel.isEditing = true } }
         .sheet(isPresented: $viewModel.isEditing) {
             if let draft = viewModel.draft {
@@ -121,5 +168,15 @@ struct AttentionWindowDetailView: View {
             viewModel.load()
         }
         .onChange(of: scenePhase) { _, phase in if phase == .active { viewModel.load() } }
+        .onChange(of: viewModel.activeSession?.id) { _, _ in
+            activityAcknowledgment = nil
+            liveActivityMessage = nil
+        }
+    }
+
+    private func announceActivityFeedback() {
+        if let liveActivityMessage {
+            UIAccessibility.post(notification: .announcement, argument: liveActivityMessage)
+        }
     }
 }

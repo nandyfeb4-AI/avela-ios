@@ -3,6 +3,8 @@ import SwiftUI
 struct OnboardingView: View {
     @Environment(\.appPalette) private var palette
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @AccessibilityFocusState private var isStepTitleFocused: Bool
     @State private var viewModel: OnboardingViewModel
     let onFinished: () -> Void
@@ -25,11 +27,7 @@ struct OnboardingView: View {
                     }.accessibilityHidden(true)
                     Text("\(model.step.rawValue + 1) of \(OnboardingStep.allCases.count)")
                         .font(.caption).foregroundStyle(.secondary)
-                    Text(title).font(.largeTitle.weight(.semibold))
-                        .accessibilityIdentifier("onboarding.title")
-                        .accessibilityAddTraits(.isHeader)
-                        .accessibilityFocused($isStepTitleFocused)
-                    Text(description).foregroundStyle(.secondary)
+                    introduction
                     stepContent
                 }
                 .padding(24)
@@ -39,12 +37,17 @@ struct OnboardingView: View {
             .appThemeCanvas()
             .safeAreaInset(edge: .bottom) {
                 VStack(spacing: 8) {
-                    Button(model.step == .finish ? "Start My Day" : "Continue") {
+                    Button {
                         if model.step == .finish { model.finish() } else { model.advance() }
+                    } label: {
+                        Text(model.step == .finish ? "Start My Day" : "Continue")
+                            .font(.headline)
+                            .frame(maxWidth: .infinity, minHeight: 36)
                     }
                     .foregroundStyle(palette.prominentInk)
                     .buttonStyle(.borderedProminent)
                     .tint(palette.prominentFill)
+                    .buttonBorderShape(.roundedRectangle(radius: 18))
                     .frame(minHeight: 44)
                     .accessibilityIdentifier("onboarding.continue")
                     if [.habit, .attention, .companion, .reminder].contains(model.step) {
@@ -55,8 +58,11 @@ struct OnboardingView: View {
                 }
                 .frame(maxWidth: .infinity).padding(16)
                 .background {
-                    if reduceTransparency { palette.surface }
-                    else { Rectangle().fill(.regularMaterial) }
+                    if reduceTransparency || model.step == .welcome {
+                        palette.surface.ignoresSafeArea(edges: .bottom)
+                    } else {
+                        Rectangle().fill(.regularMaterial).ignoresSafeArea(edges: .bottom)
+                    }
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
@@ -73,6 +79,44 @@ struct OnboardingView: View {
         .alert("Changes Couldn’t Be Saved", isPresented: Binding(
             get: { model.errorMessage != nil }, set: { if !$0 { model.errorMessage = nil } }
         )) { Button("OK", role: .cancel) {} } message: { Text(model.errorMessage ?? "") }
+    }
+
+    private var introduction: some View {
+        VStack(alignment: .leading, spacing: 24) {
+            if viewModel.step == .welcome {
+                HStack(spacing: 16) {
+                    Image("BrandIcon").resizable().scaledToFit()
+                        .frame(width: 72, height: 72)
+                        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                        .accessibilityHidden(true)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Rilova").font(.largeTitle.weight(.medium)).fontDesign(.rounded)
+                            .accessibilityIdentifier("onboarding.brandName")
+                        if !dynamicTypeSize.isAccessibilitySize {
+                            Text("Habits & Focus").font(.subheadline)
+                                .foregroundStyle(Color.appInkSecondary)
+                        }
+                    }
+                }
+            }
+            Text(title).font(.largeTitle.weight(.semibold))
+                .foregroundStyle(Color.appInk)
+                .accessibilityIdentifier("onboarding.title")
+                .accessibilityAddTraits(.isHeader)
+                .accessibilityFocused($isStepTitleFocused)
+            Text(description).foregroundStyle(Color.appInkSecondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(viewModel.step == .welcome ? 24 : 0)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background {
+            if viewModel.step == .welcome {
+                RoundedRectangle(cornerRadius: 28, style: .continuous)
+                    .fill(contrast == .increased
+                          ? AnyShapeStyle(palette.surface)
+                          : AnyShapeStyle(LinearGradient(colors: palette.welcomeColors, startPoint: .topLeading, endPoint: .bottomTrailing)))
+            }
+        }
     }
 
     @ViewBuilder private var stepContent: some View {
@@ -105,7 +149,7 @@ struct OnboardingView: View {
 
     private var title: String {
         switch viewModel.step {
-        case .welcome: return "Build habits. Make room for your attention."
+        case .welcome: return "Habits that fit real life."
         case .habit: return "Start with one small habit"
         case .attention: return "Choose an attention budget"
         case .companion: return "Choose your companion"
@@ -118,7 +162,7 @@ struct OnboardingView: View {
         switch viewModel.step {
         case .welcome: return "Flexible commitments and supportive recovery, without treating a missed day as lost progress."
         case .habit: return "Choose something you'd like to build up or cut down. Daily, selected days, or a flexible weekly goal."
-        case .attention: return "Set a daily limit and log time manually. Avela doesn't automatically monitor your phone usage."
+        case .attention: return "Set a daily limit and log time manually. Rilova doesn't automatically monitor your phone usage."
         case .companion: return "A quiet reflection of your progress, with no care tasks or obligations."
         case .reminder: return "Permission is requested only when you save an enabled reminder. Reminders are optional."
         case .finish: return "Everything stays on this device. Begin small; adjust as you go."

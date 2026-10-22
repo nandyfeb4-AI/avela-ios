@@ -158,6 +158,132 @@ import XCTest
         XCTAssertTrue(try habits.completions(in: range).isEmpty)
     }
 
+    func testSettingsSaveAcknowledgesConfigurationWithoutClaimingHealthReadAccessAndResetsOnEdits() async throws {
+        let habit = try habit()
+        let anchor = date!
+        let model = HealthHabitSettingsModel(habitID: habit.id, service: service, currentDate: { anchor })
+        model.load()
+        XCTAssertFalse(model.connected)
+        await model.save()
+        XCTAssertTrue(model.didSave)
+        XCTAssertTrue(model.connected)
+        XCTAssertTrue(model.feedback?.contains("No accessible Health data") == true)
+        XCTAssertTrue(try habits.completions(in: range).isEmpty)
+        XCTAssertFalse(model.didRefresh)
+        await model.refresh()
+        XCTAssertTrue(model.didRefresh)
+
+        model.target = "6000"
+        XCTAssertFalse(model.didSave)
+        XCTAssertFalse(model.didRefresh)
+        XCTAssertNil(model.feedback)
+        XCTAssertEqual(try service.connection(for: habit.id)?.target, 5000)
+        await model.save()
+        XCTAssertTrue(model.didSave)
+        model.metric = .exerciseMinutes
+        XCTAssertEqual(Double(model.target), HealthHabitMetric.exerciseMinutes.defaultTarget)
+        XCTAssertFalse(model.didSave)
+        XCTAssertNil(model.feedback)
+        model.load()
+        XCTAssertEqual(model.metric, .steps)
+        XCTAssertEqual(Double(model.target), 6000)
+        XCTAssertFalse(model.didSave)
+    }
+
+    func testSettingsFailedUpdateRetainsSavedConnectionAndDraftThenConfirmsOnlySuccessfulRetry() async throws {
+        let habit = try habit()
+        let anchor = date!
+        let model = HealthHabitSettingsModel(habitID: habit.id, service: service, currentDate: { anchor })
+        await model.save()
+        XCTAssertTrue(model.didSave)
+        model.target = "6000"
+        provider.failsRequest = true
+        await model.save()
+        XCTAssertFalse(model.didSave)
+        XCTAssertFalse(model.isSaving)
+        XCTAssertNotNil(model.errorMessage)
+        XCTAssertEqual(model.target, "6000")
+        XCTAssertEqual(try service.connection(for: habit.id)?.target, 5000)
+        provider.failsRequest = false
+        await model.save()
+        XCTAssertTrue(model.didSave)
+        XCTAssertNil(model.errorMessage)
+        XCTAssertEqual(try service.connection(for: habit.id)?.target, 6000)
+    }
+
+    func testSettingsDisconnectKeepsVisibleConfirmationAndRecordedProgress() async throws {
+        let habit = try habit()
+        let anchor = date!
+        let model = HealthHabitSettingsModel(habitID: habit.id, service: service, currentDate: { anchor })
+        provider.value = 5000
+        await model.save()
+        let completion = try XCTUnwrap(habits.completions(for: habit.id, in: range).first)
+        model.disconnect()
+        XCTAssertFalse(model.connected)
+        XCTAssertFalse(model.didSave)
+        XCTAssertFalse(model.didRefresh)
+        XCTAssertEqual(model.feedback, "Disconnected. Existing completions are kept.")
+        XCTAssertNil(try service.connection(for: habit.id))
+        XCTAssertEqual(try habits.completions(for: habit.id, in: range).first?.id, completion.id)
+        let reads = provider.reads
+        await model.refresh()
+        XCTAssertEqual(provider.reads, reads)
+        XCTAssertEqual(model.feedback, "Disconnected. Existing completions are kept.")
+    }
+
+    func testSettingsPendingActionsExposeProgressAndPreventDuplicateRequests() async throws {
+        let habit = try habit()
+        let anchor = date!
+        let model = HealthHabitSettingsModel(habitID: habit.id, service: service, currentDate: { anchor })
+        provider.onRequest = {
+            XCTAssertTrue(model.isSaving)
+            XCTAssertTrue(model.isWorking)
+            XCTAssertFalse(model.didSave)
+            await model.save()
+            model.disconnect()
+        }
+        await model.save()
+        XCTAssertEqual(provider.requests, 1)
+        XCTAssertTrue(model.connected)
+        XCTAssertTrue(model.didSave)
+        XCTAssertFalse(model.isWorking)
+
+        let originalReads = provider.reads
+        provider.onAsyncRead = {
+            XCTAssertTrue(model.isRefreshing)
+            XCTAssertFalse(model.didRefresh)
+            XCTAssertTrue(model.isWorking)
+            XCTAssertNil(model.feedback)
+            await model.refresh()
+            await model.save()
+            model.disconnect()
+            XCTAssertTrue(model.connected)
+        }
+        await model.refresh()
+        XCTAssertEqual(provider.reads, originalReads + 1)
+        XCTAssertEqual(provider.requests, 1)
+        XCTAssertFalse(model.isWorking)
+        XCTAssertTrue(model.didRefresh)
+        XCTAssertNotNil(model.feedback)
+        provider.onAsyncRead = nil
+        provider.onRead = { throw HealthHabitError.unavailable }
+        await model.refresh()
+        XCTAssertFalse(model.didRefresh)
+        XCTAssertTrue(model.feedback?.contains("Couldn't refresh Apple Health") == true)
+    }
+
+    func testSettingsDraftChangedDuringSaveCannotDisplayAFalseSavedState() async throws {
+        let habit = try habit()
+        let anchor = date!
+        let model = HealthHabitSettingsModel(habitID: habit.id, service: service, currentDate: { anchor })
+        provider.onRequest = { model.target = "7000" }
+        await model.save()
+        XCTAssertEqual(try service.connection(for: habit.id)?.target, 5000)
+        XCTAssertEqual(model.target, "7000")
+        XCTAssertFalse(model.didSave)
+        XCTAssertNil(model.feedback)
+    }
+
     func testLegacyStoreReopensWithNewOptionalConnectionModelWithoutDataReset() throws {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
@@ -195,12 +321,16 @@ import XCTest
     var reads = 0
     var failsRequest = false
     var onRead: (() throws -> Void)?
+    var onRequest: (() async -> Void)?
+    var onAsyncRead: (() async -> Void)?
     func requestReadAccess(for metric: HealthHabitMetric) async throws {
         requests += 1
+        await onRequest?()
         if failsRequest { throw HealthHabitError.unavailable }
     }
     func total(for metric: HealthHabitMetric, in interval: DateInterval) async throws -> Double? {
         reads += 1
+        await onAsyncRead?()
         try onRead?()
         return value
     }

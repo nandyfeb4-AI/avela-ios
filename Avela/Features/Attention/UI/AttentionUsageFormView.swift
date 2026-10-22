@@ -26,6 +26,8 @@ struct AttentionUsageFormView: View {
             Form {
                 Section {
                     TextField("Amount", text: $amountText)
+                        .font(.system(.title2, design: .rounded, weight: .medium)).monospacedDigit()
+                        .frame(minHeight: 44)
                         .keyboardType(.numberPad)
                         .accessibilityIdentifier("attentionUsageForm.amountField")
                 } header: { Text(unitSectionTitle) } footer: {

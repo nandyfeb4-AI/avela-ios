@@ -1,12 +1,12 @@
-# Avela — implemented features and UX review
+# Rilova — implemented features and UX review
 
 Updated: October 6, 2026. This is a product review inventory, not a claim that every integration has been verified on hardware or that the app is ready for App Store submission. It describes implementation in this repository; configuration-dependent capabilities and proposed work are separated below.
 
 ## Product intent
 
-Avela combines habit tracking, intentional use of attention, and recovery after interruptions. Its proposed promise is: **Build habits that survive real life—and protect the time to do them.** This positioning is a proposal, not validated market differentiation.
+Rilova combines habit tracking, intentional use of attention, and recovery after interruptions. Its proposed promise is: **Build habits that survive real life—and protect the time to do them.** This positioning is a proposal, not validated market differentiation.
 
-The app is native Swift/SwiftUI/SwiftData, local-first, with Apple frameworks and no third-party runtime dependencies, analytics SDK, advertising SDK, generative AI or Avela-operated backend. Apple speech recognition uses machine learning; that is distinct from an LLM interpreting or advising on your notes.
+The app is native Swift/SwiftUI/SwiftData, local-first, with Apple frameworks and no third-party runtime dependencies, analytics SDK, advertising SDK, generative AI or Rilova-operated backend. Apple speech recognition uses machine learning; that is distinct from an LLM interpreting or advising on your notes.
 
 ## 1. Today and navigation
 
@@ -90,8 +90,8 @@ The app is native Swift/SwiftUI/SwiftData, local-first, with Apple frameworks an
 - Session durations and captured start/end boundaries are preserved. A timer ending does not certify success.
 - Explicit outcome reporting, with success unavailable before the target end and interruption reporting available earlier.
 - Correct/delete today's manual budget entries and edit targets while retaining historical budget snapshots.
-- Clear manual provenance, Healthy/Near Limit/Exceeded or not-logged wording; no claim that Avela automatically measured other apps.
-- Automatic Screen Time reading/blocking is **not implemented**.
+- Clear manual provenance, Healthy/Near Limit/Exceeded or not-logged wording; no claim that Rilova automatically measured other apps.
+- Automatic Screen Time usage reading is **not implemented**. Optional blocking has a development implementation described in §22, with signed-device/release gates still pending.
 
 ## 8. Make Room → Do It
 
@@ -160,7 +160,7 @@ The review **What I Made Room For** presents recorded linked sessions, ended tim
 
 - SwiftData local persistence with historical configurations, pause periods and stored local-day identities.
 - Logical backup validation and explicit restoration flow avoid overwriting existing tracking.
-- Optional private Apple iCloud backup is a recovery-copy mechanism, not live sync or an Avela-operated account/database.
+- Optional private Apple iCloud backup is a recovery-copy mechanism, not live sync or an Rilova-operated account/database.
 - Health/fitness/Health-connected history, reflection notes, completion notes and private habit reasons are excluded from app-managed logical cloud recovery. Apple whole-device backups are separate.
 - Restore requires an empty tracking installation; timers do not restore as manufactured completed outcomes.
 - Free creation limits currently: three active habits and one attention goal. Premium increases creation capacity.
@@ -204,7 +204,7 @@ These are proposals, not claims that competitors lack these features:
 
 ## 17. Questions for an independent product/UX review
 
-- Which one user/job should Avela target first? Are these capabilities coherent for that person?
+- Which one user/job should Rilova target first? Are these capabilities coherent for that person?
 - Which existing features are hard to find or understand, and should be simplified before adding more?
 - Is Make Room valuable enough to become a primary Today action? What needs observed user evidence?
 - Does charging for a second attention goal undermine the habits-plus-focus promise? Consider the business model alongside UX.
@@ -230,7 +230,7 @@ This sharpens the product promise around protected attention, retained progress 
 
 ## 19. Optional Quick Log widget
 
-Small/medium Home Screen option: dedicated circle for a saved simple check-in without opening the app, name link for details, plus link for quantity logging. Pending rows follow habit order; successful rows remain in place briefly. Older/stale snapshots, midnight, timezone changes, edited schedules, quantity targets and skipped days cannot silently write. App-owned persistence, no new permission, no mascot or stats dashboard. After midnight, Refresh habits updates the app-owned projection without opening Avela or recording a completion. The optional Settings guide explains one-time placement and privacy. Device/provisioning validation remains distinct from simulator verification.
+Small/medium Home Screen option: dedicated Log button for a saved simple check-in without opening the app, name link for details, plus link for quantity logging. Pending rows follow habit order; successful rows remain in place briefly. Older/stale snapshots, midnight, timezone changes, edited schedules, quantity targets and skipped days cannot silently write. App-owned persistence, no new permission, no mascot or stats dashboard. After midnight, Refresh habits updates the app-owned projection without opening Rilova or recording a completion. The optional Settings guide explains one-time placement and privacy. Device/provisioning validation remains distinct from simulator verification.
 
 
 ## 20. Simplified Home Screen logging
@@ -241,3 +241,23 @@ Two Home Screen widget types: Quick Log (today’s habits) and Routine (explicit
 ### Approved widget presentation
 
 Quick Log and Routine use Rich Tide: selected-theme deep gradients, clear pale Log buttons, small/medium sizes and reduced row counts at accessibility sizes. Simple check-ins save without opening Avela. Names open details; quantity + opens the amount logger. Native screenshots and remaining device checks: [verification](verification/two-widgets/README.md).
+
+
+## 21. Calendar planning and Make Room automation
+
+Habit Detail → Make Room → Plan Time in Calendar prepares a chosen time block in Apple's native editor. No calendar reading, progress writes, running timer or two-way calendar sync. Siri/Shortcuts adds Make Room for a Habit for explicitly selected existing habit/session goal, with no automatic habit completion or app blocking. Watch confirmed successes now appear inline, with explicit failure alerts retained. Optional protection now has the development implementation in §22; signed-device verification and distribution approval remain pending.
+
+
+## 22. Optional app protection — development implementation
+
+Make Room can restrict explicitly chosen apps/categories/websites for one 15-minute–8-hour session, using native individual permission, picker and a timed monitor extension. Stop releases only Rilova's restrictions without ending the timer or marking success. Tokens stay private/on-device and outside recovery/shared presentation. Development testing requires a signed iPhone; simulator only shows unavailable setup. Release availability defaults off pending hardware lifecycle verification and Family Controls distribution approval. Automatic Screen Time metering and protected Shortcut starts remain unimplemented.
+
+### Other integrations: remaining configuration and evidence
+
+- Health steps/exercise: already implemented; real-device permission/sample aggregation/denial/revocation still needed. Sleep/mindfulness/workout-specific automation and background import are not implemented.
+- Siri/Shortcuts: explicit habit/quantity/attention logging and Make Room starts implemented; spoken discovery, parameters, locking and real automation need device checks. In-app voice commands remain deferred; reflection dictation is reviewable text only.
+- Watch: supported quick logging/local timer implemented; enable preference and validate signed paired-device delivery/reachability. No offline write queue.
+- Calendar: user-reviewed event planning implemented; real calendars, time zones and sync/sharing need checks. No reading/two-way sync.
+- Widgets/Live Activities/notifications: implemented; signed App Group, locked/background behavior, actual delivery and accessibility still need hardware checks.
+- iCloud recovery: code implemented, but real container/profiles/production schema/recovery testing pending. No live sync.
+- StoreKit: code/local StoreKit tests implemented; actual products, agreements and sandbox/TestFlight purchase/restore need account setup.

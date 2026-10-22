@@ -9,7 +9,7 @@ enum BackupError: LocalizedError, Equatable {
         case .unavailable: return "iCloud backup isn't available right now. Your local progress is unchanged."
         case .accountChanged: return "Your iCloud account changed. Enable backup again for the current account."
         case .invalidFile: return "This backup couldn't be verified. Nothing was restored."
-        case .unsupportedVersion: return "This backup needs a newer version of Avela. Nothing was restored."
+        case .unsupportedVersion: return "This backup needs a newer version of Rilova. Nothing was restored."
         case .existingHistory: return "Restore is available only before tracking begins on this installation. Your existing history won't be overwritten."
         case .unsavedChanges: return "Finish saving your current changes before backing up or restoring."
         }

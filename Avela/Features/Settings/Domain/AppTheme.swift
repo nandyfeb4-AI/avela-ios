@@ -8,7 +8,7 @@ enum AppTheme: String, CaseIterable, Identifiable, Sendable {
     var title: String { rawValue.capitalized }
     var description: String {
         switch self {
-        case .tidewater: return "Fresh teal · Avela's original palette"
+        case .tidewater: return "Fresh teal · Rilova's original palette"
         case .sapphire: return "Clear blue · Quiet focus"
         case .plum: return "Rich purple · A softer evening tone"
         case .ember: return "Warm copper · A little energy"

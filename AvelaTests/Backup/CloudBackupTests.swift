@@ -188,6 +188,105 @@ import SwiftData
         XCTAssertEqual(provider.uploads.count, 1)
         model.disable()
     }
+
+    func testBackupFeedbackWaitsForUploadAndClearsSuccessBeforeFailedRetry() async throws {
+        let source = try AppPersistence.makeContainer(inMemory: true)
+        _ = try seed(source)
+        let provider = FakeBackupProvider()
+        let model = CloudBackupModel(store: BackupStore(context: source.mainContext), provider: provider, defaults: defaults())
+        await model.setEnabled(true)
+        defer { model.disable() }
+
+        let uploadStarted = expectation(description: "Upload is waiting for acknowledgment")
+        provider.suspendUpload = true
+        provider.uploadStarted = { uploadStarted.fulfill() }
+        let backupDate = date(5)
+        let attempt = Task { await model.backupNow(at: backupDate) }
+        await fulfillment(of: [uploadStarted], timeout: 2)
+        XCTAssertTrue(model.isBusy)
+        XCTAssertEqual(model.feedbackAction, .backup)
+        XCTAssertFalse(model.actionSucceeded)
+        XCTAssertNil(model.message)
+        XCTAssertNil(model.lastSuccessfulBackup)
+        await model.backupNow(at: date(6))
+        XCTAssertTrue(provider.uploads.isEmpty, "Repeated taps must not start another upload")
+
+        provider.resumeUpload()
+        await attempt.value
+        XCTAssertFalse(model.isBusy)
+        XCTAssertTrue(model.actionSucceeded)
+        XCTAssertEqual(model.lastSuccessfulBackup, date(5))
+        XCTAssertTrue(model.message?.contains("was backed up") == true)
+
+        provider.fail = true
+        await model.backupNow(at: date(6))
+        XCTAssertFalse(model.actionSucceeded, "An old acknowledgment cannot stand in for this failed attempt")
+        XCTAssertFalse(model.isBusy)
+        XCTAssertNotNil(model.message)
+        XCTAssertEqual(model.lastSuccessfulBackup, date(5), "The earlier acknowledged recovery point remains factual")
+        XCTAssertEqual(provider.uploads.count, 1)
+    }
+
+    func testCheckingBackupsShowsEmptyResultAndClearsFeedbackWhileRetrying() async throws {
+        let source = try AppPersistence.makeContainer(inMemory: true)
+        let provider = FakeBackupProvider()
+        let model = CloudBackupModel(store: BackupStore(context: source.mainContext), provider: provider, defaults: defaults())
+        await model.loadBackups()
+        XCTAssertEqual(model.feedbackAction, .checkBackups)
+        XCTAssertTrue(model.actionSucceeded)
+        XCTAssertEqual(model.message, "No iCloud recovery points were found. Your local progress is unchanged.")
+        XCTAssertNil(model.lastSuccessfulBackup, "An empty successful check is not an uploaded backup")
+        XCTAssertFalse(model.isEnabled, "Checking existing recovery points does not consent to uploads")
+
+        let listStarted = expectation(description: "Retry is waiting for the cloud list")
+        provider.suspendList = true
+        provider.listStarted = { listStarted.fulfill() }
+        let retry = Task { await model.loadBackups() }
+        await fulfillment(of: [listStarted], timeout: 2)
+        XCTAssertTrue(model.isBusy)
+        XCTAssertEqual(model.feedbackAction, .checkBackups)
+        XCTAssertNil(model.message, "The prior empty result must disappear while a new check is pending")
+        XCTAssertFalse(model.actionSucceeded)
+        provider.fail = true
+        provider.resumeList()
+        await retry.value
+        XCTAssertFalse(model.isBusy)
+        XCTAssertFalse(model.actionSucceeded)
+        XCTAssertEqual(model.message, "Couldn't load iCloud backups. Your local progress is unchanged.")
+
+        provider.fail = false
+        _ = try seed(source)
+        provider.uploads = [try BackupStore(context: source.mainContext).capture(at: date(5))]
+        await model.loadBackups()
+        XCTAssertTrue(model.actionSucceeded)
+        XCTAssertEqual(model.backups.count, 1)
+        XCTAssertEqual(model.message, "Found 1 iCloud recovery point.")
+        XCTAssertNil(model.lastSuccessfulBackup)
+    }
+
+    func testDisablingDuringPendingUploadCannotLeaveAFalseAcknowledgment() async throws {
+        let source = try AppPersistence.makeContainer(inMemory: true)
+        _ = try seed(source)
+        let provider = FakeBackupProvider()
+        let model = CloudBackupModel(store: BackupStore(context: source.mainContext), provider: provider, defaults: defaults())
+        await model.setEnabled(true)
+        let uploadStarted = expectation(description: "Upload has already been sent")
+        provider.suspendUpload = true
+        provider.uploadStarted = { uploadStarted.fulfill() }
+        let backupDate = date(5)
+        let attempt = Task { await model.backupNow(at: backupDate) }
+        await fulfillment(of: [uploadStarted], timeout: 2)
+        model.disable()
+        provider.resumeUpload()
+        await attempt.value
+        XCTAssertFalse(model.isEnabled)
+        XCTAssertFalse(model.actionSucceeded)
+        XCTAssertNil(model.feedbackAction)
+        XCTAssertNil(model.lastSuccessfulBackup)
+        XCTAssertEqual(model.message, "Automatic backup is off. Existing iCloud backups are kept.")
+        XCTAssertEqual(provider.uploads.count, 1, "An upload already sent can finish; the UI must not claim it protects this installation")
+    }
+
     func testRestorePreviewCancelConfirmationAndDeletionAreExplicit() async throws {
         let source = try AppPersistence.makeContainer(inMemory: true)
         let habit = try seed(source)
@@ -283,14 +382,45 @@ import SwiftData
     var identity = "account-one"
     var fail = false
     var uploads: [BackupArchive] = []
+    var suspendUpload = false
+    var suspendList = false
+    var uploadStarted: (() -> Void)?
+    var listStarted: (() -> Void)?
+    private var uploadContinuation: CheckedContinuation<Void, Never>?
+    private var listContinuation: CheckedContinuation<Void, Never>?
     func accountIdentity() async throws -> String {
         if fail { throw BackupError.unavailable }
         return identity
     }
     func upload(_ archive: BackupArchive, deviceID: String) async throws {
+        if suspendUpload {
+            await withCheckedContinuation { continuation in
+                uploadContinuation = continuation
+                uploadStarted?()
+            }
+        }
         if fail { throw BackupError.unavailable }; uploads.append(archive)
     }
-    func list() async throws -> [CloudBackupSummary] { uploads.map { .init(id: $0.id.uuidString, createdAt: $0.createdAt) } }
+    func list() async throws -> [CloudBackupSummary] {
+        if suspendList {
+            await withCheckedContinuation { continuation in
+                listContinuation = continuation
+                listStarted?()
+            }
+        }
+        if fail { throw BackupError.unavailable }
+        return uploads.map { .init(id: $0.id.uuidString, createdAt: $0.createdAt) }
+    }
+    func resumeUpload() {
+        suspendUpload = false
+        uploadContinuation?.resume()
+        uploadContinuation = nil
+    }
+    func resumeList() {
+        suspendList = false
+        listContinuation?.resume()
+        listContinuation = nil
+    }
     func download(id: String) async throws -> BackupArchive {
         guard let row = uploads.first(where: { $0.id.uuidString == id }) else { throw BackupError.invalidFile }
         return row

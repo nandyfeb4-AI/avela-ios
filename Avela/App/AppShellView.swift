@@ -23,6 +23,8 @@ struct AppShellView: View {
     @State private var insightsViewModel: InsightsViewModel?
     @State private var historyViewModel: HistoryViewModel?
     @State private var reminderService: HabitReminderService?
+    @State private var protectionDriver: AppleAppProtectionDriver?
+    @State private var protectionModel: AppProtectionModel?
     @State private var healthService: HealthHabitService?
     @State private var liveActivityService: SessionLiveActivityService?
     @State private var activityRepository: HabitActivityRepository?
@@ -87,6 +89,13 @@ struct AppShellView: View {
         .onChange(of: scenePhase) { _, phase in
             if phase == .active { cloudBackup?.scheduleBackup() }
         }
+        .task(id: protectionModel?.active?.endsAt) {
+            guard let deadline = protectionModel?.active?.endsAt else { return }
+            do { try await Task.sleep(for: .seconds(max(0, deadline.timeIntervalSinceNow))) }
+            catch { return }
+            guard !Task.isCancelled else { return }
+            protectionModel?.refresh()
+        }
         .task(id: liveActivityService?.nextExpiration) {
             guard let deadline = liveActivityService?.nextExpiration else { return }
             do { try await Task.sleep(for: .seconds(max(0, deadline.timeIntervalSinceNow))) }
@@ -106,6 +115,8 @@ struct AppShellView: View {
         .environment(\.habitReminderService, reminderService)
         .environment(\.healthHabitService, healthService)
         .environment(\.sessionLiveActivityService, liveActivityService)
+        .environment(\.appProtectionModel, protectionModel)
+        .environment(\.appProtectionDriver, protectionDriver)
         .sheet(item: $widgetSelection, onDismiss: refreshVisibleData) { selection in
             if let repository {
                 if selection.logsProgress, let activityRepository {
@@ -128,6 +139,7 @@ struct AppShellView: View {
             // after the save. Do not race that export with an unpinned reload.
             if scenePhase == .active { exportWidgetSnapshot() }
             synchronizeLiveActivity()
+            protectionModel?.refresh()
             watchCoordinator?.refresh()
             todayViewModel?.load()
         }
@@ -235,6 +247,24 @@ struct AppShellView: View {
             todayViewModel?.creationAllowed = { subscriptionManager.canCreateHabit(activeCount: $0) }
             let attentionRepository = SwiftDataAttentionRepository(modelContext: modelContext)
             self.attentionRepository = attentionRepository
+            if AppleAppProtectionDriver.featureVisible {
+                #if targetEnvironment(simulator)
+                protectionModel = AppProtectionModel(driver: UnavailableAppProtectionDriver(), sessionIsActive: { _ in false })
+                #else
+                if let driver = try? AppleAppProtectionDriver() {
+                    protectionDriver = driver
+                    protectionModel = AppProtectionModel(driver: driver) { lease in
+                        guard let goal = try attentionRepository.fetchGoal(id: lease.goalID), goal.type.isTimedSession else { return false }
+                        return try attentionRepository.sessions(for: lease.goalID).contains {
+                            $0.id == lease.sessionID && $0.isActive && $0.startedAt == lease.startedAt && $0.expectedEnd == lease.endsAt
+                        }
+                    }
+                    protectionModel?.refresh()
+                } else {
+                    protectionModel = AppProtectionModel(driver: UnavailableAppProtectionDriver(), sessionIsActive: { _ in false })
+                }
+                #endif
+            }
             intentionLinks = SwiftDataIntentionSessionLinkRepository(modelContext: modelContext)
             insightsViewModel = InsightsViewModel(repository: repository, attentionRepository: attentionRepository, intentionLinks: intentionLinks)
             historyViewModel = HistoryViewModel(repository: repository, attentionRepository: attentionRepository)
@@ -385,6 +415,7 @@ struct AppShellView: View {
 
     private func refreshVisibleData() {
         reloadProfile()
+        protectionModel?.refresh()
         watchCoordinator?.refresh()
         exportWidgetSnapshot()
         synchronizeLiveActivity()

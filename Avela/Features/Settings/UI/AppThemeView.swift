@@ -42,7 +42,7 @@ struct AppThemeView: View {
                     .accessibilityValue(viewModel.selectedTheme == theme ? "Selected" : "Not selected")
                 }
             } header: { Text("Choose Your Theme") } footer: {
-                Text("Themes follow your iPhone's light or dark appearance. Attention warnings and recovery keep their familiar colors. Widgets and session activities keep Avela's original Tidewater palette.")
+                Text("Themes follow your iPhone's light or dark appearance. Attention warnings and recovery keep their familiar colors. Widgets and session activities keep Rilova's original Tidewater palette.")
             }
         }
         .appThemeCanvas()

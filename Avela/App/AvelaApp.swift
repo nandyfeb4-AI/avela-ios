@@ -50,9 +50,9 @@ struct AvelaApp: App {
                     .modelContainer(container)
             case .failure:
                 ContentUnavailableView(
-                    "Unable to Open Avela",
+                    "Unable to Open Rilova",
                     systemImage: "externaldrive.badge.exclamationmark",
-                    description: Text("Your local data could not be opened. Please close Avela and try again.")
+                    description: Text("Your local data could not be opened. Please close Rilova and try again.")
                 )
             }
         }
