@@ -53,6 +53,7 @@ struct TodayView: View {
     @State private var isDoneSectionExpanded = false
     @State private var isShowingHabitOrder = false
     @State private var toast: TodayToast?
+    @State private var celebrationPulse = 0
     @State private var activityHabitID: UUID?
     @State private var recoveryChoiceID: UUID?
     @State private var pendingRecoveryLoggerID: UUID?
@@ -147,6 +148,9 @@ struct TodayView: View {
             collapseTasks.removeAll()
             pendingDoneIDs.removeAll()
             hideToast()
+        }
+        .onChange(of: toast?.id) { _, next in
+            if next != nil { celebrationPulse += 1 }
         }
         .onChange(of: voiceOverEnabled) { _, enabled in
             if enabled { cancelAutomaticPresentationChanges() }
@@ -275,10 +279,10 @@ struct TodayView: View {
     }
 
     private var populatedContent: some View {
-        VStack(alignment: .leading, spacing: 22) {
+        VStack(alignment: .leading, spacing: 18) {
             todayHero
             if companionProfile.companionEnabled {
-                CompanionView(profile: companionProfile, input: companionInput, compact: true)
+                CompanionView(profile: companionProfile, input: companionInput, compact: true, showsPortrait: false)
             }
             HomeCalendarStrip(repository: repository, activities: activityRepository)
             habitsSection
@@ -296,38 +300,102 @@ struct TodayView: View {
     private var todayHero: some View {
         let done = viewModel.rows.filter(\.isCompletedToday).count
         let total = viewModel.rows.count
-        return VStack(alignment: .leading, spacing: 14) {
-            HStack(alignment: .firstTextBaseline) {
-                Text("MAKE ROOM FOR TODAY").font(.caption2.weight(.bold)).tracking(1.6)
-                Spacer(minLength: 0)
-                Image(systemName: "sparkle").accessibilityHidden(true)
-            }.foregroundStyle(.white.opacity(0.86))
-            HStack(alignment: .firstTextBaseline, spacing: 8) {
-                Text("\(done)").font(.system(.largeTitle, design: .rounded, weight: .bold)).monospacedDigit()
+        return Group {
+            if dynamicTypeSize >= .xxLarge {
+                VStack(alignment: .leading, spacing: 14) {
+                    RilovaWorldArtwork(scene: .coast).frame(height: 100)
+                        .clipShape(RoundedRectangle(cornerRadius: 22))
+                    todayProgress(done: done, total: total)
+                }
+                .padding(18).background(palette.luminousColors.last ?? palette.heroEnd,
+                    in: RoundedRectangle(cornerRadius: 28))
+            } else {
+                ZStack(alignment: .leading) {
+                    RilovaWorldArtwork(scene: .coast)
+                    GeometryReader { geometry in
+                        LinearGradient(stops: [.init(color: Color(red: 0.025, green: 0.16, blue: 0.19).opacity(0.90), location: 0),
+                                               .init(color: Color(red: 0.025, green: 0.16, blue: 0.19).opacity(0.82), location: 0.62),
+                                               .init(color: Color(red: 0.025, green: 0.16, blue: 0.19).opacity(0.74), location: 0.82),
+                                               .init(color: .clear, location: 1)],
+                                       startPoint: .leading, endPoint: .trailing)
+                            .frame(width: geometry.size.width * 0.9)
+                    }.allowsHitTesting(false).accessibilityHidden(true)
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Make room\nfor today.")
+                            .font(.system(.title, design: .rounded, weight: .bold))
+                            .tracking(-0.6).foregroundStyle(.white)
+                        todayProgress(done: done, total: total)
+                    }
+                    .padding(20).frame(maxWidth: .infinity, alignment: .leading)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.trailing, 126)
+                    if companionProfile.companionEnabled {
+                        VStack {
+                            Spacer(minLength: 0)
+                            HStack {
+                                Spacer(minLength: 0)
+                                todayCompanion
+                            }
+                        }.padding(.trailing, 8).padding(.bottom, 8)
+                    }
+                }
+                .frame(minHeight: 206)
+                .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 30).strokeBorder(.white.opacity(0.22), lineWidth: 1))
+            }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Habits: \(done) of \(total) done")
+        .accessibilityValue(attentionViewModel.rows.isEmpty ? "" : "Attention: " + attentionOverviewLabel)
+    }
+
+    @ViewBuilder private var todayCompanion: some View {
+        let presentation = CompanionPresentation.state(for: companionInput)
+        let artwork = CompanionArtwork(animal: companionProfile.selectedAnimal.rawValue,
+                         state: presentation.artworkState.rawValue, size: 106, highResolution: true)
+            .id(presentation)
+            .transition(reduceMotion ? .identity : .opacity.combined(with: .scale(scale: 0.96)))
+            .animation(reduceMotion ? nil : .spring(response: 0.38, dampingFraction: 0.8), value: presentation)
+            .shadow(color: .black.opacity(0.25), radius: 9, y: 7)
+            .accessibilityHidden(true).allowsHitTesting(false)
+        if reduceMotion {
+            artwork
+        } else {
+            // One short response to a successfully saved fact; never an idle
+            // loop, a care request or a condition for keeping progress.
+            artwork.keyframeAnimator(initialValue: 0.0, trigger: celebrationPulse) { content, offset in
+                content.offset(y: CGFloat(offset))
+            } keyframes: { _ in
+                CubicKeyframe(-5.0, duration: 0.16)
+                CubicKeyframe(0.0, duration: 0.28)
+            }
+        }
+    }
+
+    private func todayProgress(done: Int, total: Int) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                Text("\(done)").font(.system(.title, design: .rounded, weight: .bold)).monospacedDigit()
                     .contentTransition(reduceMotion ? .identity : .numericText(value: Double(done)))
-                    .animation(reduceMotion ? nil : .snappy(duration: 0.28), value: done)
-                Text("of \(total) complete today").font(.headline).fixedSize(horizontal: false, vertical: true)
+                Text("of \(total) complete today").font(.subheadline.weight(.semibold))
+                    .fixedSize(horizontal: false, vertical: true)
             }.foregroundStyle(.white)
             if total > 0 {
                 GeometryReader { proxy in
                     ZStack(alignment: .leading) {
-                        Capsule().fill(Color.white.opacity(0.18))
-                        Capsule().fill(palette.luminousHighlight).frame(width: proxy.size.width * CGFloat(done) / CGFloat(total))
+                        Capsule().fill(Color.white.opacity(0.24))
+                        Capsule().fill(Color(red: 0.73, green: 0.98, blue: 0.88))
+                            .frame(width: proxy.size.width * CGFloat(done) / CGFloat(total))
                     }
                 }.frame(height: 5).accessibilityHidden(true)
-                    .animation(reduceMotion ? nil : .smooth(duration: 0.3), value: done)
             }
             if !attentionViewModel.rows.isEmpty {
-                Label("Attention · " + attentionOverviewLabel, systemImage: "hourglass")
-                    .font(.footnote.weight(.medium)).foregroundStyle(.white.opacity(0.9))
+                Text("Attention · " + attentionOverviewLabel)
+                    .font(.caption.weight(.medium)).foregroundStyle(.white)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
-        .padding(22).frame(maxWidth: .infinity, alignment: .leading)
-        .background { RilovaAurora() }
-        .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Habits: \(done) of \(total) done")
-        .accessibilityValue(attentionViewModel.rows.isEmpty ? "" : "Attention: " + attentionOverviewLabel)
+        .animation(reduceMotion ? nil : .smooth(duration: 0.35), value: done)
     }
 
     private var attentionOverviewLabel: String {
@@ -392,25 +460,19 @@ struct TodayView: View {
     }
 
     private var habitsCard: some View {
-        VStack(spacing: 0) {
-            ForEach(Array(toDoRows.enumerated()), id: \.element.id) { index, row in
-                if index > 0 { Divider().padding(.leading, isAccessibilitySize ? 0 : 66) }
+        VStack(spacing: 10) {
+            ForEach(toDoRows) { row in
                 HabitRowView(row: row, isAccessibilitySize: isAccessibilitySize, onToggle: { toggle(row) }, onQuickAmount: { logQuickAmount(row) }, onNavigate: prepareForNavigation)
             }
             if !doneRows.isEmpty {
-                if !toDoRows.isEmpty { Divider() }
-                doneToggleRow
+                doneToggleRow.padding(.horizontal, 14)
                 if isDoneSectionExpanded {
                     ForEach(doneRows) { row in
-                        Divider().padding(.leading, isAccessibilitySize ? 0 : 66)
                         HabitRowView(row: row, isAccessibilitySize: isAccessibilitySize, onToggle: { toggle(row) }, onQuickAmount: { logQuickAmount(row) }, onNavigate: prepareForNavigation)
                     }
                 }
             }
         }
-        .padding(.horizontal, 12)
-        .background(palette.surface)
-        .clipShape(RoundedRectangle(cornerRadius: AppMetrics.cardCornerRadius, style: .continuous))
     }
 
     private var doneToggleRow: some View {
@@ -742,25 +804,27 @@ struct TodayView: View {
     // MARK: - Empty state
 
     private var emptyState: some View {
-        ContentUnavailableView {
-            Label {
-                Text("No Habits Yet")
-                    .fontDesign(.rounded)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 22) {
+                RilovaWorldArtwork(scene: .coast)
+                    .frame(height: isAccessibilitySize ? 110 : 230)
+                    .clipShape(RoundedRectangle(cornerRadius: 30))
+                Text("No Habits Yet").font(.system(.largeTitle, design: .rounded, weight: .bold))
                     .accessibilityIdentifier("today.emptyState.title")
-            } icon: {
-                Image("BrandIcon").resizable().scaledToFit()
-                    .frame(width: 72, height: 72)
-                    .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-                    .accessibilityHidden(true)
-            }
-        } description: {
-            Text("Habits you create will show up here when they're due today.")
-        } actions: {
-            Button("Create Habit") {
-                viewModel.requestCreation()
-            }
-            .buttonStyle(.borderedProminent).controlSize(.large)
-            .accessibilityIdentifier("today.emptyState.createHabitButton")
+                    .fixedSize(horizontal: false, vertical: true)
+                Text("Make a little room for what matters.")
+                    .font(.title3.weight(.medium)).foregroundStyle(palette.accent)
+                Text("Habits you create will show up here when they're due today.")
+                    .font(.body).foregroundStyle(Color.appInkSecondary)
+                Button { viewModel.requestCreation() } label: {
+                    Label("Create Habit", systemImage: "plus")
+                        .font(.headline).foregroundStyle(palette.prominentInk)
+                        .frame(maxWidth: .infinity, minHeight: 54)
+                        .background(palette.prominentFill, in: RoundedRectangle(cornerRadius: 20))
+                }
+                .buttonStyle(RilovaPressStyle())
+                .accessibilityIdentifier("today.emptyState.createHabitButton")
+            }.padding(24)
         }
     }
 
@@ -835,6 +899,8 @@ private struct HabitRowView: View {
     let onQuickAmount: () -> Void
     let onNavigate: () -> Void
 
+    private var identity: AppPalette { AppPalette(theme: HabitIconBadge.identityTheme(for: row.iconName)) }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
         if isAccessibilitySize {
@@ -846,7 +912,7 @@ private struct HabitRowView: View {
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(palette.prominentFill)
+                .tint(identity.prominentFill)
                 .accessibilityIdentifier("today.completeButton.\(row.id.uuidString)")
                 .accessibilityLabel(accessibilityToggleLabel)
             }
@@ -864,13 +930,29 @@ private struct HabitRowView: View {
                     .font(.subheadline.weight(.semibold)).frame(minHeight: 44)
                     .padding(.horizontal, 14)
                     .frame(maxWidth: isAccessibilitySize ? .infinity : nil)
-                    .background(palette.accentSoft, in: Capsule())
+                    .foregroundStyle(identity.accent)
+                    .background(identity.accentSoft, in: Capsule())
             }.buttonStyle(RilovaPressStyle())
                 .accessibilityLabel("Log \(amount) \(target.unit.name(for: amount)) for \(row.name)")
                 .accessibilityIdentifier("today.quickAmount.\(row.name)")
                 .padding(.leading, isAccessibilitySize ? 0 : 54).padding(.bottom, 10)
         }
         }
+        .padding(.horizontal, 14)
+        .background {
+            RoundedRectangle(cornerRadius: 23, style: .continuous).fill(palette.surface)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 23, style: .continuous)
+                        .fill(LinearGradient(colors: [identity.accent.opacity(0.055), .clear],
+                                             startPoint: .leading, endPoint: .trailing))
+                }
+        }
+        .overlay(alignment: .leading) {
+            Capsule().fill(identity.accent).frame(width: 3, height: 28).padding(.leading, 1)
+                .accessibilityHidden(true).allowsHitTesting(false)
+        }
+        .overlay(RoundedRectangle(cornerRadius: 23).strokeBorder(identity.accent.opacity(0.12), lineWidth: 1).allowsHitTesting(false))
+        .animation(reduceMotion ? nil : .snappy(duration: 0.25), value: row.isCompletedToday)
     }
 
     private var openLink: some View {
@@ -920,7 +1002,7 @@ private struct HabitRowView: View {
             .foregroundStyle(row.isCompletedToday ? palette.accent : palette.prominentInk)
             .frame(minWidth: 56, minHeight: 44)
             .padding(.horizontal, 8)
-            .background(row.isCompletedToday ? palette.accentSoft : palette.prominentFill, in: Capsule())
+            .background(row.isCompletedToday ? palette.accentSoft : identity.prominentFill, in: Capsule())
         }
         .buttonStyle(RilovaPressStyle())
         .contentTransition(reduceMotion ? .identity : .symbolEffect(.replace))

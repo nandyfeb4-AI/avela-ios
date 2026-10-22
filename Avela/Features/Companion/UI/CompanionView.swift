@@ -9,6 +9,7 @@ struct CompanionView: View {
     let profile: CompanionProfile
     let input: CompanionInput
     var compact = false
+    var showsPortrait = true
 
     private var state: CompanionPresentationState { CompanionPresentation.state(for: input) }
     private var stateInk: Color {
@@ -26,11 +27,13 @@ struct CompanionView: View {
                 ? AnyLayout(VStackLayout(alignment: .leading, spacing: 10))
                 : AnyLayout(HStackLayout(alignment: .center, spacing: 14))
             layout {
-                CompanionPortrait(animal: profile.selectedAnimal, state: state.artworkState.rawValue,
-                                  tint: stateInk, size: compact ? 58 : 90)
-                    .id(state)
-                    .transition(reduceMotion ? .identity : .opacity)
-                    .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: state)
+                if showsPortrait {
+                    CompanionPortrait(animal: profile.selectedAnimal, state: state.artworkState.rawValue,
+                                      tint: stateInk, size: compact ? 66 : 108)
+                        .id(state)
+                        .transition(reduceMotion ? .identity : .opacity)
+                        .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: state)
+                }
                 VStack(alignment: .leading, spacing: 5) {
                     if !compact {
                         Text("Your \(profile.selectedAnimal.title.lowercased()) companion")
@@ -45,8 +48,14 @@ struct CompanionView: View {
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(compact ? 14 : 18)
-            .rilovaCard()
+            .padding(showsPortrait ? (compact ? 12 : 18) : 0)
+            .background {
+                if showsPortrait {
+                    RoundedRectangle(cornerRadius: 26, style: .continuous)
+                        .fill(LinearGradient(colors: [palette.atmosphere, palette.surfaceSecondary],
+                                             startPoint: .topLeading, endPoint: .bottomTrailing))
+                }
+            }
             .accessibilityElement(children: .combine)
             .accessibilityLabel("Your \(profile.selectedAnimal.title.lowercased()) companion. \(CompanionPresentation.message(for: input))")
             .accessibilityIdentifier("companion.summary")
@@ -76,7 +85,7 @@ struct CompanionSelectionView: View {
                         ? AnyLayout(VStackLayout(alignment: .leading, spacing: 10))
                         : AnyLayout(HStackLayout(alignment: .center, spacing: 16))
                     layout {
-                        CompanionPortrait(animal: animal, state: "calm", tint: palette.accent, size: 64)
+                        CompanionPortrait(animal: animal, state: "calm", tint: palette.accent, size: 76)
                         VStack(alignment: .leading, spacing: 3) {
                             Text(animal.title).font(.headline).fontDesign(.rounded)
                                 .foregroundStyle(Color.appInk)
@@ -90,7 +99,7 @@ struct CompanionSelectionView: View {
                     }
                     .padding(14)
                     .frame(maxWidth: .infinity, minHeight: 80, alignment: .leading)
-                    .background(selected ? palette.accentSoft : palette.surface,
+                    .background(selected ? palette.accentSoft : palette.surfaceSecondary,
                                 in: RoundedRectangle(cornerRadius: 24, style: .continuous))
                     .overlay {
                         RoundedRectangle(cornerRadius: 24, style: .continuous)
@@ -120,6 +129,7 @@ struct CompanionSelectionView: View {
 /// Shared grounding and lighting coordinates the existing original artwork.
 /// This is a still portrait; only real state/selection changes may animate it.
 private struct CompanionPortrait: View {
+    @Environment(\.appPalette) private var palette
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @Environment(\.colorSchemeContrast) private var contrast
     let animal: CompanionAnimal
@@ -129,16 +139,26 @@ private struct CompanionPortrait: View {
 
     var body: some View {
         ZStack {
-            Circle().fill(tint.opacity(contrast == .increased ? 0.15 : 0.08))
-            if !reduceTransparency && contrast != .increased {
-                Circle().fill(RadialGradient(colors: [tint.opacity(0.16), .clear], center: .topLeading,
-                                            startRadius: 0, endRadius: size))
-                Ellipse().fill(tint.opacity(0.13)).frame(width: size * 0.56, height: size * 0.10)
-                    .offset(y: size * 0.36)
+            if reduceTransparency || contrast == .increased {
+                palette.heroEnd
+            } else {
+                RilovaWorldArtwork(scene: animal == .otter ? .coast : .sanctuary)
+                    .frame(width: size * 1.28, height: size)
+                    .clipped()
             }
-            CompanionArtwork(animal: animal.rawValue, state: state, size: size * 0.90)
+            Ellipse().fill(Color(red: 0.88, green: 0.79, blue: 0.59))
+                .frame(width: size * 0.78, height: size * 0.14)
+                .overlay(Ellipse().strokeBorder(.white.opacity(0.4), lineWidth: 1))
+                .offset(y: size * 0.32)
+            CompanionArtwork(animal: animal.rawValue, state: state, size: size * 0.88,
+                             highResolution: size > 90)
+                .offset(y: -size * 0.03)
         }
-        .frame(width: size, height: size)
+        .frame(width: size * 1.28, height: size)
+        .clipShape(UnevenRoundedRectangle(topLeadingRadius: size * 0.30,
+                                         bottomLeadingRadius: size * 0.18,
+                                         bottomTrailingRadius: size * 0.30,
+                                         topTrailingRadius: size * 0.18))
         .accessibilityHidden(true).allowsHitTesting(false)
     }
 }

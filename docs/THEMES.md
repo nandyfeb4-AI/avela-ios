@@ -1,5 +1,58 @@
 # Curated app themes
 
+## Current Expressive World treatment — 2026-10-21
+
+This owner-approved presentation refinement supersedes the earlier page-wash
+and uniform-card descriptions below. Those dated sections remain as historical
+implementation records. Theme identities, saved values, paired accents and
+tracking semantics are unchanged.
+
+The light page top is now warm `#F7F6F1`; the bottom remains `#F7F5F0`.
+`AppPalette.pageGradient` blends top → selected atmosphere → bottom from
+top-leading to bottom-trailing. Its top-right radial wash now uses the page-top
+colour at 36% opacity, fading to clear over 440 points, replacing the previous
+12% accent radial. The nine light atmosphere stops are:
+
+| Theme | Current light atmosphere | Dark atmosphere, unchanged |
+| --- | --- | --- |
+| Tidewater | `#D4EBE6` | `#152029` |
+| Sapphire | `#D8E6FA` | `#171F30` |
+| Plum | `#E8DCF3` | `#231D2D` |
+| Ember | `#F4DFCA` | `#29201B` |
+| Rose | `#F4DDE8` | `#2B1E28` |
+| Indigo | `#DDDFF7` | `#1E1E32` |
+| Forest | `#DDEBD5` | `#1B241E` |
+| Coral | `#F9E7DF` | `#2C201F` |
+| Gold | `#F3E6C7` | `#28231A` |
+
+Dark page endpoints remain `#131720` / `#101216`. Opaque reading surfaces
+remain `#FFFFFF` / `#202329`, with secondary surfaces `#F0EFEC` / `#2A2D34`.
+Today habit rows add a left-to-right identity wash that starts at **5.5% of
+the symbol's curated identity accent** over that opaque surface and fades to
+clear. It is not a 5.5% whole-row overlay. A narrow identity rail and a 12%
+identity outline support recognition; explicit Log/Undo, quantity and state
+labels remain authoritative. Identity is chosen from the existing symbol
+mapping, never private habit text or inferred behaviour.
+
+`RilovaWorldArtwork` bundles the original coast's light/dark pair and a focus
+sanctuary. Non-Tidewater themes apply a 16% selected-accent colour blend to the
+artwork; this does not replace their own controls, accents or saved preference.
+Scenery is decorative, hidden from accessibility and unable to intercept taps.
+Increase Contrast or Reduce Transparency substitutes a solid deep palette
+surface. The shared page canvas also retains its solid Increase Contrast
+fallback. Native labels and recorded values remain separate from the images.
+See [artwork provenance](../design/brand/rilova/world/provenance.json).
+
+The added regression
+`AppThemeTests.testExpressiveAtmosphereAndHabitReadingSurfacesKeepTextContrast`
+asserts 4.5:1 for accent text against every atmosphere in light/dark, and for
+primary/secondary ink against the maximum 5.5% identity tint for representative
+book, walking, leaf, heart and water symbols. Run evidence is recorded in the
+[Expressive World verification](verification/expressive-world/verification.json).
+Opaque-colour calculations do not establish text contrast
+through arbitrary image pixels, native glass, physical OLED appearance or
+device accessibility; native verification belongs in the pass's evidence record.
+
 Owner-approved enrichment, 2026-10-05. Nine free app themes are available from
 Settings → App Theme: Tidewater (default), Sapphire, Plum, Ember, Rose, Indigo,
 Forest, Coral and Gold.

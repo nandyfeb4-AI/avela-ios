@@ -2,6 +2,14 @@
 
 ## Owner approved expressive redesign — October 21, 2026
 
+The subsequent owner review explicitly requests more expressive visual design
+across the app: original illustrated day/night environments, richer complementary
+colour, distinct screen compositions, purposeful bounded motion and interactive
+visualizations. Bundled artwork may be created with image-generation tools;
+there is no image-generation or AI service in the running app. Existing selected
+companions and their visibility remain authoritative, including in Make Room.
+Illustrations are decorative and never encode completion or verified focus.
+
 The owner requests the coordinated Luminous Tide redesign and the first/next
 feature priorities in `design/exploration/expressive-refresh/RESEARCH.md` in one
 integrated pass. This authorizes richer theme-aware native artwork/gradients,

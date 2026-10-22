@@ -6,6 +6,9 @@ struct SettingsView: View {
     @Environment(\.appProtectionDriver) private var protectionDriver
     @State private var showingProtection = false
     @Environment(\.appPalette) private var palette
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     let repository: HabitRepository
     var reflectionRepository: ReflectionRepository? = nil
     var cloudBackup: CloudBackupModel? = nil
@@ -20,22 +23,28 @@ struct SettingsView: View {
     var body: some View {
         List {
             Section {
-                HStack(spacing: 14) {
+                HStack(spacing: 12) {
                     Image("BrandIcon").resizable().scaledToFit()
-                        .frame(width: 58, height: 58)
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .frame(width: 46, height: 46)
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
                         .accessibilityHidden(true)
                     VStack(alignment: .leading, spacing: 5) {
-                        Text("Rilova").font(.system(.title, design: .rounded, weight: .semibold))
-                            .foregroundStyle(.white)
-                        Text("Habits that fit real life.").font(.subheadline)
-                            .foregroundStyle(.white.opacity(0.85))
+                        Text("Rilova").font(.system(.title, design: .rounded, weight: .bold))
+                            .foregroundStyle(Color.appInk)
                             .fixedSize(horizontal: false, vertical: true)
+                        Text("Habits that fit real life.").font(.subheadline)
+                            .foregroundStyle(Color.appInkSecondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }.frame(maxWidth: .infinity, alignment: .leading)
+                    if !dynamicTypeSize.isAccessibilitySize && contrast != .increased && !reduceTransparency {
+                        RilovaWorldArtwork(scene: .coast)
+                            .frame(width: 68, height: 52).clipped()
+                            .clipShape(UnevenRoundedRectangle(topLeadingRadius: 22, bottomLeadingRadius: 8,
+                                bottomTrailingRadius: 22, topTrailingRadius: 8))
+                            .accessibilityHidden(true).allowsHitTesting(false)
                     }
                 }
-                .padding(24).frame(maxWidth: .infinity, alignment: .leading)
-                .background { RilovaAurora() }
-                .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+                .padding(.vertical, 14).frame(maxWidth: .infinity, alignment: .leading)
                 .accessibilityElement(children: .combine)
                 .accessibilityIdentifier("settings.brand")
                 .listRowInsets(EdgeInsets())

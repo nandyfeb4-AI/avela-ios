@@ -5,6 +5,7 @@ struct OnboardingView: View {
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @Environment(\.colorSchemeContrast) private var contrast
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @ScaledMetric(relativeTo: .largeTitle) private var welcomeTitleSize = 44.0
     @AccessibilityFocusState private var isStepTitleFocused: Bool
     @State private var viewModel: OnboardingViewModel
     let onFinished: () -> Void
@@ -19,7 +20,7 @@ struct OnboardingView: View {
         NavigationStack {
             ScrollViewReader { proxy in
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 24) {
+                    VStack(alignment: .leading, spacing: 28) {
                         progress
                         introduction.id("onboarding.stepStart")
                         stepContent
@@ -74,14 +75,14 @@ struct OnboardingView: View {
     }
 
     private var introduction: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: 22) {
             if viewModel.step == .welcome {
                 HStack(spacing: 12) {
-                    Image("BrandIcon").resizable().scaledToFit().frame(width: 46, height: 46)
-                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    Image("BrandIcon").resizable().scaledToFit().frame(width: 38, height: 38)
+                        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                         .accessibilityHidden(true)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Rilova").font(.title.weight(.medium)).fontDesign(.rounded)
+                        Text("Rilova").font(.title2.weight(.semibold)).fontDesign(.rounded)
                             .accessibilityIdentifier("onboarding.brandName")
                         Text("Habits & Focus").font(.caption).foregroundStyle(Color.appInkSecondary)
                     }
@@ -91,11 +92,15 @@ struct OnboardingView: View {
                             showsCompanion: viewModel.profile.companionEnabled,
                             compact: dynamicTypeSize.isAccessibilitySize)
                 .frame(height: sceneHeight)
-                .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+                .clipShape(UnevenRoundedRectangle(topLeadingRadius: 28, bottomLeadingRadius: 64,
+                                                  bottomTrailingRadius: 28, topTrailingRadius: 28))
+                .id(viewModel.step)
             VStack(alignment: .leading, spacing: 12) {
                 Text(title)
-                    .font(.system(viewModel.step == .welcome ? .largeTitle : .title, design: .rounded, weight: .bold))
-                    .tracking(-0.7).foregroundStyle(Color.appInk)
+                    .font(viewModel.step == .welcome
+                          ? .system(size: welcomeTitleSize, weight: .bold, design: .rounded)
+                          : .system(.largeTitle, design: .rounded, weight: .bold))
+                    .foregroundStyle(Color.appInk)
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityIdentifier("onboarding.title").accessibilityAddTraits(.isHeader)
                     .accessibilityFocused($isStepTitleFocused)
@@ -106,12 +111,12 @@ struct OnboardingView: View {
     }
 
     private var sceneHeight: CGFloat {
-        if dynamicTypeSize.isAccessibilitySize { return viewModel.step == .welcome ? 110 : 80 }
-        return viewModel.step == .welcome || viewModel.step == .finish ? 200 : 132
+        if dynamicTypeSize.isAccessibilitySize { return viewModel.step == .welcome ? 96 : 76 }
+        return viewModel.step == .welcome || viewModel.step == .finish ? 254 : 188
     }
 
     private var continuation: some View {
-        VStack(spacing: 4) {
+        VStack(spacing: 12) {
             Button {
                 if viewModel.step == .finish { viewModel.finish() } else { viewModel.advance() }
             } label: {
@@ -125,12 +130,17 @@ struct OnboardingView: View {
             }
             .buttonStyle(RilovaPressStyle()).accessibilityIdentifier("onboarding.continue")
             if [.habit, .attention, .companion, .reminder].contains(viewModel.step) {
-                Button("Skip for now") { viewModel.advance() }
-                    .font(.subheadline.weight(.medium)).foregroundStyle(Color.appInkSecondary)
-                    .frame(maxWidth: .infinity, minHeight: 44).accessibilityIdentifier("onboarding.skip")
+                Button { viewModel.advance() } label: {
+                    Text("Skip for now")
+                        .font(.subheadline.weight(.medium)).foregroundStyle(Color.appInkSecondary)
+                        .frame(maxWidth: .infinity, minHeight: 44)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(RilovaPressStyle())
+                .accessibilityIdentifier("onboarding.skip")
             }
         }
-        .padding(.horizontal, 24).padding(.top, 12).padding(.bottom, 8)
+        .padding(.horizontal, 24).padding(.top, 16).padding(.bottom, 10)
         .frame(maxWidth: .infinity)
         .background {
             if reduceTransparency || contrast == .increased {
@@ -265,8 +275,8 @@ struct OnboardingView: View {
     }
 }
 
-/// Original native illustration. Its shapes introduce the product and never
-/// represent a user's recorded results or imply companion care obligations.
+/// Each stage is an illustrated setting, never a projection of user progress.
+/// Entry choreography is finite; the landscape remains still while reading.
 private struct OnboardingScene: View {
     @Environment(\.appPalette) private var palette
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -282,93 +292,82 @@ private struct OnboardingScene: View {
         GeometryReader { geometry in
             ZStack {
                 if contrast == .increased || reduceTransparency {
-                    palette.luminousColors.last ?? palette.heroEnd
+                    palette.heroEnd
                 } else {
-                    palette.luminousGradient
-                    RilovaAurora()
+                    RilovaWorldArtwork(scene: step == .attention || step == .companion ? .sanctuary : .coast)
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .clipped()
                 }
-                ribbon
                 illustration(size: geometry.size)
-                    .scaleEffect(appeared || reduceMotion ? 1 : 0.96)
-                    .offset(y: appeared || reduceMotion ? 0 : 8)
                     .opacity(appeared || reduceMotion ? 1 : 0)
-            }.frame(width: geometry.size.width, height: geometry.size.height)
+            }
+            .frame(width: geometry.size.width, height: geometry.size.height)
         }
         .accessibilityHidden(true).allowsHitTesting(false)
         .onAppear {
             guard !appeared else { return }
-            withAnimation(reduceMotion ? nil : .spring(response: 0.48, dampingFraction: 0.88)) { appeared = true }
-        }
-    }
-
-    private var ribbon: some View {
-        Canvas { context, size in
-            guard contrast != .increased, !reduceTransparency else { return }
-            for index in 0..<3 {
-                let shift = CGFloat(index) * size.height * 0.12
-                var curve = Path()
-                curve.move(to: CGPoint(x: -30, y: size.height * 0.88 + shift))
-                curve.addCurve(to: CGPoint(x: size.width + 25, y: size.height * 0.38 + shift),
-                    control1: CGPoint(x: size.width * 0.36, y: size.height * 0.18 + shift),
-                    control2: CGPoint(x: size.width * 0.65, y: size.height * 1.24 + shift))
-                context.stroke(curve, with: .color(palette.luminousHighlight.opacity(index == 0 ? 0.24 : 0.09)),
-                               style: StrokeStyle(lineWidth: index == 0 ? 1.2 : 18, lineCap: .round))
-            }
+            withAnimation(reduceMotion ? nil : .spring(response: 0.65, dampingFraction: 0.86)) { appeared = true }
         }
     }
 
     @ViewBuilder private func illustration(size: CGSize) -> some View {
-        let dimension = min(size.height * 0.72, compact ? 86 : 148)
+        let dimension = min(size.height * 0.69, compact ? 68 : 158)
         switch step {
         case .welcome, .finish, .companion:
+            let position: CGFloat = step == .welcome ? 0.68 : step == .finish ? 0.34 : 0.5
             ZStack {
-                Circle().fill(RadialGradient(colors: [palette.luminousHighlight.opacity(0.32), .clear],
-                    center: .center, startRadius: 0, endRadius: dimension * 0.75))
-                    .frame(width: dimension * 1.7, height: dimension * 1.7)
-                Circle().strokeBorder(.white.opacity(0.15), lineWidth: 1)
-                    .frame(width: dimension * 1.2, height: dimension * 1.2)
+                if !compact {
+                    Ellipse().fill(Color(red: 0.93, green: 0.82, blue: 0.62))
+                        .frame(width: dimension * 1.3, height: dimension * 0.24)
+                        .overlay(Ellipse().strokeBorder(.white.opacity(0.40), lineWidth: 1))
+                        .shadow(color: .black.opacity(0.15), radius: 10, y: 10)
+                        .offset(y: dimension * 0.45)
+                }
                 if step == .finish && !showsCompanion {
                     Image("BrandIcon").resizable().scaledToFit()
-                        .frame(width: dimension * 0.8, height: dimension * 0.8)
-                        .clipShape(RoundedRectangle(cornerRadius: dimension * 0.22, style: .continuous))
+                        .frame(width: dimension * 0.82, height: dimension * 0.82)
+                        .clipShape(RoundedRectangle(cornerRadius: dimension * 0.22))
                 } else {
                     CompanionArtwork(animal: animal.rawValue, state: "calm", size: dimension, highResolution: true)
-                        .shadow(color: .black.opacity(0.17), radius: 12, y: 8)
-                }
-                if !compact {
-                    Image(systemName: "sparkle").font(.system(size: 17, weight: .medium)).foregroundStyle(palette.luminousHighlight)
-                        .offset(x: dimension * 0.67, y: -dimension * 0.30)
-                    Circle().fill(.white.opacity(0.7)).frame(width: 4, height: 4)
-                        .offset(x: -dimension * 0.68, y: dimension * 0.10)
+                        .shadow(color: .black.opacity(0.15), radius: 8, y: 6)
                 }
             }
+            .scaleEffect(appeared || reduceMotion ? 1 : 0.90, anchor: .bottom)
+            .offset(y: appeared || reduceMotion ? 0 : 14)
+            .position(x: size.width * (compact ? 0.5 : position), y: size.height * (compact ? 0.5 : 0.60))
         case .habit:
-            HStack(spacing: compact ? 12 : 18) {
-                sceneTile("book.closed.fill", angle: -9, size: dimension * 0.69)
-                sceneTile("checkmark", angle: 0, size: dimension * 0.86)
-                sceneTile("figure.walk", angle: 9, size: dimension * 0.69)
+            HStack(alignment: .center, spacing: compact ? 10 : 14) {
+                sceneTile("book.closed.fill", tint: Color(red: 0.97, green: 0.78, blue: 0.53), angle: -12, size: dimension * 0.67)
+                    .offset(y: appeared || reduceMotion ? 9 : 26)
+                sceneTile("leaf.fill", tint: palette.luminousHighlight, angle: 4, size: dimension * 0.88)
+                sceneTile("figure.walk", tint: Color(red: 0.76, green: 0.76, blue: 0.96), angle: 13, size: dimension * 0.67)
+                    .offset(y: appeared || reduceMotion ? -5 : 14)
             }
+            .rotationEffect(.degrees(appeared || reduceMotion ? 0 : -4))
+            .position(x: size.width * 0.51, y: size.height * 0.51)
         case .attention:
             ZStack {
-                Circle().stroke(.white.opacity(0.16), lineWidth: 9)
-                Circle().trim(from: 0.06, to: 0.77).stroke(palette.luminousHighlight, style: StrokeStyle(lineWidth: 9, lineCap: .round))
-                    .rotationEffect(.degrees(-90))
-                Image(systemName: "hourglass").font(.system(size: dimension * 0.34, weight: .light)).foregroundStyle(.white)
-            }.frame(width: dimension * 0.90, height: dimension * 0.90)
+                Circle().stroke(.white.opacity(0.25), lineWidth: 1).padding(-14)
+                Circle().fill(Color(red: 0.08, green: 0.19, blue: 0.28))
+                Circle().strokeBorder(Color(red: 0.87, green: 0.79, blue: 0.57), lineWidth: 3).padding(8)
+                Image(systemName: "hourglass").font(.system(size: dimension * 0.35, weight: .light))
+                    .foregroundStyle(palette.luminousHighlight)
+            }
+            .frame(width: dimension, height: dimension)
+            .scaleEffect(appeared || reduceMotion ? 1 : 0.84)
+            .position(x: size.width * (compact ? 0.5 : 0.64), y: size.height * 0.50)
         case .reminder:
-            ZStack {
-                Circle().stroke(.white.opacity(0.13), lineWidth: 1)
-                Circle().stroke(.white.opacity(0.08), lineWidth: 1).padding(-14)
-                sceneTile("bell.fill", angle: -8, size: dimension * 0.76)
-            }.frame(width: dimension, height: dimension)
+            sceneTile("bell.fill", tint: Color(red: 0.98, green: 0.80, blue: 0.53), angle: appeared || reduceMotion ? -8 : 8, size: dimension * 0.88)
+                .offset(y: appeared || reduceMotion ? 0 : 12)
+                .position(x: size.width * (compact ? 0.5 : 0.37), y: size.height * 0.49)
         }
     }
 
-    private func sceneTile(_ symbol: String, angle: Double, size: CGFloat) -> some View {
-        Image(systemName: symbol).font(.system(size: size * 0.42, weight: .medium))
-            .foregroundStyle(Color(red: 0.04, green: 0.28, blue: 0.29)).frame(width: size, height: size)
-            .background(LinearGradient(colors: [.white, palette.luminousHighlight], startPoint: .topLeading, endPoint: .bottomTrailing),
-                        in: RoundedRectangle(cornerRadius: size * 0.28, style: .continuous))
-            .rotationEffect(.degrees(angle)).shadow(color: .black.opacity(0.14), radius: 10, y: 8)
+    private func sceneTile(_ symbol: String, tint: Color, angle: Double, size: CGFloat) -> some View {
+        Image(systemName: symbol).font(.system(size: size * 0.40, weight: .medium))
+            .foregroundStyle(Color(red: 0.06, green: 0.23, blue: 0.27)).frame(width: size, height: size)
+            .background(tint, in: RoundedRectangle(cornerRadius: size * 0.30, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: size * 0.30).strokeBorder(.white.opacity(0.55), lineWidth: 1))
+            .rotationEffect(.degrees(angle)).shadow(color: .black.opacity(0.13), radius: 12, y: 10)
     }
 }

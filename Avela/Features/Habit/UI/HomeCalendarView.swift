@@ -156,6 +156,7 @@ struct HomeCalendarStrip: View {
     @State private var selectedDay: HomeCalendarModel.Day?
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.appPalette) private var palette
+    @Environment(\.colorSchemeContrast) private var contrast
     init(repository: any HabitRepository, activities: (any HabitActivityRepository)? = nil) {
         _model = State(initialValue: HomeCalendarModel(repository: repository, activities: activities))
     }
@@ -182,13 +183,23 @@ struct HomeCalendarStrip: View {
                                 VStack(spacing: 7) {
                                     Text(day.weekday).font(.caption2.weight(.medium))
                                     Text("\(day.number)").font(.system(.title3, design: .rounded, weight: .semibold))
-                                    Circle().fill(day.loggedCount > 0 ? (day.isToday ? Color.white : palette.accent) : Color.clear)
-                                        .overlay(Circle().stroke(day.isToday ? Color.white.opacity(0.7) : palette.accent.opacity(0.5), lineWidth: 1))
-                                        .frame(width: 5, height: 5).accessibilityHidden(true)
+                                    if day.loggedCount > 0 {
+                                        Text("\(day.loggedCount)").font(.caption2.weight(.bold)).monospacedDigit()
+                                            .frame(minWidth: 18, minHeight: 18)
+                                            .background(day.isToday ? Color.white.opacity(0.12) : palette.accentSoft, in: Circle())
+                                            .accessibilityHidden(true)
+                                    } else {
+                                        Circle().strokeBorder(day.isToday ? palette.prominentInk : Color.appInkSecondary,
+                                            lineWidth: 1).frame(width: 5, height: 5)
+                                            .frame(height: 18).accessibilityHidden(true)
+                                    }
                                 }
                                 .foregroundStyle(day.isToday ? palette.prominentInk : Color.appInk)
-                                .frame(width: typeSize.isAccessibilitySize ? 64 : 44, height: typeSize.isAccessibilitySize ? 100 : 78)
-                                .background(day.isToday ? palette.prominentFill : palette.surface.opacity(0.6), in: Capsule())
+                                .padding(.horizontal, typeSize.isAccessibilitySize ? 8 : 0)
+                                .frame(minWidth: typeSize.isAccessibilitySize ? 64 : 44,
+                                       minHeight: typeSize.isAccessibilitySize ? 110 : 84)
+                                .background(day.isToday ? palette.prominentFill : day.loggedCount > 0 ? palette.accentSoft : palette.surface, in: Capsule())
+                                .overlay(Capsule().strokeBorder(day.isToday ? palette.prominentFill : palette.accent.opacity(contrast == .increased ? 0.6 : 0.12), lineWidth: 1))
                             }
                             .buttonStyle(RilovaPressStyle())
                             .accessibilityLabel(day.date.formatted(date: .complete, time: .omitted))
@@ -223,22 +234,17 @@ private struct HomeMonthView: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var selectedDay: HomeCalendarModel.Day?
     @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    HStack {
-                        Button { model.moveMonth(by: -1) } label: { Image(systemName: "chevron.left").frame(width: 44, height: 44).contentShape(Rectangle()) }
-                            .disabled(!model.canGoBack).accessibilityLabel("Previous month").accessibilityIdentifier("homeCalendar.previousMonth")
-                        Spacer()
-                        Text(model.monthTitle).font(.title2.bold()).fontDesign(.rounded).accessibilityIdentifier("homeCalendar.month")
-                        Spacer()
-                        Button { model.moveMonth(by: 1) } label: { Image(systemName: "chevron.right").frame(width: 44, height: 44).contentShape(Rectangle()) }
-                            .disabled(!model.canGoForward).accessibilityLabel("Next month").accessibilityIdentifier("homeCalendar.nextMonth")
-                    }
-                    Text("Your days, in view.").font(.largeTitle.bold()).fontDesign(.rounded)
-                    Text("Dots show distinct habits logged. A blank day isn't a verdict. Tap a date to review its records.")
-                        .font(.subheadline).foregroundStyle(Color.appInkSecondary)
+                VStack(alignment: .leading, spacing: 16) {
+                    monthIdentity
+                    monthNavigation
+                    Text("Counts show distinct habits with recorded activity. Tap a date to review. A blank day isn't a verdict.")
+                        .font(.footnote).foregroundStyle(Color.appInkSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
                     if typeSize.isAccessibilitySize {
                         ForEach(model.month) { day in dayButton(day) }
                     } else {
@@ -248,38 +254,111 @@ private struct HomeMonthView: View {
                                 ForEach(model.month) { day in dayButton(day, fullDate: true) }
                             }
                         }
-                        if contrast != .increased {
-                            ThemeLandscape(theme: palette.theme).frame(height: 64)
-                                .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-                                .accessibilityHidden(true).allowsHitTesting(false)
-                        }
                     }
+                    Label("Check-ins, partial amounts and smaller steps all count as recorded activity.", systemImage: "circle.grid.3x3.fill")
+                        .font(.caption).foregroundStyle(Color.appInkSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
                 }.padding(20)
             }.appThemeCanvas().navigationTitle("Calendar").navigationBarTitleDisplayMode(.inline)
                 .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() }.accessibilityIdentifier("homeCalendar.done") } }
                 .sheet(item: $selectedDay, onDismiss: { model.load() }) { HomeDayReviewView(day: $0, repository: model.repository, activities: model.activities) }
         }
     }
+
+    private var monthIdentity: some View {
+        HStack(alignment: .center, spacing: 16) {
+            VStack(alignment: .leading, spacing: 7) {
+                Text("YOUR DAYS, IN VIEW").font(.caption2.weight(.bold)).tracking(1.7)
+                    .foregroundStyle(palette.accent)
+                Text("A little, over time.").font(.system(.title2, design: .rounded, weight: .bold))
+                    .foregroundStyle(Color.appInk).fixedSize(horizontal: false, vertical: true)
+            }.frame(maxWidth: .infinity, alignment: .leading)
+            if !typeSize.isAccessibilitySize && contrast != .increased && !reduceTransparency {
+                RilovaWorldArtwork(scene: .coast)
+                    .frame(width: 90, height: 62).clipped()
+                    .clipShape(UnevenRoundedRectangle(topLeadingRadius: 26, bottomLeadingRadius: 9,
+                        bottomTrailingRadius: 26, topTrailingRadius: 9))
+                    .accessibilityHidden(true).allowsHitTesting(false)
+            }
+        }
+    }
+
+    private var monthNavigation: some View {
+        HStack(spacing: 10) {
+            Button { moveMonth(by: -1) } label: {
+                Image(systemName: "chevron.left").frame(width: 44, height: 44)
+                    .background(palette.surface, in: Circle()).contentShape(Rectangle())
+            }.buttonStyle(RilovaPressStyle()).disabled(!model.canGoBack)
+                .accessibilityLabel("Previous month").accessibilityIdentifier("homeCalendar.previousMonth")
+            Text(model.monthTitle).font(.system(.title2, design: .rounded, weight: .bold))
+                .foregroundStyle(Color.appInk).multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity)
+                .accessibilityIdentifier("homeCalendar.month")
+            Button { moveMonth(by: 1) } label: {
+                Image(systemName: "chevron.right").frame(width: 44, height: 44)
+                    .background(palette.surface, in: Circle()).contentShape(Rectangle())
+            }.buttonStyle(RilovaPressStyle()).disabled(!model.canGoForward)
+                .accessibilityLabel("Next month").accessibilityIdentifier("homeCalendar.nextMonth")
+        }
+    }
+
+    private func moveMonth(by amount: Int) {
+        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.22)) { model.moveMonth(by: amount) }
+    }
+
     private var monthGrid: some View {
-        LazyVGrid(columns: Array(repeating: GridItem(.flexible(minimum: 44), spacing: 2), count: 7), spacing: 8) {
+        LazyVGrid(columns: Array(repeating: GridItem(.flexible(minimum: 44), spacing: 2), count: 7), spacing: 7) {
             ForEach(Array(model.weekdayLabels.enumerated()), id: \.offset) { _, name in
-                Text(name).font(.caption).foregroundStyle(Color.appInkSecondary)
+                Text(name).font(.caption2.weight(.semibold)).foregroundStyle(Color.appInkSecondary)
+                    .padding(.bottom, 6).accessibilityHidden(true)
             }
             ForEach(0..<model.leadingBlanks, id: \.self) { _ in Color.clear.frame(height: 58) }
             ForEach(model.month) { day in dayButton(day) }
         }
+        .padding(.horizontal, 4).padding(.vertical, 16)
+        .background(palette.surface, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 26).strokeBorder(palette.accent.opacity(contrast == .increased ? 0.5 : 0.1), lineWidth: 1).allowsHitTesting(false))
     }
     private func dayButton(_ day: HomeCalendarModel.Day, fullDate: Bool = false) -> some View {
-        Button { selectedDay = day } label: {
-            VStack(spacing: 5) {
-                Text(typeSize.isAccessibilitySize || fullDate ? day.date.formatted(date: .complete, time: .omitted) : "\(day.number)")
-                    .font(.body.weight(day.isToday ? .bold : .medium))
-                Text(day.loggedCount > 0 ? "\(day.loggedCount)" : day.isFuture ? "—" : "·")
-                    .font(.caption.weight(.semibold))
+        let showsFullDate = typeSize.isAccessibilitySize || fullDate
+        let intensity = min(Double(day.loggedCount), 5) / 5
+        return Button { selectedDay = day } label: {
+            VStack(alignment: showsFullDate ? .leading : .center, spacing: 5) {
+                Text(showsFullDate ? day.date.formatted(date: .complete, time: .omitted) : "\(day.number)")
+                    .font(showsFullDate ? .body.weight(.semibold) : .system(.title3, design: .rounded, weight: day.isToday ? .bold : .semibold))
+                    .fixedSize(horizontal: false, vertical: true)
+                if showsFullDate {
+                    Text(day.isFuture && day.loggedCount == 0 ? "Upcoming" : "\(day.loggedCount) habits with recorded activity\(day.isToday ? " · Today" : "")")
+                        .font(.subheadline).foregroundStyle(Color.appInkSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                } else if day.loggedCount > 0 {
+                    HStack(spacing: 3) {
+                        Circle().fill(palette.accent).frame(width: 4, height: 4)
+                        Text("\(day.loggedCount)").font(.caption2.weight(.bold)).monospacedDigit()
+                    }.foregroundStyle(palette.accent)
+                } else {
+                    Text(day.isFuture ? "—" : "·").font(.caption.weight(.semibold)).foregroundStyle(Color.appInkSecondary)
+                }
             }
-            .foregroundStyle(day.isToday ? .white : Color.appInk)
-            .frame(maxWidth: .infinity, minHeight: 58)
-            .background(day.isToday ? palette.prominentFill : day.loggedCount > 0 ? palette.accentSoft : palette.surface, in: RoundedRectangle(cornerRadius: 16))
+            .foregroundStyle(Color.appInk)
+            .frame(maxWidth: .infinity, minHeight: 58, alignment: showsFullDate ? .leading : .center)
+            .padding(.horizontal, showsFullDate ? 16 : 0).padding(.vertical, showsFullDate ? 12 : 0)
+            .background {
+                if showsFullDate { palette.surface }
+                else if day.loggedCount > 0 && (contrast == .increased || reduceTransparency) { palette.surfaceSecondary }
+                else if day.loggedCount > 0 {
+                    LinearGradient(colors: [palette.accent.opacity(0.08 + intensity * 0.12), palette.accent.opacity(0.04 + intensity * 0.07)],
+                        startPoint: .topLeading, endPoint: .bottomTrailing)
+                }
+            }
+            .clipShape(RoundedRectangle(cornerRadius: showsFullDate ? 20 : 18, style: .continuous))
+            .overlay {
+                if day.isToday {
+                    RoundedRectangle(cornerRadius: showsFullDate ? 20 : 18)
+                        .strokeBorder(palette.accent, lineWidth: 2)
+                }
+            }
+            .contentShape(Rectangle())
         }.buttonStyle(RilovaPressStyle())
             .accessibilityLabel(day.date.formatted(date: .complete, time: .omitted))
             .accessibilityValue(day.isFuture && day.loggedCount == 0 ? "Upcoming" : "\(day.loggedCount) habits logged")
@@ -294,6 +373,7 @@ private struct HomeDayReviewView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.habitActivityRepository) private var activity
     @State private var correcting: HomeCalendarSelection?
+    @Environment(\.appPalette) private var palette
     init(day: HomeCalendarModel.Day, repository: any HabitRepository, activities: (any HabitActivityRepository)? = nil) {
         self.day = day; self.repository = repository
         _reviewModel = State(initialValue: HomeCalendarModel(repository: repository, activities: activities))
@@ -303,8 +383,16 @@ private struct HomeDayReviewView: View {
         NavigationStack {
             List {
                 Section {
-                    RilovaSectionHeader(title: day.date.formatted(.dateTime.weekday(.wide).month(.wide).day()),
-                        subtitle: day.isFuture && reviewedDay.loggedCount == 0 ? "Upcoming. No activity is assumed." : "\(reviewedDay.loggedCount) distinct habits logged. Reviewing never changes your progress.", symbol: "calendar")
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text(day.date.formatted(.dateTime.weekday(.wide)).uppercased())
+                            .font(.caption2.weight(.bold)).tracking(1.8).foregroundStyle(palette.accent)
+                        Text(day.date.formatted(.dateTime.month(.wide).day()))
+                            .font(.system(.largeTitle, design: .rounded, weight: .bold))
+                            .fixedSize(horizontal: false, vertical: true)
+                        Text(day.isFuture && reviewedDay.loggedCount == 0 ? "Upcoming. No activity is assumed." : "\(reviewedDay.loggedCount) distinct habits logged. Reviewing never changes your progress.")
+                            .font(.subheadline).foregroundStyle(Color.appInkSecondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }.padding(.vertical, 8)
                         .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
                 }
                 if reviewedDay.rows.isEmpty { ContentUnavailableView("No Habits Tracked", systemImage: "calendar", description: Text("No habit records apply to this day.")) }

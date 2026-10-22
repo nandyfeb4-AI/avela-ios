@@ -1,8 +1,33 @@
 # Testing Strategy
 
+## Expressive World coverage — October 21, 2026
+
+The full unit suite passes **628 tests**, including the new nine-theme
+atmosphere/identity-surface contrast regression. This presentation follow-up
+exercises **29 distinct affected native UI tests**, including two new setup
+geometry cases. It does not claim a fresh unfiltered run of all 121 current UI
+methods. The preceding 119-case sweep remains a separate dated record below.
+
+Current checks cover onboarding skips and persistence, separate 44-point setup
+actions at normal/largest text, Today logging and exact Undo, readable calendar
+history, saved themes/companions, actual focus countdown/Live Activity creation,
+supporting-screen accessibility audits and report/share review without progress
+changes. Dark runs use actual simulator appearance, not a launch argument.
+The [run record](verification/expressive-world/test-results.json) retains every
+execution, including repeated final Today/report captures. Stills wait for the
+known bounded transitions; the separate native video shows motion.
+
+The five-iteration launch measurement is descriptive simulator data with high
+variation, not a physical-device benchmark or evidence of improved performance.
+See the [latest verification](verification/expressive-world/verification.json)
+and [native gallery](verification/expressive-world/index.html). Physical
+VoiceOver, haptics, OLED, supported-device performance and real integration
+authorization remain separate release checks.
+
 ## Luminous Tide coverage — October 21, 2026
 
-The latest rebuilt full unit suite passes **627 tests**. All **119 distinct UI
+At the preceding Luminous Tide checkpoint, the rebuilt full unit suite passed
+**627 tests**. All **119 distinct UI
 tests have passing executions** across the sweep and focused repairs; this is
 not a claim that one final unfiltered command passed. Native run provenance,
 Release checks, screenshots and remaining device gates are recorded separately

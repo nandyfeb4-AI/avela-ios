@@ -1,5 +1,41 @@
 # UX Specification
 
+## Expressive Rilova worlds — October 21, 2026
+
+This owner-approved presentation pass supersedes the earlier still-landscape-only
+and repeated-banner guidance. The product keeps its existing navigation and
+explicit actions while using original bundled environments, stronger display
+type, varied compositions and brief responses to real interaction. The intended
+quality is expressive and carefully readable. Native screenshot and
+accessibility evidence is recorded in the
+[Expressive World verification](verification/expressive-world/verification.json);
+physical-device accessibility and performance remain separate checks.
+
+Today uses one coast scene with the saved, enabled companion in its actual
+deterministic pose. The separate `CompanionView(showsPortrait: false)` supplies
+the state and sentence without a second portrait or scenic container. The week
+strip and logging controls remain directly below this overview. Decorative art
+does not establish a completed habit or a measured attention state.
+
+Onboarding retains six stages, optional skips and its existing creation and
+permission boundaries. Coast and sanctuary settings, grounded characters and
+native symbolic miniatures give each stage its own composition. Entry movement
+is finite and scene-specific; Continue remains pinned while content scrolls,
+with a distinct gap before Skip. Make Room uses a sanctuary clock stage and the
+saved companion only when enabled. Before Start it labels the suggested/saved
+minute target; an active selected linked session can show a countdown from its
+captured start and target. That timer never proves concentration, phone-free
+behaviour or habit success. Optional protection and activity consent remain
+separate from its illustration and explicit Start.
+
+Larger text substitutes compact scenery and readable stacked values for crowded
+compositions. Reduce Motion removes entry/scale choreography; Increase Contrast
+and Reduce Transparency replace atmospheric layers with opaque surfaces.
+Environmental art is hidden from accessibility and cannot intercept input.
+Motion has no endless background or companion-care loop, and visual clock
+updates pause when the app is inactive. This is presentation over existing
+facts: no new runtime AI service, schema, progress write or permission is added.
+
 ## Navigation
 
 Recommended primary structure:
@@ -14,7 +50,7 @@ Habit creation can be presented modally.
 ## Habit setup
 
 New Habit offers Browse Habit Ideas alongside immediate custom entry. The local
-catalog groups eight starting points into Move, Learn and Make Space, with
+catalog offers 40 editable ideas in eight groups and four collections, with
 native search. Selecting an idea fills the editable form and returns to it;
 explicit Save is required. Browsing/back navigation does not change the draft,
 and Cancel adds nothing. Existing habits use the normal edit form without an

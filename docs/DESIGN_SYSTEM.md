@@ -1,5 +1,43 @@
 # Design System
 
+## Expressive world treatment — October 21, 2026
+
+The owner-approved illustrated-world pass supersedes earlier notes that limit
+the app to small still landscapes, uniformly neutral cards or the same gradient
+banner in each destination. Compose a distinct scene for the task: the coast for
+the day ahead, the deeper sanctuary for intentional space, varied illustrated
+onboarding stages and factual charts with their own hierarchy. The shared
+`RilovaWorldArtwork` supplies bundled original imagery, including light/dark coast
+variants; callers frame and clip it to a deliberate region. Other saved themes
+retain their accents and receive a coordinating tint rather than a new theme
+selection. Nothing is generated or fetched during use.
+
+Balance rich environmental colour with opaque, readable information surfaces.
+Mint/pearl, lavender and warm gold are complementary illustration/report accents;
+they do not replace labelled recovery, budget, pause or success meanings.
+Typography uses scalable native styles with larger display moments, natural
+wrapping and intrinsic numeral height. Artwork cannot compete with the current
+date, selected reporting period, primary logging action or explicit Undo.
+
+Today has one main coast setting with the saved enabled companion's real pose;
+its compact status sentence uses `showsPortrait: false` to avoid repeating the
+scene. Selection previews place existing owl, fox and otter art on grounded
+habitat vignettes. Make Room can show that saved character in a sanctuary beside
+its suggested/saved duration or active selected session countdown. This calm
+session illustration is not a new companion state, verified focus or progress.
+There are no care obligations, currencies or additional mascots.
+
+Choreography is bounded to stage entry, explicit selection and genuine state or
+value changes. Reduce Motion supplies static changes; Increase Contrast and
+Reduce Transparency use opaque alternatives. Accessibility sizes shorten scenes
+and reflow controls/values; decorative art stays outside the accessibility tree
+and hit testing. No endless animation or inactive-app background animation is
+introduced. The pass adds no runtime AI, new schema, permission or canonical
+write path. Native captures and accessibility evidence are recorded in the
+[Expressive World verification](verification/expressive-world/verification.json).
+Physical-device accessibility, performance and user research remain separate;
+this section records the implemented direction, not proven usability or awards.
+
 ## Design intent
 
 Premium, calm, native, emotionally engaging.

@@ -1,5 +1,27 @@
 # Build Plan
 
+## Expressive World follow-up — October 21, 2026
+
+The owner requested a stronger art direction after Luminous Tide. The native
+follow-up adds original bundled day/night coastal artwork and a focus sanctuary,
+a grounded saved companion with one brief successful-save reaction, stronger
+theme atmosphere and habit identity cards. Today, detail/calendars, Make Room,
+onboarding, Insights, History and Settings have task-specific compositions.
+Report panels add selectable factual week/amount readouts, distinct session
+outcomes and a recorded-activity atlas. The six existing setup stages retain
+explicit actions, skips and contextual permissions.
+
+Canonical models, calculations, exact-record Undo, privacy boundaries and
+optional integrations are unchanged. No new package, schema, backend or runtime
+AI is introduced; original artwork-generation prompts are retained in
+[provenance](../design/brand/rilova/world/provenance.json). The full unit suite
+passes 628 tests; 29 distinct affected native UI tests have passing executions.
+The [current verification](verification/expressive-world/verification.json)
+separates UI reruns, Release/signing evidence and physical-device gates. The
+[gallery](verification/expressive-world/index.html) includes native light/dark
+and large-text captures plus a short motion excerpt. The prior full UI sweep
+below remains its own checkpoint, not a new 121-case regression claim.
+
 ## Luminous Tide implementation — October 21, 2026
 
 The coordinated redesign is implemented across Today, habit detail/calendar,

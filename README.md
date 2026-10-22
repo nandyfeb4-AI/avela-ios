@@ -11,6 +11,14 @@ The current repository contains the implemented MVP and simulator verification
 material. Signed-device validation, production configuration, and distribution
 review remain required before TestFlight or App Store release.
 
+The latest visual follow-up is **Expressive World**: original bundled coastal
+artwork, a grounded saved companion, coloured habit identities, flowing calendar
+ribbons and interactive factual report panels. See the
+[native preview gallery](docs/verification/expressive-world/index.html) for light,
+dark and large-text screens plus a short native onboarding video. The earlier
+[Luminous Tide record](docs/verification/luminous-tide/README.md) preserves the
+preceding full regression and its repairs.
+
 ## What is built
 
 - **Habit setup:** 40 editable ideas in eight groups,
@@ -22,7 +30,8 @@ review remain required before TestFlight or App Store release.
   Optional count/pages/glasses/minutes targets, elapsed-minute timers, personal
   quick amounts and confirmed dated corrections preserve historical settings.
   Smaller actions record effort separately from full success.
-- **Luminous Tide Today:** coordinated gradient heroes, readable habit rows,
+- **Expressive Today:** an illustrated coast with the saved companion,
+  stronger page atmosphere, readable colour-coded habit cards,
   visible quantity progress, one-tap preset amounts, a collapsible Done group
   and exact-record Undo. Keep in View optionally pins one due habit; My routines
   and My day changed surface existing grouping and recovery choices.
@@ -32,7 +41,9 @@ review remain required before TestFlight or App Store release.
   logger. Per-habit calendars retain daily success ribbons, neutral skips/pauses,
   separate weekly commitments and large-text date lists.
 - **Appearance:** nine saved light/dark themes coordinate page gradients,
-  illuminated headers, cards and controls. Bounded press/entry/state responses
+  editorial headers, cards and controls. Original day/night coast and focus
+  sanctuary art is decorative; increased-contrast/transparency settings replace
+  it with solid reading surfaces. Bounded press/entry/state responses
   respect accessibility settings; attention and recovery colours retain meaning.
 - **Manual attention and Make Room:** daily budgets with quick usage logging and
   today-only corrections; recurring protected/phone-free windows with manual
@@ -66,7 +77,8 @@ review remain required before TestFlight or App Store release.
   the named habit for confirmation; opening a notification alone never logs.
 - **Companions:** original owl, fox and otter artwork, saved visibility/selection,
   four deterministic app-facing states using six existing poses, and bounded
-  transitions respecting Reduce Motion. No pet-care obligations or currency.
+  transitions respecting Reduce Motion. A successful save triggers one brief
+  reaction; no idle animation loop or pet-care obligation is added.
 - **Subscriptions:** StoreKit 2 monthly/annual purchase, restore and entitlement
   handling. Free supports three active habits and one attention goal; Premium
   removes creation limits. Expiry preserves existing tracking and history.

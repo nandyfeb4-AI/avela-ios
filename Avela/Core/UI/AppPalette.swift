@@ -10,7 +10,7 @@ struct AppPalette {
     var onAccent: Color { .appOnAccent }
     // Opaque themed reading surfaces. The canvas carries colour; text stays
     // on contrast-tested surfaces rather than transparent glass layers.
-    var pageTop: Color { dynamic(light: 0xF1F3F5, dark: 0x131720) }
+    var pageTop: Color { dynamic(light: 0xF7F6F1, dark: 0x131720) }
     var pageBottom: Color { dynamic(light: 0xF7F5F0, dark: 0x101216) }
     var surface: Color { dynamic(light: 0xFFFFFF, dark: 0x202329) }
     var surfaceSecondary: Color { dynamic(light: 0xF0EFEC, dark: 0x2A2D34) }
@@ -63,15 +63,15 @@ struct AppPalette {
     /// A complementary sky wash, distinct from accent-colored actions.
     var atmosphere: Color {
         switch theme {
-        case .tidewater: dynamic(light: 0xE8EFF2, dark: 0x152029)
-        case .sapphire: dynamic(light: 0xE7EDF8, dark: 0x171F30)
-        case .plum: dynamic(light: 0xF0EAF4, dark: 0x231D2D)
-        case .ember: dynamic(light: 0xF4EBDF, dark: 0x29201B)
-        case .rose: dynamic(light: 0xF6E9EF, dark: 0x2B1E28)
-        case .indigo: dynamic(light: 0xEAEAF8, dark: 0x1E1E32)
-        case .forest: dynamic(light: 0xEAF0E5, dark: 0x1B241E)
-        case .coral: dynamic(light: 0xF7EBE5, dark: 0x2C201F)
-        case .gold: dynamic(light: 0xF4EDDB, dark: 0x28231A)
+        case .tidewater: dynamic(light: 0xD4EBE6, dark: 0x152029)
+        case .sapphire: dynamic(light: 0xD8E6FA, dark: 0x171F30)
+        case .plum: dynamic(light: 0xE8DCF3, dark: 0x231D2D)
+        case .ember: dynamic(light: 0xF4DFCA, dark: 0x29201B)
+        case .rose: dynamic(light: 0xF4DDE8, dark: 0x2B1E28)
+        case .indigo: dynamic(light: 0xDDDFF7, dark: 0x1E1E32)
+        case .forest: dynamic(light: 0xDDEBD5, dark: 0x1B241E)
+        case .coral: dynamic(light: 0xF9E7DF, dark: 0x2C201F)
+        case .gold: dynamic(light: 0xF3E6C7, dark: 0x28231A)
         }
     }
 
@@ -141,7 +141,7 @@ private struct AppThemeCanvasModifier: ViewModifier {
                 else {
                     ZStack(alignment: .topTrailing) {
                         palette.pageGradient
-                        RadialGradient(colors: [palette.accent.opacity(0.12), .clear],
+                        RadialGradient(colors: [palette.pageTop.opacity(0.36), .clear],
                                        center: .topTrailing, startRadius: 0, endRadius: 440)
                     }.ignoresSafeArea()
                 }

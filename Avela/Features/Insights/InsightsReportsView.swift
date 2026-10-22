@@ -1,8 +1,8 @@
 import SwiftUI
 import Charts
 
-/// Longitudinal views are deliberately separate from the completed-week review.
-/// Each chart includes a readable values alternative and its own period/units.
+/// Presentation of canonical, read-only reports. Separate bars are snapshots,
+/// never an interpolated trend; accessible values stay available without plots.
 struct InsightsReportsView: View {
     enum Lens: String, CaseIterable, Identifiable {
         case week = "Week", rhythm = "Rhythm", activity = "Activity"
@@ -11,15 +11,24 @@ struct InsightsReportsView: View {
 
     @Environment(\.appPalette) private var palette
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.colorSchemeContrast) private var contrast
     let report: InsightsReportCalculator.Report
     let calendar: Calendar
     let lens: Lens
     @State private var selectedQuantityID: String?
     @State private var monthNumber: Int?
     @State private var selectedWeek: Date?
+    @State private var selectedQuantityWeek: String?
+
+    private let foam = Color(red: 0.77, green: 0.96, blue: 0.88)
+    private let lavender = Color(red: 0.77, green: 0.74, blue: 0.98)
+    private let sunlight = Color(red: 0.99, green: 0.84, blue: 0.58)
+    private var usesReadableValues: Bool { dynamicTypeSize >= .xxLarge }
+    private var chartAnimation: Animation? { reduceMotion ? nil : .easeInOut(duration: 0.4) }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
+        VStack(alignment: .leading, spacing: 30) {
             if lens == .rhythm {
                 rhythmCard
                 weekdayCard
@@ -29,100 +38,133 @@ struct InsightsReportsView: View {
                 activityCard
             }
         }
-        .onChange(of: report.interval) { _, _ in selectedWeek = nil }
+        .onChange(of: report.interval) { _, _ in
+            selectedWeek = nil
+            selectedQuantityWeek = nil
+        }
+    }
+
+    private var inspectedWeek: InsightsReportCalculator.Week? {
+        guard let selectedWeek else { return report.weeks.last }
+        return report.weeks.first { calendar.isDate($0.interval.start, equalTo: selectedWeek, toGranularity: .weekOfYear) } ?? report.weeks.last
     }
 
     private var rhythmCard: some View {
-        VStack(alignment: .leading, spacing: 18) {
-            reportHeading("Your rhythm", subtitle: "12 completed weeks · \(rangeLabel(report.interval))", symbol: "waveform.path")
-            if let recent = report.weeks.last, let rate = recent.consistency {
-                let layout = dynamicTypeSize.isAccessibilitySize
-                    ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
-                    : AnyLayout(HStackLayout(alignment: .firstTextBaseline, spacing: 8))
+        VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 7) {
+                Label("Your rhythm", systemImage: "water.waves")
+                    .font(.title2.weight(.bold)).fontDesign(.rounded).accessibilityAddTraits(.isHeader)
+                Text("12 completed weeks · \(rangeLabel(report.interval))").font(.caption).foregroundStyle(.white.opacity(0.85))
+            }
+            if let week = inspectedWeek {
+                let layout = usesReadableValues
+                    ? AnyLayout(VStackLayout(alignment: .leading, spacing: 7))
+                    : AnyLayout(HStackLayout(alignment: .lastTextBaseline, spacing: 16))
                 layout {
-                    Text(percent(rate)).font(.system(.largeTitle, design: .rounded, weight: .bold)).foregroundStyle(palette.accent)
-                    Text("in the latest review").font(.subheadline).foregroundStyle(Color.appInkSecondary)
-                }
-            }
-            if !dynamicTypeSize.isAccessibilitySize {
-                Chart(report.weeks) { week in
-                    if let rate = week.consistency {
-                        BarMark(x: .value("Week", week.interval.start, unit: .weekOfYear), y: .value("Consistency", rate), width: .ratio(0.62))
-                            .foregroundStyle(palette.accent.gradient).cornerRadius(5)
-                    } else {
-                        PointMark(x: .value("Week", week.interval.start, unit: .weekOfYear), y: .value("No data", 0))
-                            .symbol(.cross).symbolSize(18).foregroundStyle(Color.appInkSecondary)
-                    }
-                    if let selectedWeek, calendar.isDate(selectedWeek, equalTo: week.interval.start, toGranularity: .weekOfYear) {
-                        RuleMark(x: .value("Selected week", week.interval.start, unit: .weekOfYear))
-                            .foregroundStyle(palette.accent.opacity(0.35)).lineStyle(StrokeStyle(lineWidth: 2))
+                    Text(week.consistency.map(percent) ?? "—")
+                        .font(.system(.largeTitle, design: .rounded, weight: .bold)).monospacedDigit()
+                        .foregroundStyle(foam).contentTransition(.numericText())
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("Week of \(shortDate(week.interval.start))").font(.subheadline.weight(.semibold))
+                        Text(week.consistency == nil ? "No resolved commitments" : "\(week.eligibleHabitIDs.count) eligible \(week.eligibleHabitIDs.count == 1 ? "habit" : "habits")")
+                            .font(.caption).foregroundStyle(.white.opacity(0.85))
                     }
                 }
-                .chartYScale(domain: 0...1)
-                .chartYAxis { AxisMarks(values: [0.0, 0.5, 1.0]) { value in
-                    AxisGridLine().foregroundStyle(palette.accent.opacity(0.12))
-                    AxisValueLabel { if let value = value.as(Double.self) { Text(percent(value)) } }
-                } }
-                .chartXAxis { AxisMarks(values: .stride(by: .weekOfYear, count: 3)) { _ in AxisValueLabel(format: .dateTime.month(.abbreviated).day()) } }
-                .chartXSelection(value: $selectedWeek)
-                .frame(height: 188)
-                .accessibilityHidden(true)
+                .accessibilityElement(children: .combine)
+                .accessibilityIdentifier("insights.rhythm.selection")
+                .animation(chartAnimation, value: week.id)
             }
-            if let selectedWeek, let week = report.weeks.first(where: { calendar.isDate($0.interval.start, equalTo: selectedWeek, toGranularity: .weekOfYear) }) {
-                Text("\(shortDate(week.interval.start)): \(week.consistency.map(percent) ?? "No resolved commitments") · \(week.eligibleHabitIDs.count) eligible habits")
-                    .font(.subheadline.weight(.medium)).foregroundStyle(palette.accent)
+            if !usesReadableValues { tidalChart }
+            if !report.weeks.contains(where: { $0.consistency != nil }) {
+                Text("A little time, then a little perspective. Your first weekly snapshot will appear after a week with resolved commitments.")
+                    .font(.subheadline).fixedSize(horizontal: false, vertical: true)
             }
-            Text(dynamicTypeSize.isAccessibilitySize
+            Text(usesReadableValues
                  ? "Each week uses that week's eligible habits. These are weekly snapshots, not a like-for-like trend. No data means no resolved commitments."
                  : "Each bar uses that week's eligible habits. These are weekly snapshots, not a like-for-like trend. × means no resolved commitments.")
-                .font(.caption).foregroundStyle(Color.appInkSecondary)
-                .accessibilityIdentifier(dynamicTypeSize.isAccessibilitySize ? "insights.rhythm.accessibleSummary" : "insights.rhythm.chartSummary")
+                .font(.caption).foregroundStyle(.white.opacity(0.87))
+                .accessibilityIdentifier(usesReadableValues ? "insights.rhythm.accessibleSummary" : "insights.rhythm.chartSummary")
             DisclosureGroup {
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 14) {
                     ForEach(report.weeks) { week in
-                        let layout = dynamicTypeSize.isAccessibilitySize
+                        let layout = usesReadableValues
                             ? AnyLayout(VStackLayout(alignment: .leading, spacing: 4))
                             : AnyLayout(HStackLayout(alignment: .firstTextBaseline))
                         layout {
                             Text(shortDate(week.interval.start))
-                            if !dynamicTypeSize.isAccessibilitySize { Spacer() }
+                            if !usesReadableValues { Spacer() }
                             Text(week.consistency.map(percent) ?? "No data").fontWeight(.semibold).monospacedDigit()
                         }
-                        .fixedSize(horizontal: false, vertical: true)
-                        .accessibilityElement(children: .combine)
+                        .fixedSize(horizontal: false, vertical: true).accessibilityElement(children: .combine)
                     }
                 }.font(.subheadline).padding(.top, 10)
             } label: { Text("View weekly values").frame(maxWidth: .infinity, minHeight: 44, alignment: .leading) }
-            .font(.subheadline).accessibilityIdentifier("insights.rhythm.values")
+            .font(.subheadline)
+            .disclosureGroupStyle(ReportValuesDisclosureStyle(identifier: "insights.rhythm.values"))
         }
-        .padding(20).frame(maxWidth: .infinity, alignment: .leading)
-        .rilovaCard()
+        .foregroundStyle(.white).padding(24).frame(maxWidth: .infinity, alignment: .leading)
+        .background(palette.luminousGradient)
+        .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+    }
 
+    private var tidalChart: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Chart(report.weeks) { week in
+                if let rate = week.consistency {
+                    BarMark(x: .value("Week", week.interval.start, unit: .weekOfYear), y: .value("Consistency", rate), width: .ratio(0.68))
+                        .foregroundStyle(LinearGradient(colors: [foam, Color.cyan.opacity(0.55)], startPoint: .top, endPoint: .bottom))
+                        .cornerRadius(7)
+                    PointMark(x: .value("Week", week.interval.start, unit: .weekOfYear), y: .value("Consistency", rate))
+                        .symbolSize(rate > 0 ? 16 : 11).foregroundStyle(foam)
+                } else {
+                    PointMark(x: .value("Week", week.interval.start, unit: .weekOfYear), y: .value("No data", 0))
+                        .symbol(.cross).symbolSize(22).foregroundStyle(.white.opacity(0.85))
+                }
+                if let selectedWeek, calendar.isDate(selectedWeek, equalTo: week.interval.start, toGranularity: .weekOfYear) {
+                    RuleMark(x: .value("Selected week", week.interval.start, unit: .weekOfYear))
+                        .foregroundStyle(sunlight).lineStyle(StrokeStyle(lineWidth: 1.5, dash: [3, 3]))
+                }
+            }
+            .chartYScale(domain: 0...1)
+            .chartYAxis { AxisMarks(values: [0.0, 0.5, 1.0]) { value in
+                AxisGridLine().foregroundStyle(.white.opacity(0.14))
+                AxisValueLabel { if let value = value.as(Double.self) { Text(percent(value)).foregroundStyle(.white.opacity(0.85)) } }
+            } }
+            .chartXAxis { AxisMarks(values: .stride(by: .weekOfYear, count: 3)) { _ in
+                AxisValueLabel(format: .dateTime.month(.abbreviated).day()).foregroundStyle(.white.opacity(0.85))
+            } }
+            .chartXSelection(value: $selectedWeek)
+            .frame(height: 200).accessibilityHidden(true)
+            .animation(chartAnimation, value: report.interval)
+            Text("Tap or drag a bar to explore a week.").font(.caption).foregroundStyle(.white.opacity(0.85)).accessibilityHidden(true)
+        }
     }
 
     private var weekdayCard: some View {
         VStack(alignment: .leading, spacing: 18) {
             reportHeading("A week in perspective", subtitle: "12 completed weeks · daily commitments", symbol: "calendar")
-            Text("Which days have had room?").font(.title3.weight(.semibold)).fontDesign(.rounded)
-            if !dynamicTypeSize.isAccessibilitySize {
-                HStack(alignment: .bottom, spacing: 10) {
+            Text("Which days have had room?").font(.title2.weight(.semibold)).fontDesign(.rounded)
+                .fixedSize(horizontal: false, vertical: true)
+            if !usesReadableValues {
+                VStack(spacing: 12) {
                     ForEach(report.weekdays) { day in
-                        VStack(spacing: 7) {
-                            Text(day.consistency.map(percent) ?? "—").font(.caption2.weight(.semibold)).monospacedDigit()
+                        HStack(spacing: 12) {
+                            Text(calendar.shortWeekdaySymbols[day.number - 1]).font(.subheadline.weight(.semibold)).frame(width: 42, alignment: .leading)
                             GeometryReader { geometry in
-                                ZStack(alignment: .bottom) {
-                                    RoundedRectangle(cornerRadius: 6).fill(palette.accentSoft)
+                                ZStack(alignment: .leading) {
+                                    Capsule().fill(palette.accentSoft)
                                     if let value = day.consistency, value > 0 {
-                                        RoundedRectangle(cornerRadius: 6).fill(palette.accent.gradient)
-                                            .frame(height: geometry.size.height * value)
+                                        Capsule().fill(palette.accent.gradient).frame(width: geometry.size.width * value)
+                                    }
+                                    if day.consistency == nil {
+                                        Circle().stroke(palette.accent, lineWidth: 1).frame(width: 8, height: 8).padding(.leading, 4)
                                     }
                                 }
-                            }.frame(height: 94)
-                            Text(calendar.veryShortWeekdaySymbols[day.number - 1]).font(.caption.weight(.semibold))
+                            }.frame(height: 10)
+                            Text(day.consistency.map(percent) ?? "—").font(.subheadline.weight(.semibold)).monospacedDigit().frame(width: 48, alignment: .trailing)
                         }
                     }
-                }
-                .accessibilityHidden(true)
+                }.padding(.vertical, 4).accessibilityHidden(true)
             }
             Text("Successful / resolved opportunities. Flexible weekly habits, skips, pauses and pending days are excluded.")
                 .font(.caption).foregroundStyle(Color.appInkSecondary)
@@ -135,8 +177,7 @@ struct InsightsReportsView: View {
                 }.padding(.top, 10)
             } label: { Text("View weekday counts").frame(maxWidth: .infinity, minHeight: 44, alignment: .leading) }.font(.subheadline)
         }
-        .padding(20).frame(maxWidth: .infinity, alignment: .leading)
-        .rilovaCard()
+        .padding(.vertical, 8).frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var quantity: InsightsReportCalculator.Quantity? {
@@ -146,28 +187,22 @@ struct InsightsReportsView: View {
     private var quantityCard: some View {
         VStack(alignment: .leading, spacing: 18) {
             reportHeading("What adds up", subtitle: "Recorded amounts · 12 completed weeks", symbol: "chart.bar.xaxis")
-            Picker("Habit and captured unit", selection: Binding(get: { quantity?.id ?? "" }, set: { selectedQuantityID = $0 })) {
+            Picker("Habit and captured unit", selection: Binding(get: { quantity?.id ?? "" }, set: { selectedQuantityID = $0; selectedQuantityWeek = nil })) {
                 ForEach(report.quantities) { item in Text("\(item.habitName) · \(item.unit.rawValue)").tag(item.id) }
             }.pickerStyle(.menu).accessibilityIdentifier("insights.quantityPicker")
             if let quantity {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("\(quantity.total.formatted()) \(quantity.unit.name(for: quantity.total))")
-                        .font(.system(.largeTitle, design: .rounded, weight: .bold)).foregroundStyle(palette.accent)
-                    Text(quantity.habitName).font(.headline)
+                        .font(.system(.largeTitle, design: .rounded, weight: .bold)).foregroundStyle(Color.appInk)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text(quantity.habitName).font(.headline).foregroundStyle(Color.appInkSecondary)
                 }
-                if !dynamicTypeSize.isAccessibilitySize {
-                    Chart(quantity.weeks) { week in
-                        BarMark(x: .value("Week", week.date, unit: .weekOfYear), y: .value(quantity.unit.rawValue, week.amount), width: .ratio(0.62))
-                            .foregroundStyle(palette.accent.gradient).cornerRadius(5)
-                    }
-                    .chartXAxis { AxisMarks(values: .stride(by: .weekOfYear, count: 3)) { _ in AxisValueLabel(format: .dateTime.month(.abbreviated).day()) } }
-                    .frame(height: 160).accessibilityHidden(true)
-                }
-                Text(dynamicTypeSize.isAccessibilitySize
+                if !usesReadableValues { quantityChart(quantity) }
+                Text(usesReadableValues
                      ? "Amounts stay in their captured unit. A week with no amount recorded does not establish what happened."
                      : "Amounts stay in their captured unit. An empty bar means no amount recorded; it does not establish what happened.")
                     .font(.caption).foregroundStyle(Color.appInkSecondary)
-                    .accessibilityIdentifier(dynamicTypeSize.isAccessibilitySize ? "insights.quantity.accessibleSummary" : "insights.quantity.chartSummary")
+                    .accessibilityIdentifier(usesReadableValues ? "insights.quantity.accessibleSummary" : "insights.quantity.chartSummary")
                 DisclosureGroup {
                     VStack(alignment: .leading, spacing: 12) {
                         ForEach(quantity.weeks) { week in
@@ -178,35 +213,71 @@ struct InsightsReportsView: View {
                 } label: { Text("View recorded amounts").frame(maxWidth: .infinity, minHeight: 44, alignment: .leading) }.font(.subheadline)
             }
         }
-        .padding(20).frame(maxWidth: .infinity, alignment: .leading)
-        .rilovaCard()
+        .padding(22).frame(maxWidth: .infinity, alignment: .leading)
+        .background(palette.atmosphere, in: RoundedRectangle(cornerRadius: 28))
+        .overlay(alignment: .topLeading) { Capsule().fill(palette.accent).frame(width: 42, height: 4).padding(.leading, 22) }
+    }
+
+    private func quantityChart(_ quantity: InsightsReportCalculator.Quantity) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Chart(quantity.weeks) { week in
+                BarMark(x: .value(quantity.unit.rawValue, week.amount), y: .value("Week", shortDate(week.date)), height: .ratio(0.6))
+                    .foregroundStyle(palette.accent.opacity(selectedQuantityWeek == nil || selectedQuantityWeek == shortDate(week.date) ? 1 : 0.4).gradient)
+                    .cornerRadius(5)
+            }
+            .chartXAxis { AxisMarks(position: .bottom) { _ in AxisGridLine().foregroundStyle(palette.accent.opacity(0.12)); AxisValueLabel() } }
+            .chartYAxis { AxisMarks { _ in AxisValueLabel() } }
+            .chartYSelection(value: $selectedQuantityWeek)
+            .frame(height: 270).accessibilityHidden(true)
+            .animation(chartAnimation, value: quantity.id)
+            if let selectedQuantityWeek, let week = quantity.weeks.first(where: { shortDate($0.date) == selectedQuantityWeek }) {
+                Text("\(shortDate(week.date)): \(week.amount) \(quantity.unit.name(for: week.amount)) recorded")
+                    .font(.subheadline.weight(.medium)).foregroundStyle(palette.accent)
+                    .accessibilityIdentifier("insights.quantity.selection")
+            } else {
+                Text("Tap a week to inspect its recorded amount.").font(.caption).foregroundStyle(Color.appInkSecondary).accessibilityHidden(true)
+            }
+        }
     }
 
     private var sessionCard: some View {
         let kept = report.sessions.reduce(0) { $0 + $1.kept }
         let interrupted = report.sessions.reduce(0) { $0 + $1.interrupted }
         let unreported = report.sessions.reduce(0) { $0 + $1.unreported }
-        return VStack(alignment: .leading, spacing: 18) {
-            reportHeading("Space you made", subtitle: "Sessions started in these 12 completed weeks", symbol: "leaf")
-            Text("\(report.sessions.reduce(0) { $0 + $1.started }) sessions started")
-                .font(.system(.title, design: .rounded, weight: .bold)).foregroundStyle(palette.accent)
-            if !dynamicTypeSize.isAccessibilitySize {
-                Chart(report.sessions) { week in
-                    BarMark(x: .value("Week", week.date, unit: .weekOfYear), y: .value("Sessions started", week.started), width: .ratio(0.62))
-                        .foregroundStyle(palette.accent.gradient).cornerRadius(5)
-                }
-                .chartXAxis { AxisMarks(values: .stride(by: .weekOfYear, count: 3)) { _ in AxisValueLabel(format: .dateTime.month(.abbreviated).day()) } }
-                .frame(height: 144).accessibilityHidden(true)
+        return VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 7) {
+                Label("Space you made", systemImage: "leaf").font(.title2.weight(.bold)).fontDesign(.rounded).accessibilityAddTraits(.isHeader)
+                Text("Sessions started in these 12 completed weeks").font(.caption).foregroundStyle(.white.opacity(0.85))
             }
-            VStack(alignment: .leading, spacing: 8) {
-                Label("\(kept) reported kept", systemImage: "checkmark.circle")
-                Label("\(interrupted) reported interrupted", systemImage: "pause.circle")
-                Label("\(unreported) unfinished or unreported", systemImage: "circle.dashed")
+            Text("\(report.sessions.reduce(0) { $0 + $1.started }) sessions started")
+                .font(.system(.title, design: .rounded, weight: .bold)).fixedSize(horizontal: false, vertical: true)
+            if !usesReadableValues {
+                Chart(report.sessions) { week in
+                    BarMark(x: .value("Week", week.date, unit: .weekOfYear), y: .value("Kept", week.kept), width: .ratio(0.64))
+                        .foregroundStyle(foam)
+                    BarMark(x: .value("Week", week.date, unit: .weekOfYear), y: .value("Interrupted", week.interrupted), width: .ratio(0.64))
+                        .foregroundStyle(lavender)
+                    BarMark(x: .value("Week", week.date, unit: .weekOfYear), y: .value("Unreported", week.unreported), width: .ratio(0.64))
+                        .foregroundStyle(.white.opacity(0.35))
+                }
+                .chartXAxis { AxisMarks(values: .stride(by: .weekOfYear, count: 3)) { _ in
+                    AxisValueLabel(format: .dateTime.month(.abbreviated).day()).foregroundStyle(.white.opacity(0.85))
+                } }
+                .chartYAxis { AxisMarks { _ in AxisGridLine().foregroundStyle(.white.opacity(0.12)); AxisValueLabel().foregroundStyle(.white.opacity(0.85)) } }
+                .frame(height: 152).accessibilityHidden(true)
+                .animation(chartAnimation, value: report.interval)
+            }
+            VStack(alignment: .leading, spacing: 12) {
+                sessionKey("\(kept) reported kept", color: foam, symbol: "checkmark.circle")
+                sessionKey("\(interrupted) reported interrupted", color: lavender, symbol: "pause.circle")
+                sessionKey("\(unreported) unfinished or unreported", color: .white.opacity(0.7), symbol: "circle.dashed")
+                Divider().overlay(.white.opacity(0.2))
                 Label("\(MadeRoomReviewViewModel.minutes(report.sessions.reduce(0) { $0 + $1.timerMinutes } * 60)) elapsed timer minutes", systemImage: "timer")
-            }.font(.subheadline)
+                    .font(.subheadline.weight(.medium))
+            }
             Text("Timer minutes include ended sessions only. They are not verified focus, phone-free or saved time. Outcomes are self-reported; sessions never complete a habit.")
-                .font(.caption).foregroundStyle(Color.appInkSecondary)
-                .accessibilityIdentifier(dynamicTypeSize.isAccessibilitySize ? "insights.sessions.accessibleSummary" : "insights.sessions.chartSummary")
+                .font(.caption).foregroundStyle(.white.opacity(0.87))
+                .accessibilityIdentifier(usesReadableValues ? "insights.sessions.accessibleSummary" : "insights.sessions.chartSummary")
             DisclosureGroup {
                 VStack(alignment: .leading, spacing: 12) {
                     ForEach(report.sessions) { week in
@@ -214,104 +285,148 @@ struct InsightsReportsView: View {
                             .font(.subheadline).frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }.padding(.top, 10)
-            } label: { Text("View session weeks").frame(maxWidth: .infinity, minHeight: 44, alignment: .leading) }.font(.subheadline)
+            } label: { Text("View session weeks").frame(maxWidth: .infinity, minHeight: 44, alignment: .leading) }
+            .font(.subheadline).disclosureGroupStyle(ReportValuesDisclosureStyle(identifier: "insights.sessions.values"))
         }
-        .padding(20).frame(maxWidth: .infinity, alignment: .leading)
-        .rilovaCard()
+        .foregroundStyle(.white).padding(24).frame(maxWidth: .infinity, alignment: .leading)
+        .background(palette.luminousColors.last ?? palette.heroEnd, in: RoundedRectangle(cornerRadius: 30))
+    }
+
+    private func sessionKey(_ title: String, color: Color, symbol: String) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: symbol).foregroundStyle(color).frame(width: 20).accessibilityHidden(true)
+            Text(title).font(.subheadline)
+        }
     }
 
     private var displayedMonth: Int {
         monthNumber ?? calendar.component(.month, from: report.interval.end.addingTimeInterval(-1))
     }
-
     private var monthDays: [InsightsReportCalculator.ActivityDay] {
         report.activityDays.filter { calendar.component(.month, from: $0.date) == displayedMonth }
     }
 
     private var activityCard: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            reportHeading("A year of showing up", subtitle: "\(report.activityYear.start.formatted(.dateTime.year())) · through \(shortDate(report.interval.end.addingTimeInterval(-1)))", symbol: "square.grid.3x3.fill")
-            Text("\(report.recordedDays) recorded activity \(report.recordedDays == 1 ? "day" : "days")")
-                .font(.system(.title, design: .rounded, weight: .bold)).foregroundStyle(palette.accent)
-            if !dynamicTypeSize.isAccessibilitySize {
-                ScrollViewReader { proxy in
-                    ScrollView(.horizontal) {
-                        let firstOffset = (calendar.component(.weekday, from: report.activityYear.start) - calendar.firstWeekday + 7) % 7
-                        LazyHGrid(rows: Array(repeating: GridItem(.fixed(10), spacing: 3), count: 7), spacing: 3) {
-                            ForEach(0..<firstOffset, id: \.self) { _ in Color.clear.frame(width: 10, height: 10) }
-                            ForEach(report.activityDays) { day in activityCell(day, size: 10).id(day.key) }
-                        }.padding(.vertical, 4)
-                    }
-                    .onAppear {
-                        if let lastReviewedDay = report.activityDays.last(where: { $0.state != .afterReview }) {
-                            proxy.scrollTo(lastReviewedDay.key, anchor: .trailing)
+        VStack(alignment: .leading, spacing: 24) {
+            annualAtlas
+            VStack(alignment: .leading, spacing: 18) {
+                Picker("Activity month", selection: Binding(get: { displayedMonth }, set: { monthNumber = $0 })) {
+                    ForEach(1...12, id: \.self) { month in Text(calendar.monthSymbols[month - 1]).tag(month) }
+                }.pickerStyle(.menu).accessibilityIdentifier("insights.activity.month")
+                Text(calendar.monthSymbols[displayedMonth - 1]).font(.system(.title, design: .rounded, weight: .bold))
+                if !usesReadableValues { monthMatrix }
+                Text("A record of check-ins, amounts and smaller actions. Colour shows activity, not adherence. Skips and days with no record remain separate.")
+                    .font(.caption).foregroundStyle(Color.appInkSecondary)
+                DisclosureGroup {
+                    VStack(alignment: .leading, spacing: 14) {
+                        ForEach(monthDays) { day in
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text(shortDate(day.date)).fontWeight(.semibold)
+                                Text(dayDescription(day)).foregroundStyle(Color.appInkSecondary)
+                            }
+                            .font(.subheadline).frame(maxWidth: .infinity, alignment: .leading)
+                            .accessibilityElement(children: .combine)
                         }
-                    }
-                }
-                .accessibilityHidden(true)
+                    }.padding(.top, 10)
+                } label: { Text(usesReadableValues ? "Activity dates and recorded values" : "View dates and recorded values").frame(maxWidth: .infinity, minHeight: 44, alignment: .leading) }
+                .font(.subheadline).accessibilityIdentifier("insights.activity.values")
             }
-            Text("A record of check-ins, amounts and smaller actions. Colour shows activity, not adherence. Skips and days with no record remain separate.")
-                .font(.caption).foregroundStyle(Color.appInkSecondary)
-            HStack(spacing: 16) {
-                Label("Recorded", systemImage: "square.fill").foregroundStyle(palette.accent)
-                Label("Skipped", systemImage: "minus.square")
+            .padding(20).frame(maxWidth: .infinity, alignment: .leading)
+            .background(palette.surface, in: RoundedRectangle(cornerRadius: 28))
+        }
+        .onChange(of: report.activityYear) { _, _ in monthNumber = nil }
+    }
+
+    private var annualAtlas: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            Label("A year of showing up", systemImage: "square.grid.3x3.fill")
+                .font(.title2.weight(.bold)).fontDesign(.rounded).accessibilityAddTraits(.isHeader)
+            Text("\(yearLabel) · through \(shortDate(report.interval.end.addingTimeInterval(-1)))")
+                .font(.caption).foregroundStyle(.white.opacity(0.85))
+            VStack(alignment: .leading, spacing: 3) {
+                Text("\(report.recordedDays) recorded activity \(report.recordedDays == 1 ? "day" : "days")")
+                    .font(.system(.title, design: .rounded, weight: .bold)).foregroundStyle(foam)
+                    .fixedSize(horizontal: false, vertical: true)
+                Text("Every mark is something you recorded.").font(.subheadline).foregroundStyle(.white.opacity(0.85))
+            }
+            if !usesReadableValues { annualCells }
+            let layout = usesReadableValues
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 10))
+                : AnyLayout(HStackLayout(spacing: 18))
+            layout {
+                Label("Recorded", systemImage: "square.fill").foregroundStyle(foam)
+                Label("Skipped", systemImage: "minus.square").foregroundStyle(sunlight)
+                Label("No record", systemImage: "square").foregroundStyle(.white.opacity(0.8))
             }.font(.caption)
-            Picker("Activity month", selection: Binding(get: { displayedMonth }, set: { monthNumber = $0 })) {
-                ForEach(1...12, id: \.self) { month in Text(calendar.monthSymbols[month - 1]).tag(month) }
-            }.pickerStyle(.menu).accessibilityIdentifier("insights.activity.month")
-            if !dynamicTypeSize.isAccessibilitySize, let first = monthDays.first {
+            Text("Recorded activity, not an adherence score. Dates after this review are not included.")
+                .font(.caption).foregroundStyle(.white.opacity(0.87))
+        }
+        .foregroundStyle(.white).padding(24).frame(maxWidth: .infinity, alignment: .leading)
+        .background(palette.luminousGradient, in: RoundedRectangle(cornerRadius: 30))
+    }
+
+    private var annualCells: some View {
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal) {
+                let firstOffset = (calendar.component(.weekday, from: report.activityYear.start) - calendar.firstWeekday + 7) % 7
+                LazyHGrid(rows: Array(repeating: GridItem(.fixed(12), spacing: 4), count: 7), spacing: 4) {
+                    ForEach(0..<firstOffset, id: \.self) { _ in Color.clear.frame(width: 12, height: 12) }
+                    ForEach(report.activityDays) { day in
+                        RoundedRectangle(cornerRadius: 3)
+                            .fill(day.hasActivity ? foam : .white.opacity(day.state == .afterReview || day.state == .beforeTracking ? 0.025 : (contrast == .increased ? 0.18 : 0.09)))
+                            .overlay {
+                                if day.state == .skipped { RoundedRectangle(cornerRadius: 3).stroke(sunlight, lineWidth: 1.2) }
+                                else if day.state == .noRecord { RoundedRectangle(cornerRadius: 3).stroke(.white.opacity(contrast == .increased ? 0.65 : 0.2), lineWidth: 0.6) }
+                            }
+                            .frame(width: 12, height: 12).id(day.key)
+                    }
+                }.padding(.vertical, 5)
+            }
+            .onAppear { scrollAtlas(proxy) }
+            .onChange(of: report.interval) { _, _ in scrollAtlas(proxy) }
+        }.accessibilityHidden(true)
+    }
+
+    private func scrollAtlas(_ proxy: ScrollViewProxy) {
+        if let last = report.activityDays.last(where: { $0.state != .afterReview }) {
+            proxy.scrollTo(last.key, anchor: .trailing)
+        }
+    }
+
+    private var monthMatrix: some View {
+        VStack(spacing: 10) {
+            if let first = monthDays.first {
                 let offset = (calendar.component(.weekday, from: first.date) - calendar.firstWeekday + 7) % 7
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 7), spacing: 8) {
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 5), count: 7), spacing: 8) {
                     ForEach(0..<7, id: \.self) { offset in
                         let index = (calendar.firstWeekday - 1 + offset) % 7
                         Text(calendar.veryShortWeekdaySymbols[index]).font(.caption.weight(.semibold)).foregroundStyle(Color.appInkSecondary)
                     }
-                    ForEach(0..<offset, id: \.self) { _ in Color.clear.frame(height: 34) }
+                    ForEach(0..<offset, id: \.self) { _ in Color.clear.frame(height: 36) }
                     ForEach(monthDays) { day in
                         ZStack {
-                            RoundedRectangle(cornerRadius: 10).fill(cellColor(day))
-                            if day.state == .skipped { RoundedRectangle(cornerRadius: 10).stroke(palette.accent, style: StrokeStyle(lineWidth: 1, dash: [3, 2])) }
+                            RoundedRectangle(cornerRadius: 11).fill(cellColor(day))
+                            if day.state == .skipped { RoundedRectangle(cornerRadius: 11).stroke(palette.accent, style: StrokeStyle(lineWidth: 1, dash: [3, 2])) }
                             Text("\(calendar.component(.day, from: day.date))")
                                 .font(.subheadline.weight(day.hasActivity ? .bold : .regular))
                                 .foregroundStyle(day.hasActivity ? Color.white : Color.appInkSecondary)
-                        }.frame(height: 34)
+                        }.frame(height: 36)
                     }
-                }.accessibilityHidden(true)
+                }
             }
-            DisclosureGroup {
-                VStack(alignment: .leading, spacing: 14) {
-                    ForEach(monthDays) { day in
-                        VStack(alignment: .leading, spacing: 3) {
-                            Text(shortDate(day.date)).fontWeight(.semibold)
-                            Text(dayDescription(day)).foregroundStyle(Color.appInkSecondary)
-                        }
-                        .font(.subheadline).frame(maxWidth: .infinity, alignment: .leading)
-                        .accessibilityElement(children: .combine)
-                    }
-                }.padding(.top, 10)
-            } label: { Text(dynamicTypeSize.isAccessibilitySize ? "Activity dates and recorded values" : "View dates and recorded values").frame(maxWidth: .infinity, minHeight: 44, alignment: .leading) }.font(.subheadline).accessibilityIdentifier("insights.activity.values")
         }
-        .padding(20).frame(maxWidth: .infinity, alignment: .leading)
-        .rilovaCard()
-        .onChange(of: report.activityYear) { _, _ in monthNumber = nil }
-    }
-
-    private func activityCell(_ day: InsightsReportCalculator.ActivityDay, size: CGFloat) -> some View {
-        RoundedRectangle(cornerRadius: 2).fill(cellColor(day))
-            .overlay { if day.state == .skipped { RoundedRectangle(cornerRadius: 2).stroke(palette.accent, lineWidth: 1) } }
-            .frame(width: size, height: size)
+        .accessibilityHidden(true)
+        .animation(chartAnimation, value: displayedMonth)
     }
 
     private func cellColor(_ day: InsightsReportCalculator.ActivityDay) -> Color {
         switch day.state {
         case .recorded: palette.prominentFill
         case .skipped: palette.accentSoft
-        case .noRecord: palette.surfaceSecondary
-        case .paused: palette.surfaceSecondary
+        case .noRecord, .paused: palette.surfaceSecondary
         case .beforeTracking, .afterReview: palette.surface
         }
     }
-
     private func dayDescription(_ day: InsightsReportCalculator.ActivityDay) -> String {
         switch day.state {
         case .recorded: return "\(day.checkInCount) check-ins, \(day.quantityEntryCount) amount entries, \(day.smallerActionCount) smaller actions\(day.skipCount > 0 ? ", \(day.skipCount) excused skips" : "")"
@@ -322,22 +437,52 @@ struct InsightsReportsView: View {
         case .afterReview: return "After this review · not included"
         }
     }
-
     private func reportHeading(_ title: String, subtitle: String, symbol: String) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 7) {
             Label(title, systemImage: symbol).font(.headline).accessibilityAddTraits(.isHeader)
             Text(subtitle).font(.caption).foregroundStyle(Color.appInkSecondary)
         }
     }
-
+    private var yearLabel: String {
+        let formatter = DateFormatter(); formatter.calendar = calendar; formatter.timeZone = calendar.timeZone
+        formatter.setLocalizedDateFormatFromTemplate("yyyy")
+        return formatter.string(from: report.activityYear.start)
+    }
     private func percent(_ value: Double) -> String { "\(Int((value * 100).rounded()))%" }
     private func shortDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.calendar = calendar; formatter.timeZone = calendar.timeZone
+        let formatter = DateFormatter(); formatter.calendar = calendar; formatter.timeZone = calendar.timeZone
         formatter.setLocalizedDateFormatFromTemplate("MMMd")
         return formatter.string(from: date)
     }
     private func rangeLabel(_ interval: DateInterval) -> String { "\(shortDate(interval.start))–\(shortDate(interval.end.addingTimeInterval(-1)))" }
+}
+
+/// Explicit white disclosure controls remain readable on the dark report panels.
+/// IDs live on the action itself, avoiding identifiers cascading into child values.
+private struct ReportValuesDisclosureStyle: DisclosureGroupStyle {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    let identifier: String
+    func makeBody(configuration: Configuration) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Button {
+                withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.18)) {
+                    configuration.isExpanded.toggle()
+                }
+            } label: {
+                HStack(spacing: 12) {
+                    configuration.label
+                    Spacer(minLength: 8)
+                    Image(systemName: configuration.isExpanded ? "chevron.up" : "chevron.down")
+                        .font(.caption.weight(.semibold)).accessibilityHidden(true)
+                }
+                .foregroundStyle(.white).frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain).accessibilityIdentifier(identifier)
+            .accessibilityValue(configuration.isExpanded ? "Expanded" : "Collapsed")
+            if configuration.isExpanded { configuration.content.foregroundStyle(.white) }
+        }
+    }
 }
 
 /// The image is built locally only after a deliberate preview. Names are off

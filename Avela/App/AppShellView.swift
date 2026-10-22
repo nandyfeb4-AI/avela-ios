@@ -106,6 +106,7 @@ struct AppShellView: View {
             await liveActivityService?.synchronize()
         }
         .environment(\.appPalette, AppPalette(theme: appTheme))
+        .environment(\.rilovaCompanionProfile, companionProfile)
         .tint(AppPalette(theme: appTheme).accent)
         .environment(\.habitActivityRepository, activityRepository)
         .environment(\.routineRepository, routineRepository)

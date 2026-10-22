@@ -11,6 +11,8 @@ struct InsightsView: View {
     @Environment(\.appPalette) private var palette
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    @Environment(\.colorSchemeContrast) private var contrast
     @ScaledMetric(relativeTo: .largeTitle) private var consistencyDisplaySize = 58
     @State private var lens: InsightsReportsView.Lens = .week
     @State private var showsSharePreview = false
@@ -189,31 +191,28 @@ struct InsightsView: View {
     }
 
     private var weekRangeHeader: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("Your weekly review").font(.title2.weight(.semibold)).fontDesign(.rounded)
+        VStack(alignment: .leading, spacing: 16) {
+            coastalScene
+            Text("Your story is taking shape.")
+                .font(.system(.largeTitle, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.appInk).accessibilityAddTraits(.isHeader)
-            Text(viewModel.weekRangeLabel).font(.subheadline).foregroundStyle(Color.appInkSecondary)
+                .fixedSize(horizontal: false, vertical: true)
+            Text(viewModel.weekRangeLabel).font(.subheadline.weight(.medium)).foregroundStyle(Color.appInkSecondary)
                 .accessibilityIdentifier("insights.weekRangeLabel")
-            Label("Completed week", systemImage: "calendar")
-                .font(.caption.weight(.medium)).foregroundStyle(Color.appInkSecondary)
+            Label("Completed week", systemImage: "calendar").font(.caption.weight(.medium)).foregroundStyle(palette.accent)
         }
-        .rilovaHeaderSurface()
     }
 
     private func summaryCard(for insights: WeeklyInsightsCalculator.WeeklyInsights, overallConsistency: Double) -> some View {
         VStack(alignment: .leading, spacing: 18) {
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 7) {
-                    Text("YOUR PROGRESS").font(.caption.weight(.bold)).tracking(1.5)
-                    Text("Find your rhythm.")
-                        .font(.system(.largeTitle, design: .rounded, weight: .bold))
-                        .accessibilityAddTraits(.isHeader)
-                }
-                Spacer(minLength: 12)
-                Image(systemName: "waveform.path").font(.title).foregroundStyle(palette.luminousHighlight)
-                    .accessibilityHidden(true)
+            coastalScene
+            HStack(alignment: .firstTextBaseline) {
+                Text("Find your rhythm.")
+                    .font(.system(.largeTitle, design: .rounded, weight: .bold))
+                    .fixedSize(horizontal: false, vertical: true).accessibilityAddTraits(.isHeader)
+                Spacer(minLength: 0)
             }
-            Text(viewModel.weekRangeLabel).font(.subheadline.weight(.medium))
+            Text(viewModel.weekRangeLabel).font(.subheadline.weight(.medium)).foregroundStyle(Color.appInkSecondary)
                 .accessibilityIdentifier("insights.weekRangeLabel")
             let layout = dynamicTypeSize.isAccessibilitySize
                 ? AnyLayout(VStackLayout(alignment: .leading, spacing: 10))
@@ -222,37 +221,58 @@ struct InsightsView: View {
                 Text(Self.percentageText(overallConsistency))
                     .font(.system(size: consistencyDisplaySize, weight: .bold, design: .rounded))
                     .fontWidth(.expanded).monospacedDigit().lineLimit(1).minimumScaleFactor(0.5)
+                    .foregroundStyle(palette.accent)
                     .accessibilityIdentifier("insights.overallConsistency")
-                    .padding(.vertical, 10)
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Overall Consistency").font(.headline).accessibilityAddTraits(.isHeader)
                     Text("Across \(insights.eligibleHabits.count) \(insights.eligibleHabits.count == 1 ? "habit" : "habits")")
-                        .font(.subheadline)
+                        .font(.subheadline).foregroundStyle(Color.appInkSecondary)
+                }
+                if !dynamicTypeSize.isAccessibilitySize {
+                    Spacer(minLength: 0)
+                    WeeklyTideDial(value: overallConsistency, tint: palette.accent)
+                        .frame(width: 66, height: 66).accessibilityHidden(true)
                 }
             }
-            Text(Self.trendText(insights.trendInPercentagePoints))
-                .font(.subheadline.weight(.semibold))
-                .accessibilityIdentifier("insights.trend")
-            Text("Completed week · Equal weight per habit")
-                .font(.caption.weight(.medium))
+            HStack(alignment: .top, spacing: 10) {
+                Image(systemName: "arrow.left.arrow.right").font(.caption.weight(.semibold)).padding(.top, 3).accessibilityHidden(true)
+                Text(Self.trendText(insights.trendInPercentagePoints))
+                    .font(.subheadline.weight(.medium)).fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("insights.trend")
+            }
+            .foregroundStyle(Color.appInk).padding(14)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(palette.accentSoft, in: RoundedRectangle(cornerRadius: 18))
+            Text("Completed week · Equal weight per habit").font(.caption.weight(.medium)).foregroundStyle(Color.appInkSecondary)
             DisclosureGroup("How this is calculated") {
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Each eligible habit counts equally. Excused skips, pauses and pending periods are excluded. Daily habits count days; flexible weekly habits count weeks.")
                     Text("The prior-week change compares only habits with unchanged schedules and complete opportunities in both weeks. It can use a smaller group than the overall percentage.")
-                }.font(.footnote).padding(.top, 8)
+                }.font(.footnote).foregroundStyle(Color.appInkSecondary).padding(.top, 8)
             }
-            .font(.caption.weight(.medium))
+            .font(.caption.weight(.medium)).foregroundStyle(Color.appInkSecondary)
             .disclosureGroupStyle(InsightsHeroDisclosureStyle())
         }
-        .foregroundStyle(.white)
-        .padding(24).frame(maxWidth: .infinity, alignment: .leading)
-        .background {
-            ZStack {
-                palette.luminousGradient
-                RilovaAurora().opacity(0.65)
+        .foregroundStyle(Color.appInk).frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var coastalScene: some View {
+        ZStack(alignment: .bottomLeading) {
+            RilovaWorldArtwork(scene: .coast)
+            if contrast == .increased || reduceTransparency {
+                VStack { Spacer(); Color.black.frame(height: 48) }
+            } else {
+                LinearGradient(colors: [.clear, .black.opacity(0.78)], startPoint: .center, endPoint: .bottom)
             }
+            Label("A little perspective", systemImage: "water.waves")
+                .font(.caption.weight(.semibold)).foregroundStyle(.white)
+                .padding(.horizontal, 12).padding(.vertical, 9)
+                .background(Color(red: 0.02, green: 0.13, blue: 0.18), in: Capsule())
+                .padding(16)
         }
+        .frame(height: dynamicTypeSize.isAccessibilitySize ? 96 : 166)
         .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .accessibilityHidden(true)
     }
 
     private func highlightsCard(for insights: WeeklyInsightsCalculator.WeeklyInsights) -> some View {
@@ -349,15 +369,17 @@ struct InsightsView: View {
     }
 
     private var noHabitsEmptyState: some View {
-        ContentUnavailableView {
-            Label {
-                Text("No Habits Yet")
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                coastalScene
+                Text("No Habits Yet").font(.system(.largeTitle, design: .rounded, weight: .bold))
                     .accessibilityIdentifier("insights.emptyState.title")
-            } icon: {
-                Image(systemName: "chart.bar")
-            }
-        } description: {
-            Text("Create a habit on the Today tab, and your weekly review will appear here once a full week has passed.")
+                Text("Small starts become a bigger picture.").font(.title3.weight(.medium))
+                Text("Create a habit on the Today tab, and your weekly review will appear here once a full week has passed.")
+                    .font(.body).foregroundStyle(Color.appInkSecondary)
+                Label("Your progress appears from real records. No sample scores or pressure to fill every day.", systemImage: "sparkle")
+                    .font(.subheadline).foregroundStyle(Color.appInkSecondary).fixedSize(horizontal: false, vertical: true)
+            }.padding(24).frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 
@@ -414,9 +436,8 @@ private struct InsightsHabitDestination: View {
     var body: some View { HabitDetailView(viewModel: viewModel, onViewHistory: onViewHistory) }
 }
 
-/// Native disclosure semantics with an explicit, contrast-safe chevron and a
-/// real 44-point label. The system's default disclosure arrow ignored tint on
-/// the deep hero in native captures, so the style owns this small presentation.
+/// Native disclosure semantics with an explicit readable chevron and a real
+/// 44-point label, coordinated with the editorial review rather than the art.
 private struct InsightsHeroDisclosureStyle: DisclosureGroupStyle {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     func makeBody(configuration: Configuration) -> some View {
@@ -432,13 +453,30 @@ private struct InsightsHeroDisclosureStyle: DisclosureGroupStyle {
                     Image(systemName: configuration.isExpanded ? "chevron.up" : "chevron.down")
                         .font(.caption.weight(.semibold)).accessibilityHidden(true)
                 }
-                .foregroundStyle(.white)
+                .foregroundStyle(Color.appInkSecondary)
                 .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .accessibilityValue(configuration.isExpanded ? "Expanded" : "Collapsed")
-            if configuration.isExpanded { configuration.content.foregroundStyle(.white) }
+            if configuration.isExpanded { configuration.content }
+        }
+    }
+}
+
+/// Decorative progress only: the numeric label remains the authoritative value.
+private struct WeeklyTideDial: View {
+    let value: Double
+    let tint: Color
+    var body: some View {
+        ZStack {
+            Circle().stroke(tint.opacity(0.14), lineWidth: 6)
+            if value > 0 {
+                Circle().trim(from: 0, to: min(max(value, 0), 1))
+                    .stroke(tint.gradient, style: StrokeStyle(lineWidth: 6, lineCap: .round))
+                    .rotationEffect(.degrees(-90))
+            }
+            Image(systemName: "water.waves").font(.title3).foregroundStyle(tint)
         }
     }
 }

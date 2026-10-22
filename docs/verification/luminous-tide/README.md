@@ -1,5 +1,11 @@
 # Luminous Tide — October 21, 2026
 
+The owner subsequently requested a more illustrated, expressive treatment across
+the app. The latest [Expressive World gallery](../expressive-world/index.html)
+and [verification record](../expressive-world/verification.json) cover that
+follow-up, including original bundled artwork and 628 unit tests. This document
+preserves the preceding Luminous Tide implementation and full UI sweep.
+
 This pass implements the owner-approved coordinated redesign and the First/Next
 items in the [competitive research](../../../design/exploration/expressive-refresh/RESEARCH.md).
 That survey distinguishes official screenshots, publisher descriptions and our

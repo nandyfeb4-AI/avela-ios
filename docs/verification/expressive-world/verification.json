@@ -1,0 +1,91 @@
+{
+  "date_local": "2026-10-21",
+  "timezone": "America/Denver",
+  "generated_at_utc": "2026-10-22T05:26:59.264475+00:00",
+  "scope": "Owner-approved Expressive World native iOS follow-up after the Luminous Tide checkpoint.",
+  "implemented": [
+    "Original bundled light/day coast, matching dark/night coast and focus sanctuary; no runtime generation or download.",
+    "Today scene with saved enabled companion, naturally growing protected text area, factual progress and one finite successful-save reaction.",
+    "Stronger nine-theme atmosphere and opaque symbol-identity habit cards; explicit Log/Undo unchanged.",
+    "Habit detail and calendars use distinct compositions, readable dates and canonical daily-success ribbons; Home activity intensity remains recorded effort.",
+    "Make Room shows suggested/saved target or the actual selected active-session countdown, with the saved companion only when enabled.",
+    "Six illustrated onboarding stages, explicit creation/permission actions and separated Continue/Skip at normal/largest text.",
+    "Weekly editorial Insights, selectable independent-week and captured-unit bars, session outcome stacks and annual recorded-activity atlas.",
+    "History and Settings use compact editorial headers and separate decorative scenery.",
+    "Bounded motion; Reduce Motion, Increase Contrast, Reduce Transparency and larger-text alternatives implemented."
+  ],
+  "preserved_boundaries": [
+    "No new model, repository, calculator, schema, entitlement, permission, backend or third-party package.",
+    "No runtime AI; all reports remain factual canonical calculations with existing eligibility/cohort/skip/pause semantics.",
+    "Exact-record and stale-context Undo guards retained. Focus elapsed time never verifies concentration or completes a habit.",
+    "Companion visibility/selection and feedback preferences remain authoritative; no care loop or currency.",
+    "Artwork is hidden from accessibility and cannot intercept input. Share content and consent remain unchanged."
+  ],
+  "artwork": {
+    "mode": "Built-in image_gen",
+    "provenance": "../../../design/brand/rilova/world/provenance.json",
+    "bundled_images": 3,
+    "usage": "Decorative only; native labels and values are separate."
+  },
+  "verification": {
+    "unit_tests_passed": 628,
+    "unit_failures": 0,
+    "distinct_affected_ui_tests_passed": 29,
+    "ui_executions": 42,
+    "ui_failures": 0,
+    "full_current_121_ui_suite_rerun": false,
+    "test_record": "test-results.json",
+    "previous_full_ui_checkpoint": "../luminous-tide/test-results.json",
+    "native_audits": "Unsuppressed hit-region, text-clipping, traits and element descriptions on affected core/supporting screens; palette contrast is a separate unit regression.",
+    "appearance": "Actual simulator light/dark appearance; selected flows at largest Dynamic Type.",
+    "launch_metric": "Five-iteration responsive launch measurement is descriptive simulator data with high variance; no hardware or improvement claim.",
+    "independent_code_review": "No actionable material data, Undo, availability, overlay-hit-testing or unbounded-motion regression found."
+  },
+  "previews": {
+    "gallery": "index.html",
+    "screenshots": "screenshots.json",
+    "count": 38,
+    "light": 31,
+    "dark": 7,
+    "pngs": "Unmodified native PNG bytes and dimensions, with per-file hashes and source test identifiers. Fictional verification data only.",
+    "video": "onboarding-motion.mp4",
+    "video_description": "15-second scaled/compressed excerpt of an actual native simulator onboarding recording; manual playback, no loop. Not a performance benchmark.",
+    "desktop_copy": "Rilova Expressive World Preview"
+  },
+  "builds": {
+    "debug": "Native build-for-testing and rebuilt affected UI runs passed.",
+    "release": {
+      "complete_repository_scheme_passed": true,
+      "includes_watch_widget_and_monitor": true,
+      "debug_markers_absent_from_four_executables": true,
+      "app_protection_flag": "NO",
+      "inspection": "release-inspection.json"
+    },
+    "signed_phone": {
+      "build_passed": true,
+      "harness": "Fresh temporary copy of the current project, with only main-app Watch embedding/dependency omitted. Current source/resource references and other settings preserved.",
+      "signatures_and_capabilities_verified": true,
+      "inspection": "device-build-inspection.json",
+      "installed_in_place": true,
+      "installation_outcome": "devicectl confirmed success over paired connection.",
+      "automatic_foreground_launch": "Not established: subsequent CoreDevice process launch failed to allocate an RSD device. Open Rilova manually.",
+      "data_operations": "No uninstall, reset, seed or automated tests against the owner phone."
+    },
+    "owner_simulator": {
+      "updated_in_place": true,
+      "data_operations": "Install only; no uninstall, reset, seed or automated tests against the owner simulator."
+    }
+  },
+  "integrity": {
+    "project_membership_resources_and_asset_json_pass": true,
+    "record": "project-integrity.json",
+    "diff_whitespace_check_pass": true
+  },
+  "remaining_manual_gates": [
+    "Hands-on physical VoiceOver/focus order, haptics, OLED/Always-On, sustained animation and device performance review.",
+    "Older supported iOS/device layouts and accessibility-setting combinations require hands-on release review beyond the executed simulator flows.",
+    "Existing signed Health, notification, Siri, Screen Time, StoreKit, Watch and optional private iCloud authorization/lifecycle checks.",
+    "Existing distribution entitlements, production configuration and TestFlight/App Store review gates are separate from a successful development build.",
+    "Existing users retain completed onboarding; the new sequence is not forced on update. Review it in the gallery or a deliberately separate fresh QA store."
+  ]
+}

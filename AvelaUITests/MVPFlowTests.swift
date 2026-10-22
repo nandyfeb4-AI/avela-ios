@@ -480,6 +480,13 @@ final class MVPFlowTests: XCTestCase {
         waitAndTap(app.buttons["intentionSession.start"])
         XCTAssertTrue(app.buttons["intentionSession.start"].label.contains("Session Started"))
         XCTAssertFalse(app.buttons["intentionSession.start"].isEnabled)
+        let countdown = app.descendants(matching: .any)["intentionSession.countdown"].firstMatch
+        for _ in 0..<6 where !countdown.exists || !countdown.isHittable { app.swipeDown() }
+        XCTAssertTrue(countdown.waitForExistence(timeout: 10),
+                      "The selected active session should expose its actual target countdown")
+        XCTAssertTrue(countdown.isHittable)
+        let clockCapture = XCTAttachment(screenshot: app.screenshot())
+        clockCapture.name = "Expressive active focus countdown"; clockCapture.lifetime = .keepAlways; add(clockCapture)
         let message = app.staticTexts["intentionSession.activityMessage"]
         for _ in 0..<5 where !message.isHittable { app.swipeUp() }
         XCTAssertTrue(message.waitForExistence(timeout: 10))

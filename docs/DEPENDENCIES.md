@@ -11,6 +11,7 @@ This app can be built almost entirely with Apple frameworks.
 No external package installation required for:
 
 - SwiftUI
+- Charts (native read-only report plots)
 - SwiftData
 - Foundation
 - Speech (optional on-device reflection dictation)
@@ -110,3 +111,18 @@ EventKit and EventKitUI are Apple-native runtime frameworks for optional event c
 ## Optional app protection — 2026-10-07
 
 FamilyControls, ManagedSettings and DeviceActivity are now used by the owner-approved development integration. Native frameworks only; no package/backend. The app and Device Activity Monitor extension need Family Controls and shared-group provisioning. Automatic Screen Time metering remains unimplemented. See SCREEN_TIME_INTEGRATION_PLAN.md for permission/privacy boundaries and release gates.
+
+## Expressive World artwork and motion — 2026-10-21
+
+The illustrated coast and focus sanctuary are bundled local image assets,
+generated during development with the built-in image tool. Prompts, asset paths
+and the dark-coast reference relationship are recorded in
+[the provenance JSON](../design/brand/rilova/world/provenance.json). No competitor
+assets or new character-art runtime are introduced.
+
+Reports use Apple's Charts framework; transitions and short triggered keyframes
+use SwiftUI, with Reduce Motion alternatives. These require no package manager
+or third-party animation runtime. This pass adds no package, backend, runtime AI,
+remote art service, analytics SDK, permission or entitlement. The existing native
+framework and integration requirements above remain unchanged. Build, native UI
+and hardware results are recorded separately; this dependency note claims none.

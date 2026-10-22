@@ -1,5 +1,47 @@
 # Development Setup
 
+## Expressive World candidate — October 21, 2026
+
+Open the [current native gallery](verification/expressive-world/index.html) for
+the implemented day/night coast, focus sanctuary, themed habit cards, calendars,
+reports and six-stage onboarding. A self-contained local copy is delivered as
+**Desktop/Rilova Expressive World Preview**. Existing users keep their completed
+onboarding; reviewing the gallery never resets their tracking or setup state.
+
+This pass uses the same isolated QA simulator and redirected DEBUG stores as
+the preceding Luminous Tide record. Discover an available QA destination using
+`xcrun simctl list devices available`; never erase or seed an owner's device.
+With `RILOVA_QA_DEVICE_ID` set to that separate simulator, a reproducible full
+domain-suite plus refreshed-journey run is:
+
+```bash
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild \
+  -project Avela.xcodeproj -scheme Avela \
+  -destination "platform=iOS Simulator,id=${RILOVA_QA_DEVICE_ID}" \
+  -derivedDataPath /tmp/RilovaWorldReview \
+  -resultBundlePath /tmp/RilovaWorldReview.xcresult \
+  CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- \
+  -parallel-testing-enabled NO \
+  -only-testing:AvelaTests \
+  -only-testing:AvelaUITests/PremiumRefreshUITests test
+```
+
+Use a fresh result-bundle path for another run. Exact executed cases, result
+bundles and counts are recorded in
+[test-results.json](verification/expressive-world/test-results.json); the current
+pass is 628 unit tests plus 29 distinct affected UI cases across focused runs,
+not a new unfiltered 121-case sweep. Actual dark captures use
+`xcrun simctl ui "$RILOVA_QA_DEVICE_ID" appearance dark`, then restore `light`.
+The launch argument for interface style remains ineffective on this toolchain.
+
+Local logs/results use `/tmp/rilova-world-`. Release uses the complete repository
+scheme; the temporary signed phone harness omits only main-app Watch embedding
+and its dependency for a phone without a registered Watch. It preserves current
+source/resource references, identifiers, capabilities and other build settings.
+Consult [verification.json](verification/expressive-world/verification.json) for
+the actual build/install outcome; a signed build alone never proves installation
+or real integration authorization. Do not uninstall or reset a progress store.
+
 ## Habit ideas verification — 2026-10-05
 
 New Habit → Browse Habit Ideas opens the optional local catalog. Today and

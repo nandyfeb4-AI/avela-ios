@@ -8,28 +8,32 @@ struct HistoryView: View {
     @Bindable var viewModel: HistoryViewModel
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.appPalette) private var palette
+    @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack(alignment: .center, spacing: 14) {
+            HStack(alignment: .center, spacing: 16) {
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Your story, recorded.")
-                        .font(.system(.title3, design: .rounded, weight: .bold))
+                        .font(.system(.title2, design: .rounded, weight: .bold))
+                        .foregroundStyle(Color.appInk)
                         .fixedSize(horizontal: false, vertical: true)
                     Text(viewModel.rangeLabel).font(.subheadline)
-                        .foregroundStyle(.white.opacity(0.85))
+                        .foregroundStyle(Color.appInkSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
                         .accessibilityIdentifier("history.rangeLabel")
-                }
-                Spacer(minLength: 0)
-                if !dynamicTypeSize.isAccessibilitySize {
-                    Image(systemName: "clock.arrow.circlepath").font(.title2.weight(.light))
-                        .foregroundStyle(palette.luminousHighlight).accessibilityHidden(true)
+                }.frame(maxWidth: .infinity, alignment: .leading)
+                if !dynamicTypeSize.isAccessibilitySize && contrast != .increased && !reduceTransparency {
+                    RilovaWorldArtwork(scene: .coast)
+                        .frame(width: 76, height: 52).clipped()
+                        .clipShape(UnevenRoundedRectangle(topLeadingRadius: 23, bottomLeadingRadius: 8,
+                            bottomTrailingRadius: 23, topTrailingRadius: 8))
+                        .accessibilityHidden(true).allowsHitTesting(false)
                 }
             }
-            .foregroundStyle(.white).padding(18)
+            .padding(.vertical, 14)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background { RilovaAurora() }
-            .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
             .padding(.horizontal, 20).padding(.top, 12).padding(.bottom, 4)
 
             if viewModel.sections.isEmpty {

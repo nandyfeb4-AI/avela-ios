@@ -17,6 +17,8 @@ struct HabitDetailView: View {
     @Environment(\.healthHabitService) private var healthService
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
 
     var body: some View {
         Group {
@@ -64,8 +66,7 @@ struct HabitDetailView: View {
                         } label: {
                             toolLabel("Calendar History", symbol: "calendar", subtitle: "Your recorded days, together")
                         }.accessibilityIdentifier("habitDetail.calendarLink")
-                        detailRow("Current", value: display.currentStreakLabel, identifier: "habitDetail.currentStreak")
-                        detailRow("Best", value: display.bestStreakLabel, identifier: "habitDetail.bestStreak")
+                        rhythmFacts(display)
                         VStack(alignment: .leading, spacing: 4) {
                             Text(display.consistencyRangeLabel).font(.caption).foregroundStyle(Color.appInkSecondary)
                             Text(display.consistencyLabel).font(.subheadline.weight(.semibold))
@@ -247,60 +248,109 @@ struct HabitDetailView: View {
     }
 
     private func habitHero(_ display: HabitDetailDisplay) -> some View {
-        VStack(alignment: .leading, spacing: 20) {
-            let layout = dynamicTypeSize.isAccessibilitySize
-                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 16))
-                : AnyLayout(HStackLayout(alignment: .top, spacing: 16))
-            layout {
+        let identity = AppPalette(theme: HabitIconBadge.identityTheme(for: display.iconName))
+        return VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .center, spacing: 13) {
                 Image(systemName: display.iconName)
-                    .font(.system(size: 32, weight: .medium))
-                    .foregroundStyle(display.isArchived ? Color.gray : (palette.luminousColors.last ?? palette.heroEnd))
-                    .frame(width: 64, height: 64)
-                    .background(palette.luminousHighlight, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+                    .font(.system(size: 27, weight: .medium))
+                    .foregroundStyle(display.isArchived ? Color.appInkSecondary : identity.accent)
+                    .frame(width: 56, height: 56)
+                    .background(identity.accent.opacity(0.10), in: RoundedRectangle(cornerRadius: 19, style: .continuous))
                     .accessibilityHidden(true)
-                VStack(alignment: .leading, spacing: 7) {
-                    Text(display.name).font(.system(.title, design: .rounded, weight: .bold))
-                        .fixedSize(horizontal: false, vertical: true)
-                        .accessibilityIdentifier("habitDetail.name")
-                    Text("\(display.categoryLabel) · \(display.polarityLabel)")
-                        .font(.subheadline).foregroundStyle(.white.opacity(0.85))
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(display.categoryLabel.uppercased())
+                        .font(.caption2.weight(.bold)).tracking(1.6)
+                    Text(display.polarityLabel)
+                        .font(.subheadline).foregroundStyle(Color.appInkSecondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
-                if !dynamicTypeSize.isAccessibilitySize { Spacer(minLength: 0) }
+                Spacer(minLength: 0)
+                if !dynamicTypeSize.isAccessibilitySize && contrast != .increased && !reduceTransparency {
+                    RilovaWorldArtwork(scene: .coast)
+                        .frame(width: 88, height: 58).clipped()
+                        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                        .accessibilityHidden(true).allowsHitTesting(false)
+                }
             }
-            VStack(alignment: .leading, spacing: 6) {
+            Text(display.name)
+                .font(.system(.largeTitle, design: .rounded, weight: .bold))
+                .foregroundStyle(Color.appInk)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("habitDetail.name")
+            let statusLayout = dynamicTypeSize.isAccessibilitySize
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 5))
+                : AnyLayout(HStackLayout(alignment: .firstTextBaseline, spacing: 10))
+            statusLayout {
                 Text(display.isArchived ? "ARCHIVED" : display.weeklyProgress == nil ? "TODAY" : "THIS WEEK")
-                    .font(.caption2.weight(.bold)).tracking(2).foregroundStyle(.white.opacity(0.85))
+                    .font(.caption2.weight(.bold)).tracking(1.4)
+                    .foregroundStyle(Color.appInkSecondary)
                 if let progress = display.weeklyProgress {
                     Text("\(progress.completed)/\(progress.target)")
-                        .font(.system(.title2, design: .rounded, weight: .bold)).monospacedDigit()
+                        .font(.system(.title3, design: .rounded, weight: .bold)).monospacedDigit()
+                        .foregroundStyle(palette.accent)
                         .accessibilityIdentifier("habitDetail.progress")
                 } else {
                     Label(display.todayStatusLabel, systemImage: display.isCompletedToday ? "checkmark.circle.fill" : "circle")
-                        .font(.headline).fixedSize(horizontal: false, vertical: true)
+                        .font(.subheadline.weight(.semibold)).foregroundStyle(Color.appInk)
+                        .fixedSize(horizontal: false, vertical: true)
                         .accessibilityIdentifier("habitDetail.progress")
                 }
             }
         }
-        .foregroundStyle(.white).padding(24)
+        .foregroundStyle(Color.appInk).padding(22)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background { RilovaAurora() }
-        .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+        .background {
+            ZStack(alignment: .leading) {
+                palette.surface
+                if contrast != .increased && !reduceTransparency {
+                    LinearGradient(colors: [identity.accent.opacity(0.09), .clear], startPoint: .topLeading, endPoint: .bottomTrailing)
+                }
+                RoundedRectangle(cornerRadius: 3)
+                    .fill(display.isArchived ? Color.appInkSecondary : identity.accent)
+                    .frame(width: 4).padding(.vertical, 26)
+            }
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 28).strokeBorder(identity.accent.opacity(contrast == .increased ? 0.5 : 0.14), lineWidth: 1))
     }
 
     private func actionTile(_ title: String, detail: String, symbol: String, prominent: Bool) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Image(systemName: symbol).font(.title2.weight(.medium)).accessibilityHidden(true)
-            Text(title).font(.headline).fontDesign(.rounded)
-            Text(detail).font(.caption).fixedSize(horizontal: false, vertical: true)
+        HStack(alignment: .center, spacing: 10) {
+            Image(systemName: symbol).font(.title3.weight(.semibold))
+                .frame(width: 28).accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title).font(.subheadline.weight(.bold)).fontDesign(.rounded)
+                    .fixedSize(horizontal: false, vertical: true)
+                Text(detail).font(.caption).fixedSize(horizontal: false, vertical: true)
+            }
         }
         .foregroundStyle(prominent ? palette.prominentInk : Color.appInk)
-        .frame(maxWidth: .infinity, minHeight: 110, alignment: .topLeading)
-        .padding(18)
+        .frame(maxWidth: .infinity, minHeight: 50, alignment: .leading)
+        .padding(14)
         .background(prominent ? palette.prominentFill : palette.surface,
-                    in: RoundedRectangle(cornerRadius: 24, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 24).strokeBorder(palette.accent.opacity(0.15), lineWidth: 1))
-        .contentShape(RoundedRectangle(cornerRadius: 24))
+                    in: RoundedRectangle(cornerRadius: 21, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 21).strokeBorder(palette.accent.opacity(0.15), lineWidth: 1))
+        .contentShape(RoundedRectangle(cornerRadius: 21))
+    }
+
+    private func rhythmFacts(_ display: HabitDetailDisplay) -> some View {
+        let layout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 14))
+            : AnyLayout(HStackLayout(alignment: .top, spacing: 20))
+        return layout {
+            VStack(alignment: .leading, spacing: 5) {
+                Text("Current streak").font(.caption).foregroundStyle(Color.appInkSecondary)
+                Text(display.currentStreakLabel).font(.subheadline.weight(.semibold))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("habitDetail.currentStreak")
+            }.frame(maxWidth: .infinity, alignment: .leading)
+            VStack(alignment: .leading, spacing: 5) {
+                Text("Personal best").font(.caption).foregroundStyle(Color.appInkSecondary)
+                Text(display.bestStreakLabel).font(.subheadline.weight(.semibold))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("habitDetail.bestStreak")
+            }.frame(maxWidth: .infinity, alignment: .leading)
+        }.padding(.vertical, 6)
     }
 
     private func toolLabel(_ title: String, symbol: String, subtitle: String? = nil) -> some View {

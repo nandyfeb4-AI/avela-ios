@@ -297,6 +297,33 @@ final class AppThemeTests: XCTestCase {
         }
     }
 
+    func testExpressiveAtmosphereAndHabitReadingSurfacesKeepTextContrast() {
+        for theme in AppTheme.allCases {
+            let palette = AppPalette(theme: theme)
+            for style: UIUserInterfaceStyle in [.light, .dark] {
+                let traits = UITraitCollection(userInterfaceStyle: style)
+                let atmosphere = UIColor(palette.atmosphere).resolvedColor(with: traits)
+                XCTAssertGreaterThanOrEqual(contrast(atmosphere, UIColor(palette.accent).resolvedColor(with: traits)), 4.5,
+                    "\(theme.title) navigation text on its stronger atmosphere")
+                let base = UIColor(palette.surface).resolvedColor(with: traits)
+                var br: CGFloat = 0, bg: CGFloat = 0, bb: CGFloat = 0, ba: CGFloat = 0
+                base.getRed(&br, green: &bg, blue: &bb, alpha: &ba)
+                for symbol in ["book.fill", "figure.walk", "leaf.fill", "heart.fill", "drop.fill"] {
+                    let identity = AppPalette(theme: HabitIconBadge.identityTheme(for: symbol))
+                    let accent = UIColor(identity.accent).resolvedColor(with: traits)
+                    var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+                    accent.getRed(&r, green: &g, blue: &b, alpha: &a)
+                    let tinted = UIColor(red: br * 0.945 + r * 0.055, green: bg * 0.945 + g * 0.055,
+                                         blue: bb * 0.945 + b * 0.055, alpha: 1)
+                    for ink in [Color.appInk, Color.appInkSecondary] {
+                        XCTAssertGreaterThanOrEqual(contrast(tinted, UIColor(ink).resolvedColor(with: traits)), 4.5,
+                            "\(symbol) readable row in \(style)")
+                    }
+                }
+            }
+        }
+    }
+
     private func temporaryDirectory() throws -> URL {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)

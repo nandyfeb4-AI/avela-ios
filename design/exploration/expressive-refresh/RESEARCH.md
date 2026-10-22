@@ -135,3 +135,30 @@ sips -s format png design/exploration/expressive-refresh/concept-board.svg --out
 The static board cannot demonstrate the proposed motion, native touch feedback,
 Dynamic Type behaviour or physical-device performance. Those belong in the
 connected prototype and native implementation checks described above.
+
+## Approved expressive implementation follow-through — October 21, 2026
+
+This appendix maps the owner's subsequent approval to the implementation now
+present in source. The research and concept board above remain a dated proposal;
+this mapping is neither a new competitor survey nor a usability result.
+
+| Previous official evidence | Implemented Rilova interpretation | Evidence boundary |
+| --- | --- | --- |
+| **Observed:** Finch's illustrated environments and Fabulous's coordinated illustrated promotional panels; **published:** Forest's focus/growth experience. [Finch](https://apps.apple.com/us/app/finch-self-care-pet/id1528595748), [Fabulous](https://apps.apple.com/us/app/fabulous-daily-habit-tracker/id1203637303), [Forest](https://www.forestapp.cc/). | Original sculptural coast artwork in light/dark and a separate focus sanctuary connect onboarding, Today, detail/calendar and Make Room. Existing optional companions sit within that environment. | The connected coastal world is our design judgment. Artwork is decoration, never progress evidence, a care obligation or a claim that focus was verified. No competitor image or character is bundled. |
+| **Observed:** Streaks' coordinated gradient/progress composition and Structured's immediately visible week strip. [Streaks press material](https://streaks.app/press/), [Structured](https://structured.app/). | A scenic Today composition keeps explicit logging controls and a week strip nearby; calendar dates lead, with sculpted ribbons joining recorded successful daily commitments. | Separate weekly commitments remain weekly. Browsing or selecting a date does not create success or change Today's logging context. No first-tap, accessibility or performance advantage is established by this comparison. |
+| **Observed/published:** HabitKit's luminous activity grids, Habitify's period/weekday reports and Strides' explicit chart units. [HabitKit](https://habitkit.app/press), [Habitify reports](https://intercom.help/habitify-app/en/articles/14717723-progress-screen-the-good-habits-report-mobile-app), [Strides](https://www.stridesapp.com/). | Insights varies its composition: a coastal weekly introduction, selectable tidal bars, horizontal captured-quantity bars, weekday tracks, manual session-outcome stacks and a luminous annual activity atlas with month detail. Large-text layouts retain readable values instead of crowded plots. | Twelve separate weekly snapshots retain their own eligible cohorts; no continuous line implies comparability. The canonical comparable-cohort trend is unchanged. Quantities retain captured units; session outcomes remain self-reported; missing records are unknown. The atlas describes activity, not adherence. |
+| **Published:** Forest presents a focus-centred visual environment; Apple's design material supports distinctive content with familiar navigation. [Forest](https://www.forestapp.cc/), [Apple brand identity guidance](https://developer.apple.com/videos/play/wwdc2026/251/). | Make Room uses the sanctuary artwork, a prominent target/countdown and the saved optional companion, while retaining native goal selection, Start, restriction consent and separate habit logging. | A countdown measures its saved timer interval. It does not verify concentration, promise that the phone was unused, establish screen time saved or complete the linked habit. |
+| **Published guidance:** Apple's motion guidance and brand discussion describe purposeful transitions and expressive system typography. [Motion](https://developer.apple.com/design/human-interface-guidelines/motion), [brand guidance](https://developer.apple.com/videos/play/wwdc2026/251/). | Native entry, selection, press and bounded chart/calendar transitions support the illustrated compositions. Reduce Motion, Reduce Transparency, Increase Contrast and readable large-text alternatives remain explicit presentation choices. | The selected timings and artwork treatments are our inference/design choices. Source animation declarations do not establish observed runtime smoothness, hardware performance or user preference. |
+
+The original bundled environment assets, generation prompts and the dark-coast
+reference relationship are recorded in [the artwork provenance JSON](../../brand/rilova/world/provenance.json).
+They were generated during development using the built-in image tool; the app
+uses local image assets and introduces no runtime image generation, LLM,
+third-party art service or network request. Native text, controls and recorded
+values remain separate from the images.
+
+The implementation preserves existing repositories, historical rules, explicit
+sharing consent and the distinction between logging, starting a session and
+reporting an outcome. This appendix makes no new test-result, retention,
+adherence, market-exclusivity or design-award claim. Native captures, regression
+results and physical-device checks belong in the pass's verification record.

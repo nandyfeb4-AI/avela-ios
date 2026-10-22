@@ -48,6 +48,10 @@ final class PremiumRefreshUITests: XCTestCase {
     }
 
     private func capture(_ name: String) {
+        // SwiftUI's bounded 400–450 ms value/entry transitions can outlast
+        // XCTest's idle acknowledgement. Export a settled native frame;
+        // animation itself is shown separately in the recorded walkthrough.
+        Thread.sleep(forTimeInterval: 0.65)
         let attachment = XCTAttachment(screenshot: app.screenshot())
         attachment.name = name; attachment.lifetime = .keepAlways
         add(attachment)
@@ -60,9 +64,9 @@ final class PremiumRefreshUITests: XCTestCase {
         // always receive touch events. This is a vertical scroll; the chart's
         // selection changes only horizontally. Recorded facts are unchanged.
         for _ in 0..<8 {
-            let top = app.navigationBars.firstMatch.frame.maxY + 24
+            let top = app.navigationBars.firstMatch.frame.maxY + 44
             let delta = heading.frame.minY - top
-            if abs(delta) < 40 { break }
+            if abs(delta) < 14 { break }
             let shift = min(abs(delta) / app.frame.height, 0.25) * (delta > 0 ? -1.0 : 1.0)
             app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.58))
                 .press(forDuration: 0.05, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.58 + shift)))
@@ -77,6 +81,34 @@ final class PremiumRefreshUITests: XCTestCase {
         reveal(picker, direction: direction)
         if largestText { tap(app.buttons["insights.reportLens"]) }
         tap(app.buttons[name])
+    }
+
+    func testIllustratedSetupKeepsContinueAndSkipSeparate() {
+        verifySetupActionGeometry(largestText: false)
+    }
+
+    func testIllustratedSetupKeepsContinueAndSkipSeparateAtLargestText() {
+        verifySetupActionGeometry(largestText: true)
+    }
+
+    private func verifySetupActionGeometry(largestText: Bool) {
+        let app = launch(onboarding: true, largestText: largestText)
+        XCTAssertTrue(app.staticTexts["onboarding.title"].waitForExistence(timeout: 10))
+        tap(app.buttons["onboarding.continue"])
+        for step in 0..<4 {
+            let primary = app.buttons["onboarding.continue"]
+            let skip = app.buttons["onboarding.skip"]
+            XCTAssertTrue(skip.waitForExistence(timeout: 5))
+            XCTAssertTrue(primary.isHittable && skip.isHittable)
+            XCTAssertGreaterThanOrEqual(skip.frame.minY, primary.frame.maxY + 4,
+                                      "The two setup actions must never overlap, including during step changes")
+            XCTAssertGreaterThanOrEqual(skip.frame.height.rounded(), 44)
+            if step == 0 { capture(largestText ? "Expressive setup actions at largest text" : "Expressive setup actions with separate Skip") }
+            tap(skip)
+        }
+        tap(app.buttons["onboarding.continue"])
+        XCTAssertTrue(app.staticTexts["today.emptyState.title"].waitForExistence(timeout: 10),
+                      "Skipping optional setup cannot create tracking records")
     }
 
     func testReportLensesAndSharePreviewPreserveRecordedFacts() {

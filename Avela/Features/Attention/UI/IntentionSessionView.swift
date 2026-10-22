@@ -6,6 +6,11 @@ struct IntentionSessionView: View {
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.appPalette) private var palette
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.rilovaCompanionProfile) private var companionProfile
+    @ScaledMetric(relativeTo: .largeTitle) private var stageFontSize = 48.0
     @Environment(\.sessionLiveActivityService) private var liveActivityService
     @Environment(\.habitActivityRepository) private var activityRepository
     @Environment(\.attentionGoalCreationAllowed) private var creationAllowed
@@ -20,6 +25,7 @@ struct IntentionSessionView: View {
     @State private var acknowledgedStartID: UUID?
     @State private var newGoalMinutes: Double = 30
     @State private var newGoalType: AttentionGoalType = .focusSession
+    @State private var stageArrived = false
 
     init(viewModel: IntentionSessionViewModel) { _viewModel = State(initialValue: viewModel) }
 
@@ -226,35 +232,109 @@ struct IntentionSessionView: View {
     private var composerHero: some View {
         let type = viewModel.goals.isEmpty ? newGoalType : viewModel.selectedSessionType
         let minutes = viewModel.selectedTargetMinutes ?? newGoalMinutes
-        return VStack(alignment: .leading, spacing: 20) {
-            Text(type == .phoneFreeSession ? "PHONE-FREE INTENTION" : "TIME TO FOCUS")
-                .font(.caption2.weight(.bold)).tracking(2).foregroundStyle(.white.opacity(0.85))
-            let layout = dynamicTypeSize.isAccessibilitySize
-                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12))
-                : AnyLayout(HStackLayout(alignment: .center, spacing: 20))
-            layout {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(minutes.formatted()).font(.system(.largeTitle, design: .rounded, weight: .bold))
-                        .monospacedDigit()
-                    Text(viewModel.goals.isEmpty ? "minutes · suggested start" : "minute target").font(.subheadline).foregroundStyle(.white.opacity(0.85))
+        return VStack(alignment: .leading, spacing: 0) {
+            if usesReadableStage {
+                focusEnvironment.frame(height: 76).clipped().accessibilityHidden(true)
+            } else {
+                ZStack(alignment: .leading) {
+                    focusEnvironment
+                    HStack(alignment: .bottom, spacing: 12) {
+                        ZStack {
+                            Circle().fill(Color(red: 0.05, green: 0.17, blue: 0.23))
+                            Circle().strokeBorder(Color(red: 0.88, green: 0.79, blue: 0.57), lineWidth: 2).padding(8)
+                            Circle().strokeBorder(.white.opacity(0.16), lineWidth: 1).padding(15)
+                            VStack(spacing: 6) {
+                                clockValue(minutes: minutes)
+                                Text(activeSession == nil ? "minutes" : "remaining")
+                                    .font(.caption.weight(.medium))
+                                    .foregroundStyle(palette.luminousHighlight)
+                            }.padding(22)
+                        }
+                        .frame(width: 172, height: 172)
+                        .accessibilityElement(children: .combine)
+                        .accessibilityIdentifier(activeSession == nil ? "intentionSession.targetClock" : "intentionSession.countdown")
+                        .scaleEffect(stageArrived || reduceMotion ? 1 : 0.94)
+                        Spacer(minLength: 0)
+                        if let profile = companionProfile, profile.companionEnabled {
+                            ZStack {
+                                Ellipse().fill(Color(red: 0.85, green: 0.76, blue: 0.56))
+                                    .frame(width: 110, height: 18).offset(y: 44)
+                                CompanionArtwork(animal: profile.selectedAnimal.rawValue, state: "calm", size: 112, highResolution: true)
+                                    .offset(y: -4)
+                            }
+                            .offset(y: stageArrived || reduceMotion ? 0 : 10)
+                            .accessibilityHidden(true)
+                        }
+                    }.padding(22)
                 }
-                if !dynamicTypeSize.isAccessibilitySize { Spacer(minLength: 0) }
-                ZStack {
-                    Circle().strokeBorder(.white.opacity(0.20), lineWidth: 1)
-                    Circle().strokeBorder(palette.luminousHighlight.opacity(0.5), lineWidth: 3).padding(8)
-                    Image(systemName: type == .phoneFreeSession ? "moon" : "sparkle")
-                        .font(.system(size: 28, weight: .light)).foregroundStyle(palette.luminousHighlight)
-                }.frame(width: 78, height: 78).accessibilityHidden(true)
+                .frame(height: 216).clipped()
             }
-            VStack(alignment: .leading, spacing: 6) {
-                Text("Make room for").font(.subheadline).foregroundStyle(.white.opacity(0.85))
-                Text(viewModel.habitName).font(.system(.title2, design: .rounded, weight: .bold))
+            VStack(alignment: .leading, spacing: 10) {
+                Label(type == .phoneFreeSession ? "Phone-free intention" : "Focus session",
+                      systemImage: type == .phoneFreeSession ? "moon.stars" : "sparkle")
+                    .font(.caption.weight(.semibold)).foregroundStyle(palette.accent)
+                Text(viewModel.habitName.isEmpty ? "Make a little space" : viewModel.habitName)
+                    .font(.system(.title2, design: .rounded, weight: .bold))
+                    .foregroundStyle(Color.appInk).fixedSize(horizontal: false, vertical: true)
+                if usesReadableStage {
+                    clockValue(minutes: minutes).foregroundStyle(Color.appInk)
+                }
+                Text(activeSession == nil
+                     ? (viewModel.goals.isEmpty ? "\(minutes.formatted()) minutes · suggested start" : "\(minutes.formatted()) minute target")
+                     : "Target timer · your habit still needs its own check-in")
+                    .font(.subheadline).foregroundStyle(Color.appInkSecondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
+            .padding(22).frame(maxWidth: .infinity, alignment: .leading)
+            .background(palette.surfaceSecondary)
         }
-        .foregroundStyle(.white).padding(24).frame(maxWidth: .infinity, alignment: .leading)
-        .background { RilovaAurora() }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+        .onAppear {
+            guard !stageArrived else { return }
+            withAnimation(reduceMotion ? nil : .easeOut(duration: 0.45)) { stageArrived = true }
+        }
+    }
+
+    private var focusEnvironment: some View {
+        GeometryReader { geometry in
+            if reduceTransparency || contrast == .increased {
+                palette.heroEnd
+            } else {
+                RilovaWorldArtwork(scene: .sanctuary)
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .clipped()
+            }
+        }
+        .accessibilityHidden(true).allowsHitTesting(false)
+    }
+
+    private var activeSession: AttentionSession? {
+        viewModel.history.first {
+            $0.session.isActive && $0.session.attentionGoalID == viewModel.selectedGoalID
+        }?.session
+    }
+
+    // Large display numerals and live countdowns need their natural width well
+    // before accessibility sizes; the fixed decorative dial is only for the
+    // smaller text settings.
+    private var usesReadableStage: Bool { dynamicTypeSize >= .xxLarge }
+
+    @ViewBuilder private func clockValue(minutes: Double) -> some View {
+        if let session = activeSession {
+            let end = session.startedAt.addingTimeInterval(session.targetMinutes * 60)
+            Text(timerInterval: session.startedAt...end,
+                 pauseTime: scenePhase == .active ? nil : Date(), countsDown: true, showsHours: false)
+                .font(.system(.title, design: .rounded, weight: .bold)).monospacedDigit()
+                .fixedSize(horizontal: false, vertical: true)
+                .foregroundStyle(usesReadableStage ? Color.appInk : .white)
+                .accessibilityIdentifier(usesReadableStage ? "intentionSession.countdown" : "intentionSession.clockDigits")
+        } else {
+            Text(minutes.formatted())
+                .font(.system(size: stageFontSize, weight: .bold, design: .rounded)).monospacedDigit()
+                .fixedSize(horizontal: false, vertical: true)
+                .foregroundStyle(usesReadableStage ? Color.appInk : .white)
+        }
     }
 
     private var durationStarters: some View {
