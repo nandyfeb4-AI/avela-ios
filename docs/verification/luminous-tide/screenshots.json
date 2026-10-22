@@ -1,0 +1,266 @@
+[
+  {
+    "file": "today-light.png",
+    "title": "Today \u00b7 calendar and direct logging",
+    "mode": "light",
+    "source": "Luminous Today with home week calendar_0_8938B15E-9AD2-4961-B7FF-994B6F42831B.png"
+  },
+  {
+    "file": "calendar-light.png",
+    "title": "Home \u00b7 month history",
+    "mode": "light",
+    "source": "Luminous Home month calendar_0_404C0DB6-C42F-4C6D-AA6B-3A4AB30DDD82.png"
+  },
+  {
+    "file": "habit-calendar-light.png",
+    "title": "Habit \u00b7 recorded calendar ribbon",
+    "mode": "light",
+    "source": "Luminous Tide habit calendar with recorded rhythm_0_DD3283BE-C779-4058-83BC-D87C91283C1D.png"
+  },
+  {
+    "file": "calendar-indigo-light.png",
+    "title": "Indigo theme \u00b7 calendar",
+    "mode": "light",
+    "source": "Luminous habit calendar with recorded rhythm_0_CE5F6938-2720-42E2-BB7C-F4B08A5A7EE2.png"
+  },
+  {
+    "file": "detail-light.png",
+    "title": "Habit \u00b7 action and history",
+    "mode": "light",
+    "source": "Luminous habit detail with primary actions_0_6057BAFE-9AF0-4019-875C-74FDDC695046.png"
+  },
+  {
+    "file": "make-room-light.png",
+    "title": "Make Room \u00b7 reviewed session",
+    "mode": "light",
+    "source": "Luminous Make Room reviewed 25 minute goal_0_127A85B7-6198-472C-9078-0CAE9F48756D.png"
+  },
+  {
+    "file": "ideas-light.png",
+    "title": "Habit ideas \u00b7 editable catalog",
+    "mode": "light",
+    "source": "Luminous editable habit idea library_0_90481B51-5EB9-457D-9BE6-198C69D0A6F3.png"
+  },
+  {
+    "file": "create-light.png",
+    "title": "Creation \u00b7 quantity targets",
+    "mode": "light",
+    "source": "Luminous amount habit creation preview_0_ED73ADEA-9534-4FEF-AEF8-DB28298BBFD1.png"
+  },
+  {
+    "file": "quick-amount-light.png",
+    "title": "Today \u00b7 quantity shortcut and Undo",
+    "mode": "light",
+    "source": "Luminous Today quantity chip after exact entry Undo_0_B4E07B6E-0915-4AF1-888C-D76672778405.png"
+  },
+  {
+    "file": "insights-light.png",
+    "title": "Insights \u00b7 completed week",
+    "mode": "light",
+    "source": "Luminous Insights weekly review_0_7D327690-9754-4841-8D54-4254AC0B072C.png"
+  },
+  {
+    "file": "rhythm-light.png",
+    "title": "Insights \u00b7 twelve completed weeks",
+    "mode": "light",
+    "source": "Luminous twelve week recorded rhythm_0_4D1ACDF4-3F51-437A-B199-86F63FF8C904.png"
+  },
+  {
+    "file": "quantity-report-light.png",
+    "title": "Insights \u00b7 captured units",
+    "mode": "light",
+    "source": "Luminous captured quantity report_0_2103058C-3D4D-44A3-B0BC-0A299131D754.png"
+  },
+  {
+    "file": "session-report-light.png",
+    "title": "Insights \u00b7 reported sessions",
+    "mode": "light",
+    "source": "Luminous self reported session report_0_637A66D8-126C-4850-9CB8-C17153484A8A.png"
+  },
+  {
+    "file": "activity-map-light.png",
+    "title": "Insights \u00b7 activity map",
+    "mode": "light",
+    "source": "Luminous year and month activity map_0_7E0A86AC-EC4F-4FD3-9FD6-D1B5ABFA46B9.png"
+  },
+  {
+    "file": "share-light.png",
+    "title": "Share \u00b7 deliberate preview",
+    "mode": "light",
+    "source": "Luminous share preview with explicit name consent_0_8F8F4955-8796-4033-87B2-E4CC36B8A9F4.png"
+  },
+  {
+    "file": "onboarding-light.png",
+    "title": "Onboarding \u00b7 welcome",
+    "mode": "light",
+    "source": "Luminous onboarding welcome_0_EA58DED1-4F72-48E9-B62F-2D9D8F6F8244.png"
+  },
+  {
+    "file": "onboarding-habit-light.png",
+    "title": "Onboarding \u00b7 first habit",
+    "mode": "light",
+    "source": "Luminous onboarding habit_0_62254E4E-82DE-4F38-8825-EC7E8C713744.png"
+  },
+  {
+    "file": "onboarding-attention-light.png",
+    "title": "Onboarding \u00b7 Make Room",
+    "mode": "light",
+    "source": "Luminous onboarding attention_0_F5A9AD8B-14E4-4ED6-BBC5-34B57E3781B4.png"
+  },
+  {
+    "file": "onboarding-companion-light.png",
+    "title": "Onboarding \u00b7 companion",
+    "mode": "light",
+    "source": "Luminous onboarding companion_0_BDB04DD3-65B7-401D-BF3A-75E7037BB142.png"
+  },
+  {
+    "file": "onboarding-reminders-light.png",
+    "title": "Onboarding \u00b7 optional reminders",
+    "mode": "light",
+    "source": "Luminous onboarding reminders_0_F9E1057E-7798-4F69-8C93-A0DB66BBD473.png"
+  },
+  {
+    "file": "ready-light.png",
+    "title": "Onboarding \u00b7 ready",
+    "mode": "light",
+    "source": "Luminous onboarding ready_0_77D427C4-7CD4-4AD1-A0ED-5A250C8096D2.png"
+  },
+  {
+    "file": "onboarding-ax-light.png",
+    "title": "Onboarding \u00b7 largest text",
+    "mode": "light",
+    "source": "Luminous onboarding welcome at largest text_0_364BD587-3E6F-4446-996F-1E451F47A7FC.png"
+  },
+  {
+    "file": "ready-ax-light.png",
+    "title": "Onboarding \u00b7 ready at largest text",
+    "mode": "light",
+    "source": "Luminous onboarding ready at largest text_0_BCD6EF79-AA77-4C04-8A0F-08D1FFC8DB54.png"
+  },
+  {
+    "file": "routine-light.png",
+    "title": "Routines \u00b7 review before saving",
+    "mode": "light",
+    "source": "Luminous routine starter editable review_0_A217100E-DF2D-4E34-BE5C-C3E2B912FD57.png"
+  },
+  {
+    "file": "rhythm-ax-light.png",
+    "title": "Insights \u00b7 accessible weekly values",
+    "mode": "light",
+    "source": "Luminous rhythm accessible values_0_6A4B1AB9-6E09-4440-B84D-9E1E047784B7.png"
+  },
+  {
+    "file": "today-dark.png",
+    "title": "Today \u00b7 calendar and direct logging",
+    "mode": "dark",
+    "source": "Luminous Today with home week calendar_0_2529B039-FAB2-4FDF-B9CC-60FB50FF17D7.png"
+  },
+  {
+    "file": "calendar-dark.png",
+    "title": "Home \u00b7 month history",
+    "mode": "dark",
+    "source": "Luminous Home month calendar_0_ECE06CDA-39AC-4316-988D-47DA04724A77.png"
+  },
+  {
+    "file": "detail-dark.png",
+    "title": "Habit \u00b7 action and history",
+    "mode": "dark",
+    "source": "Luminous habit detail with primary actions_0_002ACD58-4CAE-49FB-80A1-E0FCD658700A.png"
+  },
+  {
+    "file": "make-room-dark.png",
+    "title": "Make Room \u00b7 reviewed session",
+    "mode": "dark",
+    "source": "Luminous Make Room reviewed 25 minute goal_0_5B20D94B-31AF-41D9-B02C-070C543B8668.png"
+  },
+  {
+    "file": "ideas-dark.png",
+    "title": "Habit ideas \u00b7 editable catalog",
+    "mode": "dark",
+    "source": "Luminous editable habit idea library_0_514F52F5-1060-4420-BEC8-4F8BD543BBC9.png"
+  },
+  {
+    "file": "create-dark.png",
+    "title": "Creation \u00b7 quantity targets",
+    "mode": "dark",
+    "source": "Luminous amount habit creation preview_0_B3169F67-7A7B-4F7C-B3EF-7693A929209C.png"
+  },
+  {
+    "file": "insights-dark.png",
+    "title": "Insights \u00b7 completed week",
+    "mode": "dark",
+    "source": "Luminous Insights weekly review_0_BEB2C1FA-615E-46A3-A105-2C61BB92BD7F.png"
+  },
+  {
+    "file": "rhythm-dark.png",
+    "title": "Insights \u00b7 twelve completed weeks",
+    "mode": "dark",
+    "source": "Luminous twelve week recorded rhythm_0_D29138A4-9C86-412F-ACBE-0EA4A49C6C54.png"
+  },
+  {
+    "file": "quantity-report-dark.png",
+    "title": "Insights \u00b7 captured units",
+    "mode": "dark",
+    "source": "Luminous captured quantity report_0_B68CC847-B1AC-40F1-A2EA-D04BF978E9D6.png"
+  },
+  {
+    "file": "session-report-dark.png",
+    "title": "Insights \u00b7 reported sessions",
+    "mode": "dark",
+    "source": "Luminous self reported session report_0_65DC21C2-AF2F-416D-9599-8E352E4AADC8.png"
+  },
+  {
+    "file": "activity-map-dark.png",
+    "title": "Insights \u00b7 activity map",
+    "mode": "dark",
+    "source": "Luminous year and month activity map_0_10D08462-665E-40DA-B441-985F7A40194C.png"
+  },
+  {
+    "file": "share-dark.png",
+    "title": "Share \u00b7 deliberate preview",
+    "mode": "dark",
+    "source": "Luminous share preview with explicit name consent_0_84D3A746-2DBB-4E2F-94BA-CD0AA5C38A98.png"
+  },
+  {
+    "file": "onboarding-dark.png",
+    "title": "Onboarding \u00b7 welcome",
+    "mode": "dark",
+    "source": "Luminous onboarding welcome_0_874BC864-8B92-4E31-A035-34EE7D0D0546.png"
+  },
+  {
+    "file": "onboarding-habit-dark.png",
+    "title": "Onboarding \u00b7 first habit",
+    "mode": "dark",
+    "source": "Luminous onboarding habit_0_FF655C93-E424-4818-BBD9-755BC21D245C.png"
+  },
+  {
+    "file": "onboarding-attention-dark.png",
+    "title": "Onboarding \u00b7 Make Room",
+    "mode": "dark",
+    "source": "Luminous onboarding attention_0_212845A4-D9FD-49D9-9533-776B1BFB120F.png"
+  },
+  {
+    "file": "onboarding-companion-dark.png",
+    "title": "Onboarding \u00b7 companion",
+    "mode": "dark",
+    "source": "Luminous onboarding companion_0_5E534F3B-00AD-4DF0-9234-737A1DD63343.png"
+  },
+  {
+    "file": "onboarding-reminders-dark.png",
+    "title": "Onboarding \u00b7 optional reminders",
+    "mode": "dark",
+    "source": "Luminous onboarding reminders_0_4456DC37-EF25-457E-B227-C198134E77DA.png"
+  },
+  {
+    "file": "ready-dark.png",
+    "title": "Onboarding \u00b7 ready",
+    "mode": "dark",
+    "source": "Luminous onboarding ready_0_5BD1F6BA-BB8A-448A-8972-0F5CA2217751.png"
+  },
+  {
+    "file": "rhythm-ax-dark.png",
+    "title": "Insights \u00b7 accessible weekly values",
+    "mode": "dark",
+    "source": "Luminous rhythm accessible values_0_2A34A5A0-0600-4FBD-82EB-6384BFEF2DF9.png"
+  }
+]

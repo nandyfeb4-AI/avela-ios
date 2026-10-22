@@ -256,6 +256,14 @@
 		FEE4EBBDA28E41589BB2E260 /* Avela/Features/HabitActivity/Data/SwiftDataHabitActivityRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F68E6E28034F1B8C481FB7 /* Avela/Features/HabitActivity/Data/SwiftDataHabitActivityRepository.swift */; };
 		FEFAFF22BADF4AF6B336E880 /* Avela/Features/Backup/Data/CloudBackupProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6DC56EAC1784D869B894AC8 /* Avela/Features/Backup/Data/CloudBackupProvider.swift */; };
 		FFBA7FC65DC449E0BD03EAC8 /* Avela/Features/Habit/UI/HabitLifetimeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A700663FCE04CCE960FDFB1 /* Avela/Features/Habit/UI/HabitLifetimeViewModel.swift */; };
+		4794067984EA45B197168EC3 /* HomeCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538F183CE4DC487CB5230273 /* HomeCalendarView.swift */; };
+		255F2EAA17CA4168862C4401 /* InsightsReportCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA23913143D04E4B8543D833 /* InsightsReportCalculator.swift */; };
+		6602B0EB0416416CBCBEBDE7 /* InsightsReportsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50EA6C6E78145BBAC4138D4 /* InsightsReportsView.swift */; };
+		59B8B086CE6641AE95FC8B6A /* HabitStarterCreationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B5B5BE3A2E44E6BBF6918FF /* HabitStarterCreationTests.swift */; };
+		E26E3D589A364538879145D6 /* InsightsReportCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B380A1F44F4B4105BBAFE695 /* InsightsReportCalculatorTests.swift */; };
+		1F62DC8DA0634C5FA69B1B70 /* HomeCalendarModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37066981FF94303B82F0664 /* HomeCalendarModelTests.swift */; };
+		BF824657CEC74ECA9C16F861 /* TodayQuickAmountTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161C989830444DFB881D0179 /* TodayQuickAmountTests.swift */; };
+		363086E657F743AD933FAB21 /* PremiumRefreshUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F1B2F6AB1646A39211F1C1 /* PremiumRefreshUITests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -564,6 +572,14 @@
 		FE5B371DF309504C93075328 /* Avela/Features/LiveActivity/SessionLiveActivityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Avela/Features/LiveActivity/SessionLiveActivityService.swift; sourceTree = SOURCE_ROOT; };
 		FEA9B593C65151AEAEA63047 /* AvelaTests/Companion/OnboardingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvelaTests/Companion/OnboardingTests.swift; sourceTree = SOURCE_ROOT; };
 		FFA5869E0B3051C7B4DF1B00 /* Avela/Features/Notifications/Data/HabitReminderRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Avela/Features/Notifications/Data/HabitReminderRecord.swift; sourceTree = SOURCE_ROOT; };
+		538F183CE4DC487CB5230273 /* HomeCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Habit/UI/HomeCalendarView.swift"; sourceTree = SOURCE_ROOT; };
+		EA23913143D04E4B8543D833 /* InsightsReportCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Insights/Domain/InsightsReportCalculator.swift"; sourceTree = SOURCE_ROOT; };
+		B50EA6C6E78145BBAC4138D4 /* InsightsReportsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Avela/Features/Insights/InsightsReportsView.swift"; sourceTree = SOURCE_ROOT; };
+		4B5B5BE3A2E44E6BBF6918FF /* HabitStarterCreationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvelaTests/Habit/HabitStarterCreationTests.swift"; sourceTree = SOURCE_ROOT; };
+		B380A1F44F4B4105BBAFE695 /* InsightsReportCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvelaTests/Insights/InsightsReportCalculatorTests.swift"; sourceTree = SOURCE_ROOT; };
+		D37066981FF94303B82F0664 /* HomeCalendarModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvelaTests/Habit/HomeCalendarModelTests.swift"; sourceTree = SOURCE_ROOT; };
+		161C989830444DFB881D0179 /* TodayQuickAmountTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvelaTests/Habit/TodayQuickAmountTests.swift"; sourceTree = SOURCE_ROOT; };
+		F9F1B2F6AB1646A39211F1C1 /* PremiumRefreshUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvelaUITests/PremiumRefreshUITests.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1103,6 +1119,7 @@
 		CC5D242D023A9271190EA7C6 = {
 			isa = PBXGroup;
 			children = (
+				C5A3FD873E004422B3C499D6 /* Luminous Tide */,
 				893A5E43188A3ECC97B25242 /* AvelaWatch */,
 				BD26133AE59D48F985623EF5 /* AvelaTests Progress Enrichment */,
 				58B4208705A44B7A9DE167A5 /* Avela Progress Enrichment */,
@@ -1235,6 +1252,16 @@
 			path = Attention;
 			sourceTree = "<group>";
 		};
+		C5A3FD873E004422B3C499D6 /* Luminous Tide */ = {isa = PBXGroup; children = (
+			F9F1B2F6AB1646A39211F1C1 /* PremiumRefreshUITests.swift */,
+			161C989830444DFB881D0179 /* TodayQuickAmountTests.swift */,
+			D37066981FF94303B82F0664 /* HomeCalendarModelTests.swift */,
+			B380A1F44F4B4105BBAFE695 /* InsightsReportCalculatorTests.swift */,
+			4B5B5BE3A2E44E6BBF6918FF /* HabitStarterCreationTests.swift */,
+			B50EA6C6E78145BBAC4138D4 /* InsightsReportsView.swift */,
+			EA23913143D04E4B8543D833 /* InsightsReportCalculator.swift */,
+			538F183CE4DC487CB5230273 /* HomeCalendarView.swift */,
+		); name = "Luminous Tide"; sourceTree = "<group>"; };
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1477,6 +1504,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF824657CEC74ECA9C16F861 /* TodayQuickAmountTests.swift in Sources */,
+				1F62DC8DA0634C5FA69B1B70 /* HomeCalendarModelTests.swift in Sources */,
+				E26E3D589A364538879145D6 /* InsightsReportCalculatorTests.swift in Sources */,
+				59B8B086CE6641AE95FC8B6A /* HabitStarterCreationTests.swift in Sources */,
 				C7CC182E757C4DD884A48273 /* AvelaTests/Reflection/ReflectionDictationTests.swift in Sources */,
 				2E8C9B78417043388A7D863D /* AvelaTests/HabitActivity/SwiftDataHabitActivityTests.swift in Sources */,
 				0D95D9492D224026AFC76286 /* AvelaTests/Routines/RoutineTests.swift in Sources */,
@@ -1546,6 +1577,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6602B0EB0416416CBCBEBDE7 /* InsightsReportsView.swift in Sources */,
+				255F2EAA17CA4168862C4401 /* InsightsReportCalculator.swift in Sources */,
+				4794067984EA45B197168EC3 /* HomeCalendarView.swift in Sources */,
 				8DB85F46441840CF9FBA940C /* Avela/Features/Reflection/Platform/ReflectionDictation.swift in Sources */,
 				3D80B5D068034062AE1143DA /* Avela/Features/HabitActivity/Data/HabitActivityRecords.swift in Sources */,
 				FEE4EBBDA28E41589BB2E260 /* Avela/Features/HabitActivity/Data/SwiftDataHabitActivityRepository.swift in Sources */,
@@ -1738,6 +1772,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				363086E657F743AD933FAB21 /* PremiumRefreshUITests.swift in Sources */,
 				D6DE3804770E5583AACA0A98 /* AvelaUITests/MVPFlowTests.swift in Sources */,
 				DBC1EBA051CE1FF2D1102726 /* AvelaUITests.swift in Sources */,
 			);

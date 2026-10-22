@@ -60,6 +60,29 @@ enum HabitCalendarCalculator {
             for: habit, snapshots: snapshots, completions: completions, skips: skips,
             archivePeriods: archivePeriods, asOf: date, calendar: calendar
         )
+        let days = monthDays(containing: monthDate, habit: habit, snapshots: snapshots,
+            completions: completions, skips: skips, archivePeriods: archivePeriods,
+            periods: periods, asOf: date, calendar: calendar)
+        return Month(
+            start: range.start, days: days,
+            leadingBlankCount: (civil.component(.weekday, from: range.start) - civil.firstWeekday + 7) % 7,
+            weeklyPeriods: periods.filter { $0.unit == .weeks && $0.periodStart < range.end && $0.periodEnd > range.start },
+            streak: HabitProgressCalculator.streak(for: habit, snapshots: snapshots, completions: completions,
+                skips: skips, archivePeriods: archivePeriods, asOf: date, calendar: calendar),
+            hasMixedStreakUnits: periods.contains { $0.unit == .days } && periods.contains { $0.unit == .weeks }
+        )
+    }
+
+    /// Reuses evaluated canonical history for screens that render more than
+    /// one month. This is the same day-state projection used by `month`; it
+    /// neither recalculates a lifetime streak nor changes any outcome rule.
+    static func monthDays(
+        containing monthDate: Date, habit: Habit, snapshots: [HabitConfigurationSnapshot],
+        completions: [Completion], skips: [Skip], archivePeriods: [HabitArchivePeriod],
+        periods: [HabitProgressCalculator.ProgressPeriod], asOf date: Date, calendar: Calendar
+    ) -> [Day] {
+        let civil = civilCalendar(from: calendar)
+        let range = civil.dateInterval(of: .month, for: monthDate)!
         let daily = Dictionary(periods.filter { $0.unit == .days }.map { ($0.localDateKey, $0.outcome) }, uniquingKeysWith: { _, latest in latest })
         let completionKeys = Set(completions.filter { $0.habitID == habit.id }.map(\.localDateKey))
         let skipKeys = Set(skips.filter { $0.habitID == habit.id }.map(\.localDateKey))
@@ -102,13 +125,7 @@ enum HabitCalendarCalculator {
             days.append(Day(date: cursor, key: key, number: civil.component(.day, from: cursor), state: state, isToday: key == todayKey))
             cursor = civil.date(byAdding: .day, value: 1, to: cursor)!
         }
-        return Month(
-            start: range.start, days: days,
-            leadingBlankCount: (civil.component(.weekday, from: range.start) - civil.firstWeekday + 7) % 7,
-            weeklyPeriods: periods.filter { $0.unit == .weeks && $0.periodStart < range.end && $0.periodEnd > range.start },
-            streak: HabitProgressCalculator.streak(for: habit, snapshots: snapshots, completions: completions,
-                skips: skips, archivePeriods: archivePeriods, asOf: date, calendar: calendar),
-            hasMixedStreakUnits: periods.contains { $0.unit == .days } && periods.contains { $0.unit == .weeks }
-        )
+        return days
     }
+
 }

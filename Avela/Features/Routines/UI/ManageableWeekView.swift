@@ -71,6 +71,7 @@ struct ManageableWeekView: View {
     private let habits: any HabitRepository
     let onLogHabit: (UUID) -> Void
     @Environment(\.habitReminderService) private var reminders
+    @Environment(\.appPalette) private var palette
     @State private var pauseCandidate: ManageableWeekViewModel.Row?
     @State private var planDays: Int?
 
@@ -83,45 +84,84 @@ struct ManageableWeekView: View {
     var body: some View {
         List {
             Section {
-                Label("Make room for this week", systemImage: "leaf")
-                    .font(.title2.bold()).accessibilityAddTraits(.isHeader)
-                Text("Keep what feels manageable. Pause one habit at a time, or choose a short list to focus on. Reviewing this screen never changes your tracking.")
-                    .foregroundStyle(.secondary)
+                VStack(alignment: .leading, spacing: 14) {
+                    Label("A little more room.", systemImage: "leaf.fill")
+                        .font(.largeTitle.weight(.bold)).fontDesign(.rounded)
+                        .foregroundStyle(.white).accessibilityAddTraits(.isHeader)
+                    Text("Your day can change. Choose a smaller step, pause one habit, or make a short restart list.")
+                        .font(.subheadline).foregroundStyle(.white.opacity(0.84))
+                        .fixedSize(horizontal: false, vertical: true)
+                    Label("Your earlier progress stays with you.", systemImage: "checkmark.shield")
+                        .font(.caption.weight(.semibold)).foregroundStyle(.white.opacity(0.9))
+                }
+                .padding(22)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background { RilovaAurora() }
+                .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+                .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
             }
             if let message = model.confirmationMessage {
-                Section { Label(message, systemImage: "checkmark.circle").foregroundStyle(.secondary) }
+                Section {
+                    Label(message, systemImage: "checkmark.circle.fill")
+                        .foregroundStyle(palette.accent)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityIdentifier("manageWeek.confirmation")
+                }
             }
             if model.rows.isEmpty {
                 ContentUnavailableView("No Active Habits", systemImage: "leaf", description: Text("Create or reactivate a habit to build your restart plan."))
             }
             ForEach(model.rows) { row in
                 Section {
-                    Label(row.habit.name, systemImage: row.habit.iconName).font(.headline)
-                    Toggle("Focus on this habit", isOn: Binding(
+                    HStack(spacing: 12) {
+                        HabitIconBadge(symbol: row.habit.iconName).accessibilityHidden(true)
+                        Text(row.habit.name).font(.title3.weight(.bold)).fontDesign(.rounded)
+                            .foregroundStyle(Color.appInk)
+                    }.padding(.vertical, 4)
+                    Toggle("Include in my restart", isOn: Binding(
                         get: { model.focusIDs.contains(row.id) },
                         set: { selected in if selected { model.focusIDs.insert(row.id) } else { model.focusIDs.remove(row.id) } }
                     ))
                     .accessibilityIdentifier("manageWeek.focus.\(row.id.uuidString)")
                     .accessibilityLabel("Focus on \(row.habit.name)")
                     if let action = row.smallerAction {
-                        Text("Smaller action: \(action)").foregroundStyle(.secondary)
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("THE SMALLER STEP").font(.caption2.weight(.semibold)).tracking(1)
+                                .foregroundStyle(Color.appInkSecondary)
+                            Text(action).font(.title3.weight(.semibold)).fontDesign(.rounded)
+                                .foregroundStyle(Color.appInk)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }.padding(.vertical, 4)
                         Button {
                             onLogHabit(row.id)
-                        } label: { Text("Open smaller-action check-in").frame(minHeight: 44) }
+                        } label: {
+                            Label("Open smaller-action check-in", systemImage: "arrow.up.right")
+                                .frame(minHeight: 44)
+                        }
+                        .accessibilityIdentifier("manageWeek.smaller.\(row.id.uuidString)")
                         Text("Choosing a smaller action records it separately; it never counts as full success.")
                             .font(.subheadline).foregroundStyle(.secondary)
                     }
                     Button {
                         pauseCandidate = row
-                    } label: { Text("Pause \(row.habit.name)").frame(minHeight: 44) }
+                    } label: {
+                        Label("Pause \(row.habit.name)", systemImage: "pause.circle")
+                            .foregroundStyle(Color.appInkSecondary).frame(minHeight: 44)
+                    }
                     .accessibilityIdentifier("manageWeek.pause.\(row.id.uuidString)")
                 } footer: { Text("Leave this habit as it is by making no change. Pause retains history and requires confirmation.") }
             }
             if !model.rows.isEmpty {
                 Section {
-                    Button { planDays = 3 } label: { Text("Review 3-Day Restart").frame(minHeight: 44) }
+                    Text(model.focusIDs.isEmpty ? "Choose a focus habit above to begin." : "\(model.focusIDs.count) \(model.focusIDs.count == 1 ? "habit" : "habits") selected for your restart")
+                        .font(.subheadline).foregroundStyle(Color.appInkSecondary)
+                    Button { planDays = 3 } label: {
+                        restartRow(days: 3, subtitle: "A small beginning")
+                    }
                         .disabled(model.focusIDs.isEmpty).accessibilityIdentifier("manageWeek.restart3")
-                    Button { planDays = 7 } label: { Text("Review 7-Day Restart").frame(minHeight: 44) }
+                    Button { planDays = 7 } label: {
+                        restartRow(days: 7, subtitle: "Room to find a rhythm")
+                    }
                         .disabled(model.focusIDs.isEmpty).accessibilityIdentifier("manageWeek.restart7")
                 } header: { Text("Start Small") } footer: {
                     Text("A restart groups only your chosen focus habits. It never pauses other habits, lowers a target, logs success or resets progress.")
@@ -161,5 +201,23 @@ struct ManageableWeekView: View {
         .alert("Unable to Update", isPresented: Binding(get: { model.errorMessage != nil }, set: { if !$0 { model.errorMessage = nil } })) {
             Button("OK", role: .cancel) { model.errorMessage = nil }
         } message: { Text(model.errorMessage ?? "") }
+    }
+
+    private func restartRow(days: Int, subtitle: String) -> some View {
+        HStack(spacing: 14) {
+            Text("\(days)").font(.title.weight(.bold)).fontDesign(.rounded)
+                .foregroundStyle(palette.accent)
+                .frame(width: 46, height: 50)
+                .background(palette.accentSoft, in: RoundedRectangle(cornerRadius: 14))
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Review \(days)-Day Restart").font(.headline)
+                Text(subtitle).font(.subheadline).foregroundStyle(Color.appInkSecondary)
+            }
+            .fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 0)
+            Image(systemName: "arrow.up.right").font(.caption.weight(.semibold)).accessibilityHidden(true)
+        }
+        .frame(minHeight: 60).padding(.vertical, 4)
     }
 }

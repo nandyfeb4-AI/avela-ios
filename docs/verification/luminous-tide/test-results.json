@@ -1,0 +1,1530 @@
+{
+  "date": "2026-10-21",
+  "strategy": "Unfiltered regression followed by rebuilt full units and affected/new native UI reruns; repeated real-dark captures use simulator appearance, not a launch argument.",
+  "expected_unique_ui_tests": 119,
+  "unique_ui_tests_with_a_passing_execution": 119,
+  "unexecuted": [],
+  "latest_ui_failures": [],
+  "runs": [
+    {
+      "name": "unfiltered-regression",
+      "complete": true,
+      "command_success": false,
+      "ui_executions": 118,
+      "ui_passed": 108,
+      "ui_failed": 10,
+      "unit_results": [
+        {
+          "status": "passed",
+          "tests": 622,
+          "failures": 0
+        }
+      ]
+    },
+    {
+      "name": "rebuilt-units-and-weekday-audit",
+      "complete": true,
+      "command_success": false,
+      "ui_executions": 1,
+      "ui_passed": 0,
+      "ui_failed": 1,
+      "unit_results": [
+        {
+          "status": "passed",
+          "tests": 627,
+          "failures": 0
+        }
+      ]
+    },
+    {
+      "name": "form-reflow-audit",
+      "complete": true,
+      "command_success": false,
+      "ui_executions": 1,
+      "ui_passed": 0,
+      "ui_failed": 1,
+      "unit_results": []
+    },
+    {
+      "name": "final-light",
+      "complete": true,
+      "command_success": false,
+      "ui_executions": 31,
+      "ui_passed": 29,
+      "ui_failed": 2,
+      "unit_results": []
+    },
+    {
+      "name": "calendar-followup",
+      "complete": true,
+      "command_success": false,
+      "ui_executions": 4,
+      "ui_passed": 3,
+      "ui_failed": 1,
+      "unit_results": []
+    },
+    {
+      "name": "logging-and-capture-followup",
+      "complete": true,
+      "command_success": true,
+      "ui_executions": 2,
+      "ui_passed": 2,
+      "ui_failed": 0,
+      "unit_results": []
+    },
+    {
+      "name": "actual-dark",
+      "complete": true,
+      "command_success": true,
+      "ui_executions": 6,
+      "ui_passed": 6,
+      "ui_failed": 0,
+      "unit_results": []
+    },
+    {
+      "name": "chart-accessibility-dark",
+      "complete": true,
+      "command_success": true,
+      "ui_executions": 2,
+      "ui_passed": 2,
+      "ui_failed": 0,
+      "unit_results": []
+    },
+    {
+      "name": "chart-final-light",
+      "complete": true,
+      "command_success": true,
+      "ui_executions": 1,
+      "ui_passed": 1,
+      "ui_failed": 0,
+      "unit_results": []
+    }
+  ],
+  "ui_tests": [
+    {
+      "test": "AvelaUITests.AvelaUITests/testArchiveConfirmationCanBeCancelledLeavingTheHabitActive",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 32.072
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testArchivedAndActiveHabitIconsAppearTogetherInHistoryForVisualTintComparison",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 37.526
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testArchivedHabitSurvivesRelaunchAndCanStillBeReactivated",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 37.025
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testArchivingFromDetailRemovesHabitFromToday",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 21.449
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testAttentionDetailRetainsLoadedStateAcrossTodayTabRefresh",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 20.228
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testAttentionGoalDetailShowsLoggedEntryAndAllowsCorrection",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 25.938
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testAttentionGoalsAndUsagePersistAcrossRelaunch",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 28.511
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testAttentionQuickLogChipLogsInstantlyWithAnUndoToast",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 19.651
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testAttentionQuickLogTargetsAreAtLeast44Points",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 14.226
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testCompletedHabitRowCollapsesIntoDoneGroupAndCanStillBeUndoneAfterward",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 19.658
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 19.827
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testCompletingAHabitShowsAnUndoToastThatUndoesIt",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 17.984
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 17.076
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testCompletingAndUndoingAHabit",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 17.741
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testCreatingADailyHabitShowsItInTheTodayList",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 11.96
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testCreatingAnAttentionGoalShowsItInTheTodayAttentionSection",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 17.034
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testDeletingAnAttentionUsageEntryRemovesItAndRestoresMissingDataStatus",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 23.246
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testEditingHabitFromDetailUpdatesTodayWithoutLosingPriorCompletion",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 25.676
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testFlexibleWeeklyHabitShowsProgressTowardTarget",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "failed",
+          "duration_seconds": 12.414
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 21.693
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testHabitDetailRetainsLoadedStateAcrossTodayTabRefresh",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 21.113
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testHistoryHabitFilterShowsOnlyTheSelectedHabit",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 30.983
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testHistoryRecordsSurviveRelaunch",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 25.647
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testHistoryShowsEmptyStateThenACompletionAfterSwitchingTabs",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 25.688
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testIconPickerTouchTargetsAreAtLeast44Points",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 8.911
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testIconPickerTouchTargetsRemainAtLeast44PointsAtLargeDynamicType",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "failed",
+          "duration_seconds": 12.894
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 14.397
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testInsightsListsAllTiedHabitsForStrongestAndNeedsAttention",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 11.958
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testInsightsShowsAValidTrendForAComparableHabit",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 10.249
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testInsightsShowsBalancedSummaryForIdenticalResults",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 11.602
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testInsightsShowsEmptyStateThenInsufficientDataAfterCreatingAHabit",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 23.137
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testInsightsShowsNotEnoughComparableDataWhenScheduleChangedBetweenWeeks",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 10.842
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testInsightsShowsPopulatedSummaryWithStrongestAndNeedsAttention",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 11.864
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testInsightsWeekNavigationMovesBetweenCompletedWeeksAndBack",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 19.926
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testLoggingUsageFromTodayUpdatesStatusImmediately",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 19.391
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testOpeningHabitDetailDoesNotTriggerCompletion",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 18.326
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testPersistedHabitsSurviveRelaunch",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 20.285
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testReactivatingFromSettingsReturnsHabitToTodayAcrossRepeatedCycles",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 52.13
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testShellNavigationAndRelaunch",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 28.923
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testTidewaterBalanceAccessibilityDynamicTypeScreenshot",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 35.777
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 34.997
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testTidewaterBalancePopulatedScreenshot",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 32.391
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testTidewaterBalancePopulatedScreenshotDarkMode",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 32.317
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testTodayAndDetailUsePolarityAwareWordingForAvoidanceHabits",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "failed",
+          "duration_seconds": 12.86
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 26.875
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testTodayPillarsReflectRealHabitAndAttentionData",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 25.48
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 24.113
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testViewingHistoryFromHabitDetailFiltersToThatHabit",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 33.111
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testVisualAppearanceInDarkMode",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 21.468
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.AvelaUITests/testVisualAppearanceInLightMode",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 21.388
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testActivePhoneFreeSessionSurvivesRelaunchAndCanBeReportedInterrupted",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 57.502
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testActivityConfigurationAtLargestTextRemainsReachable",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 34.077
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 33.855
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testAdditionalThemesSurviveRelaunch",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 57.228
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testAppThemeAppliesImmediatelyAndSurvivesRelaunch",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 48.937
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 47.266
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testApplicationLaunchPerformanceBaseline",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 42.338
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testAvoidanceIdeaKeepsHonestSuccessCopyAtLargeText",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 31.34
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testBrandedTodayAtAccessibilityTextSizePreservesLoggingAndUndo",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 17.911
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testBrandedWelcomeAtAccessibilityTextSizeKeepsContinueUsable",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 11.893
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testBrowsingIdeasAndCancellingDoesNotCreateAHabit",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 41.297
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testCalendarReviewAndCancelNeverStartSessionOrCompleteHabit",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 48.816
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testCalendarSaveReportsPlannedTimeWithoutCompletingHabit",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 49.391
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testCalendarShowsPersistedHistoryAndMonthNavigationWithoutLogging",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "failed",
+          "duration_seconds": 42.434
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 30.825
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testCloudBackupUnavailableBuildNeverClaimsProtection",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 18.981
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testCloudRecoveryPreviewCancelConfirmAndRelaunch",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 55.819
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testCompanionChoiceAndVisibilitySurviveRelaunch",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 90.983
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testCompanionSaveConfirmationIsReadableAtLargestTextSize",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 32.326
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testCoreScreensPassNativeAccessibilityAudit",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "failed",
+          "duration_seconds": 23.871
+        },
+        {
+          "run": "final-light",
+          "status": "failed",
+          "duration_seconds": 23.215
+        },
+        {
+          "run": "calendar-followup",
+          "status": "passed",
+          "duration_seconds": 24.097
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testDismissConfirmationPreservesLoggingAndDoneUndo",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 17.107
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testHabitIdeaCanBeCustomizedSavedAndEditedAfterRelaunch",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 41.086
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testHabitOrderCancelSaveAndRelaunchPreserveTracking",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 90.903
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testHabitOrderingFromSettingsAtAccessibilityTextSize",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 42.436
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testHabitSkipSurvivesRelaunchAndCanBeUndone",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "failed",
+          "duration_seconds": 45.605
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 39.434
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testHealthSetupIsExplicitAndLeavesHabitUncompleted",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 33.051
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testImmersiveThemeAndStreakCalendarPreserveReadOnlyHistory",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "failed",
+          "duration_seconds": 8.445
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 61.533
+        },
+        {
+          "run": "calendar-followup",
+          "status": "passed",
+          "duration_seconds": 61.157
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testLifetimeMilestonePersistsAndUndoRecomputesTotal",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 74.029
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testLighterScheduleAtAccessibilityTextSize",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 51.42
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testLighterScheduleCancelConfirmAndRelaunch",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 60.603
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testMadeRoomReviewShowsOnlyRecordedFactsForSelectedWeek",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 37.61
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testMakeRoomCreatesFocusSessionAndRequiresSeparateHabitLogging",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 107.56
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testManageableWeekPauseRequiresConfirmationAndSurvivesRelaunch",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 43.06
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testManageableWeekRestartRequiresSelectionAndExplicitConfirmation",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 49.506
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testMomentumShowsRecordedFactsAndOptionalReasonSurvivesRelaunch",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 46.132
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testNativeHabitOrderDragHandleChangesDraftOnlyUntilSave",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 18.73
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testNativeReminderReviewCanBeCancelledWithoutLogging",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 59.312
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testNativeReminderReviewConfirmsIdentityBeforeLoggingAndSurvivesRelaunch",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 58.803
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testOnboardingOptionalStepsCanBeSkippedAndCompletionSurvivesRelaunch",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 27.416
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 27.629
+        },
+        {
+          "run": "actual-dark",
+          "status": "passed",
+          "duration_seconds": 28.92
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testOnboardingWelcomePassesNativeAccessibilityAudit",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "failed",
+          "duration_seconds": 8.664
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 13.013
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testOpeningNativeReminderAloneDoesNotLog",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 56.658
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testPersonalQuickPresetsSaveCancelUndoAndRelaunch",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 54.944
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testPhoneFreeIntentionStaysSeparateFromHabitCompletion",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 64.232
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testPhoneFreeLiveActivityIsOptionalAndDoesNotCertifySuccess",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 57.789
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testPolishedCoreScreensKeepNavigationAndRecoveryReadable",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 46.331
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testPrivacyIsAccessibleWithoutPremium",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 43.491
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 39.609
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testPrivateReasonEditorAtLargestTextCanHideAndSave",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 60.274
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testProgressReviewRemainsNavigableAtLargestText",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 71.016
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testProtectedWindowStartsUnknownWithoutImpliedMeasurementOrUsageChips",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 27.194
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testQuantityProgressAndSmallerActionRemainDistinctAcrossRelaunch",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 57.902
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 58.666
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testRecoveryCardToolsKeepSmallerActionsSeparateAndCancellationSafe",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "failed",
+          "duration_seconds": 30.629
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 34.09
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testRecoveryChoicesRequireConfirmationAndSmallerLoggerDoesNotAutoSave",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 49.17
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testRecoveryCompletionUndoAtAccessibilityTextSize",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 36.723
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testReflectionDictationReviewRequiresInsertionAndExplicitSave",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 49.767
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testReflectionFromInsightsShowsRecordedProgressForReviewedWeek",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 14.779
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testReminderAcknowledgmentClearsWhenEditingTheDraft",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 37.49
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testRoutineCreationCancelAndExplicitHabitLogging",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 56.429
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testSessionActivityFeedbackStaysAtTheControlAtLargestTextSize",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 61.27
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testSettingsPremiumHasRestoreAndCanReturnToFreeTracking",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 24.998
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testShortcutsGuideExplainsSelfReportedLogging",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 18.418
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testSimulatorProtectionSetupExplainsAvailabilityWithoutPermissions",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 22.18
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testSupportingScreensPassNativeAccessibilityAudit",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 32.701
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testVisualInsightsAtLargestTextKeepsChartsAndControlsReadable",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 29.575
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testVisualInsightsShowsExactCommitmentsCoverageAndReadOnlyNavigation",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 44.614
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testWeekdayFormAtLargestTextHasComfortableTargetsAndPersists",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "failed",
+          "duration_seconds": 28.62
+        },
+        {
+          "run": "rebuilt-units-and-weekday-audit",
+          "status": "failed",
+          "duration_seconds": 29.603
+        },
+        {
+          "run": "form-reflow-audit",
+          "status": "failed",
+          "duration_seconds": 42.504
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 48.083
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testWeeklyCalendarExplainsCommitmentsAtAccessibilityTextSize",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 42.301
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 45.142
+        },
+        {
+          "run": "calendar-followup",
+          "status": "passed",
+          "duration_seconds": 46.481
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testWeeklyReflectionSaveCancelAndRelaunch",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 55.789
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.MVPFlowTests/testWidgetGuideIsOptionalAndExplainsSeparateControls",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 18.579
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.PremiumRefreshUITests/testAmountTemplateReviewSavesAndLogsExplicitly",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 38.119
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 37.838
+        },
+        {
+          "run": "actual-dark",
+          "status": "passed",
+          "duration_seconds": 34.637
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.PremiumRefreshUITests/testHomeCalendarReviewDoesNotLogOrChangeToday",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 18.99
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 18.5
+        },
+        {
+          "run": "actual-dark",
+          "status": "passed",
+          "duration_seconds": 18.311
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.PremiumRefreshUITests/testHomeDayReviewKeepsFirstAndHistoricalCorrectionDatesWithoutSaving",
+      "executions": [
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 60.291
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.PremiumRefreshUITests/testMakeRoomDurationStarterRequiresReviewBeforeSave",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 37.169
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 36.941
+        },
+        {
+          "run": "actual-dark",
+          "status": "passed",
+          "duration_seconds": 34.343
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.PremiumRefreshUITests/testMyDayChangedPauseCancellationKeepsHabitAndProgress",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 23.976
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 23.029
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.PremiumRefreshUITests/testPinnedHabitStaysFirstAfterRelaunchWithoutChangingProgress",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 17.453
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 18.135
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.PremiumRefreshUITests/testPremiumOnboardingAtLargestTextCanSkipWithoutPermissionPrompts",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 23.438
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 23.142
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.PremiumRefreshUITests/testReportLensesAndSharePreviewPreserveRecordedFacts",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 60.537
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 82.848
+        },
+        {
+          "run": "logging-and-capture-followup",
+          "status": "passed",
+          "duration_seconds": 82.434
+        },
+        {
+          "run": "actual-dark",
+          "status": "passed",
+          "duration_seconds": 82.398
+        },
+        {
+          "run": "chart-accessibility-dark",
+          "status": "passed",
+          "duration_seconds": 77.871
+        },
+        {
+          "run": "chart-final-light",
+          "status": "passed",
+          "duration_seconds": 80.706
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.PremiumRefreshUITests/testReportValuesRemainReachableAtLargestText",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 43.594
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 43.72
+        },
+        {
+          "run": "actual-dark",
+          "status": "passed",
+          "duration_seconds": 44.458
+        },
+        {
+          "run": "chart-accessibility-dark",
+          "status": "passed",
+          "duration_seconds": 41.507
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.PremiumRefreshUITests/testRoutineStarterDraftCanBeReviewedAndCancelledWithoutCreatingAnything",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 27.032
+        },
+        {
+          "run": "final-light",
+          "status": "passed",
+          "duration_seconds": 23.686
+        }
+      ]
+    },
+    {
+      "test": "AvelaUITests.PremiumRefreshUITests/testTodayQuantityChipUndoRemovesOnlyItsLastEntry",
+      "executions": [
+        {
+          "run": "unfiltered-regression",
+          "status": "passed",
+          "duration_seconds": 34.438
+        },
+        {
+          "run": "final-light",
+          "status": "failed",
+          "duration_seconds": 38.516
+        },
+        {
+          "run": "calendar-followup",
+          "status": "failed",
+          "duration_seconds": 40.66
+        },
+        {
+          "run": "logging-and-capture-followup",
+          "status": "passed",
+          "duration_seconds": 41.429
+        }
+      ]
+    }
+  ]
+}

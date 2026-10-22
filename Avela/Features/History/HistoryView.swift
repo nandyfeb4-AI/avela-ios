@@ -7,25 +7,30 @@ import SwiftUI
 struct HistoryView: View {
     @Bindable var viewModel: HistoryViewModel
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.appPalette) private var palette
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack(spacing: 10) {
-                if !dynamicTypeSize.isAccessibilitySize {
-                    AppIconBadge(symbol: "clock.arrow.circlepath")
-                        .accessibilityHidden(true)
+            HStack(alignment: .center, spacing: 14) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Your story, recorded.")
+                        .font(.system(.title3, design: .rounded, weight: .bold))
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text(viewModel.rangeLabel).font(.subheadline)
+                        .foregroundStyle(.white.opacity(0.85))
+                        .accessibilityIdentifier("history.rangeLabel")
                 }
-                Text(viewModel.rangeLabel)
-                .font(.subheadline.weight(.medium))
-                .foregroundStyle(Color.appInk)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .accessibilityIdentifier("history.rangeLabel")
+                Spacer(minLength: 0)
+                if !dynamicTypeSize.isAccessibilitySize {
+                    Image(systemName: "clock.arrow.circlepath").font(.title2.weight(.light))
+                        .foregroundStyle(palette.luminousHighlight).accessibilityHidden(true)
+                }
             }
-            .padding(14)
-            .background(Color.appSurface, in: RoundedRectangle(cornerRadius: 18))
-            .padding(.horizontal, 20)
-            .padding(.top, 12)
-            .padding(.bottom, 4)
+            .foregroundStyle(.white).padding(18)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background { RilovaAurora() }
+            .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+            .padding(.horizontal, 20).padding(.top, 12).padding(.bottom, 4)
 
             if viewModel.sections.isEmpty {
                 emptyState

@@ -1,6 +1,30 @@
 # Build Plan
 
+## Luminous Tide implementation — October 21, 2026
+
+The coordinated redesign is implemented across Today, habit detail/calendar,
+Make Room, Insights, six-stage onboarding and secondary reading/logging screens.
+It adds theme-aware native illustration, scalable hierarchy and bounded motion;
+40 editable ideas in eight groups; creation-time check-in/amount/timed setup;
+four reviewed routine starters; optional habit priority; manageable-day access;
+and read-only Home week/month review. Twelve-week and annual activity reports
+retain factual units and canonical weekly semantics, with a voluntary local
+share preview. Existing history, privacy, plan limits and optional integrations
+remain intact; no new schema, permission, backend or dependency is introduced.
+
+The latest rebuilt full unit suite passes **627 tests**, including atomic
+creation, exact-record/stale-control guards, civil-date review and factual
+reporting. All **119 distinct native UI tests have passing executions** across
+the sweep and focused repairs. Native run provenance, unsuppressed typography/hit-area audits,
+screenshots, Release inspection and outstanding device gates are tracked in the
+[Luminous Tide verification record](verification/luminous-tide/README.md).
+Those results are separate from this unit-suite result and from distribution
+entitlement or App Store approval. Earlier dated milestones below retain their
+original scope and evidence.
+
 ## Habit setup enrichment — 2026-10-05
+
+Historical eight-idea milestone; the October 21 Luminous Tide implementation supersedes this catalog with 40 ideas and creation-time tracking setup.
 
 Added an optional eight-idea starter library in the shared new-habit form.
 Selection pre-fills editable fields; saving and free-tier checks remain in the
@@ -17,6 +41,8 @@ unsigned iPhone SDK Release compilation succeeds. Real-device VoiceOver remains
 a release check.
 
 ## Owner-approved logging enrichment — 2026-10-04
+
+This milestone predates October 6 reflection dictation; general in-app voice commands remain deferred, while optional on-device reflection transcription is implemented.
 
 Added Siri/Shortcuts logging (8 service tests, native guide UI) and opt-in Apple
 Health steps/exercise targets (13 provider/persistence tests, native setup UI).

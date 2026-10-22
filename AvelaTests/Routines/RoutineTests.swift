@@ -96,6 +96,65 @@ final class RoutineTests: XCTestCase {
         XCTAssertTrue(try routines.routines().isEmpty)
     }
 
+    func testRoutineStarterUsesOnlyCategoriesActiveHabitsAndSavedOrder() throws {
+        let (habits, routines) = try repositories()
+        func add(_ name: String, _ category: HabitCategory) throws -> Habit {
+            try habits.createHabit(.init(name: name, iconName: "star.fill", category: category,
+                polarity: .positive, schedule: .daily), at: date)
+        }
+        let firstMovement = try add("Private first name", .fitness)
+        let secondMovement = try add("Morning movement", .fitness)
+        let care = try add("Private second name", .health)
+        let quiet = try add("Private third name", .mindfulness)
+        let archived = try add("Already paused", .health)
+        try habits.archiveHabit(id: archived.id, at: date)
+        let model = RoutinesViewModel(repository: routines, habits: habits)
+        model.load()
+        let draft = model.draft(for: .morning)
+        XCTAssertEqual(draft.name, "Morning")
+        XCTAssertEqual(draft.habitIDs, [care.id, firstMovement.id, quiet.id])
+        XCTAssertFalse(draft.habitIDs.contains(secondMovement.id))
+        XCTAssertFalse(draft.habitIDs.contains(archived.id))
+        XCTAssertNil(draft.routineID)
+        XCTAssertNil(draft.restartDays)
+        XCTAssertTrue(try routines.routines().isEmpty, "Reviewing suggestions does not save a grouping")
+        var renamed = model.activeHabits
+        for index in renamed.indices { renamed[index].name = "Completely different private text" }
+        XCTAssertEqual(RoutineStarter.morning.suggestedHabitIDs(from: Array(renamed.reversed())), draft.habitIDs,
+                       "Names and input enumeration order must not change category suggestions")
+    }
+
+    func testUnmatchedRoutineStarterHasNoFallbackSelectionAndRequiresExplicitChoice() throws {
+        let (habits, routines) = try repositories()
+        let social = try habits.createHabit(.init(name: "Focus", iconName: "person.2.fill", category: .social,
+            polarity: .positive, schedule: .daily), at: date)
+        let model = RoutinesViewModel(repository: routines, habits: habits)
+        model.load()
+        var draft = model.draft(for: .focus)
+        XCTAssertTrue(draft.habitIDs.isEmpty, "A name match must never select the first unrelated habit")
+        XCTAssertFalse(model.save(id: nil, name: draft.name, habitIDs: draft.habitIDs, at: date))
+        XCTAssertTrue(try routines.routines().isEmpty)
+        draft.habitIDs = [social.id]
+        XCTAssertTrue(model.save(id: nil, name: draft.name, habitIDs: draft.habitIDs, at: date))
+        XCTAssertEqual(try routines.routines().first?.habitIDs, [social.id], "The user may deliberately choose any active habit")
+    }
+
+    func testCancellingRoutineStarterAndRejectingStaleSelectionDoNotAlterHabits() throws {
+        let (habits, routines) = try repositories()
+        let habit = try create("Read", in: habits)
+        let model = RoutinesViewModel(repository: routines, habits: habits)
+        model.load()
+        let cancelled = model.draft(for: .focus)
+        XCTAssertEqual(cancelled.habitIDs, [habit.id])
+        XCTAssertTrue(try routines.routines().isEmpty)
+        XCTAssertEqual(try habits.configurationHistory(for: habit.id).count, 1)
+        XCTAssertTrue(try habits.archivePeriods(for: habit.id).isEmpty)
+        try habits.archiveHabit(id: habit.id, at: date)
+        XCTAssertFalse(model.save(id: nil, name: cancelled.name, habitIDs: cancelled.habitIDs, at: date))
+        XCTAssertTrue(try routines.routines().isEmpty)
+        XCTAssertEqual(try habits.archivePeriods(for: habit.id).count, 1)
+    }
+
     func testRoutineAndRestartSurviveDiskReopen() throws {
         let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)

@@ -1,6 +1,47 @@
 # Testing Strategy
 
+## Luminous Tide coverage — October 21, 2026
+
+The latest rebuilt full unit suite passes **627 tests**. All **119 distinct UI
+tests have passing executions** across the sweep and focused repairs; this is
+not a claim that one final unfiltered command passed. Native run provenance,
+Release checks, screenshots and remaining device gates are recorded separately
+in the [Luminous Tide verification record](verification/luminous-tide/README.md).
+The unit result is not a claim that every UI or hardware check has passed.
+
+- Creation tests cover the initial amount/minute target and smaller action being
+  saved with the habit, invalid-draft rollback, unchanged ordinary editing and
+  explicit creation limits. Template and routine browsing remain cancellable.
+- Today tests exercise captured-day and configuration guards, repeated Log,
+  replacement check-ins, newly saved skips, archives and schedule changes.
+  Quantity Undo removes its exact entry ID and preserves independent entries;
+  stale controls cannot redirect a write or remove a replacement fact.
+- Home calendar tests cover civil week/DST boundaries, month alignment, stored
+  dates after travel, archived history and read-only navigation. Partial amounts
+  and smaller actions count as recorded effort without becoming successes.
+  First-tracking-day and historical corrections retain their explicitly reviewed
+  civil date.
+- Report tests cover equal-weight weekly snapshots, missing data, cohort/schedule
+  changes, completed-week bounds, excused/pending exclusions, captured units,
+  stable-ID deduplication and separately reported session outcomes/elapsed time.
+  Native flows review lenses and the local share preview without changing facts;
+  sharing requires the explicit system Share action.
+- Native UI coverage includes editable amount creation, exact-entry Undo, saved
+  priority ordering, cancelled manageable-day/routine/duration drafts and all six
+  onboarding stages at large text without permission prompts. Native typography
+  and hit-area audits remain unsuppressed, including the onboarding caption and
+  month arrows; fixes and rerun outcomes belong in the verification record.
+  Long-range report plots use readable values at accessibility text sizes;
+  native tests verify this alternative and the existing value disclosures.
+
+Physical VoiceOver focus, hardware recognition/authorization, haptics, OLED,
+Always-On and device performance remain separate checks. No test reads the
+owner's progress store or establishes Apple approval.
+
 ## Habit starter creation
+
+This section records the original starter-library milestone; the Luminous Tide
+scope above supersedes its smaller catalog.
 
 The catalog is static draft data; critical behavior is verified through the
 native creation flow rather than tests that merely mirror its entry count.

@@ -2,6 +2,8 @@
 
 ## Habit starter library — 2026-10-05
 
+Historical eight-idea milestone; the October 21 Luminous Tide implementation supersedes this catalog with 40 ideas and creation-time tracking setup.
+
 `HabitStarter` is a bundled, Foundation-only catalog of eight editable ideas.
 Catalog IDs identify menu entries, never persisted habit UUIDs. Selecting one
 fills the existing creation form's draft fields; only explicit Save reaches the
@@ -1831,3 +1833,92 @@ Widget Toggle on/off presentation is transient system UI, not a persisted comple
 Action acknowledgments remain ephemeral UI/view-model state. Reminder saves clear their acknowledgment when Enable/time changes or a new load/write begins. Health settings capture the submitted metric/target and cannot acknowledge a changed draft; `completedRefreshHabitIDs` records only completed per-habit queries within the current refresh in memory. It stores no health sample or permission inference, is cleared when refresh begins, and cannot mark a failed/canceled/stale query as checked. Existing Health import rules and saved connection/history semantics remain authoritative.
 
 Cloud backup's feedback action and acknowledged-success flag do not replace last-success dates or account/generation checks; only the existing provider acknowledgment sets upload success. List checks can report an empty successful result without inventing a recovery point. Habit activity confirmations are scoped to the selected civil day and loaded activity configuration, and clear before writes/on failure; exact-entry Undo and captured-unit history are unchanged. Calendar draft changes/review attempts clear old success and invalid review cannot retain an older editor draft. Session-presentation acknowledgments, Make Room start acknowledgment and Watch pending wording do not alter sessions, outcomes, records, backup formats or widget contracts. There is no schema migration.
+
+## Luminous Tide creation and report projections — October 21, 2026
+
+No new SwiftData entity, migration, permission, backend or generative-AI feature
+is introduced by this pass. Existing domain calculators, repository boundaries,
+logical recovery exclusions and explicit integration opt-ins remain authoritative.
+
+- `HabitDraft.quantityTarget` and `smallerAction` are optional **creation-only**
+  inputs. `createHabit` validates them before inserting a habit, its initial
+  schedule snapshot and an optional existing `HabitActivityConfigurationRecord`,
+  then saves those records together. Failure removes only that attempted insert
+  set. Manual targets require Build Up polarity and 1–10,000 units; smaller text
+  is trimmed and capped at 160 characters. A minute target supports existing
+  timer tracking. Later activity changes still use the versioned Progress Setup
+  path; ordinary name/schedule edits with default-nil draft fields do not reset
+  the activity configuration. Templates only prepare editable values; their
+  selection grants no Health access or reminder permission.
+- Today's quantity shortcut uses the existing activity writer. It revalidates
+  the displayed local day, active/due habit, current activity configuration and
+  target, positive polarity and absent excused skip before saving its amount.
+  The returned stable entry ID identifies the single new quantity fact for Undo;
+  Undo cannot choose a replacement entry, another habit or another civil day.
+  A successful save followed by an export/read failure is disclosed as saved
+  progress for review, never as a failed write inviting a duplicate additive log.
+- Simple Today check-ins also revalidate the row's captured civil day, active
+  habit, current due schedule and actual current records. Repeated activation of
+  an already-saved Log is idempotent; Undo can remove only the captured current-day
+  completion ID. A newly saved skip requires review before replacement. Stale,
+  archived or replaced facts are left intact and explained; an unsuccessful
+  toast Undo remains available rather than announcing a successful removal.
+- `HomeCalendarModel` is a read-only projection of existing habits, snapshots,
+  completions, skips and archive periods, including archived habits. An optional
+  activity repository adds existing quantity/smaller-action facts to this
+  projection. Its week
+  always represents the current local civil week; browsing another month does
+  not alter that week or the current-day logger. Activity counts distinct habits
+  with a saved check-in, positive captured-unit quantity entry, or smaller-action
+  entry, not adherence. Several entries for one habit still count once. Activity
+  entries retain their stored day keys and must have been logged by the
+  projection's `asOf` instant; a partial quantity or smaller action does not change the habit's
+  commitment state, manufacture a success or extend its streak. Day review
+  explicitly distinguishes such effort from a completed target. Stored civil keys remain
+  authoritative after travel, and month bounds include recorded fact months.
+  Review or Correct opens `HabitActivityView(initialDate:)`; the existing logger
+  then validates that selected day and requires its normal explicit confirmation
+  for historical writes. Calendar navigation itself records nothing.
+- The optional `rilova.priorityHabitID` AppStorage value is presentation only.
+  It moves a matching due to-do row before the remaining saved habit order.
+  Missing/not-due IDs do not create rows, change schedules or affect counts;
+  selecting Follow My Habit Order removes the pin. It is not a new habit field
+  or a calculated priority recommendation.
+- `InsightsReportCalculator` derives twelve completed-week snapshots ending at
+  the selected review's exclusive end. Each bar averages its own eligible
+  habits' resolved-commitment percentages; empty data is nil. These bars do not
+  replace `WeeklyInsightsCalculator`'s canonical comparable-cohort trend or imply
+  a continuous like-for-like comparison. Schedule, pause, pending and excused-skip
+  semantics still come from the progress engine. Weekday rates use daily resolved
+  commitments only, keeping flexible-weekly commitments out of invented daily
+  misses. Quantity totals retain captured units and stored day keys; repeated
+  projections of the same stable fact are counted once.
+- The report's annual activity map describes recorded check-in/quantity/smaller
+  effort, excused skips, missing records, pauses and dates outside the review.
+  A blank/no-record cell is not a measured failure. Session weekly projections
+  separate starts, manual kept/interrupted/unreported outcomes and ended elapsed
+  timer minutes; active timers contribute no completed minutes. They never infer
+  habit success, verified concentration, phone-free time or saved screen time.
+- Progress sharing renders an ephemeral preview from the selected canonical
+  weekly review. Habit names default off and week dates are optional. An explicit
+  native Share action hands only that rendered card to the system share sheet;
+  opening the preview uploads nothing. Reasons, reflection text, Health samples
+  and raw attention/session records are not included. No public profile, automatic
+  sharing, remote renderer or new tracking store is added.
+- Four routine starters create cancellable `RoutineFormDraft` values. Suggestions use
+  active habit categories and existing stable IDs in saved order, never private
+  reason/reflection text. Explicit Save uses the existing routine repository and
+  revalidates membership. Starters create no habits, alter no schedules and grant
+  no batch completion. Existing restart semantics remain unchanged.
+- Session-duration starters prepare a new goal form's default target only when
+  it has no existing draft; existing edit targets take precedence. Opening or
+  cancelling a 15/25/45-minute draft writes nothing. Goal Save, session Start,
+  optional app protection, Live Activity presentation and habit logging remain
+  separate operations with their existing validation and acknowledgments.
+
+Companion selection and four deterministic presentation states retain their
+existing stored profile and engine. Larger onboarding images opt into a separate
+lazy artwork cache; default widget/Island artwork remains compact. Illustration,
+press, transition, share-preview and onboarding state is presentation data, not
+persisted evidence of user progress. Verification belongs in the pass's evidence
+record; no simulator or hardware result is asserted here.

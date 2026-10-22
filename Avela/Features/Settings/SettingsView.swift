@@ -22,18 +22,20 @@ struct SettingsView: View {
             Section {
                 HStack(spacing: 14) {
                     Image("BrandIcon").resizable().scaledToFit()
-                        .frame(width: 48, height: 48)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .frame(width: 58, height: 58)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
                         .accessibilityHidden(true)
                     VStack(alignment: .leading, spacing: 5) {
-                        Text("Rilova").font(.title2.weight(.semibold)).fontDesign(.rounded)
-                            .foregroundStyle(Color.appInk)
+                        Text("Rilova").font(.system(.title, design: .rounded, weight: .semibold))
+                            .foregroundStyle(.white)
                         Text("Habits that fit real life.").font(.subheadline)
-                            .foregroundStyle(Color.appInkSecondary)
+                            .foregroundStyle(.white.opacity(0.85))
                             .fixedSize(horizontal: false, vertical: true)
                     }
                 }
-                .rilovaHeaderSurface()
+                .padding(24).frame(maxWidth: .infinity, alignment: .leading)
+                .background { RilovaAurora() }
+                .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
                 .accessibilityElement(children: .combine)
                 .accessibilityIdentifier("settings.brand")
                 .listRowInsets(EdgeInsets())

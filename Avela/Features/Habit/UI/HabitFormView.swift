@@ -24,6 +24,10 @@ struct HabitFormView: View {
     @State private var scheduleKind: ScheduleKind
     @State private var selectedWeekdays: Set<Weekday>
     @State private var timesPerWeek: Int
+    @State private var trackingKind: TrackingKind = .checkIn
+    @State private var targetAmount = "10"
+    @State private var targetUnit: HabitQuantityUnit = .count
+    @State private var smallerAction = ""
 
     init(initialDraft: HabitDraft? = nil, onSave: @escaping (HabitDraft) -> Void) {
         self.initialDraft = initialDraft
@@ -59,6 +63,32 @@ struct HabitFormView: View {
 
     private var isEditing: Bool { initialDraft != nil }
 
+    private enum TrackingKind: String, CaseIterable, Identifiable {
+        case checkIn, amount, timed
+        var id: String { rawValue }
+        var title: String {
+            switch self {
+            case .checkIn: "Check-in"
+            case .amount: "Amount"
+            case .timed: "Timed"
+            }
+        }
+        var symbol: String {
+            switch self {
+            case .checkIn: "checkmark.circle.fill"
+            case .amount: "plus.circle.fill"
+            case .timed: "timer"
+            }
+        }
+        var explanation: String {
+            switch self {
+            case .checkIn: "One tap when you've done what you intended."
+            case .amount: "Add pages, glasses or counts as you go."
+            case .timed: "Use a timer or enter your minutes. You choose when to log them."
+            }
+        }
+    }
+
     private enum ScheduleKind: String, CaseIterable, Identifiable {
         case daily, weekdays, timesPerWeek
         var id: String { rawValue }
@@ -86,6 +116,13 @@ struct HabitFormView: View {
             icons += ["iphone.slash", "nosign", "cup.and.saucer.fill", "takeoutbag.and.cup.and.straw.fill"]
         }
         return icons
+    }
+
+    private var availableIcons: [String] {
+        let choices = Self.iconChoices(for: category, polarity: polarity)
+        // A template or an existing habit may use another valid native icon.
+        // Always show its current selection before offering alternatives.
+        return choices.contains(iconName) ? choices : [iconName] + choices
     }
 
     private static func categoryIconChoices(_ category: HabitCategory) -> [String] {
@@ -117,7 +154,19 @@ struct HabitFormView: View {
                         NavigationLink {
                             HabitStarterLibraryView { applyStarter($0) }
                         } label: {
-                            Label("Browse Habit Ideas", systemImage: "sparkles")
+                            HStack(spacing: 14) {
+                                AppIconBadge(symbol: "sparkles").accessibilityHidden(true)
+                                VStack(alignment: .leading, spacing: 5) {
+                                    Text("Find your next small start")
+                                        .font(.title3.weight(.semibold)).fontDesign(.rounded)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                    Text("40 editable ideas · 8 categories")
+                                        .font(.subheadline).foregroundStyle(.secondary)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                }
+                                .fixedSize(horizontal: false, vertical: true)
+                            }
+                            .padding(.vertical, 5)
                         }
                         .accessibilityIdentifier("habitForm.ideasLink")
                     } footer: {
@@ -132,6 +181,10 @@ struct HabitFormView: View {
                     }
                 }
 
+                if !isEditing {
+                    trackingSection
+                }
+
                 Section("Icon") {
                     // `.adaptive(minimum:)` recomputes how many columns fit
                     // the available width, rather than a fixed 6-column grid
@@ -140,7 +193,7 @@ struct HabitFormView: View {
                     // also means the grid naturally reflows to fewer, larger
                     // columns as Dynamic Type grows the icons themselves.
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 44, maximum: 64), spacing: 12)], spacing: 12) {
-                        ForEach(Self.iconChoices(for: category, polarity: polarity), id: \.self) { candidate in
+                        ForEach(availableIcons, id: \.self) { candidate in
                             Button {
                                 iconName = candidate
                             } label: {
@@ -197,6 +250,22 @@ struct HabitFormView: View {
                             .accessibilityIdentifier("habitForm.timesPerWeekStepper")
                     }
                 }
+                if !isEditing {
+                    Section {
+                        TextField("A smaller version (optional)", text: $smallerAction, axis: .vertical)
+                            .lineLimit(1...3)
+                            .accessibilityLabel("Smaller action, optional")
+                            .accessibilityIdentifier("habitForm.smallerActionField")
+                        if smallerAction.count > 160 {
+                            Text("Use 160 characters or fewer.")
+                                .font(.caption).foregroundStyle(Color.appRecovery)
+                        }
+                    } header: {
+                        Text("On a busy day")
+                    } footer: {
+                        Text("A small step records effort separately. It doesn't mark the full habit complete.")
+                    }
+                }
                 Section {
                     NavigationLink {
                         reasonEditor
@@ -213,6 +282,9 @@ struct HabitFormView: View {
 
             }
             .scrollDismissesKeyboard(.immediately)
+            .onChange(of: polarity) { _, value in
+                if value == .avoidance { trackingKind = .checkIn }
+            }
             .appThemeCanvas()
             .navigationTitle(isEditing ? "Edit Habit" : "New Habit")
             // Compact, centered title — not the default large-title style —
@@ -231,6 +303,66 @@ struct HabitFormView: View {
                         .accessibilityIdentifier("habitForm.saveButton")
                 }
             }
+        }
+    }
+
+    private var trackingSection: some View {
+        Section {
+            if polarity == .positive {
+                Picker("Tracking", selection: $trackingKind) {
+                    ForEach(TrackingKind.allCases) { kind in
+                        Text(kind.title).tag(kind)
+                    }
+                }
+                .modifier(AdaptiveHabitPickerStyle())
+                .accessibilityIdentifier("habitForm.trackingPicker")
+                Label(trackingKind.explanation, systemImage: trackingKind.symbol)
+                    .font(.subheadline).foregroundStyle(Color.appInkSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                if trackingKind != .checkIn {
+                    HStack(alignment: .firstTextBaseline, spacing: 14) {
+                        Text("Target").font(.body.weight(.medium))
+                        TextField("Amount", text: $targetAmount)
+                            .keyboardType(.numberPad)
+                            .multilineTextAlignment(.trailing)
+                            .accessibilityLabel("Target amount")
+                            .accessibilityIdentifier("habitForm.targetAmountField")
+                        if trackingKind == .timed {
+                            Text("minutes").foregroundStyle(.secondary)
+                        }
+                    }
+                    if trackingKind == .amount {
+                        Picker("Unit", selection: $targetUnit) {
+                            Text("Count").tag(HabitQuantityUnit.count)
+                            Text("Pages").tag(HabitQuantityUnit.pages)
+                            Text("Glasses").tag(HabitQuantityUnit.glasses)
+                        }
+                        .accessibilityIdentifier("habitForm.quantityUnitPicker")
+                    }
+                    if Int(targetAmount).map({ !(1...10_000).contains($0) }) ?? true {
+                        Text("Enter a whole-number target from 1 to 10,000.")
+                            .font(.caption).foregroundStyle(Color.appRecovery)
+                    }
+                    Text("Reach this target on a scheduled day to log a full success. Partial progress stays visible.")
+                        .font(.caption).foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                DisclosureGroup("Prefer Apple Health?") {
+                    Text("Choose Check-in here, then open this habit's details → Apple Health after saving to connect steps or exercise minutes. Permission is requested only when you connect.")
+                        .font(.subheadline).foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .accessibilityIdentifier("habitForm.healthInfo")
+            } else {
+                Label("Success check-in", systemImage: "checkmark.circle.fill")
+                    .foregroundStyle(palette.accent)
+                Text("Choose your own boundary. Log success when you meet it; an unlogged day doesn't mean zero usage.")
+                    .font(.subheadline).foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        } header: {
+            Text("How you'll track it")
         }
     }
 
@@ -313,6 +445,14 @@ struct HabitFormView: View {
         iconName = draft.iconName
         category = draft.category
         polarity = draft.polarity
+        if let target = draft.quantityTarget {
+            trackingKind = target.unit == .minutes ? .timed : .amount
+            targetAmount = String(target.amount)
+            targetUnit = target.unit == .minutes ? .count : target.unit
+        } else {
+            trackingKind = .checkIn
+        }
+        smallerAction = draft.smallerAction ?? ""
         switch draft.schedule {
         case .daily: scheduleKind = .daily
         case .weekdays: scheduleKind = .weekdays
@@ -328,6 +468,12 @@ struct HabitFormView: View {
         guard whyItMatters.count <= 240 else { return false }
         guard !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return false }
         if scheduleKind == .weekdays && selectedWeekdays.isEmpty { return false }
+        if !isEditing {
+            guard smallerAction.trimmingCharacters(in: .whitespacesAndNewlines).count <= 160 else { return false }
+            if polarity == .positive && trackingKind != .checkIn {
+                guard let amount = Int(targetAmount), (1...10_000).contains(amount) else { return false }
+            }
+        }
         return true
     }
 
@@ -345,7 +491,11 @@ struct HabitFormView: View {
             polarity: polarity,
             schedule: schedule,
             whyItMatters: whyItMatters,
-            isWhyMemoryHidden: isWhyMemoryHidden
+            isWhyMemoryHidden: isWhyMemoryHidden,
+            quantityTarget: !isEditing && polarity == .positive && trackingKind != .checkIn
+                ? Int(targetAmount).map { HabitQuantityTarget(amount: $0, unit: trackingKind == .timed ? .minutes : targetUnit) }
+                : nil,
+            smallerAction: isEditing ? nil : smallerAction
         )
         onSave(draft)
     }
@@ -365,7 +515,10 @@ struct HabitFormView: View {
             "chart.pie.fill": "Budget", "cart.fill": "Shopping", "star.fill": "Star",
             "tag.fill": "Tag", "circle.grid.2x2.fill": "Grid", "checkmark.circle.fill": "Checkmark",
             "iphone.slash": "Phone break", "nosign": "Limit",
-            "cup.and.saucer.fill": "Cup", "takeoutbag.and.cup.and.straw.fill": "Takeout"
+            "cup.and.saucer.fill": "Cup", "takeoutbag.and.cup.and.straw.fill": "Takeout",
+            "sun.max.fill": "Sun", "doc.text.fill": "Document", "pencil.tip": "Sketching",
+            "paintpalette.fill": "Art", "camera.fill": "Camera", "house.fill": "Home",
+            "desktopcomputer": "Desk", "bubble.left.and.bubble.right.fill": "Conversation", "ear.fill": "Listening"
         ]
         return "\(labels[symbol] ?? "Habit") icon"
     }
@@ -395,7 +548,7 @@ struct HabitFormView: View {
 private struct AdaptiveHabitPickerStyle: ViewModifier {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @ViewBuilder func body(content: Content) -> some View {
-        if dynamicTypeSize.isAccessibilitySize {
+        if dynamicTypeSize >= .xxLarge {
             content.labelsHidden().pickerStyle(.inline)
         }
         else { content.pickerStyle(.segmented) }

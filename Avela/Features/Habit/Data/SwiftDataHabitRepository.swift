@@ -79,6 +79,12 @@ final class SwiftDataHabitRepository: HabitRepository {
     func createHabit(_ draft: HabitDraft, at date: Date = Date()) throws -> Habit {
         try validate(draft.schedule)
         guard (draft.whyItMatters?.count ?? 0) <= 240 else { throw HabitRepositoryError.invalidWhyMemory }
+        let smallerAction = (draft.smallerAction ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        guard smallerAction.count <= 160 else { throw HabitActivityError.invalidTarget }
+        if let target = draft.quantityTarget {
+            guard draft.polarity == .positive else { throw HabitRepositoryError.manualQuantityRequiresPositivePolarity }
+            guard (1...10_000).contains(target.amount) else { throw HabitActivityError.invalidTarget }
+        }
         let record = HabitRecord(domain: Habit(
             id: UUID(),
             name: draft.name,
@@ -96,17 +102,34 @@ final class SwiftDataHabitRepository: HabitRepository {
             },
             isWhyMemoryHidden: draft.isWhyMemoryHidden
         ))
-        modelContext.insert(record)
-        modelContext.insert(HabitConfigurationSnapshotRecord(domain: HabitConfigurationSnapshot(
+        let snapshot = HabitConfigurationSnapshotRecord(domain: HabitConfigurationSnapshot(
             id: UUID(),
             habitID: record.id,
             polarity: draft.polarity,
             schedule: draft.schedule,
             effectiveLocalDateKey: LocalDay.key(for: date, calendar: calendar),
-            revision: try nextConfigurationRevision(for: record.id),
+            revision: 0,
             createdAt: date
-        )))
-        try modelContext.save()
+        ))
+        let activity = draft.quantityTarget != nil || !smallerAction.isEmpty
+            ? HabitActivityConfigurationRecord(habitID: record.id,
+                dayKey: LocalDay.key(for: date, calendar: calendar), revision: 0,
+                target: draft.quantityTarget, smallerAction: smallerAction)
+            : nil
+        modelContext.insert(record)
+        modelContext.insert(snapshot)
+        if let activity { modelContext.insert(activity) }
+        do {
+            // A starter's target is part of creating this habit. A second
+            // autosaving repository call could leave an unintended check-in
+            // habit behind if its activity setup failed.
+            try modelContext.save()
+        } catch {
+            if let activity { modelContext.delete(activity) }
+            modelContext.delete(snapshot)
+            modelContext.delete(record)
+            throw error
+        }
         NotificationCenter.default.post(name: .avelaPersistenceDidChange, object: nil)
         return record.toDomain()
     }

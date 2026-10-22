@@ -30,8 +30,9 @@ final class TodayViewModelTests: XCTestCase {
         let habit = try repository.createHabit(HabitDraft(name: "Read", iconName: "book.fill", category: .other, polarity: .positive, schedule: .daily), at: day0)
         let completion = try repository.recordCompletion(habitID: habit.id, at: day0, source: .app, note: nil)
         let model = TodayViewModel(repository: repository, calendar: calendar)
-        model.undoTodayCompletion(id: completion.id, habitID: habit.id, asOf: day0)
-        model.undoTodayCompletion(id: completion.id, habitID: habit.id, asOf: day0)
+        XCTAssertTrue(model.undoTodayCompletion(id: completion.id, habitID: habit.id, asOf: day0))
+        XCTAssertFalse(model.undoTodayCompletion(id: completion.id, habitID: habit.id, asOf: day0))
+        XCTAssertNotNil(model.errorMessage)
         XCTAssertFalse(try XCTUnwrap(model.rows.first).isCompletedToday)
         XCTAssertTrue(try repository.completions(for: habit.id, in: DateInterval(start: day(-1), end: day(2))).isEmpty)
     }
@@ -42,7 +43,7 @@ final class TodayViewModelTests: XCTestCase {
         let old = try repository.recordCompletion(habitID: habit.id, at: day0, source: .app, note: nil)
         let next = try repository.recordCompletion(habitID: habit.id, at: day(1), source: .app, note: nil)
         let model = TodayViewModel(repository: repository, calendar: calendar)
-        model.undoTodayCompletion(id: old.id, habitID: habit.id, asOf: day(1))
+        XCTAssertFalse(model.undoTodayCompletion(id: old.id, habitID: habit.id, asOf: day(1)))
         XCTAssertEqual(model.rows.first?.todaysCompletionID, next.id)
         XCTAssertEqual(Set(try repository.completions(for: habit.id, in: DateInterval(start: day(-1), end: day(2))).map(\.id)), Set([old.id, next.id]))
         model.undoTodayCompletion(id: next.id, habitID: habit.id, asOf: day(1))
@@ -78,6 +79,80 @@ final class TodayViewModelTests: XCTestCase {
         model.toggleCompletion(for: try XCTUnwrap(model.rows.first), asOf: day0)
         XCTAssertTrue(try XCTUnwrap(model.rows.first).isCompletedToday)
         XCTAssertFalse(try XCTUnwrap(model.rows.first).isSkippedToday)
+    }
+
+    func testStaleMainControlCannotLogOrUndoAnotherDay() throws {
+        let repository = try makeRepository()
+        let draft = HabitDraft(name: "Read", iconName: "book.fill", category: .learning, polarity: .positive, schedule: .daily)
+        let completed = try repository.createHabit(draft, at: day0)
+        let pending = try repository.createHabit(draft, at: day0)
+        let oldFact = try repository.recordCompletion(habitID: completed.id, at: day0, source: .app, note: nil)
+        let model = TodayViewModel(repository: repository, calendar: calendar)
+        model.load(asOf: day0)
+        let oldCompletedRow = try XCTUnwrap(model.rows.first { $0.id == completed.id })
+        let oldPendingRow = try XCTUnwrap(model.rows.first { $0.id == pending.id })
+        let currentFact = try repository.recordCompletion(habitID: completed.id, at: day(1), source: .app, note: nil)
+        model.toggleCompletion(for: oldCompletedRow, asOf: day(1))
+        model.toggleCompletion(for: oldPendingRow, asOf: day(1))
+        let range = DateInterval(start: day(-1), end: day(2))
+        XCTAssertEqual(Set(try repository.completions(for: completed.id, in: range).map(\.id)), [oldFact.id, currentFact.id])
+        XCTAssertTrue(try repository.completions(for: pending.id, in: range).isEmpty)
+        XCTAssertNotNil(model.errorMessage)
+    }
+
+    func testRepeatedCapturedLogDoesNotDuplicateAnAlreadySavedCheckIn() throws {
+        let repository = try makeRepository()
+        let habit = try repository.createHabit(.init(name: "Read", iconName: "book.fill", category: .learning,
+                                                     polarity: .positive, schedule: .daily), at: day0)
+        let model = TodayViewModel(repository: repository, calendar: calendar)
+        model.load(asOf: day0)
+        let pending = try XCTUnwrap(model.rows.first)
+        model.toggleCompletion(for: pending, asOf: day0)
+        let savedID = try XCTUnwrap(model.rows.first?.todaysCompletionID)
+        model.toggleCompletion(for: pending, asOf: day0)
+        XCTAssertEqual(try repository.completions(for: habit.id,
+            in: XCTUnwrap(calendar.dateInterval(of: .day, for: day0))).map(\.id), [savedID])
+        XCTAssertEqual(model.rows.first?.todaysCompletionID, savedID)
+    }
+
+    func testStaleMainUndoCannotDeleteAReplacementCheckInButFreshUndoStillWorks() throws {
+        let repository = try makeRepository()
+        let habit = try repository.createHabit(.init(name: "Read", iconName: "book.fill", category: .learning,
+                                                     polarity: .positive, schedule: .daily), at: day0)
+        let original = try repository.recordCompletion(habitID: habit.id, at: day0, source: .app, note: nil)
+        let model = TodayViewModel(repository: repository, calendar: calendar)
+        model.load(asOf: day0)
+        let oldRow = try XCTUnwrap(model.rows.first)
+        try repository.undoCompletion(id: original.id)
+        let replacement = try repository.recordCompletion(habitID: habit.id, at: day0, source: .app, note: nil)
+        model.toggleCompletion(for: oldRow, asOf: day0)
+        XCTAssertEqual(try repository.completions(for: habit.id,
+            in: XCTUnwrap(calendar.dateInterval(of: .day, for: day0))).map(\.id), [replacement.id])
+        model.toggleCompletion(for: try XCTUnwrap(model.rows.first), asOf: day0)
+        XCTAssertTrue(try repository.completions(for: habit.id,
+            in: XCTUnwrap(calendar.dateInterval(of: .day, for: day0))).isEmpty)
+    }
+
+    func testStaleMainControlCannotBypassAnArchiveScheduleChangeOrNewSkip() throws {
+        let repository = try makeRepository()
+        let draft = HabitDraft(name: "Read", iconName: "book.fill", category: .learning, polarity: .positive, schedule: .daily)
+        let archived = try repository.createHabit(draft, at: day0)
+        let rescheduled = try repository.createHabit(draft, at: day0)
+        let skipped = try repository.createHabit(draft, at: day0)
+        let model = TodayViewModel(repository: repository, calendar: calendar)
+        model.load(asOf: day0)
+        let captured = model.rows
+        try repository.archiveHabit(id: archived.id, at: day0)
+        var revised = draft
+        revised.schedule = .weekdays([.sunday])
+        _ = try repository.updateHabit(id: rescheduled.id, with: revised, at: day0)
+        let skip = try repository.recordSkip(habitID: skipped.id, on: day0, reason: .planned)
+        for row in captured { model.toggleCompletion(for: row, asOf: day0) }
+        let range = try XCTUnwrap(calendar.dateInterval(of: .day, for: day0))
+        XCTAssertTrue(try repository.completions(in: range).isEmpty)
+        XCTAssertEqual(try repository.skips(for: skipped.id, in: range).map(\.id), [skip.id])
+        XCTAssertEqual(try repository.archivePeriods(for: archived.id).count, 1)
+        XCTAssertEqual(try repository.configurationHistory(for: rescheduled.id).count, 2)
     }
 
     func testFreshHabitHasNoRecoveryContext() throws {

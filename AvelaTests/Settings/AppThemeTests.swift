@@ -269,6 +269,34 @@ final class AppThemeTests: XCTestCase {
         }
     }
 
+    func testLuminousHeroesKeepSmallTextReadableUnderTheirBrightestDecoration() {
+        func blend(_ foreground: UIColor, over background: UIColor, alpha: CGFloat) -> UIColor {
+            var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+            var br: CGFloat = 0, bg: CGFloat = 0, bb: CGFloat = 0, ba: CGFloat = 0
+            foreground.getRed(&r, green: &g, blue: &b, alpha: &a)
+            background.getRed(&br, green: &bg, blue: &bb, alpha: &ba)
+            return UIColor(red: r * alpha + br * (1-alpha), green: g * alpha + bg * (1-alpha),
+                           blue: b * alpha + bb * (1-alpha), alpha: 1)
+        }
+        for theme in AppTheme.allCases {
+            let palette = AppPalette(theme: theme)
+            for style: UIUserInterfaceStyle in [.light, .dark] {
+                let traits = UITraitCollection(userInterfaceStyle: style)
+                let highlight = UIColor(palette.luminousHighlight).resolvedColor(with: traits)
+                for endpoint in palette.luminousColors {
+                    // Conservative upper bound: the strongest radial wash and
+                    // contour plus an overlapping thin line are at maximum opacity.
+                    let radial = blend(highlight, over: UIColor(endpoint).resolvedColor(with: traits), alpha: 0.08)
+                    let wideContour = blend(highlight, over: radial, alpha: 0.05)
+                    let decorated = blend(highlight, over: wideContour, alpha: 0.03)
+                    let secondaryInk = blend(.white, over: decorated, alpha: 0.8)
+                    XCTAssertGreaterThanOrEqual(contrast(decorated, secondaryInk), 4.5,
+                        "\(theme.title) small secondary hero text in \(style)")
+                }
+            }
+        }
+    }
+
     private func temporaryDirectory() throws -> URL {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)

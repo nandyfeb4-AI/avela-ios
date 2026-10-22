@@ -266,7 +266,7 @@ struct AppShellView: View {
                 #endif
             }
             intentionLinks = SwiftDataIntentionSessionLinkRepository(modelContext: modelContext)
-            insightsViewModel = InsightsViewModel(repository: repository, attentionRepository: attentionRepository, intentionLinks: intentionLinks)
+            insightsViewModel = InsightsViewModel(repository: repository, attentionRepository: attentionRepository, intentionLinks: intentionLinks, activityRepository: activity)
             historyViewModel = HistoryViewModel(repository: repository, attentionRepository: attentionRepository)
             let service = HabitReminderService(habits: repository,
                 reminders: SwiftDataHabitReminderRepository(modelContext: modelContext), adapter: UserNotificationAdapter())

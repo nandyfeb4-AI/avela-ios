@@ -149,6 +149,21 @@ final class CompanionTests: XCTestCase {
         XCTAssertNil(CompanionArtwork.image(animal: "owl", state: "unknown"))
     }
 
+    func testLargeOnboardingArtworkKeepsCompactWidgetCacheSeparate() throws {
+        for animal in CompanionAnimal.allCases {
+            let compact = try XCTUnwrap(CompanionArtwork.image(animal: animal.rawValue, state: "calm"))
+            let hero = try XCTUnwrap(CompanionArtwork.image(animal: animal.rawValue, state: "calm", highResolution: true))
+            XCTAssertGreaterThan(hero.size.width, compact.size.width,
+                                 "The onboarding hero needs a larger image than a compact widget")
+            XCTAssertLessThanOrEqual(compact.size.width, 256,
+                                     "Loading a hero must not enlarge extension artwork")
+            XCTAssertTrue(compact === CompanionArtwork.image(animal: animal.rawValue, state: "calm"))
+            XCTAssertTrue(hero === CompanionArtwork.image(animal: animal.rawValue, state: "calm", highResolution: true))
+        }
+        XCTAssertNil(CompanionArtwork.image(animal: "unknown", state: "calm", highResolution: true))
+        XCTAssertNil(CompanionArtwork.image(animal: "owl", state: "unknown", highResolution: true))
+    }
+
     func testStatePriorityPreservesAttentionWarningsOverCelebration() {
         var input = CompanionInput(loggedAttentionStates: [.exceeded, .nearLimit], attentionGoalCount: 2,
                                    isRecovering: true, meaningfulCompletion: true,

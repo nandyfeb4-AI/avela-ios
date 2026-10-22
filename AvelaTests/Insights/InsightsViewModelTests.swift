@@ -210,4 +210,45 @@ final class InsightsViewModelTests: XCTestCase {
         XCTAssertNil(model.attentionWeek?.successRate)
     }
 
+    func testReportAndWeeklyReviewUseTheSameCompletedWeekAndNavigateTogether() throws {
+        let repository = try makeRepository()
+        let habit = try repository.createHabit(
+            HabitDraft(name: "Read", iconName: "book", category: .learning, polarity: .positive, schedule: .daily), at: day(-60)
+        )
+        _ = try repository.recordCompletion(habitID: habit.id, at: day(-7), source: .app, note: nil)
+        let model = InsightsViewModel(repository: repository, calendar: calendar)
+        model.load(asOf: day(3))
+        XCTAssertEqual(model.report?.weeks.count, 12)
+        XCTAssertEqual(model.report?.weeks.last?.consistency, model.insights?.overallConsistency)
+        XCTAssertEqual(model.report?.interval.end, model.insights?.weekInterval.end)
+        let initial = try XCTUnwrap(model.report?.interval)
+        model.goToPreviousWeek(asOf: day(3))
+        XCTAssertLessThan(try XCTUnwrap(model.report?.interval.end), initial.end)
+        XCTAssertEqual(model.report?.interval.end, model.insights?.weekInterval.end)
+        model.goToNextWeek(asOf: day(3))
+        XCTAssertEqual(model.report?.interval, initial)
+        XCTAssertEqual(try repository.configurationHistory(for: habit.id).count, 1)
+        XCTAssertEqual(try repository.completions(for: habit.id, in: DateInterval(start: day(-60), end: day(4))).count, 1)
+    }
+
+    func testQuantityReportUsesCapturedUnitAndCurrentWeekCannotEnterReview() throws {
+        let repository = try makeRepository()
+        let context = try XCTUnwrap(container).mainContext
+        let activity = SwiftDataHabitActivityRepository(context: context, habits: repository, calendar: calendar)
+        let habit = try repository.createHabit(
+            HabitDraft(name: "Read", iconName: "book", category: .learning, polarity: .positive, schedule: .daily), at: day(-7)
+        )
+        try activity.configure(habitID: habit.id, target: HabitQuantityTarget(amount: 10, unit: .pages), smallerAction: "One page", at: day(-7))
+        let config = try XCTUnwrap(activity.configuration(for: habit.id, on: day(-4)))
+        try activity.log(habitID: habit.id, kind: .quantity, amount: 5, expectedConfigurationID: config.id, on: day(-4), now: day(-4))
+        try activity.log(habitID: habit.id, kind: .quantity, amount: 20, expectedConfigurationID: config.id, on: day(3), now: day(3))
+        let model = InsightsViewModel(repository: repository, activityRepository: activity, calendar: calendar)
+        model.load(asOf: day(3))
+        XCTAssertEqual(model.report?.quantities.first?.total, 5)
+        XCTAssertEqual(model.report?.quantities.first?.unit, .pages)
+        XCTAssertEqual(model.report?.recordedDays, 1)
+        XCTAssertEqual(model.insights?.eligibleHabits.first?.successfulUnits, 0, "a partial amount is activity, not a completed target")
+        XCTAssertEqual(try activity.entries(for: habit.id, on: day(3)).first?.amount, 20, "reviewing does not modify current progress")
+    }
+
 }

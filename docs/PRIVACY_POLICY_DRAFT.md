@@ -1,6 +1,6 @@
 # Rilova privacy policy — owner-review draft
 
-Draft date: 2026-10-05. This document describes the current native implementation;
+Draft updated: 2026-10-21. This document describes the current native implementation;
 it has not been published and is not a guarantee of legal or App Review outcomes.
 The owner must review the scope, identify the responsible publisher and supply a
 real support/privacy contact before publication. Remove this editorial introduction
@@ -52,8 +52,8 @@ and automations through Apple's Shortcuts app.
 If you connect a Build Up habit, Rilova requests read access to your chosen steps
 or exercise-minute metric. It reads today's available total when you open the
 app or refresh, and can log habit success once the chosen target is met. It does
-not write to Apple Health, promise continuous background monitoring, or upload
-Health data. No accessible data can mean missing samples or restricted access;
+not write to Apple Health, promise continuous background monitoring, or
+automatically upload Health data. No accessible data can mean missing samples or restricted access;
 manual tracking remains available.
 
 Rilova stores the connection settings and resulting habit completions locally,
@@ -61,8 +61,26 @@ not raw Health samples. Disconnecting stops future imports and keeps existing
 completions. Undoing an imported completion can be followed by a new import while
 the connection remains active. Change Health permissions separately in Apple
 Health; disconnecting in Rilova does not revoke Apple's system permission.
-Rilova does not use Health information for advertising or sell/share it with an
-external service. Health-derived local records are excluded from Rilova’s optional cloud recovery. Apple-controlled device-backup behavior must be checked for the final signed build.
+Rilova does not use Health information for advertising, sell it, or send it to a
+developer-operated external service. This restriction on developer-operated
+sharing is separate from a card you explicitly choose to export, described below.
+Health-derived local records remain excluded from Rilova's optional cloud recovery.
+Apple-controlled device-backup behavior must be checked for the final signed build.
+
+## Optional progress sharing
+
+You can preview a weekly progress card created on your device. It contains the
+shown weekly consistency and eligible-habit count. You choose whether week dates
+appear; habit names are off by default and appear only if you include them.
+Aggregates may reflect habit successes imported from Apple Health. The card
+does not include raw Health samples, private habit reasons, reflection notes or
+detailed attention/session records.
+
+Opening or editing the preview publishes nothing and sends no tracking data to
+a Rilova-operated server. Only an explicit Share opens Apple's share sheet,
+where you choose the recipient, app or other destination. The selected destination
+then handles the card under its own practices; you can cancel before sending.
+Rilova does not publish a public profile or automatically share progress.
 
 ## Notifications
 
@@ -75,8 +93,9 @@ and delivery follow your device's notification and Focus settings.
 ## Widgets
 
 Rilova writes a local progress snapshot into an App Group container shared with
-its own widget extension. The snapshot supports Home Screen and Lock Screen
-widgets; it is not uploaded to a developer server.
+its own widget extension. The snapshot supports the Quick Log and Routine Home
+Screen widgets; it is not uploaded to a developer server. Lock Screen and Dynamic
+Island session Live Activities are a separate feature, described below.
 
 Widgets can display progress and, depending on their configuration, habit names.
 People who can see your screen may see those details. Choose widget placement and

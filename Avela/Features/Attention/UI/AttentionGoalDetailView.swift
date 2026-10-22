@@ -6,6 +6,7 @@ import SwiftUI
 /// computes threshold math itself.
 struct AttentionGoalDetailView: View {
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.appPalette) private var palette
     @Bindable var viewModel: AttentionGoalDetailViewModel
 
     var body: some View {
@@ -13,29 +14,24 @@ struct AttentionGoalDetailView: View {
             if let display = viewModel.display {
                 List {
                     Section {
-                        HStack(spacing: 14) {
-                            AppIconBadge(symbol: "hourglass").accessibilityHidden(true)
-                            VStack(alignment: .leading, spacing: 6) {
-                                Text(display.name)
-                                    .font(.title2.weight(.semibold))
-                                    .fontDesign(.rounded).foregroundStyle(Color.appInk)
-                                    .accessibilityIdentifier("attentionGoalDetail.name")
-                                if let label = display.appOrCategoryLabel {
-                                    Text(label)
-                                        .font(.caption)
-                                        .foregroundStyle(Color.appInkSecondary)
-                                }
-                            }
-                        }
-                        .rilovaHeaderSurface()
+                        budgetHero(display)
                         .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
                     }
 
                     Section("Today") {
-                        detailRow("Budget", value: display.targetLabel, identifier: "attentionGoalDetail.target")
                         Text(display.statusLabel)
                             .foregroundStyle(stateColor(display.state))
                             .accessibilityIdentifier("attentionGoalDetail.status")
+                        Text("Logged manually. An unlogged day is unknown, not zero.")
+                            .font(.footnote).foregroundStyle(Color.appInkSecondary)
+                        Button { viewModel.activeSheet = .logUsage } label: {
+                            Label("Log Usage", systemImage: "plus")
+                                .font(.headline).foregroundStyle(palette.prominentInk)
+                                .frame(maxWidth: .infinity, minHeight: 52)
+                                .background(palette.prominentFill, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                        }
+                        .buttonStyle(RilovaPressStyle())
+                        .accessibilityIdentifier("attentionGoalDetail.logUsageButton")
                     }
 
                     Section("Entries") {
@@ -79,12 +75,6 @@ struct AttentionGoalDetailView: View {
                         }
                     }
 
-                    Section {
-                        Button {
-                            viewModel.activeSheet = .logUsage
-                        } label: { Label("Log Usage", systemImage: "plus.circle").frame(minHeight: 44) }
-                        .accessibilityIdentifier("attentionGoalDetail.logUsageButton")
-                    }
                 }
             } else {
                 ProgressView()
@@ -136,6 +126,27 @@ struct AttentionGoalDetailView: View {
         .task {
             viewModel.load()
         }
+    }
+
+    private func budgetHero(_ display: AttentionGoalDetailDisplay) -> some View {
+        VStack(alignment: .leading, spacing: 18) {
+            Text("YOUR DAILY BUDGET").font(.caption2.weight(.bold)).tracking(2)
+                .foregroundStyle(.white.opacity(0.85))
+            Text(display.name).font(.system(.title, design: .rounded, weight: .bold))
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("attentionGoalDetail.name")
+            if let label = display.appOrCategoryLabel {
+                Text(label).font(.subheadline).foregroundStyle(.white.opacity(0.85))
+            }
+            Text(display.targetLabel).font(.system(.title2, design: .rounded, weight: .semibold))
+                .monospacedDigit().fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("attentionGoalDetail.target")
+            Label("Your time, reported by you", systemImage: "hand.tap")
+                .font(.caption).foregroundStyle(.white.opacity(0.85))
+        }
+        .foregroundStyle(.white).padding(24).frame(maxWidth: .infinity, alignment: .leading)
+        .background { RilovaAurora() }
+        .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
     }
 
     private func stateColor(_ state: AttentionProgressCalculator.ThresholdState?) -> Color {

@@ -7,9 +7,10 @@ struct CompanionArtwork: View {
     let animal: String
     let state: String
     let size: CGFloat
+    var highResolution = false
 
     var body: some View {
-        if let image = Self.image(animal: animal, state: state) {
+        if let image = Self.image(animal: animal, state: state, highResolution: highResolution) {
             Image(uiImage: image)
                 .resizable()
                 .scaledToFit()
@@ -18,13 +19,13 @@ struct CompanionArtwork: View {
         }
     }
 
-    static func image(animal: String, state: String) -> UIImage? {
+    static func image(animal: String, state: String, highResolution: Bool = false) -> UIImage? {
         guard let index = stateNames.firstIndex(of: state) else { return nil }
         let poses: [UIImage]
         switch animal {
-        case "owl": poses = owlArtwork
-        case "fox": poses = foxArtwork
-        case "otter": poses = otterArtwork
+        case "owl": poses = highResolution ? owlHeroArtwork : owlArtwork
+        case "fox": poses = highResolution ? foxHeroArtwork : foxArtwork
+        case "otter": poses = highResolution ? otterHeroArtwork : otterArtwork
         default: return nil
         }
         return poses.indices.contains(index) ? poses[index] : nil
@@ -34,12 +35,16 @@ struct CompanionArtwork: View {
 
     // Lazy immutable caches load only the requested animal, especially in
     // memory-constrained widgets. Each cell is decoded once at a size suited
-    // to our maximum 80-point display at 3x screen scale.
+    // to compact display at 3x screen scale. Larger onboarding art opts into
+    // a separate lazy cache; widgets never need to decode that larger atlas.
     private static let owlArtwork = loadAtlas(named: "CompanionOwlStates")
     private static let foxArtwork = loadAtlas(named: "CompanionFoxStates")
     private static let otterArtwork = loadAtlas(named: "CompanionOtterStates")
+    private static let owlHeroArtwork = loadAtlas(named: "CompanionOwlStates", edge: 448)
+    private static let foxHeroArtwork = loadAtlas(named: "CompanionFoxStates", edge: 448)
+    private static let otterHeroArtwork = loadAtlas(named: "CompanionOtterStates", edge: 448)
 
-    private static func loadAtlas(named name: String) -> [UIImage] {
+    private static func loadAtlas(named name: String, edge: CGFloat = 256) -> [UIImage] {
         guard let source = UIImage(named: name)?.cgImage else { return [] }
         let width = source.width / 3
         let height = source.height / 2
@@ -47,7 +52,7 @@ struct CompanionArtwork: View {
         let format = UIGraphicsImageRendererFormat()
         format.scale = 1
         format.opaque = false
-        let renderedSize = CGSize(width: 256, height: 256 * CGFloat(height) / CGFloat(width))
+        let renderedSize = CGSize(width: edge, height: edge * CGFloat(height) / CGFloat(width))
         let renderer = UIGraphicsImageRenderer(size: renderedSize, format: format)
         let poses = (0..<6).compactMap { index -> UIImage? in
             let rect = CGRect(x: (index % 3) * width, y: (index / 3) * height, width: width, height: height)

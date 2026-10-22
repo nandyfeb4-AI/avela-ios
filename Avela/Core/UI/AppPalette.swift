@@ -17,11 +17,12 @@ struct AppPalette {
     var pageGradient: LinearGradient {
         LinearGradient(colors: [pageTop, atmosphere, pageBottom], startPoint: .topLeading, endPoint: .bottomTrailing)
     }
-    var heroEnd: Color {
+    var heroEnd: Color { deepAccent(multiplier: 0.72) }
+    private func deepAccent(multiplier: CGFloat) -> Color {
         let hex = theme.lightAccent
-        return Color(uiColor: UIColor(red: CGFloat((hex >> 16) & 255) / 255 * 0.72,
-            green: CGFloat((hex >> 8) & 255) / 255 * 0.72,
-            blue: CGFloat(hex & 255) / 255 * 0.72, alpha: 1))
+        return Color(uiColor: UIColor(red: CGFloat((hex >> 16) & 255) / 255 * multiplier,
+            green: CGFloat((hex >> 8) & 255) / 255 * multiplier,
+            blue: CGFloat(hex & 255) / 255 * multiplier, alpha: 1))
     }
     var heroGradient: LinearGradient {
         LinearGradient(colors: [prominentFill, heroEnd], startPoint: .topLeading, endPoint: .bottomTrailing)
@@ -42,6 +43,21 @@ struct AppPalette {
         theme == .tidewater
             ? [Color(uiColor: Self.uiColor(0x14636A)), Color(uiColor: Self.uiColor(0x0C4953)), Color(uiColor: Self.uiColor(0x072E32))]
             : [prominentFill, heroEnd]
+    }
+
+    /// Opaque brand surfaces keep white type readable in both appearances.
+    /// Alternate saved themes retain their identity rather than becoming teal.
+    var luminousColors: [Color] {
+        if theme == .tidewater {
+            return [Color(uiColor: Self.uiColor(0x0A5352)),
+                    Color(uiColor: Self.uiColor(0x0A4655)),
+                    Color(uiColor: Self.uiColor(0x062A38))]
+        }
+        return [heroEnd, deepAccent(multiplier: 0.55), deepAccent(multiplier: 0.38)]
+    }
+    var luminousHighlight: Color { Color(uiColor: Self.uiColor(0xD6F5E1)) }
+    var luminousGradient: LinearGradient {
+        LinearGradient(colors: luminousColors, startPoint: .topLeading, endPoint: .bottomTrailing)
     }
 
     /// A complementary sky wash, distinct from accent-colored actions.
@@ -122,7 +138,13 @@ private struct AppThemeCanvasModifier: ViewModifier {
             .listSectionSpacing(20)
             .background {
                 if contrast == .increased { palette.pageBottom.ignoresSafeArea() }
-                else { palette.pageGradient.ignoresSafeArea() }
+                else {
+                    ZStack(alignment: .topTrailing) {
+                        palette.pageGradient
+                        RadialGradient(colors: [palette.accent.opacity(0.12), .clear],
+                                       center: .topTrailing, startRadius: 0, endRadius: 440)
+                    }.ignoresSafeArea()
+                }
             }
     }
 }
@@ -131,6 +153,65 @@ extension View {
     func appThemeCanvas() -> some View { modifier(AppThemeCanvasModifier()) }
     /// Introductory cards share one restrained wash; data surfaces remain opaque.
     func rilovaHeaderSurface() -> some View { modifier(RilovaHeaderSurface()) }
+    func rilovaCard() -> some View { modifier(RilovaCardSurface()) }
+}
+
+private struct RilovaCardSurface: ViewModifier {
+    @Environment(\.appPalette) private var palette
+    @Environment(\.colorSchemeContrast) private var contrast
+    func body(content: Content) -> some View {
+        content
+            .background(palette.surface, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 26, style: .continuous)
+                    .strokeBorder(palette.accent.opacity(contrast == .increased ? 0.5 : 0.09), lineWidth: 1)
+                    .allowsHitTesting(false)
+            }
+    }
+}
+
+/// Original native atmosphere. Its still light and flowing contours never
+/// encode a score, activity, or a companion's needs.
+struct RilovaAurora: View {
+    @Environment(\.appPalette) private var palette
+    @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    var body: some View {
+        ZStack {
+            palette.luminousGradient
+            if contrast != .increased && !reduceTransparency {
+                GeometryReader { proxy in
+                    RadialGradient(colors: [palette.luminousHighlight.opacity(0.08), .clear],
+                                   center: .topTrailing, startRadius: 0,
+                                   endRadius: max(proxy.size.width, proxy.size.height) * 0.8)
+                    Canvas { context, size in
+                        for index in 0..<3 {
+                            let base = size.height * (0.78 + Double(index) * 0.08)
+                            var path = Path()
+                            path.move(to: CGPoint(x: -20, y: base))
+                            path.addCurve(to: CGPoint(x: size.width + 20, y: base - size.height * 0.12),
+                                control1: CGPoint(x: size.width * 0.3, y: base - size.height * 0.25),
+                                control2: CGPoint(x: size.width * 0.6, y: base + size.height * 0.15))
+                            context.stroke(path, with: .color(palette.luminousHighlight.opacity(index == 0 ? 0.05 : 0.03)),
+                                           lineWidth: index == 0 ? 20 : 1.2)
+                        }
+                    }
+                }
+            }
+        }.accessibilityHidden(true).allowsHitTesting(false)
+    }
+}
+
+/// Only a press response; saving and success remain owned by the invoking flow.
+struct RilovaPressStyle: ButtonStyle {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .contentShape(Rectangle())
+            .opacity(configuration.isPressed ? 0.8 : 1)
+            .scaleEffect(configuration.isPressed && !reduceMotion ? 0.985 : 1)
+            .animation(reduceMotion ? nil : .snappy(duration: 0.18), value: configuration.isPressed)
+    }
 }
 
 private struct RilovaHeaderSurface: ViewModifier {

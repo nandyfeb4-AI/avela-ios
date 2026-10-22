@@ -309,3 +309,100 @@ Reminder and Apple Health settings show work and successful configuration saves 
 Back Up Now and Check iCloud Backups show work/result at their controls. Only an acknowledged upload can say Backed Up; an empty successful check explicitly reports that no recovery points were found. Existing consent, restore and deletion confirmations remain unchanged. Progress & History keeps its saved-result text in a bottom safe-area strip, cleared by a day/configuration change, new write attempt or failure. Calendar's earlier Added confirmation clears when a revised plan has not been saved. Shared app-protection status exposes Stop errors/results; authorization shows work in progress. Watch's tapped habit says Logging while waiting for its iPhone reply.
 
 These are acknowledgments of existing explicit actions, not additional dialogs, celebratory haptics, automatic permission requests or new tracking behavior. Native navigation, dismissed editors, visible selection changes and updated records already provide feedback and do not receive redundant Saved states.
+
+## Luminous Tide: connected everyday journeys — October 21, 2026
+
+Long-range Rhythm, amount and session plots use readable recorded-value
+alternatives at accessibility text sizes, avoiding overlapping scaled axes.
+Weekly date/value rows stack vertically there; normal-size plots keep selection
+and the same periods, units and summaries.
+
+This owner-approved implementation supersedes the earlier restrained-header and
+calendar-scenery composition. Deep selected-theme gradients, pearl illumination,
+original native ribbon contours and rounded display typography give introductory
+and action surfaces a shared identity. Recorded data stays on opaque readable
+surfaces. Existing theme choices and semantic attention/recovery colours remain;
+background art is decorative and never encodes adherence, readiness or pet care.
+
+Today places a compact current-day summary, optional companion and seven-day
+calendar strip before habit actions. The strip opens a read-only day review or
+an expandable month; selecting a date never redirects Today's logging to that
+date. A separate Review or Correct action opens the normal logger with the
+reviewed date explicitly selected. Future, paused and weekly periods retain
+their meaning. A dot/count represents distinct habits with a saved check-in,
+partial quantity or smaller-action entry, not completed targets. Day review
+states when activity was recorded without marking the target complete; multiple
+entries for one habit still contribute only one habit to that date's count.
+The compact companion stays beside the overview before the habit actions; the
+week strip keeps today visible when large type requires horizontal scrolling.
+Calendar dates lead, with a small original theme landscape after the grid rather
+than a large decorative header. Narrow layouts use readable dated rows.
+An optional Keep in View choice pins one due habit ahead of the
+remaining saved order; Follow My Habit Order removes that presentation choice.
+My routines and My day changed expose the existing deliberate grouping/recovery
+tools without automatically changing schedules or progress.
+
+Habit rows expose quantity/unit progress and a direct saved-preset amount where
+eligible; check-ins, amount entry, detail navigation and exact-record Undo are
+separate controls. Detail leads with identity/status and Log Progress/Make Room,
+then Calendar History and factual rhythm. The month calendar leads with dates;
+compact current/personal-best totals follow, with a readable calendar key and
+separate flexible-weekly outcomes. Streak totals remain through today, even when
+browsing another month. Attention budgets keep manually logged provenance and
+place Log Usage beside today's status. New-entry amount choices fill a draft;
+Save remains the explicit additive action, while correction replaces its exact
+entry's amount.
+
+Each calendar streak metric is spoken once with its name, value and unit. Its
+accessibility bounds cover that full metric; display numerals retain intrinsic
+height and breathing room rather than carrying a sentence on the digit alone.
+
+Creation offers editable collections and a larger local idea library alongside
+immediate custom entry. Check-in, amount and timed tracking describe how the
+habit logs; timed tracking uses a minute quantity and the existing explicit
+activity timer. A target and optional smaller action can be reviewed before the
+first Save. Connected Health setup remains a distinct contextual opt-in after
+saving. Four routine starters suggest a few existing active habits by their selected
+categories; people review, remove, reorder and Save the group. Browsing ideas,
+collections or routines never creates habits, completes them or changes a plan.
+
+Make Room is a session composer with the habit, type and actual saved minute
+target visible together. Focus permits phone use; phone-free is a self-reported
+intention. New 15/25/45-minute starters open an editable goal draft, and require
+Save before a separate Start. Existing session configurations are not silently
+rewritten. Optional activity presentation and selected-app restriction controls
+stay near Start; required consent/manual meaning remains visible, with longer
+mechanics in a disclosure. Protection belonging to another session is labelled
+as such. Session Started and Activity Requested remain acknowledgments of their
+specific operations, not promises of habit completion or verified focus.
+
+Insights keeps the canonical completed-week review and adds Rhythm and Activity
+lenses within the existing destination. Twelve-week bars are independent weekly
+snapshots of that week's eligible habits; they are explicitly distinguished from
+the comparable-cohort trend. Quantity visuals retain their unit, weekday charts
+state resolved opportunity counts, and session charts distinguish recorded starts,
+self-reported outcomes and ended timer minutes. The annual activity grid is a
+record of check-ins/effort rather than adherence; monthly navigation and labelled
+value alternatives keep small cells understandable. Optional sharing first shows
+a preview: habit names are off by default, week dates can be omitted, and only an
+explicit Share opens Apple's share sheet. Private reasons, reflections, Health
+samples and detailed attention records are outside this card.
+
+Onboarding preserves its six stages, account-free path and optional skips. Each
+stage has a compact original illustration, a scalable heading and contextual
+setup/readiness content. The bottom Continue action stays reachable while long
+content scrolls; changing stages returns to the heading. Selecting a companion
+changes its choice appearance immediately; persistence remains the existing
+Continue/Save operation. The finish illustration respects a hidden-companion
+choice. No permission, account, subscription or goal creation is introduced by
+an illustration or by opening a stage.
+
+Motion is bounded to press/state/entry responses; there is no idle animation or
+new haptic loop. Reduce Motion removes scale/translation, Reduce Transparency
+and Increase Contrast simplify decorative layers, and charts retain textual
+values. Larger text reflows actions, companion choices, session selectors and
+calendars; decorative scenes become smaller rather than shrinking readable text.
+Existing success/error acknowledgments, exact-record Undo, VoiceOver context and
+save confirmations remain part of the interaction contract. Native screenshots,
+functional checks and physical accessibility/performance validation must be
+reported separately; this section makes no test, usability or award claim.

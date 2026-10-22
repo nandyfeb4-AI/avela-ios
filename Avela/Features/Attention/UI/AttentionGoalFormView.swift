@@ -19,7 +19,7 @@ struct AttentionGoalFormView: View {
     @State private var windowStart: Date
     @State private var windowEnd: Date
 
-    init(initialDraft: AttentionGoalDraft? = nil, defaultType: AttentionGoalType = .maxDurationPerDay, defaultName: String = "", sessionOnly: Bool = false, onSave: @escaping (AttentionGoalDraft) -> Void) {
+    init(initialDraft: AttentionGoalDraft? = nil, defaultType: AttentionGoalType = .maxDurationPerDay, defaultName: String = "", defaultTargetMinutes: Double = 30, sessionOnly: Bool = false, onSave: @escaping (AttentionGoalDraft) -> Void) {
         self.initialDraft = initialDraft
         self.sessionOnly = sessionOnly
         self.onSave = onSave
@@ -30,7 +30,7 @@ struct AttentionGoalFormView: View {
         _windowEnd = State(initialValue: calendar.date(byAdding: .minute, value: initialDraft?.windowEndMinute ?? 540, to: today) ?? today)
         _name = State(initialValue: initialDraft?.name ?? defaultName)
         _appOrCategoryLabel = State(initialValue: initialDraft?.appOrCategoryLabel ?? "")
-        _targetMinutesText = State(initialValue: initialDraft.map { Self.format($0.targetValue) } ?? "30")
+        _targetMinutesText = State(initialValue: Self.format(initialDraft?.targetValue ?? defaultTargetMinutes))
     }
 
     private var isEditing: Bool { initialDraft != nil }

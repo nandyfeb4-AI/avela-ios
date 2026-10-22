@@ -1,6 +1,73 @@
 import Foundation
 import Observation
 
+/// A suggested grouping of existing habits, not a new schedule or a bulk
+/// creation action. Matching uses user-selected categories, never private text.
+enum RoutineStarter: String, CaseIterable, Identifiable {
+    case morning, evening, focus, recharge
+    var id: String { rawValue }
+    var name: String {
+        switch self {
+        case .morning: "Morning"
+        case .evening: "Evening"
+        case .focus: "Focus"
+        case .recharge: "Recharge"
+        }
+    }
+    var subtitle: String {
+        switch self {
+        case .morning: "A little space to begin."
+        case .evening: "Put the day down gently."
+        case .focus: "Room for what matters."
+        case .recharge: "A slower, lighter rhythm."
+        }
+    }
+    var symbol: String {
+        switch self {
+        case .morning: "sunrise.fill"
+        case .evening: "moon.stars.fill"
+        case .focus: "scope"
+        case .recharge: "leaf.fill"
+        }
+    }
+    private var categories: [HabitCategory] {
+        switch self {
+        case .morning: [.health, .fitness, .mindfulness]
+        case .evening: [.mindfulness, .other, .social]
+        case .focus: [.productivity, .learning, .other]
+        case .recharge: [.fitness, .mindfulness, .social]
+        }
+    }
+    func suggestedHabitIDs(from habits: [Habit]) -> [UUID] {
+        let active = habits.filter { !$0.isArchived }.sorted {
+            $0.sortOrder != $1.sortOrder ? $0.sortOrder < $1.sortOrder : $0.id.uuidString < $1.id.uuidString
+        }
+        return categories.compactMap { category in active.first { $0.category == category }?.id }
+    }
+}
+
+struct RoutineFormDraft: Identifiable {
+    let id = UUID()
+    var routineID: UUID?
+    var name: String = ""
+    var habitIDs: [UUID] = []
+    var restartDays: Int? = nil
+    var starter: RoutineStarter? = nil
+
+    init() {}
+    init(routine: HabitRoutine) {
+        restartDays = routine.restartDays
+        routineID = routine.id
+        name = routine.name
+        habitIDs = routine.habitIDs
+    }
+    init(starter: RoutineStarter, habits: [Habit]) {
+        self.starter = starter
+        name = starter.name
+        habitIDs = starter.suggestedHabitIDs(from: habits)
+    }
+}
+
 @Observable @MainActor
 final class RoutinesViewModel {
     private let repository: any RoutineRepository
@@ -18,11 +85,17 @@ final class RoutinesViewModel {
         do {
             routines = try repository.routines()
             activeHabits = try habits.fetchHabits(includeArchived: false)
+            errorMessage = nil
         } catch { errorMessage = "Your routines couldn’t be loaded. Please try again." }
+    }
+
+    func draft(for starter: RoutineStarter) -> RoutineFormDraft {
+        RoutineFormDraft(starter: starter, habits: activeHabits)
     }
 
     @discardableResult
     func save(id: UUID?, name: String, habitIDs: [UUID], restartDays: Int? = nil, at date: Date = Date()) -> Bool {
+        errorMessage = nil
         do {
             try repository.save(id: id, name: name, habitIDs: habitIDs, restartDays: restartDays, at: date)
             load()
@@ -34,6 +107,7 @@ final class RoutinesViewModel {
     }
 
     func delete(_ routine: HabitRoutine) {
+        errorMessage = nil
         do { try repository.delete(id: routine.id); load() }
         catch { errorMessage = "Your routine couldn’t be removed. Please try again." }
     }

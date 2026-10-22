@@ -1744,3 +1744,40 @@ The temporary iPhone project had diverged from repository configuration and omit
 ## Action feedback audit — October 21, 2026
 
 Same-screen action feedback is now visible at the controls for session Show/Hide/Start, reminder and Health saves, Health checks and cloud checks/uploads. Progress feedback stays visible in a safe-area strip; old acknowledgments clear on draft/context changes and failures. App-protection results/errors and Watch pending logging are explicit. All 138 affected unit tests pass, with 10 distinct UI flows green across the focused runs, including native ActivityKit, large text, independent logging, Undo and fake-provider cloud recovery. [Findings, source scope, screenshots, exact result bundles and hardware limits](verification/action-feedback/README.md).
+
+## Luminous Tide candidate — October 21, 2026
+
+The coordinated native redesign, expanded editable creation library, Home
+calendar and multi-period reports are described in the
+[implementation and verification record](verification/luminous-tide/README.md).
+That record distinguishes the unfiltered regression from subsequent rebuilt
+unit/affected-flow runs; historical totals above do not certify this candidate.
+
+Use the full Xcode developer directory, a dedicated QA simulator and serialized
+testing. Every UI test redirects its DEBUG store; never seed or reset an owner's
+simulator to reproduce a screenshot. The new native flows are in
+`PremiumRefreshUITests`; the normal scheme includes those tests.
+
+```sh
+export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
+xcodebuild -project Avela.xcodeproj -scheme Avela \
+  -destination 'platform=iOS Simulator,name=iPhone 18 Pro Max' \
+  -derivedDataPath /tmp/AvelaCodexMVP \
+  CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- \
+  -parallel-testing-enabled NO test
+```
+
+Dark-mode evidence must use `xcrun simctl ui <QA-UUID> appearance dark`;
+`-UIUserInterfaceStyle Dark` is not a working launch override on this toolchain.
+Restore light appearance after the capture run. PNG exports retain native
+pixels; the HTML gallery only changes their display size.
+
+For a connected iPhone without a registered Watch, derive the temporary
+iPhone-only project from the current complete project before building. Remove
+only the main target's Watch dependency/embed phase in that copy, preserving
+all configurations, Info settings, product identifiers and extension signing.
+Check the built app's purpose strings, Live Activity support and matching App
+Group/team signatures before installing in place. Do not uninstall, seed or
+reset the iPhone's data. Release compilation still uses the complete repository
+scheme, including Watch; distribution and physical interaction gates remain
+separate.

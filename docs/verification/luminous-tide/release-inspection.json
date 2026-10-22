@@ -1,0 +1,61 @@
+{
+  "release_bundles": [
+    {
+      "bundle": "com.example.Avela.watchkitapp",
+      "platform": "watchos",
+      "executable": "AvelaWatch",
+      "binary_bytes": 752952,
+      "debug_marker_matches": {
+        "AVELA_UI_TEST_": 0,
+        "AVELA_UI_TEST_STORE_PATH": 0,
+        "AVELA_UI_TEST_SEED_FIXTURE": 0,
+        "DebugFixtures": 0,
+        "DebugCloudBackupProvider": 0,
+        "premiumReports": 0
+      }
+    },
+    {
+      "bundle": "com.example.Avela.widget",
+      "platform": "iphoneos",
+      "executable": "AvelaWidget",
+      "binary_bytes": 900048,
+      "debug_marker_matches": {
+        "AVELA_UI_TEST_": 0,
+        "AVELA_UI_TEST_STORE_PATH": 0,
+        "AVELA_UI_TEST_SEED_FIXTURE": 0,
+        "DebugFixtures": 0,
+        "DebugCloudBackupProvider": 0,
+        "premiumReports": 0
+      }
+    },
+    {
+      "bundle": "com.example.Avela",
+      "platform": "iphoneos",
+      "executable": "Avela",
+      "binary_bytes": 17779896,
+      "debug_marker_matches": {
+        "AVELA_UI_TEST_": 0,
+        "AVELA_UI_TEST_STORE_PATH": 0,
+        "AVELA_UI_TEST_SEED_FIXTURE": 0,
+        "DebugFixtures": 0,
+        "DebugCloudBackupProvider": 0,
+        "premiumReports": 0
+      }
+    },
+    {
+      "bundle": "com.example.Avela.protectionmonitor",
+      "platform": "iphoneos",
+      "executable": "AvelaProtectionMonitor",
+      "binary_bytes": 135104,
+      "debug_marker_matches": {
+        "AVELA_UI_TEST_": 0,
+        "AVELA_UI_TEST_STORE_PATH": 0,
+        "AVELA_UI_TEST_SEED_FIXTURE": 0,
+        "DebugFixtures": 0,
+        "DebugCloudBackupProvider": 0,
+        "premiumReports": 0
+      }
+    }
+  ],
+  "debug_markers_absent": true
+}

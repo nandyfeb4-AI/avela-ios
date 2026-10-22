@@ -10,6 +10,8 @@ struct AttentionUsageFormView: View {
     let onSave: (Double) -> Void
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.appPalette) private var palette
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var amountText: String
 
     init(initialAmount: Double? = nil, unit: AttentionUnit, onSave: @escaping (Double) -> Void) {
@@ -25,15 +27,42 @@ struct AttentionUsageFormView: View {
         NavigationStack {
             Form {
                 Section {
+                    RilovaSectionHeader(title: isEditing ? "Keep your record accurate" : "A little awareness, simply logged",
+                        subtitle: isEditing ? "Replace this entry's amount. Your other entries stay the same." : "Enter the minutes you want to add to today's manual record.",
+                        symbol: "hourglass")
+                        .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
+                }
+                Section {
                     TextField("Amount", text: $amountText)
                         .font(.system(.title2, design: .rounded, weight: .medium)).monospacedDigit()
                         .frame(minHeight: 44)
                         .keyboardType(.numberPad)
                         .accessibilityIdentifier("attentionUsageForm.amountField")
+                    if !isEditing {
+                        let layout = dynamicTypeSize.isAccessibilitySize
+                            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 10))
+                            : AnyLayout(HStackLayout(spacing: 10))
+                        layout {
+                            ForEach([5, 15, 30], id: \.self) { amount in
+                                Button { amountText = String(amount) } label: {
+                                    Text("\(amount) min").font(.subheadline.weight(.semibold))
+                                        .foregroundStyle(palette.accent)
+                                        .frame(maxWidth: .infinity, minHeight: 48)
+                                        .background(palette.accentSoft, in: RoundedRectangle(cornerRadius: 15))
+                                }
+                                .buttonStyle(RilovaPressStyle())
+                                .accessibilityLabel("Set amount to \(amount) minutes")
+                                .accessibilityIdentifier("attentionUsageForm.preset.\(amount)")
+                            }
+                        }
+                        Text("Choose an amount, then Save to add it.")
+                            .font(.footnote).foregroundStyle(Color.appInkSecondary)
+                    }
                 } header: { Text(unitSectionTitle) } footer: {
                     Text("Enter 0–1,440 minutes. Logging 0 explicitly reports no usage; leaving a day unlogged means unknown.")
                 }
             }
+            .scrollDismissesKeyboard(.interactively)
             .appThemeCanvas()
         .navigationTitle(isEditing ? "Correct Usage" : "Log Usage")
             .navigationBarTitleDisplayMode(.inline)

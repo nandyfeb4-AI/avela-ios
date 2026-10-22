@@ -337,6 +337,36 @@ final class HabitActivityViewModelTests: XCTestCase {
         XCTAssertTrue(try fixture.activities.entries(for: fixture.habit.id, on: fixture.now).isEmpty)
     }
 
+    func testCalendarMidnightOnFirstTrackingDayStaysSelectableAndCorrectionKeepsItsReviewedDay() throws {
+        let created = calendar.date(from: DateComponents(year: 2025, month: 1, day: 15, hour: 12))!
+        let midnight = calendar.startOfDay(for: created)
+        let later = calendar.date(byAdding: .day, value: 2, to: created)!
+        let store = try AppPersistence.makeContainer(inMemory: true)
+        let habits = SwiftDataHabitRepository(modelContext: store.mainContext, calendar: calendar)
+        let habit = try habits.createHabit(HabitDraft(name: "Read", iconName: "book.fill", category: .learning,
+            polarity: .positive, schedule: .daily), at: created)
+        let activities = SwiftDataHabitActivityRepository(context: store.mainContext, habits: habits, calendar: calendar)
+        let model = HabitActivityViewModel(habitID: habit.id, repository: activities, habits: habits, calendar: calendar)
+        model.selectedDate = midnight // The exact value supplied by Home Calendar.
+        model.load()
+
+        let selectable = model.trackingDateRange(asOf: later)
+        XCTAssertTrue(selectable.contains(midnight), "A noon creation instant must not exclude midnight on that same tracking day")
+        XCTAssertFalse(selectable.contains(midnight.addingTimeInterval(-1)))
+        XCTAssertFalse(selectable.contains(later.addingTimeInterval(1)))
+        XCTAssertEqual(model.selectedDate, midnight, "Preparing the picker must not redirect the reviewed date")
+        let all = DateInterval(start: .distantPast, end: .distantFuture)
+        XCTAssertTrue(try habits.completions(in: all).isEmpty, "Opening a historical logger never records progress")
+
+        model.correct(to: .success, reviewedDate: later)
+        XCTAssertNotNil(model.errorMessage)
+        XCTAssertTrue(try habits.completions(in: all).isEmpty, "A different confirmation date must not write either day")
+        model.correct(to: .success, reviewedDate: midnight)
+        XCTAssertNil(model.errorMessage)
+        XCTAssertEqual(try habits.completions(in: all).map(\.localDateKey), ["2025-01-15"])
+        XCTAssertEqual(model.selectedDate, midnight)
+    }
+
     func testBackdateConfirmationCannotBeRedirectedAfterReloadingAnotherDay() throws {
         let fixture = try fixture()
         let previous = calendar.date(byAdding: .day, value: -1, to: fixture.now)!

@@ -10,6 +10,10 @@ import SwiftUI
 struct InsightsView: View {
     @Environment(\.appPalette) private var palette
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @ScaledMetric(relativeTo: .largeTitle) private var consistencyDisplaySize = 58
+    @State private var lens: InsightsReportsView.Lens = .week
+    @State private var showsSharePreview = false
     @Bindable var viewModel: InsightsViewModel
     var onViewHistory: (UUID) -> Void = { _ in }
     var reflectionRepository: ReflectionRepository? = nil
@@ -19,6 +23,13 @@ struct InsightsView: View {
             .appThemeCanvas()
         .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {
+                    if viewModel.insights?.overallConsistency != nil {
+                        Button { showsSharePreview = true } label: {
+                            Image(systemName: "square.and.arrow.up").frame(minWidth: 44, minHeight: 44)
+                        }
+                        .accessibilityLabel("Preview a Weekly Progress Share Card")
+                        .accessibilityIdentifier("insights.share")
+                    }
                     if let reflectionRepository {
                         NavigationLink { ReflectionView(viewModel: viewModel.reflectionModel(repository: reflectionRepository)) } label: { Image(systemName: "square.and.pencil").frame(minWidth: 44, minHeight: 44) }
                             .accessibilityLabel("Private Weekly Reflection").accessibilityIdentifier("insights.reflection")
@@ -54,8 +65,11 @@ struct InsightsView: View {
             } message: {
                 Text(viewModel.errorMessage ?? "")
             }
-            .task {
-                viewModel.load()
+            .task { viewModel.load() }
+            .sheet(isPresented: $showsSharePreview) {
+                if let insights = viewModel.insights {
+                    InsightsShareView(insights: insights, weekLabel: viewModel.weekRangeLabel)
+                }
             }
     }
 
@@ -66,15 +80,18 @@ struct InsightsView: View {
         } else {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    weekRangeHeader
                     if let insights = viewModel.insights, let overall = insights.overallConsistency {
                         summaryCard(for: insights, overallConsistency: overall)
-                        highlightsCard(for: insights)
-                        habitBreakdown(for: insights)
                     } else {
-                        if viewModel.hasAnyHabits { notEnoughDataState }
+                        weekRangeHeader
                     }
-                    if viewModel.hasAnyAttentionBudgets { attentionCard }
+                    reportPicker
+                    if lens == .week {
+                        if let insights = viewModel.insights, insights.overallConsistency != nil {
+                            highlightsCard(for: insights)
+                            habitBreakdown(for: insights)
+                        } else if viewModel.hasAnyHabits { notEnoughDataState }
+                        if viewModel.hasAnyAttentionBudgets { attentionCard }
                     if viewModel.hasMadeRoomReview {
                         NavigationLink {
                             if let model = viewModel.madeRoomModel() { MadeRoomReviewView(viewModel: model) }
@@ -113,11 +130,27 @@ struct InsightsView: View {
                         .background(palette.surface, in: RoundedRectangle(cornerRadius: 22))
                         .accessibilityIdentifier("insights.weekdayPattern")
                     }
+                    } else if let report = viewModel.report {
+                        InsightsReportsView(report: report, calendar: viewModel.reportCalendar, lens: lens)
+                    }
                 }
+                .animation(reduceMotion ? nil : .easeInOut(duration: 0.22), value: lens)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 16)
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
+        }
+    }
+
+    @ViewBuilder private var reportPicker: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            Picker("Report view", selection: $lens) {
+                ForEach(InsightsReportsView.Lens.allCases) { value in Text(value.rawValue).tag(value) }
+            }.pickerStyle(.menu).accessibilityIdentifier("insights.reportLens")
+        } else {
+            Picker("Report view", selection: $lens) {
+                ForEach(InsightsReportsView.Lens.allCases) { value in Text(value.rawValue).tag(value) }
+            }.pickerStyle(.segmented).accessibilityIdentifier("insights.reportLens")
         }
     }
 
@@ -152,7 +185,7 @@ struct InsightsView: View {
             }
         }
         .padding(20).frame(maxWidth: .infinity, alignment: .leading)
-        .background(palette.surface, in: RoundedRectangle(cornerRadius: 22))
+        .rilovaCard()
     }
 
     private var weekRangeHeader: some View {
@@ -169,44 +202,57 @@ struct InsightsView: View {
 
     private func summaryCard(for insights: WeeklyInsightsCalculator.WeeklyInsights, overallConsistency: Double) -> some View {
         VStack(alignment: .leading, spacing: 18) {
-            Text("Overall Consistency").font(.headline).accessibilityAddTraits(.isHeader)
-            let layout = dynamicTypeSize.isAccessibilitySize
-                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 18))
-                : AnyLayout(HStackLayout(alignment: .center, spacing: 22))
-            layout {
-                ZStack {
-                    Circle().stroke(palette.accentSoft, lineWidth: 9).accessibilityHidden(true)
-                    if overallConsistency > 0 {
-                        Circle().trim(from: 0, to: overallConsistency)
-                            .stroke(palette.accent, style: StrokeStyle(lineWidth: 9, lineCap: .round))
-                            .rotationEffect(.degrees(-90)).accessibilityHidden(true)
-                    }
-                    Text(Self.percentageText(overallConsistency))
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 7) {
+                    Text("YOUR PROGRESS").font(.caption.weight(.bold)).tracking(1.5)
+                    Text("Find your rhythm.")
                         .font(.system(.largeTitle, design: .rounded, weight: .bold))
-                        .foregroundStyle(Color.appInk).monospacedDigit().minimumScaleFactor(0.75)
-                        .accessibilityIdentifier("insights.overallConsistency")
+                        .accessibilityAddTraits(.isHeader)
                 }
-                .frame(width: dynamicTypeSize.isAccessibilitySize ? 210 : 132,
-                       height: dynamicTypeSize.isAccessibilitySize ? 210 : 132)
-                VStack(alignment: .leading, spacing: 8) {
+                Spacer(minLength: 12)
+                Image(systemName: "waveform.path").font(.title).foregroundStyle(palette.luminousHighlight)
+                    .accessibilityHidden(true)
+            }
+            Text(viewModel.weekRangeLabel).font(.subheadline.weight(.medium))
+                .accessibilityIdentifier("insights.weekRangeLabel")
+            let layout = dynamicTypeSize.isAccessibilitySize
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 10))
+                : AnyLayout(HStackLayout(alignment: .center, spacing: 20))
+            layout {
+                Text(Self.percentageText(overallConsistency))
+                    .font(.system(size: consistencyDisplaySize, weight: .bold, design: .rounded))
+                    .fontWidth(.expanded).monospacedDigit().lineLimit(1).minimumScaleFactor(0.5)
+                    .accessibilityIdentifier("insights.overallConsistency")
+                    .padding(.vertical, 10)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Overall Consistency").font(.headline).accessibilityAddTraits(.isHeader)
                     Text("Across \(insights.eligibleHabits.count) \(insights.eligibleHabits.count == 1 ? "habit" : "habits")")
-                        .font(.title3.weight(.semibold))
-                    Text("Each habit counts equally. Excused skips and pauses are excluded.")
-                        .font(.footnote).foregroundStyle(Color.appInkSecondary)
+                        .font(.subheadline)
                 }
             }
             Text(Self.trendText(insights.trendInPercentagePoints))
-                .font(.subheadline.weight(.medium)).foregroundStyle(palette.accent)
-                .padding(12).frame(maxWidth: .infinity, alignment: .leading)
-                .background(palette.accentSoft, in: RoundedRectangle(cornerRadius: 12))
+                .font(.subheadline.weight(.semibold))
                 .accessibilityIdentifier("insights.trend")
-            if insights.trendInPercentagePoints != nil {
-                Text("Trend compares only habits with compatible schedules and complete opportunities in both weeks. It can use a smaller group than the overall score.")
-                    .font(.caption).foregroundStyle(Color.appInkSecondary)
+            Text("Completed week · Equal weight per habit")
+                .font(.caption.weight(.medium))
+            DisclosureGroup("How this is calculated") {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Each eligible habit counts equally. Excused skips, pauses and pending periods are excluded. Daily habits count days; flexible weekly habits count weeks.")
+                    Text("The prior-week change compares only habits with unchanged schedules and complete opportunities in both weeks. It can use a smaller group than the overall percentage.")
+                }.font(.footnote).padding(.top, 8)
+            }
+            .font(.caption.weight(.medium))
+            .disclosureGroupStyle(InsightsHeroDisclosureStyle())
+        }
+        .foregroundStyle(.white)
+        .padding(24).frame(maxWidth: .infinity, alignment: .leading)
+        .background {
+            ZStack {
+                palette.luminousGradient
+                RilovaAurora().opacity(0.65)
             }
         }
-        .padding(20).frame(maxWidth: .infinity, alignment: .leading)
-        .background(palette.surface, in: RoundedRectangle(cornerRadius: 22))
+        .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
     }
 
     private func highlightsCard(for insights: WeeklyInsightsCalculator.WeeklyInsights) -> some View {
@@ -229,14 +275,14 @@ struct InsightsView: View {
             }
         }
         .padding(20).frame(maxWidth: .infinity, alignment: .leading)
-        .background(palette.surface, in: RoundedRectangle(cornerRadius: 22))
+        .rilovaCard()
     }
 
     private func habitBreakdown(for insights: WeeklyInsightsCalculator.WeeklyInsights) -> some View {
         VStack(alignment: .leading, spacing: 20) {
             Text("Habit by habit").font(.headline).accessibilityAddTraits(.isHeader)
-            Text("Successful / resolved commitments. Daily schedules count days; flexible weekly schedules count weeks.")
-                .font(.footnote).foregroundStyle(Color.appInkSecondary)
+            Text("Successful / resolved commitments")
+                .font(.caption).foregroundStyle(Color.appInkSecondary)
             ForEach(insights.eligibleHabits, id: \.habitID) { habit in
                 let commitmentNoun = habit.scheduledUnits == 1 ? "commitment" : "commitments"
                 NavigationLink {
@@ -267,7 +313,7 @@ struct InsightsView: View {
             }
         }
         .padding(20).frame(maxWidth: .infinity, alignment: .leading)
-        .background(palette.surface, in: RoundedRectangle(cornerRadius: 22))
+        .rilovaCard()
     }
 
     private func metricBar(value: Double) -> some View {
@@ -366,4 +412,33 @@ private struct InsightsHabitDestination: View {
     @State var viewModel: HabitDetailViewModel
     var onViewHistory: (UUID) -> Void
     var body: some View { HabitDetailView(viewModel: viewModel, onViewHistory: onViewHistory) }
+}
+
+/// Native disclosure semantics with an explicit, contrast-safe chevron and a
+/// real 44-point label. The system's default disclosure arrow ignored tint on
+/// the deep hero in native captures, so the style owns this small presentation.
+private struct InsightsHeroDisclosureStyle: DisclosureGroupStyle {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    func makeBody(configuration: Configuration) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Button {
+                withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
+                    configuration.isExpanded.toggle()
+                }
+            } label: {
+                HStack(spacing: 12) {
+                    configuration.label
+                    Spacer(minLength: 8)
+                    Image(systemName: configuration.isExpanded ? "chevron.up" : "chevron.down")
+                        .font(.caption.weight(.semibold)).accessibilityHidden(true)
+                }
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityValue(configuration.isExpanded ? "Expanded" : "Collapsed")
+            if configuration.isExpanded { configuration.content.foregroundStyle(.white) }
+        }
+    }
 }

@@ -10,42 +10,57 @@ struct HabitActivityView: View {
     @State private var pendingCorrection: HabitDayCorrection?
     @State private var pendingDeletion: HabitActivityEntry?
     private let prioritizesSmallerAction: Bool
-    init(habitID: UUID, repository: HabitActivityRepository, habits: HabitRepository, prioritizesSmallerAction: Bool = false) {
+    init(habitID: UUID, repository: HabitActivityRepository, habits: HabitRepository, prioritizesSmallerAction: Bool = false, initialDate: Date? = nil) {
         self.prioritizesSmallerAction = prioritizesSmallerAction
-        _model = State(initialValue: HabitActivityViewModel(habitID: habitID, repository: repository, habits: habits))
+        let model = HabitActivityViewModel(habitID: habitID, repository: repository, habits: habits)
+        if let initialDate { model.selectedDate = initialDate }
+        _model = State(initialValue: model)
     }
     var body: some View {
         NavigationStack {
             Form {
                 if let habit = model.habit {
                     Section {
-                        HStack(spacing: 12) {
-                            Image(systemName: habit.iconName)
-                                .font(.title3.weight(.semibold)).foregroundStyle(palette.accent)
-                                .frame(width: 44, height: 44)
-                                .background(palette.accentSoft, in: RoundedRectangle(cornerRadius: 14))
-                                .accessibilityHidden(true)
-                            Text(habit.name).font(.title2.weight(.semibold)).fontDesign(.rounded)
-                                .foregroundStyle(Color.appInk)
-                        }.rilovaHeaderSurface()
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("LOG WHAT YOU DID").font(.caption2.weight(.bold)).tracking(2)
+                                .foregroundStyle(.white.opacity(0.85))
+                            HStack(alignment: .top, spacing: 14) {
+                                Image(systemName: habit.iconName)
+                                    .font(.title3.weight(.semibold))
+                                    .foregroundStyle(palette.luminousColors.last ?? palette.heroEnd)
+                                    .frame(width: 44, height: 44)
+                                    .background(palette.luminousHighlight, in: RoundedRectangle(cornerRadius: 14))
+                                    .accessibilityHidden(true)
+                                Text(habit.name).font(.system(.title2, design: .rounded, weight: .bold))
+                                    .foregroundStyle(.white).fixedSize(horizontal: false, vertical: true)
+                            }
+                        }
+                            .padding(22).frame(maxWidth: .infinity, alignment: .leading)
+                            .background { RilovaAurora() }
+                            .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
                             .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
                     }
                     Section {
                         DatePicker("Tracking day", selection: $model.selectedDate,
-                            in: min(habit.createdAt, Date())...Date(), displayedComponents: .date)
+                            in: model.trackingDateRange(), displayedComponents: .date)
                             .accessibilityIdentifier("activity.date")
                     }
                 }
                 if prioritizesSmallerAction { smallerActionSection }
                 if model.isToday && model.configuration?.target == nil {
                     Section("Today's check-in") {
-                        Button("Log success today") { model.correct(to: .success) }
-                            .frame(minHeight: 44).accessibilityIdentifier("activity.logSuccess")
+                        Button { model.correct(to: .success) } label: {
+                            Label("Log success today", systemImage: "checkmark")
+                                .font(.headline).foregroundStyle(palette.prominentInk)
+                                .frame(maxWidth: .infinity, minHeight: 52)
+                                .background(palette.prominentFill, in: RoundedRectangle(cornerRadius: 18))
+                        }
+                        .buttonStyle(RilovaPressStyle()).accessibilityIdentifier("activity.logSuccess")
                     }
                 }
                 if let target = model.configuration?.target {
                     Section("Daily Progress") {
-                        Text(model.progressLabel).font(.system(.title2, design: .rounded, weight: .semibold)).monospacedDigit().accessibilityIdentifier("activity.progress")
+                        Text(model.progressLabel).font(.system(.title, design: .rounded, weight: .bold)).monospacedDigit().accessibilityIdentifier("activity.progress")
                         ProgressView(value: Double(min(model.total, target.amount)), total: Double(target.amount))
                             .tint(palette.accent).accessibilityLabel(model.progressLabel)
                         if model.isToday {
@@ -56,7 +71,7 @@ struct HabitActivityView: View {
                                         .foregroundStyle(palette.accent)
                                         .frame(maxWidth: .infinity, minHeight: 44)
                                         .background(palette.accentSoft, in: RoundedRectangle(cornerRadius: 14))
-                                        .buttonStyle(.borderless)
+                                        .buttonStyle(RilovaPressStyle())
                                         .accessibilityLabel("Add \(increment) \(target.unit.name(for: increment)) today")
                                         .accessibilityIdentifier("activity.quickPreset.\(increment)")
                                 }
@@ -71,6 +86,7 @@ struct HabitActivityView: View {
                         Stepper("Add \(model.amount) \(target.unit.name(for: model.amount))", value: $model.amount, in: 1...10_000)
                         Button("Log \(model.amount) \(target.unit.name(for: model.amount))") { requestLog(.quantity) }
                             .frame(minHeight: 44)
+                            .buttonStyle(.borderedProminent).tint(palette.prominentFill)
                             .accessibilityIdentifier("activity.logQuantity")
                         Text("Entries add up for the day. Reaching your target logs success; removing progress below it withdraws that success.")
                             .font(.footnote).foregroundStyle(.secondary)
@@ -148,6 +164,7 @@ struct HabitActivityView: View {
                         Text(model.configuration?.smallerAction ?? "")
                         Button("I did the smaller action") { requestLog(.smallerAction) }
                             .disabled(model.entries.contains { $0.kind == .smallerAction })
+                            .buttonStyle(.bordered).tint(palette.accent)
                             .accessibilityIdentifier("activity.logSmaller")
                         Text("A separate check-in for effort. It doesn’t complete the full habit or extend a streak.")
                             .font(.footnote).foregroundStyle(.secondary)
@@ -166,6 +183,7 @@ struct HabitActivityView: View {
                     .accessibilityLabel("\(seconds / 60) minutes, \(seconds % 60) seconds")
             }
             Button(model.timer?.startedAt == nil ? "Start timer" : "Pause timer") { model.toggleTimer() }
+                .buttonStyle(.borderedProminent).tint(palette.prominentFill).controlSize(.large)
                 .accessibilityIdentifier("activity.timerToggle")
             Button("Log whole minutes") { model.logTimer() }
                 .disabled(model.timer?.startedAt != nil || (model.timer?.elapsedSeconds ?? 0) < 60)

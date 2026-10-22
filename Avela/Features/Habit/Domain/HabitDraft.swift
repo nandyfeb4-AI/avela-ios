@@ -12,4 +12,8 @@ struct HabitDraft: Equatable, Sendable {
     /// Private, optional motivation; never exported to logical cloud recovery.
     var whyItMatters: String? = nil
     var isWhyMemoryHidden: Bool = false
+    /// Creation-only activity setup. Later edits use Progress & History's
+    /// versioned configuration flow so historical targets remain intact.
+    var quantityTarget: HabitQuantityTarget? = nil
+    var smallerAction: String? = nil
 }

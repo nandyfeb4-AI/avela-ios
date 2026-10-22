@@ -4,19 +4,25 @@ import SwiftUI
 /// buttons. At accessibility text sizes the grid becomes a dated vertical list.
 struct HabitCalendarView: View {
     @State var viewModel: HabitCalendarViewModel
-    @ScaledMetric(relativeTo: .largeTitle) private var streakFontSize = 64.0
+    @ScaledMetric(relativeTo: .title) private var streakFontSize = 34.0
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.appPalette) private var palette
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                Text(viewModel.habitName).font(.title2.weight(.semibold)).fontDesign(.rounded)
-                    .foregroundStyle(Color.appInk).accessibilityAddTraits(.isHeader)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("YOUR RECORDED RHYTHM").font(.caption2.weight(.bold)).tracking(2)
+                        .foregroundStyle(palette.accent)
+                    Text(viewModel.habitName).font(.system(.largeTitle, design: .rounded, weight: .bold))
+                        .foregroundStyle(Color.appInk).accessibilityAddTraits(.isHeader)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text("Every recorded step has a place.").font(.subheadline).foregroundStyle(Color.appInkSecondary)
+                }
                 if let month = viewModel.month {
-                    streakSummary(month.streak, mixedUnits: month.hasMixedStreakUnits)
                     monthNavigation
                     if dynamicTypeSize.isAccessibilitySize {
                         if !month.weeklyPeriods.isEmpty { weeklyCommitments(month.weeklyPeriods) }
@@ -40,10 +46,13 @@ struct HabitCalendarView: View {
                     } else {
                         calendarGrid(month)
                     }
-                    legend
                     if !dynamicTypeSize.isAccessibilitySize && !month.weeklyPeriods.isEmpty {
                         weeklyCommitments(month.weeklyPeriods)
                     }
+                    streakSummary(month.streak, mixedUnits: month.hasMixedStreakUnits)
+                    DisclosureGroup("Calendar key") { legend.padding(.top, 12) }
+                        .font(.subheadline.weight(.medium)).tint(palette.accent)
+                        .padding(18).rilovaCard()
                     Text("Read-only history. Skips and pauses don't break or extend your streak. Calendar dates keep the day recorded when you logged them.")
                         .font(.footnote).foregroundStyle(Color.appInkSecondary)
                 } else if let error = viewModel.errorMessage {
@@ -75,14 +84,16 @@ struct HabitCalendarView: View {
             Button { viewModel.moveMonth(by: -1) } label: {
                 Image(systemName: "chevron.backward").frame(minWidth: 48, minHeight: 48)
             }.disabled(!viewModel.canGoBack)
+                .buttonStyle(RilovaPressStyle())
                 .accessibilityLabel("Previous month").accessibilityIdentifier("habitCalendar.previousMonth")
             Spacer(minLength: 4)
-            Text(viewModel.monthTitle).font(.headline).multilineTextAlignment(.center)
+            Text(viewModel.monthTitle).font(.system(.title3, design: .rounded, weight: .bold)).multilineTextAlignment(.center)
                 .accessibilityIdentifier("habitCalendar.monthTitle")
             Spacer(minLength: 4)
             Button { viewModel.moveMonth(by: 1) } label: {
                 Image(systemName: "chevron.forward").frame(minWidth: 48, minHeight: 48)
             }.disabled(!viewModel.canGoForward)
+                .buttonStyle(RilovaPressStyle())
                 .accessibilityLabel("Next month").accessibilityIdentifier("habitCalendar.nextMonth")
         }
         .padding(.horizontal, 8)
@@ -94,43 +105,50 @@ struct HabitCalendarView: View {
         let singular = mixedUnits ? "successful commitment" : streak.unit == .days ? "day" : "weekly commitment"
         let noun = streak.currentStreak == 1 ? singular : singular + "s"
         let bestNoun = streak.bestStreak == 1 ? singular : singular + "s"
-        return VStack(alignment: .leading, spacing: 10) {
-            Label("Current Streak", systemImage: "link")
-                .font(.subheadline.weight(.semibold))
-            Text("\(streak.currentStreak)")
-                .font(.system(size: streakFontSize, weight: .bold, design: .rounded))
-                .monospacedDigit()
-                .lineLimit(1).minimumScaleFactor(0.6)
+        let layout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 16))
+            : AnyLayout(HStackLayout(alignment: .top, spacing: 24))
+        return VStack(alignment: .leading, spacing: 14) {
+            if !dynamicTypeSize.isAccessibilitySize && contrast != .increased {
+                ThemeLandscape(theme: palette.theme)
+                    .frame(height: 56)
+                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    .accessibilityHidden(true).allowsHitTesting(false)
+            }
+            layout {
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("Current streak").font(.caption.weight(.semibold))
+                    Text("\(streak.currentStreak)")
+                        .font(.system(size: streakFontSize, weight: .bold, design: .rounded)).monospacedDigit()
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.vertical, 3)
+                    Text(noun).font(.caption).fixedSize(horizontal: false, vertical: true)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .accessibilityElement(children: .ignore)
                 .accessibilityLabel("Current streak: \(streak.currentStreak) \(noun)")
+                .accessibilityAddTraits(.isStaticText)
                 .accessibilityIdentifier("habitCalendar.currentStreak")
-            Text(noun).font(.headline)
-            Divider().overlay(Color.white.opacity(0.35)).accessibilityHidden(true)
-            if dynamicTypeSize.isAccessibilitySize {
-                Text("Personal best: \(streak.bestStreak) \(bestNoun)")
-                    .font(.subheadline.weight(.medium))
-                    .accessibilityIdentifier("habitCalendar.bestStreak")
-            } else {
-                Label("Personal best: \(streak.bestStreak) \(bestNoun)", systemImage: "sparkles")
-                    .font(.subheadline.weight(.medium))
-                    .accessibilityIdentifier("habitCalendar.bestStreak")
+                VStack(alignment: .leading, spacing: 5) {
+                    Label("Personal best", systemImage: "sparkle").font(.caption.weight(.semibold))
+                    Text("\(streak.bestStreak)")
+                        .font(.system(size: streakFontSize, weight: .bold, design: .rounded)).monospacedDigit()
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.vertical, 3)
+                    Text(bestNoun).font(.caption).fixedSize(horizontal: false, vertical: true)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("Personal best: \(streak.bestStreak) \(bestNoun)")
+                .accessibilityAddTraits(.isStaticText)
+                .accessibilityIdentifier("habitCalendar.bestStreak")
             }
             Text("Totals through today. Skips and pauses are neutral.")
-                .font(.caption)
+                .font(.caption).fixedSize(horizontal: false, vertical: true)
         }
-        .foregroundStyle(.white)
-        .padding(22).frame(maxWidth: .infinity, alignment: .leading)
-        .background {
-            if contrast == .increased { palette.prominentFill }
-            else { LinearGradient(colors: palette.todaySummaryColors, startPoint: .topLeading, endPoint: .bottomTrailing) }
-        }
-        .padding(.bottom, dynamicTypeSize.isAccessibilitySize ? 0 : 96)
-        .overlay(alignment: .bottom) {
-            if !dynamicTypeSize.isAccessibilitySize {
-                ThemeLandscape(theme: palette.theme).frame(height: 96)
-            }
-        }
-        .background(palette.prominentFill)
-        .clipShape(RoundedRectangle(cornerRadius: AppMetrics.cardCornerRadius, style: .continuous))
+        .foregroundStyle(.white).padding(22).frame(maxWidth: .infinity, alignment: .leading)
+        .background { RilovaAurora() }
+        .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
     }
 
     private func calendarGrid(_ month: HabitCalendarCalculator.Month) -> some View {
@@ -157,8 +175,9 @@ struct HabitCalendarView: View {
                 }
             }
         }
-        .padding(12)
-        .background(palette.surface, in: RoundedRectangle(cornerRadius: AppMetrics.cardCornerRadius))
+        .padding(14)
+        .rilovaCard()
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.22), value: viewModel.monthTitle)
     }
 
     private func dayCell(_ day: HabitCalendarCalculator.Day, column: Int, connectsLeft: Bool, connectsRight: Bool) -> some View {

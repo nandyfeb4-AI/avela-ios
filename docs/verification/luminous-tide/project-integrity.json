@@ -1,0 +1,17 @@
+{
+  "project": "Avela.xcodeproj/project.pbxproj",
+  "swift_files_checked": 235,
+  "source_memberships": {
+    "Avela": 170,
+    "AvelaProtectionMonitor": 3,
+    "AvelaTests": 55,
+    "AvelaUITests": 3,
+    "AvelaWatch": 4,
+    "AvelaWidget": 11
+  },
+  "resource_files_or_catalogs": 5,
+  "asset_contents_json_checked": 25,
+  "asset_filenames_checked": 8,
+  "intentional_shared_swift_files": 11,
+  "errors": []
+}

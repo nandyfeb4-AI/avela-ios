@@ -45,6 +45,15 @@ final class HabitActivityViewModel {
         return "\(total) of \(target.amount) \(target.unit.rawValue) logged"
     }
     var hasSmallerAction: Bool { !(configuration?.smallerAction.isEmpty ?? true) }
+
+    /// The picker edits a civil day, not a creation instant. Home Calendar
+    /// passes midnight, which must remain selectable when tracking began later
+    /// that same day. Canonical writes still validate the selected day separately.
+    func trackingDateRange(asOf now: Date = Date()) -> ClosedRange<Date> {
+        let firstDay = calendar.startOfDay(for: habit?.createdAt ?? now)
+        return min(firstDay, now)...now
+    }
+
     func load() {
         let previousDayKey = loadedDayKey
         let previousConfigurationID = configuration?.id

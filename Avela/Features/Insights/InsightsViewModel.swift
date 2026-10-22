@@ -4,7 +4,8 @@ import Observation
 
 /// Feature state for the read-only weekly habit Insights screen. Fetches
 /// once per load — one habits fetch, one cross-habit completions fetch and
-/// one cross-habit skips fetch scoped to the two weeks under review, and one
+/// one cross-habit skips fetch covering the review, 12 completed weeks and
+/// selected calendar year, and one
 /// configuration-history and archive-period fetch per habit (not per row) —
 /// then hands the result to `WeeklyInsightsCalculator` for aggregation. Never
 /// mutates facts. Manually reported attention and weekday patterns are
@@ -19,6 +20,8 @@ final class InsightsViewModel {
     private(set) var hasAnyAttentionGoals = false
     private(set) var hasAnyAttentionBudgets = false
     private(set) var attentionWeek: SupplementalWeeklyInsightsCalculator.AttentionWeek?
+    private(set) var report: InsightsReportCalculator.Report?
+    var reportCalendar: Calendar { HabitCalendarCalculator.civilCalendar(from: calendar) }
     private(set) var weekdayPattern: SupplementalWeeklyInsightsCalculator.WeekdayPattern?
     var hasAnyGoals: Bool { hasAnyHabits || hasAnyAttentionGoals }
 
@@ -36,14 +39,16 @@ final class InsightsViewModel {
     private let repository: HabitRepository
     private let attentionRepository: AttentionRepository?
     private let intentionLinks: IntentionSessionLinkRepository?
+    private let activityRepository: HabitActivityRepository?
     private let calendar: Calendar
     private static let logger = Logger(subsystem: "com.example.Avela", category: "InsightsViewModel")
     private static let friendlyErrorMessage = "Something went wrong. Please try again."
 
-    init(repository: HabitRepository, attentionRepository: AttentionRepository? = nil, intentionLinks: IntentionSessionLinkRepository? = nil, calendar: Calendar = .autoupdatingCurrent) {
+    init(repository: HabitRepository, attentionRepository: AttentionRepository? = nil, intentionLinks: IntentionSessionLinkRepository? = nil, activityRepository: HabitActivityRepository? = nil, calendar: Calendar = .autoupdatingCurrent) {
         self.repository = repository
         self.attentionRepository = attentionRepository
         self.intentionLinks = intentionLinks
+        self.activityRepository = activityRepository
         self.calendar = calendar
     }
 
@@ -60,7 +65,15 @@ final class InsightsViewModel {
             canGoToNextWeek = weeksBeforeLastCompleted > 0
             weekRangeLabel = Self.rangeLabel(for: weekInterval, calendar: calendar)
 
-            let combinedRange = DateInterval(start: previousWeekInterval.start, end: weekInterval.end)
+            let reportIntervals = InsightsReportCalculator.intervals(endingAt: weekInterval.end, calendar: calendar)
+            // One bounded cross-habit read supplies all reports. Padding protects
+            // stored civil-day facts after travel; each calculator filters its
+            // own half-open calendar period. No reflection or motivation
+            // repository is consulted; completion notes are not analyzed.
+            let combinedRange = DateInterval(
+                start: min(reportIntervals.report.start, reportIntervals.year.start).addingTimeInterval(-2 * 86400),
+                end: weekInterval.end.addingTimeInterval(2 * 86400)
+            )
             let completions = try repository.completions(in: combinedRange)
             let skips = try repository.skips(in: combinedRange)
 
@@ -87,8 +100,18 @@ final class InsightsViewModel {
                 completions: completions, skips: skips, archivePeriodsByHabitID: archivePeriodsByHabitID,
                 interval: weekInterval, asOf: date, calendar: calendar
             )
+            var activityEntries: [HabitActivityEntry] = []
+            if let activityRepository {
+                for habit in habits {
+                    activityEntries += try activityRepository.entries(for: habit.id, in: combinedRange)
+                }
+            }
+            var reportSessions: [AttentionSession] = []
             if let attentionRepository {
                 let goals = try attentionRepository.fetchGoals()
+                for goal in goals where goal.type.isTimedSession {
+                    reportSessions += try attentionRepository.sessions(for: goal.id)
+                }
                 hasAnyAttentionGoals = !goals.isEmpty
                 hasAnyAttentionBudgets = goals.contains { $0.type == .maxDurationPerDay }
                 var snapshots: [UUID: [AttentionGoalConfigurationSnapshot]] = [:]
@@ -99,8 +122,18 @@ final class InsightsViewModel {
                     interval: weekInterval, calendar: calendar
                 )
             }
+            report = InsightsReportCalculator.calculate(
+                habits: habits, snapshots: snapshotsByHabitID, archives: archivePeriodsByHabitID,
+                completions: completions, skips: skips, entries: activityEntries, sessions: reportSessions,
+                reviewEnd: weekInterval.end, asOf: date, calendar: calendar
+            )
             errorMessage = nil
         } catch {
+            // Navigation must never pair a new range label with stale values.
+            insights = nil
+            report = nil
+            weekdayPattern = nil
+            attentionWeek = nil
             handle(error)
         }
     }

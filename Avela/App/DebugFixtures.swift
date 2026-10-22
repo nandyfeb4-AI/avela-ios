@@ -22,6 +22,7 @@ enum DebugFixtures {
         /// Three habits with distinct, non-tied, non-balanced results: a
         /// clear strongest habit, a clear habit needing attention, and a
         /// week-over-week trend for at least one of them.
+        case premiumReports
         case visualInsights
         case recoveryProgress
         case progressEnrichment
@@ -44,6 +45,8 @@ enum DebugFixtures {
     static func seed(_ fixture: Fixture, into repository: HabitRepository, calendar: Calendar, context: ModelContext? = nil) {
         do {
             switch fixture {
+            case .premiumReports:
+                if let context { try seedPremiumReports(repository, calendar, context) }
             case .visualInsights:
                 if let context { try seedVisualInsights(repository, calendar, context) }
             case .recoveryProgress:
@@ -101,6 +104,27 @@ enum DebugFixtures {
         let goal = try attention.createGoal(AttentionGoalDraft(name: "Social media", appOrCategoryLabel: "Social", type: .maxDurationPerDay, targetValue: 30, unit: .minutes), at: week.start)
         for (offset, amount) in [(0, 10.0), (2, 35.0), (4, 30.0)] {
             try attention.recordUsage(goalID: goal.id, amount: amount, at: day(offset, in: week, calendar: calendar), source: .manual)
+        }
+    }
+
+    /// Rich report fixtures remain confined to the existing empty redirected
+    /// DEBUG store. Public writes preserve real amount/session validation.
+    private static func seedPremiumReports(_ repository: HabitRepository, _ calendar: Calendar, _ context: ModelContext) throws {
+        try seedVisualInsights(repository, calendar, context)
+        let review = lastCompletedWeek(calendar: calendar)
+        let start = calendar.date(byAdding: .weekOfYear, value: -11, to: review.start)!
+        let practice = try repository.createHabit(HabitDraft(name: "Practice music", iconName: "music.note", category: .learning, polarity: .positive, schedule: .daily), at: start)
+        let activity = SwiftDataHabitActivityRepository(context: context, habits: repository, calendar: calendar)
+        try activity.configure(habitID: practice.id, target: HabitQuantityTarget(amount: 20, unit: .minutes), smallerAction: "Play one phrase", at: start)
+        let attention = SwiftDataAttentionRepository(modelContext: context, calendar: calendar)
+        let goal = try attention.createGoal(AttentionGoalDraft(name: "Creative space", appOrCategoryLabel: nil, type: .focusSession, targetValue: 15, unit: .minutes), at: start)
+        for index in 0..<12 {
+            let week = calendar.date(byAdding: .weekOfYear, value: index, to: start)!
+            let logged = calendar.date(byAdding: .day, value: 2, to: week)!.addingTimeInterval(12 * 3600)
+            let configuration = try activity.configuration(for: practice.id, on: logged)!
+            try activity.log(habitID: practice.id, kind: .quantity, amount: 10 + index * 3, expectedConfigurationID: configuration.id, on: logged, now: logged)
+            let session = try attention.startSession(goalID: goal.id, at: logged)
+            try attention.finishSession(id: session.id, outcome: index % 3 == 0 ? .interrupted : .kept, at: logged.addingTimeInterval(20 * 60))
         }
     }
 

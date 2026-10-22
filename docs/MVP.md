@@ -1,5 +1,26 @@
 # V1 / MVP Product Contract
 
+## Owner approved expressive redesign — October 21, 2026
+
+The owner requests the coordinated Luminous Tide redesign and the first/next
+feature priorities in `design/exploration/expressive-refresh/RESEARCH.md` in one
+integrated pass. This authorizes richer theme-aware native artwork/gradients,
+scalable display typography, bounded optional motion, a redesigned six-step
+onboarding, Home week navigation with expandable month and explicit historical
+review, a larger editable starter library, creation-time amount/minute targets,
+optional priority selection, routine discovery, direct manageable-day support,
+and truthful multi-period reports with an explicit optional share preview.
+
+Keep existing data, dates, schedule history, plan limits, check-in/quantity/smaller
+action distinctions, manual attention provenance and opt-in permission rules.
+Opening a date, report, template or onboarding screen cannot log or correct facts.
+Past corrections keep explicit review/confirmation. Creating an amount habit must
+save its initial configuration atomically with the habit. Alternate saved themes
+remain supported. No AI, backend, tracking SDK, currency or compulsory habit is
+introduced. Timers and optional restriction consent remain separate from success.
+New custom scheduling families and quantitative upper-limit semantics are separate
+domain changes, not implied by decorative creation controls.
+
 This file defines the V1 release boundary.
 
 Every feature must be classified as:

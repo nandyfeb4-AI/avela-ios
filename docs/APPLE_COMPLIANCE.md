@@ -319,3 +319,32 @@ The scoped Rilova onboarding/Today polish changes presentation only. No data han
 Owner-approved correction uses native `Button(intent:)` and a non-discoverable, locally authenticated `LiveActivityIntent` with `openAppWhenRun = false`. This marker routes the write to the app; it never starts a Live Activity. No extension database writer, permission, SDK, server or new data transmission. Exported completion IDs are local action metadata; widget rows retain privacy-sensitive presentation. Health imports and current quantity targets are corrected in app detail, not via this action. Old/day-shifted/configuration-changed requests fail closed; repeating an old Undo cannot remove a replacement check-in.
 
 Reviewer: add Quick Log or choose a saved Routine, tap Log for a simple habit, wait for Logged today/Undo, tap Undo, verify Log returns and History no longer contains that exact check-in. Log again and verify one new fact. Names/quantity links still open the app. Signed-device authentication/background routing remains a release gate; no instant-update claim.
+
+## Optional local progress sharing — October 21, 2026
+
+- **Feature / user value:** preview and voluntarily export a weekly progress
+  card through the native share sheet; no public profile or automatic publishing.
+- **Data used:** the shown weekly consistency and eligible-habit count, optional
+  week dates and names. Names default off. Aggregates can reflect Health-imported
+  successes. Reasons, reflections, raw Health samples and detailed attention or
+  session records are excluded.
+- **Data leaving the device:** only the rendered card, when the user explicitly
+  shares it to their chosen recipient/app/destination. Local preview rendering
+  makes no upload, analytics call or request to a developer-operated service.
+- **Permission / capability:** existing preview controls and explicit Share;
+  no additional system permission, entitlement, SDK or server is introduced.
+- **Disclosure / review scope:** Settings → Privacy describes optional sharing
+  and possible Health-derived aggregates; the policy draft distinguishes this
+  voluntary export from developer-operated sharing and existing Health backup
+  exclusions. These disclosures are implementation records, not App Review
+  approval or a guarantee of legal compliance. Reconcile the final enabled binary,
+  public policy, privacy responses and review notes before distribution.
+- **Reviewer steps:** open a completed review with data, preview the card, change
+  date/name inclusion, and confirm only the previewed content is offered in the
+  system share sheet. Cancel without publishing; verify Settings → Privacy's
+  Optional progress sharing section remains accessible. Actual recipient handling
+  and signed-device interaction require separate verification.
+
+Policy references reviewed for this feature: Apple's [Data Use and Sharing,
+Guideline 5.1.2](https://developer.apple.com/app-store/review/guidelines/#data-use-and-sharing)
+and [Health and Health Research, Guideline 5.1.3](https://developer.apple.com/app-store/review/guidelines/#health-and-health-research).

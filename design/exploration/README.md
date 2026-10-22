@@ -107,3 +107,13 @@ adherence. The `prototype/` folder and earlier rounds are unchanged.
 ## Widget visual refinement — October 7, 2026
 
 [Three Home Screen widget treatments](widget-refinement/README.md), with an interactive comparison board. Design review before native styling; two focused widget types with labelled individual logging.
+
+## Expressive Rilova design research — October 21, 2026
+
+[Current competitive research and design brief](expressive-refresh/RESEARCH.md)
+compares 14 habit/routine apps and three adjacent products using official imagery
+and documents. It proposes Luminous Tide, Home calendar navigation, richer creation
+and reporting, and a bounded motion system. The [original concept board](expressive-refresh/concept-board.png)
+shows three proposed screens with illustrative data; it is a static study, not an
+implemented app or interactive prototype. Earlier exploration files are historical
+and their competitor-uniqueness claims should not be treated as current evidence.

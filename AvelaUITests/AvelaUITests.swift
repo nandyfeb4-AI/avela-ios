@@ -91,10 +91,10 @@ final class AvelaUITests: XCTestCase {
         nameField.tap()
         nameField.typeText(name)
         if let polarityButtonTitle {
-            app.segmentedControls["habitForm.polarityPicker"].buttons[polarityButtonTitle].tap()
+            revealDetailElement(app.buttons[polarityButtonTitle], in: app).tap()
         }
         if let scheduleButtonTitle {
-            app.segmentedControls["habitForm.scheduleTypePicker"].buttons[scheduleButtonTitle].tap()
+            revealDetailElement(app.buttons[scheduleButtonTitle], in: app).tap()
         }
         app.buttons["habitForm.saveButton"].tap()
         XCTAssertTrue(app.staticTexts[name].waitForExistence(timeout: 5))
@@ -105,9 +105,10 @@ final class AvelaUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["habitDetail.name"].waitForExistence(timeout: 5))
     }
 
-    /// SwiftUI List materializes rows lazily; a lower detail action may not
-    /// exist in the accessibility tree until scrolled into view. Keep scroll
-    /// attempts bounded and wait for a hittable target before tapping it.
+    /// SwiftUI Lists and Forms materialize rows lazily. A lower detail action
+    /// or creation option may need scrolling, especially with the richer
+    /// tracking setup or accessibility text. Keep attempts bounded and wait
+    /// for a hittable target instead of assuming its initial screen position.
     private func revealDetailElement(_ element: XCUIElement, in app: XCUIApplication) -> XCUIElement {
         for _ in 0..<8 {
             if element.exists && element.isHittable { return element }
@@ -303,7 +304,7 @@ final class AvelaUITests: XCTestCase {
         openDetail(for: "Walk", in: app)
         app.buttons["habitDetail.editButton"].tap()
         XCTAssertTrue(app.textFields["habitForm.nameField"].waitForExistence(timeout: 5))
-        app.segmentedControls["habitForm.scheduleTypePicker"].buttons["Times per Week"].tap()
+        revealDetailElement(app.buttons["Times per Week"], in: app).tap()
         app.buttons["habitForm.saveButton"].tap()
 
         // Today's completion, logged before the edit, must already count
@@ -647,7 +648,7 @@ final class AvelaUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["today.emptyState.title"].waitForExistence(timeout: 10))
 
         app.buttons["today.addHabitButton"].tap()
-        let iconButton = app.buttons["Icon book.fill"]
+        let iconButton = revealDetailElement(app.buttons["Icon book.fill"], in: app)
         XCTAssertTrue(iconButton.waitForExistence(timeout: 5))
         // Rounded to the nearest point before comparing: SwiftUI's layout
         // engine can report a frame like 43.99999999999994 for a target
@@ -662,7 +663,7 @@ final class AvelaUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["today.emptyState.title"].waitForExistence(timeout: 10))
 
         app.buttons["today.addHabitButton"].tap()
-        let iconButton = app.buttons["Icon book.fill"]
+        let iconButton = revealDetailElement(app.buttons["Icon book.fill"], in: app)
         XCTAssertTrue(iconButton.waitForExistence(timeout: 5))
         XCTAssertGreaterThanOrEqual(iconButton.frame.width.rounded(), 44, "the adaptive grid must keep targets at the 44pt minimum even at the largest Dynamic Type size")
         XCTAssertGreaterThanOrEqual(iconButton.frame.height.rounded(), 44)
@@ -936,15 +937,15 @@ final class AvelaUITests: XCTestCase {
         createHabit(named: "Walk", in: app)
         createAttentionGoal(named: "Instagram", in: app)
 
-        XCTAssertTrue(app.staticTexts["0 of 1"].waitForExistence(timeout: 5), "the Habits pillar must reflect real data, not a placeholder")
+        XCTAssertTrue(app.otherElements["Habits: 0 of 1 done"].waitForExistence(timeout: 5), "The Today summary reflects recorded data")
         XCTAssertTrue(
-            app.staticTexts["Not logged yet"].waitForExistence(timeout: 5),
-            "the Attention pillar must never claim a verified status before anything is logged"
+            app.otherElements["Habits: 0 of 1 done"].value as? String == "Attention: Not logged yet",
+            "The Today summary must keep manual attention provenance"
         )
         XCTAssertFalse(app.staticTexts["On track"].exists, "the Attention pillar must never imply an automatically verified status")
 
         completeHabit(named: "Walk", in: app)
-        XCTAssertTrue(app.staticTexts["1 of 1"].waitForExistence(timeout: 5), "the Habits pillar must update immediately on completion")
+        XCTAssertTrue(app.otherElements["Habits: 1 of 1 done"].waitForExistence(timeout: 5), "The summary must update after completion")
     }
 
     func testCompletingAHabitShowsAnUndoToastThatUndoesIt() {

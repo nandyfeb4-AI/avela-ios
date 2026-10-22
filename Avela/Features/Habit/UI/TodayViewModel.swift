@@ -21,6 +21,12 @@ struct TodayHabitRow: Identifiable, Equatable {
     var isSkippedToday: Bool = false
     var quantityProgress: String? = nil
     var requiresQuantityLogging: Bool = false
+    var quantityTarget: HabitQuantityTarget? = nil
+    var activityConfigurationID: UUID? = nil
+    var quickAmount: Int? = nil
+    /// Captures the displayed civil day; identical-looking rows cannot move a
+    /// stale action across midnight.
+    var trackingDayKey: String? = nil
 }
 
 /// Presentation composed from the same historical periods used by streaks.
@@ -65,12 +71,14 @@ final class TodayViewModel {
     var activityRepository: HabitActivityRepository?
     private let repository: HabitRepository
     private let calendar: Calendar
+    private let quickLogPresets: HabitQuickLogPresets
     private static let logger = Logger(subsystem: "com.example.Avela", category: "TodayViewModel")
     private static let friendlyErrorMessage = "Something went wrong. Please try again."
 
-    init(repository: HabitRepository, calendar: Calendar = .autoupdatingCurrent) {
+    init(repository: HabitRepository, calendar: Calendar = .autoupdatingCurrent, presets: HabitQuickLogPresets? = nil) {
         self.repository = repository
         self.calendar = calendar
+        quickLogPresets = presets ?? HabitQuickLogPresets()
     }
 
     func load(asOf date: Date = Date()) {
@@ -101,13 +109,48 @@ final class TodayViewModel {
     }
 
     func toggleCompletion(for row: TodayHabitRow, asOf date: Date = Date()) {
+        errorMessage = nil
         do {
+            let dayKey = LocalDay.key(for: date, calendar: calendar)
+            guard row.trackingDayKey == dayKey,
+                  let habit = try repository.fetchHabit(id: row.id), !habit.isArchived,
+                  habit.createdAt <= date,
+                  let schedule = try repository.activeConfiguration(for: row.id, on: date)?.schedule,
+                  HabitScheduleEvaluator.isDue(schedule, on: date, calendar: calendar) else {
+                load(asOf: date)
+                errorMessage = "This check-in has changed. Review today's habits and try again."
+                return
+            }
+            // Amount-generated success belongs to its recorded entries. A
+            // stale simple-check-in control cannot erase that derived fact
+            // while leaving the target-reaching quantity unchanged.
+            let currentActivity = try activityRepository?.configuration(for: row.id, on: date)
+            guard !row.requiresQuantityLogging && currentActivity?.target == nil else {
+                load(asOf: date)
+                errorMessage = "Open this habit's progress to review its recorded amounts."
+                return
+            }
+            let interval = try currentDayInterval(date)
+            let completions = try repository.completions(for: row.id, in: interval)
             if let completionID = row.todaysCompletionID {
+                guard completions.contains(where: { $0.id == completionID && $0.localDateKey == dayKey }) else {
+                    load(asOf: date)
+                    errorMessage = "This check-in has changed. Your current progress is unchanged."
+                    return
+                }
                 try repository.undoCompletion(id: completionID)
             } else {
-                let start = calendar.startOfDay(for: date)
-                let end = calendar.date(byAdding: .day, value: 1, to: start)!
-                for skip in try repository.skips(for: row.id, in: DateInterval(start: start, end: end)) {
+                // Multiple activations of the same displayed Log control must
+                // not add duplicate facts or replace an independently saved log.
+                guard completions.isEmpty else { load(asOf: date); return }
+                let skips = try repository.skips(for: row.id, in: interval)
+                guard row.isSkippedToday || skips.isEmpty else {
+                    load(asOf: date)
+                    errorMessage = "This day was skipped after the screen loaded. Review it before logging."
+                    return
+                }
+                try repository.validateCompletion(habitID: row.id, at: date)
+                for skip in skips {
                     try repository.undoSkip(id: skip.id)
                 }
                 _ = try repository.recordCompletion(habitID: row.id, at: date, source: .app, note: nil)
@@ -120,17 +163,96 @@ final class TodayViewModel {
 
     /// Undo targets the exact logged fact, never a toggle of a refreshed row.
     /// A confirmation kept open across midnight must not log or undo another day.
-    func undoTodayCompletion(id: UUID, habitID: UUID, asOf date: Date = Date()) {
+    @discardableResult
+    func undoTodayCompletion(id: UUID, habitID: UUID, asOf date: Date = Date()) -> Bool {
+        errorMessage = nil
         do {
             let start = calendar.startOfDay(for: date)
             let end = calendar.date(byAdding: .day, value: 1, to: start)!
             let active = try repository.fetchHabits(includeArchived: false).contains { $0.id == habitID }
             let records = try repository.completions(for: habitID, in: DateInterval(start: start, end: end))
-            if active && records.contains(where: { $0.id == id }) {
-                try repository.undoCompletion(id: id)
+            let dayKey = LocalDay.key(for: date, calendar: calendar)
+            guard active && records.contains(where: { $0.id == id && $0.localDateKey == dayKey }) else {
+                load(asOf: date)
+                errorMessage = "That check-in is no longer available to undo here. Open the habit to review its progress."
+                return false
+            }
+            try repository.undoCompletion(id: id)
+            load(asOf: date)
+            return true
+        } catch { handle(error); return false }
+    }
+
+    /// A quantity shortcut uses the same canonical writer as the full logger.
+    /// The returned ID identifies only this new entry for a deliberate Undo.
+    @discardableResult
+    func logQuickAmount(for row: TodayHabitRow, asOf date: Date = Date()) -> HabitActivityEntry? {
+        errorMessage = nil
+        var didSave = false
+        do {
+            guard let activityRepository,
+                  row.trackingDayKey == LocalDay.key(for: date, calendar: calendar),
+                  let habit = try repository.fetchHabit(id: row.id), !habit.isArchived,
+                  habit.createdAt <= date, habit.polarity == .positive,
+                  let schedule = try repository.activeConfiguration(for: row.id, on: date)?.schedule,
+                  HabitScheduleEvaluator.isDue(schedule, on: date, calendar: calendar),
+                  let config = try activityRepository.configuration(for: row.id, on: date),
+                  config.id == row.activityConfigurationID,
+                  let target = config.target, target == row.quantityTarget,
+                  let amount = row.quickAmount, (1...10_000).contains(amount) else {
+                throw HabitActivityError.staleConfiguration
+            }
+            let interval = try currentDayInterval(date)
+            guard try repository.skips(for: row.id, in: interval).isEmpty else {
+                throw HabitActivityError.unavailableDay
+            }
+            let existingIDs = Set(try activityRepository.entries(for: row.id, on: date).map(\.id))
+            try activityRepository.log(habitID: row.id, kind: .quantity, amount: amount,
+                expectedConfigurationID: config.id, on: date, now: date)
+            didSave = true
+            let added = try activityRepository.entries(for: row.id, on: date).filter {
+                !existingIDs.contains($0.id) && $0.kind == .quantity
+                    && $0.configurationID == config.id && $0.amount == amount && $0.unit == target.unit
             }
             load(asOf: date)
-        } catch { handle(error) }
+            guard added.count == 1 else {
+                errorMessage = "Progress saved. Open the habit to review your entries."
+                return nil
+            }
+            return added[0]
+        } catch {
+            if didSave {
+                // Never present an export/read failure as a failed write that
+                // invites a second additive log of the same intended amount.
+                load(asOf: date)
+                errorMessage = "Progress saved. Open the habit to review your entries."
+            } else { handle(error) }
+            return nil
+        }
+    }
+
+    @discardableResult
+    func undoQuickAmount(entryID: UUID, habitID: UUID, asOf date: Date = Date()) -> Bool {
+        errorMessage = nil
+        do {
+            guard let activityRepository,
+                  let habit = try repository.fetchHabit(id: habitID), !habit.isArchived,
+                  let entry = try activityRepository.entries(for: habitID, on: date).first(where: { $0.id == entryID }),
+                  entry.habitID == habitID, entry.kind == .quantity,
+                  entry.dayKey == LocalDay.key(for: date, calendar: calendar), entry.loggedAt <= date else {
+                load(asOf: date)
+                errorMessage = "That amount is no longer available to undo here. Open the habit to review its entries."
+                return false
+            }
+            try activityRepository.removeEntry(id: entry.id, now: date)
+            load(asOf: date)
+            return true
+        } catch { handle(error); return false }
+    }
+
+    private func currentDayInterval(_ date: Date) throws -> DateInterval {
+        guard let interval = calendar.dateInterval(of: .day, for: date) else { throw HabitActivityError.unavailableDay }
+        return interval
     }
 
     private func row(for habit: Habit, asOf date: Date) throws -> TodayHabitRow {
@@ -164,8 +286,12 @@ final class TodayViewModel {
             recoveryContext: recovery?.progressLabel,
             recovery: recovery,
             isSkippedToday: try !repository.skips(for: habit.id, in: DateInterval(start: dayStart, end: dayEnd)).isEmpty,
-            quantityProgress: quantity.map { "\(total) of \($0.amount) \($0.unit.rawValue)" },
-            requiresQuantityLogging: quantity != nil
+            quantityProgress: quantity.map { "\(total) of \($0.amount) \($0.unit.name(for: $0.amount))" },
+            requiresQuantityLogging: quantity != nil,
+            quantityTarget: quantity,
+            activityConfigurationID: activityConfig?.id,
+            quickAmount: quantity.flatMap { quickLogPresets.amounts(for: habit.id, unit: $0.unit).first },
+            trackingDayKey: LocalDay.key(for: date, calendar: calendar)
         )
     }
 

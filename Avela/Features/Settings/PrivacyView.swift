@@ -49,7 +49,13 @@ struct PrivacyView: View {
             }
 
             Section("Optional Apple Health") {
-                Text("If you connect a Build Up habit, Rilova reads today's chosen steps or exercise minutes when you open it or refresh. It saves connection settings and resulting habit successes locally, not raw Health samples. Nothing is written to Apple Health or uploaded. Disconnect to stop future imports; existing history remains. Manage read permissions separately in Apple Health. Missing data isn't treated as failure.")
+                Text("If you connect a Build Up habit, Rilova reads today's chosen steps or exercise minutes when you open it or refresh. It saves connection settings and resulting habit successes locally, not raw Health samples. Nothing is written to Apple Health or automatically uploaded. Disconnect to stop future imports; existing history remains. Manage read permissions separately in Apple Health. Missing data isn't treated as failure.")
+            }
+
+            Section("Optional progress sharing") {
+                Text("Your weekly card is created on this device. It shows weekly consistency and a habit count, with names and dates as you choose. These totals may reflect successes imported from Apple Health.")
+                    .accessibilityIdentifier("privacy.progressSharingDisclosure")
+                Text("Review the card, then choose a destination in Apple's share sheet. Nothing is published automatically. Private reasons, reflection notes, raw Health samples and detailed attention or session records aren't included.")
             }
 
             Section("Optional Calendar planning") {
@@ -63,7 +69,7 @@ struct PrivacyView: View {
             }
 
             Section("Widgets") {
-                Text("The app and its widgets share a local snapshot so progress can appear on your Home Screen and Lock Screen. Depending on the widget, habit names and progress may be visible to anyone who can see your screen. Choose widget placement and names you're comfortable displaying.")
+                Text("The app and its Quick Log and Routine widgets share a local snapshot for your Home Screen. Habit names and progress may be visible to anyone who can see your screen. Choose widget placement and names you're comfortable displaying. Lock Screen and Dynamic Island session activities are a separate feature, described below.")
             }
 
             Section("Optional session activities") {

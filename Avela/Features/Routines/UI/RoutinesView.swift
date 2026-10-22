@@ -7,6 +7,8 @@ struct RoutinesView: View {
     private let habits: any HabitRepository
     private let repository: any RoutineRepository
     @Environment(\.habitActivityRepository) private var activities
+    @Environment(\.appPalette) private var palette
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     let onLogHabit: (UUID) -> Void
     @State private var draft: RoutineFormDraft?
     @State private var deleting: HabitRoutine?
@@ -21,28 +23,74 @@ struct RoutinesView: View {
     var body: some View {
         List {
             Section {
-                Text("Keep a few habits together. Work through them in your order, with each check-in saved to its original habit.")
-                    .foregroundStyle(Color.secondary)
+                VStack(alignment: .leading, spacing: 12) {
+                    Label("A rhythm that fits.", systemImage: "square.stack.3d.up.fill")
+                        .font(.largeTitle.weight(.bold)).fontDesign(.rounded)
+                        .foregroundStyle(.white).accessibilityAddTraits(.isHeader)
+                    Text("Bring a few habits together. One small step, then the next.")
+                        .font(.subheadline).foregroundStyle(.white.opacity(0.84))
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(22)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background { RilovaAurora() }
+                .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+                .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
+            }
+            Section {
+                LazyVGrid(columns: dynamicTypeSize.isAccessibilitySize
+                    ? [GridItem(.flexible())]
+                    : [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
+                    ForEach(RoutineStarter.allCases) { starter in
+                        starterCard(starter)
+                    }
+                }
+                .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
+            } header: {
+                Text("Start with a rhythm")
+            } footer: {
+                Text("Review suggestions from your existing habits. Nothing is saved until you choose Save.")
             }
             if let activities {
                 Section {
-                    NavigationLink("Make This Week Manageable") {
+                    NavigationLink {
                         ManageableWeekView(habits: habits, activities: activities, routines: repository, onLogHabit: onLogHabit)
+                    } label: {
+                        HStack(spacing: 12) {
+                            AppIconBadge(symbol: "leaf.fill").accessibilityHidden(true)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("My day changed").font(.headline)
+                                Text("Keep it small. Keep your progress.")
+                                    .font(.subheadline).foregroundStyle(Color.appInkSecondary)
+                            }
+                        }
+                        .padding(.vertical, 4)
                     }.accessibilityIdentifier("routines.manageWeek")
                 }
             }
             if model.routines.isEmpty {
-                ContentUnavailableView("Your Rhythm, Together", systemImage: "list.bullet.rectangle", description: Text("Create a morning, evening or other routine using habits you already track."))
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Your routine starts here.")
+                        .font(.title2.weight(.bold)).fontDesign(.rounded)
+                    Text("Try a rhythm above, or use + to make your own. Each habit keeps its own schedule and history.")
+                        .font(.subheadline).foregroundStyle(Color.appInkSecondary)
+                }
+                .padding(.vertical, 10)
             }
             ForEach(model.routines) { routine in
                 NavigationLink {
                     RoutineRunView(model: RoutineRunViewModel(routine: routine, habits: habits), onLogHabit: onLogHabit)
                 } label: {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(routine.name).font(.headline)
-                        Text(routine.restartDays.map { "\($0)-day restart · \(routine.habitIDs.count) habits" } ?? "\(routine.habitIDs.count) habits").font(.subheadline).foregroundStyle(Color.secondary)
+                    HStack(spacing: 14) {
+                        AppIconBadge(symbol: routine.restartDays == nil ? "square.stack.3d.up.fill" : "leaf.fill")
+                            .accessibilityHidden(true)
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text(routine.name).font(.title3.weight(.semibold)).fontDesign(.rounded)
+                            Text(routine.restartDays.map { "\($0)-day restart · \(routine.habitIDs.count) habits" } ?? "\(routine.habitIDs.count) habits · Your order")
+                                .font(.subheadline).foregroundStyle(Color.appInkSecondary)
+                        }
                     }
-                    .frame(minHeight: 44)
+                    .frame(minHeight: 60).padding(.vertical, 5)
                 }
                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                     Button("Delete", role: .destructive) { deleting = routine }
@@ -87,26 +135,40 @@ struct RoutinesView: View {
         .task { model.load() }
         .onAppear { model.load() }
     }
-}
 
-struct RoutineFormDraft: Identifiable {
-    let id = UUID()
-    var routineID: UUID?
-    var name: String = ""
-    var habitIDs: [UUID] = []
-    var restartDays: Int? = nil
-
-    init() {}
-    init(routine: HabitRoutine) {
-        restartDays = routine.restartDays
-        routineID = routine.id
-        name = routine.name
-        habitIDs = routine.habitIDs
+    private func starterCard(_ starter: RoutineStarter) -> some View {
+        Button { draft = model.draft(for: starter) } label: {
+            VStack(alignment: .leading, spacing: 11) {
+                HStack {
+                    Image(systemName: starter.symbol)
+                        .font(.system(size: 28, weight: .light)).foregroundStyle(palette.accent)
+                        .accessibilityHidden(true)
+                    Spacer()
+                    Image(systemName: "arrow.up.right").font(.caption.weight(.semibold))
+                        .foregroundStyle(palette.accent).accessibilityHidden(true)
+                }
+                Text(starter.name).font(.title3.weight(.bold)).fontDesign(.rounded)
+                    .foregroundStyle(Color.appInk)
+                Text(starter.subtitle).font(.subheadline).foregroundStyle(Color.appInkSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(18)
+            .frame(maxWidth: .infinity, minHeight: 150, alignment: .leading)
+            .background(LinearGradient(colors: [palette.surface, palette.accentSoft],
+                startPoint: .topLeading, endPoint: .bottomTrailing),
+                in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+            .contentShape(RoundedRectangle(cornerRadius: 24))
+        }
+        .buttonStyle(RilovaPressStyle())
+        .accessibilityLabel("Review \(starter.name) routine starter. \(starter.subtitle)")
+        .accessibilityHint("Opens an editable draft using suggestions from your active habits.")
+        .accessibilityIdentifier("routines.starter.\(starter.rawValue)")
     }
 }
 
 private struct RoutineFormView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.appPalette) private var palette
     @State var draft: RoutineFormDraft
     @State private var saveFailed = false
     let habits: [Habit]
@@ -118,6 +180,23 @@ private struct RoutineFormView: View {
 
     var body: some View {
         Form {
+            if let starter = draft.starter {
+                Section {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Label(starter.name, systemImage: starter.symbol)
+                            .font(.title2.weight(.bold)).fontDesign(.rounded)
+                        Text(selectedHabits.isEmpty
+                            ? "Choose the habits that belong here. We haven't selected any for you."
+                            : "A few suggestions from your habit categories. Keep, remove or reorder any of them.")
+                            .font(.subheadline).foregroundStyle(Color.appInkSecondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                        Text("Saved only when you tap Save.")
+                            .font(.caption.weight(.semibold)).foregroundStyle(palette.accent)
+                    }
+                    .rilovaHeaderSurface()
+                    .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
+                }
+            }
             Section {
                 Picker("Plan", selection: $draft.restartDays) {
                     Text("Ongoing routine").tag(Int?.none)
@@ -130,9 +209,16 @@ private struct RoutineFormView: View {
                     .accessibilityIdentifier("routine.name")
             }
             Section {
+                if selectedHabits.isEmpty {
+                    Text(habits.isEmpty ? "Create a habit first, then add it to a routine." : "Add at least one habit below to begin.")
+                        .foregroundStyle(Color.appInkSecondary)
+                }
                 ForEach(selectedHabits) { habit in
                     VStack(alignment: .leading, spacing: 8) {
-                        Text(habit.name).frame(maxWidth: .infinity, alignment: .leading)
+                        HStack(spacing: 12) {
+                            HabitIconBadge(symbol: habit.iconName).accessibilityHidden(true)
+                            Text(habit.name).font(.headline).frame(maxWidth: .infinity, alignment: .leading)
+                        }
                         HStack {
                         Button("Remove", systemImage: "minus.circle") { draft.habitIDs.removeAll { $0 == habit.id } }
                             .labelStyle(.iconOnly).frame(minWidth: 44, minHeight: 44)
@@ -154,7 +240,12 @@ private struct RoutineFormView: View {
             Section("Add Habits") {
                 ForEach(habits.filter { !draft.habitIDs.contains($0.id) }) { habit in
                     Button { draft.habitIDs.append(habit.id) } label: {
-                        Label(habit.name, systemImage: habit.iconName).frame(minHeight: 44)
+                        HStack(spacing: 12) {
+                            HabitIconBadge(symbol: habit.iconName).accessibilityHidden(true)
+                            Text(habit.name).foregroundStyle(Color.appInk)
+                            Spacer(minLength: 0)
+                            Image(systemName: "plus.circle.fill").foregroundStyle(palette.accent).accessibilityHidden(true)
+                        }.frame(minHeight: 52)
                     }
                     .accessibilityLabel("Add \(habit.name) to routine")
                 }
@@ -186,12 +277,31 @@ struct RoutineRunView: View {
     @State var model: RoutineRunViewModel
     let onLogHabit: (UUID) -> Void
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.appPalette) private var palette
 
     var body: some View {
         List {
             Section {
-                Text("Choose a habit to check in when you’re ready.")
-                    .foregroundStyle(Color.secondary)
+                VStack(alignment: .leading, spacing: 14) {
+                    Text("One step at a time.")
+                        .font(.largeTitle.weight(.bold)).fontDesign(.rounded)
+                        .foregroundStyle(.white).accessibilityAddTraits(.isHeader)
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        Text("\(model.steps.filter { $0.isDue && $0.isComplete }.count)")
+                            .font(.largeTitle.weight(.bold)).fontDesign(.rounded).monospacedDigit().foregroundStyle(.white)
+                        Text("of \(model.steps.filter(\.isDue).count) scheduled habits logged today")
+                            .font(.subheadline).foregroundStyle(.white.opacity(0.84))
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    Text("Choose a habit when you're ready. Each check-in stays with its original habit.")
+                        .font(.subheadline).foregroundStyle(.white.opacity(0.84))
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(22)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background { RilovaAurora() }
+                .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+                .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
             }
             if let days = model.routine.restartDays {
                 Section {
@@ -207,10 +317,11 @@ struct RoutineRunView: View {
                     onLogHabit(step.id)
                 } label: {
                     HStack(spacing: 12) {
-                        Text("\(index + 1)").font(.headline.monospacedDigit()).foregroundStyle(Color.secondary)
-                        Image(systemName: step.habit.iconName).accessibilityHidden(true)
+                        Text(String(format: "%02d", index + 1))
+                            .font(.caption.weight(.semibold).monospacedDigit()).foregroundStyle(Color.appInkSecondary)
+                        HabitIconBadge(symbol: step.habit.iconName).accessibilityHidden(true)
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(step.habit.name).font(.headline)
+                            Text(step.habit.name).font(.title3.weight(.semibold)).fontDesign(.rounded).foregroundStyle(Color.appInk)
                             Text(step.isComplete ? "Logged today" : (step.isDue ? "Ready when you are" : "Not scheduled today"))
                                 .font(.subheadline).foregroundStyle(Color.secondary)
                             if let successful = step.restartSuccessfulCommitments {
@@ -222,9 +333,10 @@ struct RoutineRunView: View {
                         }
                         Spacer(minLength: 0)
                         Image(systemName: step.isComplete ? "checkmark.circle.fill" : "chevron.forward")
+                            .foregroundStyle(palette.accent)
                             .accessibilityHidden(true)
                     }
-                    .frame(minHeight: 44)
+                    .frame(minHeight: 64).padding(.vertical, 8)
                 }
                 .disabled(!step.isDue && !step.isComplete)
                 .accessibilityLabel("\(step.habit.name), \(step.isComplete ? "logged today" : step.isDue ? "open check-in" : "not scheduled today")")

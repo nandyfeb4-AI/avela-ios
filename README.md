@@ -13,57 +13,82 @@ review remain required before TestFlight or App Store release.
 
 ## What is built
 
-- **Habit ideas:** eight optional, editable starting points for movement,
-  learning and attention. Browse from New Habit; nothing is added until Save.
-- **Habits:** create, edit, archive, and reactivate positive or avoidance habits;
-  daily, selected-weekday, and flexible weekly schedules; one-tap completion,
-  skip and undo; current/best streaks, consistency, and recovery progress.
-- **Calendar history:** per-habit month views with connected daily successes,
-  excused skips and pauses; separate weekly-target outcomes and large-text date
-  lists. Open from habit detail. Browsing never changes a completion.
-- **App themes:** nine free, persistent light/dark themes with page gradients and custom card surfaces from Settings
-  → App Theme. Warning colours retain their meaning. See the
-  [calendar previews](docs/verification/calendar-themes/README.md) and
-  [expanded themes/recovery previews](docs/verification/recovery-themes/README.md).
-- **Manual attention tracking:** daily duration budgets with quick logging and
-  today-only entry corrections; protected and phone-free windows with manual
-  check-ins; persistent phone-free sessions. Missing reports remain unknown,
-  and elapsed time never certifies success. Detailed check-in timing rules are
-  documented as awaiting product confirmation in the data-model notes.
-- **Today:** Vivid Tidewater Balance styling, habit/attention summaries, recovery
-  context, a collapsible Done group, undo feedback, and companion status.
-- **History and Insights:** read-only 30-day habit and manual duration history;
-  completed-week habit consistency, comparable-cohort trends, tied rankings,
-  logged attention-budget success with coverage, and eligible weekday patterns.
-- **Onboarding and Settings:** account-free setup with optional steps, archived
-  habits, companion and haptic preferences, privacy information, and Premium.
-- **Siri and Shortcuts:** log a habit idempotently or add self-reported attention
-  minutes; Settings includes setup guidance. Native actions open the app and
-  require local authentication. In-app voice remains deferred.
-- **Apple Health:** opt-in steps/exercise-minute targets for Build Up habits,
-  checked on foreground refresh. Existing completions/skips are preserved;
-  missing access/data never becomes a failure. No Health writes or uploads.
-- **Reminders:** optional per-habit local notifications; permission is requested
-  on explicit enablement, and denial preserves tracking without repeated prompts.
-- **Companions:** original owl, fox, and otter artwork with six deterministic
-  states, saved selection/visibility, and transitions respecting Reduce Motion.
-- **Subscriptions:** StoreKit 2 monthly/annual purchase, restore, and verified
-  entitlement handling. Free supports three active habits and one attention goal;
-  Premium removes creation limits. Existing tracking and history remain available
-  after expiry.
-- **Quick Log widget:** optional small/medium Home Screen check-ins without opening Avela; quantity controls open their logger. Add it once from the Home Screen widget gallery (Settings → Home Screen Widgets has guidance).
-- **Widgets:** small, medium, and Lock Screen habit/attention summaries using
-  read-only App Group snapshots; Home Screen companion artwork. Medium habit
-  completion links open the app for a validated, idempotent write.
-- **Live Activities:** explicit Show/Hide controls for real phone-free sessions,
-  with companion and countdown on supported Dynamic Island and Lock Screen
-  surfaces. Hiding presentation leaves the local session active. Activities
-  support sessions up to eight hours; longer sessions remain usable in-app.
+- **Habit setup:** 40 editable ideas in eight groups,
+  plus immediate custom creation. Choose Check-in, Amount or Timed tracking,
+  an optional smaller action and a private reason. Templates prepare drafts;
+  only Save creates a habit. Health connections stay a separate opt-in.
+- **Habits and progress:** Build Up/Cut Down habits; daily, selected-weekday and
+  flexible-weekly schedules; archive/reactivate, excused skips and Undo.
+  Optional count/pages/glasses/minutes targets, elapsed-minute timers, personal
+  quick amounts and confirmed dated corrections preserve historical settings.
+  Smaller actions record effort separately from full success.
+- **Luminous Tide Today:** coordinated gradient heroes, readable habit rows,
+  visible quantity progress, one-tap preset amounts, a collapsible Done group
+  and exact-record Undo. Keep in View optionally pins one due habit; My routines
+  and My day changed surface existing grouping and recovery choices.
+- **Calendars:** a seven-day strip on Today expands into a month and read-only
+  day review. Dots count distinct habits with recorded check-ins or effort,
+  rather than completed targets. Explicit Review or Correct opens the dated
+  logger. Per-habit calendars retain daily success ribbons, neutral skips/pauses,
+  separate weekly commitments and large-text date lists.
+- **Appearance:** nine saved light/dark themes coordinate page gradients,
+  illuminated headers, cards and controls. Bounded press/entry/state responses
+  respect accessibility settings; attention and recovery colours retain meaning.
+- **Manual attention and Make Room:** daily budgets with quick usage logging and
+  today-only corrections; recurring protected/phone-free windows with manual
+  check-ins; persistent Focus and Phone-Free session timers. Reviewed duration
+  starters create editable goals before a separate Start. Missing reports remain
+  unknown; timers never verify concentration or complete a habit.
+- **History and reports:** read-only 30-day history; canonical completed-week
+  consistency, comparable-cohort trends, balanced/tied rankings, manual budget
+  results with coverage and eligible weekday patterns. Rhythm/Activity lenses
+  add 12 completed-week snapshots, annual/monthly activity views, unit-specific
+  quantity charts, weekday opportunity counts and session reports. Optional
+  progress sharing offers a preview, habit-name opt-in and date control.
+- **Recovery and meaning:** explainable Momentum, lifetime effort, optional
+  why-this-matters reminders and deliberate smaller-action/lighter-schedule
+  choices. Four editable routine starters group existing habits; 3/7-day restart
+  plans never silently pause, reschedule or complete them.
+- **Onboarding and Settings:** six illustrated, account-free setup stages with
+  optional skips and contextual permissions. Settings includes appearance,
+  companion/feedback preferences, archived habits, privacy and Premium.
+- **Siri and Shortcuts:** explicit habit success, quantity progress, manual
+  attention minutes and linked Make Room starts. Actions open Rilova and require
+  local authentication. There is no general in-app voice-command interpreter.
+- **Private weekly reflections:** typed notes and optional native on-device
+  dictation. Explicit Start, editable review, Add Text and Save stay separate;
+  unsupported speech recognition keeps typing available. Audio is not saved,
+  transcription has no network fallback, and no LLM analyzes reflections.
+- **Apple Health and reminders:** optional steps/exercise-minute targets for
+  Build Up habits, checked on foreground refresh; no Health writes or automatic uploads.
+  Missing accessible Health data remains unknown.
+  Optional local reminders request permission on enablement. Review & log opens
+  the named habit for confirmation; opening a notification alone never logs.
+- **Companions:** original owl, fox and otter artwork, saved visibility/selection,
+  four deterministic app-facing states using six existing poses, and bounded
+  transitions respecting Reduce Motion. No pet-care obligations or currency.
+- **Subscriptions:** StoreKit 2 monthly/annual purchase, restore and entitlement
+  handling. Free supports three active habits and one attention goal; Premium
+  removes creation limits. Expiry preserves existing tracking and history.
+- **Home Screen widgets:** two gallery choices, **Quick Log** and **Routine**, in
+  small/medium sizes. Eligible simple check-ins expose explicit Log/Undo without
+  opening the app; quantity/Health review opens Rilova. Routine requires a saved
+  routine selected in Edit Widget. WidgetKit controls refresh timing.
+- **Apple Watch:** optional current-day habit snapshots and logging through a
+  reachable, unlocked iPhone. Quantity review opens on iPhone; offline actions
+  are not queued. Paired-device validation remains separate.
+- **Live Activities:** explicitly requested companion/countdown for real Focus
+  or Phone-Free sessions on supported Dynamic Island and Lock Screen surfaces.
+  Hide leaves the local session active; sessions longer than the eight-hour
+  presentation limit remain usable in-app. This is separate from Home widgets.
 
-Automatic Screen Time metering, live cloud sync, accounts, and AI coaching
-are not implemented. Optional selected-app protection is implemented for signed-device
-development testing and remains disabled in Release pending verification and distribution
-entitlement approval. See [MVP scope](docs/MVP.md).
+Core tracking remains local-first. Optional private iCloud recovery preserves
+eligible tracking in dated backups; it is not live cloud sync and needs production
+container/signing configuration. Automatic Screen Time metering, mandatory
+accounts and AI coaching are not implemented. Selected-app protection is
+implemented for signed development testing and stays disabled in Release until
+its device lifecycle checks and distribution entitlement approval are complete.
+See [MVP scope](docs/MVP.md) and [interaction/data semantics](docs/UX.md).
 
 ## Getting started
 
@@ -73,7 +98,7 @@ entitlement approval. See [MVP scope](docs/MVP.md).
    signing and App Group entitlements; enable HealthKit for the app target.
 
 The project targets **iOS 17.0+** and uses **Swift 5 language mode**. Recorded
-validation used Xcode 27.0 and an iPhone 18 Pro / iOS 27.0 simulator. No package
+validation used Xcode 27.0 and an iPhone 18 Pro Max / iOS 27.0 simulator. No package
 installation or runtime secrets are required.
 
 See [development setup](docs/SETUP.md) for exact build/test commands, isolated
@@ -82,7 +107,7 @@ StoreKit simulator integration tests use ad-hoc signing; unsigned compilation
 alone does not establish purchase behavior. Local `.storekit` prices are test
 values and are not shipped as production pricing.
 
-The native logging enrichment passed 285 unit tests and targeted simulator UI
+The historical October 4 logging enrichment passed 285 unit tests and targeted simulator UI
 flows; both setup screens were visually reviewed. Spoken Siri and real Apple
 Health authorization/data still require a signed-device check. Full details and
 remaining release gates are in [the checklist](docs/TESTFLIGHT_CHECKLIST.md).
@@ -121,6 +146,17 @@ See [architecture](docs/ARCHITECTURE.md) and [data-model semantics](docs/DATA_MO
 
 ## Recorded verification
 
+The inventory above describes current code. The dated milestone notes below
+preserve earlier evidence; their screen compositions and test totals are not a
+claim about the latest Luminous Tide candidate.
+
+The current redesign's scope, native previews and run provenance are collected
+in the [Luminous Tide record](docs/verification/luminous-tide/README.md):
+**627 unit tests pass**, and **119 distinct UI tests have passing executions**
+across the full sweep and focused repair runs. The record preserves initial
+failures and separates native/device evidence from distribution approval.
+Browse the [light/dark screenshot gallery](docs/verification/luminous-tide/index.html).
+
 The following results are documented for **2026-10-04**; they are separate runs,
 not a claim that the full UI suite was repeated after every subsequent change.
 
@@ -147,13 +183,15 @@ Native captures include [Today](docs/mvp-validation/today-light.png),
 
 Before distribution, complete the [TestFlight checklist](docs/TESTFLIGHT_CHECKLIST.md):
 
-- Replace development bundle identifiers and `group.com.example.Avela` consistently,
-  then verify signed app/widget provisioning and shared-container access.
+- Finalize production bundle/App Group identifiers before first distribution,
+  then verify signed app/widget provisioning and shared-container access. The
+  current identifiers intentionally preserve installed progress; changing them
+  needs a migration plan rather than a cosmetic rename.
 - Configure matching monthly/annual products in App Store Connect and verify
   sandbox purchases, restore, and expiry on a signed device.
 - Publish approved privacy/support information and configure the in-app public
   privacy-policy URL; review the archive privacy report and disclosures.
-- Approve bundled companion/app-icon artwork and verify real-device appearance,
+- Verify approved companion/app-icon artwork on device and check real-device appearance,
   VoiceOver, Dynamic Type, Reduce Motion, widgets, reminders, and Live Activities.
 - Run the complete release-candidate regression suite, create and validate a signed
   archive, and complete the distribution workflow. No upload is recorded yet.
@@ -195,10 +233,10 @@ Design quality: [research and acceptance gates](docs/DESIGN_QUALITY_PLAN.md), [i
 
 Habit detail now offers **Progress, Timer & History Corrections**: optional count/pages/glasses/minutes targets, quick additive logging, explicit timers, separate smaller actions and confirmed dated corrections. Today offers **Routines & Restart Plans**, including user-selected 3/7-day focus groups. **Weekly Reflection** is available from Insights and Settings. Siri adds **Log Habit Progress**. Settings optionally connects the new Apple Watch companion for current-day snapshots and check-in logging.
 
-The Watch target builds with the app, but paired-device behavior needs verification. Restart groups do not automatically pause/reschedule habits; no microphone, external service or backend is added. See SETUP.md for final native build/test evidence and release checks.
+The Watch target builds with the app, but paired-device behavior needs verification. Restart groups do not automatically pause/reschedule habits. This earlier milestone added no microphone; optional on-device reflection dictation was added subsequently, as described below. See SETUP.md for dated build/test evidence and release checks.
 
 
-The latest expansion adds optional quantity targets and elapsed-minute timers, smaller-action check-ins, reviewed past-day corrections, ordered routines and 3/7-day restart groups, private weekly reflection, and an opt-in Apple Watch companion. Today → Routines also offers Make This Week Manageable; Habit Detail → Make Room connects a phone-free session to an intention without auto-completing the habit. Siri/Shortcuts includes additive Log Habit Progress. Native preview screenshots and verification are in [enrichment verification](docs/verification/enrichment/README.md).
+Earlier progress enrichment added optional quantity targets and elapsed-minute timers, smaller-action check-ins, reviewed past-day corrections, ordered routines and 3/7-day restart groups, private weekly reflection, and an opt-in Apple Watch companion. Today → My routines also offers My day changed; Habit Detail → Make Room connects a session to an intention without auto-completing the habit. Siri/Shortcuts includes additive Log Habit Progress. Native preview screenshots and verification for that milestone are in [enrichment verification](docs/verification/enrichment/README.md).
 
 
 ### Optional progress protection
@@ -244,7 +282,7 @@ Owner-approved optional dictation is available in each Weekly Reflection editor 
 
 ## Make Room → Do It — 2026-10-06
 
-Habit Detail → Make Room now lets the user create a Focus or Phone-Free goal in place, explicitly start a session and optionally request the mascot/countdown Live Activity. Focus permits phone use; Phone-Free records an intention without blocking or monitoring apps. Existing phone-free history is preserved. Session outcomes and actual habit logging remain independent: Log What I Did opens the existing habit logger without importing elapsed minutes or automatically completing the habit. Active-session review survives relaunch; failed intention-link writes do not replace the newly started session's review destination with an older session.
+Habit Detail → Make Room now lets the user create a Focus or Phone-Free goal in place, explicitly start a session and optionally request the mascot/countdown Live Activity. Focus permits phone use; Phone-Free records an intention and does not monitor apps. Later optional app protection can restrict chosen distractions only when explicitly enabled for a supported development session. Existing phone-free history is preserved. Session outcomes and actual habit logging remain independent: Log What I Did opens the existing habit logger without importing elapsed minutes or automatically completing the habit. Active-session review survives relaunch; failed intention-link writes do not replace the newly started session's review destination with an older session.
 
 All 473 unit tests and four affected UI flows pass. Debug and Release build; production binaries contain none of the checked DEBUG store/fixture hooks. This is a full unit run and a targeted UI run, not a full UI-suite or physical-device certification. Native screenshots, exact commands and remaining device checks: [Make Room verification](docs/verification/make-room/README.md).
 
